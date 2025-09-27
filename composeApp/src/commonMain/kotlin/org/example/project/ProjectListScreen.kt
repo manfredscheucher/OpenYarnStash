@@ -13,57 +13,43 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun YarnListScreen(
-    yarns: List<Yarn>,
+fun ProjectListScreen(
+    projects: List<Project>,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
-    onBack: () -> Unit      // <-- neu
+    onBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Woll-Stash") },
+                title = { Text("Projects") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Zurück"
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) { Text("+") }
-        },
+        floatingActionButton = { FloatingActionButton(onClick = onAddClick) { Text("+") } },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
-        if (yarns.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                Text("Noch keine Wolle. Tippe auf +")
+        if (projects.isEmpty()) {
+            Box(Modifier.padding(padding).fillMaxSize().padding(16.dp)) {
+                Text("No projects yet. Tap +")
             }
         } else {
-            LazyColumn(
-                contentPadding = padding,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(yarns) { yarn ->
+            LazyColumn(contentPadding = padding, modifier = Modifier.fillMaxSize()) {
+                items(projects) { p ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onOpen(yarn.id) }
+                            .clickable { onOpen(p.id) }
                             .padding(16.dp)
                     ) {
                         Column {
-                            Text("${yarn.name} (${yarn.color ?: "?"})")
-                            Text("${yarn.amount} g")
-                            yarn.url?.let { Text(it) }
-                            yarn.date?.let { Text(it) }
+                            Text(p.name)
+                            p.url?.let { Text(it) }
+                            p.date?.let { Text(it) }
                         }
                     }
                     Divider()

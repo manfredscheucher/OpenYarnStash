@@ -1,10 +1,8 @@
 package org.example.project
 
-// commonMain
 import androidx.compose.material3.*
-import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -12,26 +10,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeScreen(
     onOpenYarns: () -> Unit,
-    onOpenProjects: () -> Unit = {}
+    onOpenProjects: () -> Unit
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Home") }) }
+        topBar = { TopAppBar(title = { Text("OpenKnit") }) }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("Yarns", style = MaterialTheme.typography.headlineSmall)
-            Button(onClick = onOpenYarns) { Text("Zur Yarn-Liste") }
-
-            // Platzhalter für später
-            Spacer(Modifier.height(24.dp))
-            Text("Projects", style = MaterialTheme.typography.headlineSmall)
-            OutlinedButton(onClick = onOpenProjects, enabled = false) { Text("Bald…") }
+        Column(Modifier.padding(padding).padding(16.dp)) {
+            Button(onClick = onOpenYarns) { Text("Yarns") }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = onOpenProjects) { Text("Projects") }
         }
     }
 }

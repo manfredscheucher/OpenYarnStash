@@ -4,4 +4,7 @@ sealed interface Screen {
     data object Home : Screen
     data object YarnList : Screen
     data class YarnForm(val yarnId: Int?) : Screen
+
+    data object ProjectList : Screen
+    data class ProjectForm(val projectId: Int?) : Screen
 }

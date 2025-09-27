@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 data class Yarn(
     val id: Int,
     val name: String,
-    val color: String?,
-    val amount: Int,
-    val url: String? = null,     // optional
-    val date: String? = null     // optional, z.B. "2025-09-26"
+    val color: String? = null,
+    val amount: Int = 0,
+    val url: String? = null,
+    val date: String? = null
 )
 
 @Serializable
@@ -21,7 +21,7 @@ data class Project(
 )
 
 @Serializable
-data class Usage( // für (3) später
+data class Usage(
     val projectId: Int,
     val yarnId: Int,
     val amount: Int
