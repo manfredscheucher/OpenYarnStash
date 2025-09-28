@@ -61,7 +61,8 @@ fun YarnFormScreen(
         mutableStateOf(initialDisplayAmount.toString())
     }
     var url by remember { mutableStateOf(initial?.url ?: "") }
-    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: "") } // Changed from 'date' to 'dateAddedState'
+    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: "") }
+    var notes by remember { mutableStateOf(initial?.notes ?: "") } // State for notes
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
 
@@ -105,7 +106,7 @@ fun YarnFormScreen(
                         } else {
                             enteredAmountInTextField 
                         }
-                        val normalizedDate = normalizeDateString(dateAddedState) // Use dateAddedState here
+                        val normalizedDate = normalizeDateString(dateAddedState)
 
                         val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0))
                             .copy(
@@ -114,7 +115,8 @@ fun YarnFormScreen(
                                 brand = brand.ifBlank { null }, 
                                 amount = finalAmountToSave, 
                                 url = url.ifBlank { null },
-                                dateAdded = normalizedDate // Save to dateAdded field
+                                dateAdded = normalizedDate,
+                                notes = notes.ifBlank { null } // Save notes
                             )
                         onSave(yarn)
                     }) { Text(stringResource(Res.string.common_save)) }
@@ -184,10 +186,19 @@ fun YarnFormScreen(
             OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = dateAddedState, // Use dateAddedState
-                onValueChange = { dateAddedState = it }, // Update dateAddedState
-                label = { Text(stringResource(Res.string.yarn_label_date_added)) }, // Use new string resource
-                supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, // Use new string resource
+                value = dateAddedState, 
+                onValueChange = { dateAddedState = it }, 
+                label = { Text(stringResource(Res.string.yarn_label_date_added)) }, 
+                supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, 
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(
+                value = notes,
+                onValueChange = { notes = it },
+                label = { Text(stringResource(Res.string.yarn_label_notes)) },
+                singleLine = false,
+                minLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
 

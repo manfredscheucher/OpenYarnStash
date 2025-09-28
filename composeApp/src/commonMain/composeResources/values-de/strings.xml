@@ -25,6 +25,7 @@
     <string name="common_save">Speichern</string>
     <string name="common_add">Hinzufügen</string>
     <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
 
     <!-- Yarn form -->
     <string name="yarn_form_new">Neue Wolle</string>
@@ -36,6 +37,7 @@
     <string name="yarn_label_url">URL (optional)</string>
     <string name="yarn_label_date_added">Hinzugefügt am (optional)</string>
     <string name="date_format_hint_yarn_added">Hinzugefügt am (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
+    <string name="yarn_label_notes">Notizen (optional)</string>
     <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restbestand auf 0 setzen</string>
 
@@ -46,8 +48,11 @@
     <string name="project_label_url">URL (optional)</string>
     <string name="project_label_date">Datum (optional)</string>
     <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
+    <string name="project_label_notes">Notizen (optional)</string>
     <string name="project_form_button_assignments">Wolle zuweisen</string>
     <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>
+    <string name="delete_project_restricted_title">Löschen nicht möglich</string>
+    <string name="delete_project_restricted_message">Löschen nur möglich, wenn keine Wolle zugewiesen ist. Geben Sie zugewiesene Wolle in den Stash zurück, um das Löschen fortzusetzen.</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Wollzuweisungen für %1$s</string>

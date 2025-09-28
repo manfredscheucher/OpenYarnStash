@@ -12,7 +12,8 @@ data class Yarn(
     val amount: Int = 0,
     val url: String? = null,
     @JsonNames("date") // Für Abwärtskompatibilität mit alten Speicherdaten
-    val dateAdded: String? = null // Umbenannt von 'date'
+    val dateAdded: String? = null, // Umbenannt von 'date'
+    val notes: String? = null // Added notes for Yarn
 )
 
 @Serializable
@@ -20,7 +21,8 @@ data class Project(
     val id: Int,
     val name: String,
     val url: String? = null,
-    val date: String? = null // Bleibt unverändert
+    val date: String? = null, // Bleibt unverändert
+    val notes: String? = null // Added notes for Project
 )
 
 @Serializable

@@ -25,7 +25,9 @@ fun ProjectFormScreen(
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var url by remember { mutableStateOf(initial?.url ?: "") }
-    var date by remember { mutableStateOf(initial?.date ?: "") } // Raw date string from TextField
+    var date by remember { mutableStateOf(initial?.date ?: "") }
+    var notes by remember { mutableStateOf(initial?.notes ?: "") }
+    var showDeleteRestrictionDialog by remember { mutableStateOf(false) } // State for the dialog
 
     Scaffold(
         topBar = {
@@ -51,16 +53,23 @@ fun ProjectFormScreen(
                 TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (initial != null) {
-                        TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
+                        TextButton(onClick = {
+                            if (usagesForProject.isNotEmpty()) {
+                                showDeleteRestrictionDialog = true
+                            } else {
+                                onDelete(initial.id)
+                            }
+                        }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
                     }
                     Button(onClick = {
-                        val normalizedDate = normalizeDateString(date) // Normalize date
+                        val normalizedDate = normalizeDateString(date)
                         val project = (initial ?: Project(id = -1, name = ""))
                             .copy(
                                 name = name,
                                 url = url.ifBlank { null },
-                                date = normalizedDate // Save normalized date
+                                date = normalizedDate,
+                                notes = notes.ifBlank { null }
                             )
                         onSave(project)
                     }) { Text(stringResource(Res.string.common_save)) }
@@ -85,7 +94,16 @@ fun ProjectFormScreen(
                 value = date,
                 onValueChange = { date = it },
                 label = { Text(stringResource(Res.string.project_label_date)) },
-                supportingText = { Text(stringResource(Res.string.date_format_hint_project)) }, // Added hint
+                supportingText = { Text(stringResource(Res.string.date_format_hint_project)) }, 
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(
+                value = notes,
+                onValueChange = { notes = it },
+                label = { Text(stringResource(Res.string.project_label_notes)) },
+                singleLine = false,
+                minLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -95,7 +113,7 @@ fun ProjectFormScreen(
                 Spacer(Modifier.height(8.dp))
 
                 if (usagesForProject.isEmpty()) {
-                    Text(stringResource(Res.string.project_form_no_yarn_assigned)) // Changed to use string resource
+                    Text(stringResource(Res.string.project_form_no_yarn_assigned)) 
                 } else {
                     usagesForProject.forEach { usage ->
                         Text("- ${yarnNameById(usage.yarnId)}: ${usage.amount} g")
@@ -111,10 +129,18 @@ fun ProjectFormScreen(
                 }
             }
         }
+        // Dialog for delete restriction
+        if (showDeleteRestrictionDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteRestrictionDialog = false },
+                title = { Text(stringResource(Res.string.delete_project_restricted_title)) },
+                text = { Text(stringResource(Res.string.delete_project_restricted_message)) },
+                confirmButton = {
+                    TextButton(onClick = { showDeleteRestrictionDialog = false }) {
+                        Text(stringResource(Res.string.common_ok))
+                    }
+                }
+            )
+        }
     }
 }
-
-// Add a string resource for this if you haven't already:
-// <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
-// For German (values-de/strings.xml):
-// <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>
