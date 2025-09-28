@@ -60,7 +60,6 @@ fun App(repo: JsonRepository) {
                 }
 
                 if (s.yarnId != null && existingYarn == null) {
-                    // Yarn not found, navigate back or show error
                     LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
                 } else {
                     val relatedUsages = existingYarn?.id?.let { id -> usages.filter { it.yarnId == id } } ?: emptyList()
@@ -68,7 +67,8 @@ fun App(repo: JsonRepository) {
                         initial = existingYarn,
                         usagesForYarn = relatedUsages,
                         projectNameById = { pid ->
-                            try { repo.getProjectById(pid).name } catch (e: NoSuchElementException) { "?" }
+                            try { projects.firstOrNull { it.id == pid }?.name ?: repo.getProjectById(pid).name } 
+                            catch (e: NoSuchElementException) { "?" }
                         },
                         onCancel = { screen = Screen.YarnList },
                         onDelete = { id ->
@@ -107,11 +107,19 @@ fun App(repo: JsonRepository) {
                 }
 
                 if (s.projectId != null && existingProject == null) {
-                    // Project not found, navigate back
                     LaunchedEffect(s.projectId) { screen = Screen.ProjectList }
                 } else {
+                    val usagesForCurrentProject = existingProject?.id?.let { pid -> 
+                        usages.filter { it.projectId == pid } 
+                    } ?: emptyList()
+
                     ProjectFormScreen(
                         initial = existingProject,
+                        usagesForProject = usagesForCurrentProject, // Pass the filtered usages
+                        yarnNameById = { yarnId -> // Provide a way to get yarn names
+                            try { yarns.firstOrNull { it.id == yarnId }?.name ?: repo.getYarnById(yarnId).name }
+                            catch (e: NoSuchElementException) { "?" }
+                        },
                         onCancel = { screen = Screen.ProjectList },
                         onDelete = { id ->
                             scope.launch {
@@ -125,12 +133,17 @@ fun App(repo: JsonRepository) {
                                 id = editedProject.id.takeIf { it > 0 } ?: repo.nextProjectId()
                             )
                             scope.launch {
-                                val savedProject = withContext(Dispatchers.Default) { repo.addOrUpdateProject(toSave) }.projects.find { it.id == toSave.id } ?: toSave
-                                reloadAllData() // Reload to get consistent data including new project ID if it was new
+                                val savedProjectWithData = withContext(Dispatchers.Default) { repo.addOrUpdateProject(toSave) }
+                                // It's crucial to get the potentially new ID and full project data after saving
+                                val finalProject = savedProjectWithData.projects.find { it.id == toSave.id } ?: 
+                                                   (if (toSave.id == -1 && savedProjectWithData.projects.isNotEmpty()) savedProjectWithData.projects.last() else toSave)
+
+                                reloadAllData() // Reload to get consistent data
+                                
                                 if (s.projectId == null) { // New project was saved
-                                    screen = Screen.ProjectAssignments(savedProject.id, savedProject.name)
+                                    screen = Screen.ProjectAssignments(finalProject.id, finalProject.name)
                                 } else { // Existing project was saved
-                                    screen = Screen.ProjectList // Or back to ProjectForm(s.projectId)
+                                    screen = Screen.ProjectList 
                                 }
                             }
                         },
@@ -156,19 +169,17 @@ fun App(repo: JsonRepository) {
                         try {
                             repo.availableForYarn(yarnId, forProjectId = s.projectId)
                         } catch (e: NoSuchElementException) {
-                            0 // Should not happen if allYarns is consistent with repo cache
+                            0 
                         }
                     },
                     onSave = { updatedAssignments ->
                         scope.launch {
                             withContext(Dispatchers.Default) { repo.setProjectAssignments(s.projectId, updatedAssignments) }
                             reloadAllData()
-                            // Navigate back to the ProjectForm for the current project
                             screen = Screen.ProjectForm(s.projectId) 
                         }
                     },
                     onCancel = { 
-                        // Navigate back to the ProjectForm for the current project
                         screen = Screen.ProjectForm(s.projectId) 
                     }
                 )

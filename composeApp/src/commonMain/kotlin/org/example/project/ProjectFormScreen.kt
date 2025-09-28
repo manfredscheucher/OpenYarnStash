@@ -3,6 +3,8 @@ package org.example.project
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,22 +16,30 @@ import knittingappmultiplatt.composeapp.generated.resources.*
 @Composable
 fun ProjectFormScreen(
     initial: Project?,
+    usagesForProject: List<Usage>, // New parameter
+    yarnNameById: (Int) -> String, // New parameter
     onCancel: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Project) -> Unit, // Changed signature: no assignments map
-    onNavigateToAssignments: () -> Unit // New navigation callback
+    onSave: (Project) -> Unit,
+    onNavigateToAssignments: () -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var url by remember { mutableStateOf(initial?.url ?: "") }
     var date by remember { mutableStateOf(initial?.date ?: "") }
-
-    // Removed: var assignments by remember { mutableStateOf(currentAssignments.toMutableMap()) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(if (initial == null) stringResource(Res.string.project_form_new) else stringResource(Res.string.project_form_edit))
+                },
+                navigationIcon = {
+                    IconButton(onClick = onCancel) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
+                    }
                 }
             )
         },
@@ -45,14 +55,13 @@ fun ProjectFormScreen(
                         Spacer(Modifier.width(8.dp))
                     }
                     Button(onClick = {
-                        val project = (initial ?: Project(id = -1, name = "")) // ID will be set in App.kt if new
+                        val project = (initial ?: Project(id = -1, name = ""))
                             .copy(
                                 name = name,
                                 url = url.ifBlank { null },
                                 date = date.ifBlank { null }
                             )
-                        // Removed: val clean = assignments.filterValues { it > 0 }
-                        onSave(project) // Changed call: only project details
+                        onSave(project)
                     }) { Text(stringResource(Res.string.common_save)) }
                 }
             }
@@ -73,14 +82,20 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = date, onValueChange = { date = it }, label = { Text(stringResource(Res.string.project_label_date)) }, modifier = Modifier.fillMaxWidth())
 
-            // --- Removed yarn assignment section --- 
-            // Spacer(Modifier.height(16.dp))
-            // Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
-            // Spacer(Modifier.height(8.dp))
-            // Column(modifier = Modifier.fillMaxWidth()) { ... old assignment UI ... }
-
             if (initial != null) {
-                Spacer(Modifier.height(24.dp)) // Add some space before the new button
+                Spacer(Modifier.height(16.dp))
+                Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+
+                if (usagesForProject.isEmpty()) {
+                    Text("Noch keine Wolle diesem Projekt zugewiesen.") // Consider a string resource
+                } else {
+                    usagesForProject.forEach { usage ->
+                        Text("- ${yarnNameById(usage.yarnId)}: ${usage.amount} g")
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp)) // Space before the button
                 Button(
                     onClick = onNavigateToAssignments,
                     modifier = Modifier.fillMaxWidth()

@@ -3,14 +3,14 @@ package org.example.project
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons // Added import
+import androidx.compose.material.icons.automirrored.filled.ArrowBack // Added import
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource // Added import
+import org.jetbrains.compose.resources.stringResource
 import knittingappmultiplatt.composeapp.generated.resources.*
-
-// Removed import for tr, and specific string resource like yarn_form_edit as Res should cover it.
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +33,14 @@ fun YarnFormScreen(
             TopAppBar(
                 title = {
                     Text(if (initial == null) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit))
+                },
+                navigationIcon = { // Added navigation icon
+                    IconButton(onClick = onCancel) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
+                    }
                 }
             )
         },
