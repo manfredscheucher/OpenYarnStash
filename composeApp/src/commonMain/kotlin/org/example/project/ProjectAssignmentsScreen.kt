@@ -20,7 +20,7 @@ fun ProjectAssignmentsScreen(
     projectName: String,
     allYarns: List<Yarn>,
     initialAssignments: Map<Int, Int>,
-    getAvailableAmountForYarn: (yarnId: Int) -> Int, // Already accounts for current project's usage being editable
+    getAvailableAmountForYarn: (yarnId: Int) -> Int, // This is the max that can be assigned from the yarn's total
     onSave: (updatedAssignments: Map<Int, Int>) -> Unit,
     onCancel: () -> Unit
 ) {
@@ -58,37 +58,38 @@ fun ProjectAssignmentsScreen(
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                // Potentially a new string resource for "No yarns available to assign"
-                Text(stringResource(Res.string.yarn_list_empty)) // Re-using for now
+                Text(stringResource(Res.string.yarn_list_empty)) // Re-using for now, consider a specific string
             }
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .padding(paddingValues) // Apply padding from Scaffold
+                    .padding(paddingValues) 
                     .fillMaxSize()
-                    .imePadding() // Handles keyboard overlap
-                    .navigationBarsPadding(), // Handles navigation bar overlap
-                contentPadding = PaddingValues(16.dp) // Inner padding for content list
+                    .imePadding()
+                    .navigationBarsPadding(),
+                contentPadding = PaddingValues(16.dp)
             ) {
                 items(allYarns, key = { it.id }) { yarn ->
-                    val assignedAmount = currentAssignments[yarn.id] ?: 0
-                    // availableAmountForAssignment is the max this yarn can be assigned in this project,
-                    // considering its total amount and what's used in *other* projects.
-                    // The amount already assigned in *this* project is effectively "given back" by getAvailableAmountForYarn.
-                    val availableAmountForAssignment = getAvailableAmountForYarn(yarn.id)
-                    val totalAvailableForThisAssignment = availableAmountForAssignment + assignedAmount
+                    val assignedAmountInTextField = currentAssignments[yarn.id] ?: 0
+                    
+                    // maxAmountThisProjectCanTake is the total amount of this yarn that can be assigned 
+                    // to THIS project, considering the yarn's total stock and what's assigned to OTHER projects.
+                    // This comes directly from getAvailableAmountForYarn().
+                    val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 
                     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                        Text("${yarn.name} (${yarn.color ?: "?"}) - Total: ${yarn.amount}g", style = MaterialTheme.typography.titleMedium)
-                        Text(stringResource(Res.string.usage_available, totalAvailableForThisAssignment) + " for this project")
+                        Text("${yarn.name} (${yarn.color ?: "?"}) - Gesamt im Stash: ${yarn.amount}g", style = MaterialTheme.typography.titleMedium)
+                        // This text should show how much MORE can be assigned to THIS project from the yarn's total stock
+                        // OR simply, the maximum this project can take from this yarn.
+                        Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
                         Spacer(Modifier.height(4.dp))
                         OutlinedTextField(
-                            value = assignedAmount.toString(),
+                            value = assignedAmountInTextField.toString(),
                             onValueChange = { textValue ->
                                 val rawValue = textValue.filter { it.isDigit() }
                                 val numericValue = rawValue.toIntOrNull() ?: 0
-                                // Clamp the value against what's available for *this specific assignment slot*
-                                val clampedValue = numericValue.coerceIn(0, totalAvailableForThisAssignment)
+                                // Clamp the value against the maximum this project can take for this yarn
+                                val clampedValue = numericValue.coerceIn(0, maxAmountThisProjectCanTake)
                                 currentAssignments = currentAssignments.toMutableMap().apply {
                                     this[yarn.id] = clampedValue
                                 }

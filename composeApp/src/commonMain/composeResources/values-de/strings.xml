@@ -34,6 +34,7 @@
     <string name="yarn_label_url">URL (optional)</string>
     <string name="yarn_label_date">Datum (optional)</string>
     <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Restbestand auf 0 setzen</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>
@@ -42,6 +43,8 @@
     <string name="project_label_url">URL (optional)</string>
     <string name="project_label_date">Datum (optional)</string>
     <string name="project_form_button_assignments">Wolle zuweisen</string>
+    <!-- Optional: Add if you want to make "Noch keine Wolle diesem Projekt zugewiesen." localizable -->
+    <!-- <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string> -->
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Wollzuweisungen für %1$s</string>

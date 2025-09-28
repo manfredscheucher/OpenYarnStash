@@ -71,21 +71,36 @@ fun App(repo: JsonRepository) {
                             catch (e: NoSuchElementException) { "?" }
                         },
                         onCancel = { screen = Screen.YarnList },
-                        onDelete = { id ->
+                        onDelete = { yarnIdToDelete ->
                             scope.launch {
-                                withContext(Dispatchers.Default) { repo.deleteYarn(id) }
+                                withContext(Dispatchers.Default) { repo.deleteYarn(yarnIdToDelete) }
                                 reloadAllData()
                                 screen = Screen.YarnList
                             }
                         },
-                        onSave = { edited ->
-                            val toSave = edited.copy(
-                                id = edited.id.takeIf { it > 0 } ?: repo.nextYarnId()
+                        onSave = { editedYarn ->
+                            val yarnToSave = editedYarn.copy(
+                                id = editedYarn.id.takeIf { it > 0 } ?: repo.nextYarnId()
                             )
                             scope.launch {
-                                withContext(Dispatchers.Default) { repo.addOrUpdateYarn(toSave) }
+                                withContext(Dispatchers.Default) { repo.addOrUpdateYarn(yarnToSave) }
                                 reloadAllData()
                                 screen = Screen.YarnList
+                            }
+                        },
+                        onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
+                            scope.launch {
+                                try {
+                                    val yarnToUpdate = repo.getYarnById(yarnIdToUpdate)
+                                    val updatedYarn = yarnToUpdate.copy(amount = newAmount)
+                                    withContext(Dispatchers.Default) { repo.addOrUpdateYarn(updatedYarn) }
+                                    reloadAllData()
+                                    screen = Screen.YarnList
+                                } catch (e: NoSuchElementException) {
+                                    // Handle case where yarn might have been deleted in the meantime, though unlikely here
+                                    reloadAllData() // Reload to be safe
+                                    screen = Screen.YarnList 
+                                }
                             }
                         }
                     )
@@ -115,8 +130,8 @@ fun App(repo: JsonRepository) {
 
                     ProjectFormScreen(
                         initial = existingProject,
-                        usagesForProject = usagesForCurrentProject, // Pass the filtered usages
-                        yarnNameById = { yarnId -> // Provide a way to get yarn names
+                        usagesForProject = usagesForCurrentProject, 
+                        yarnNameById = { yarnId -> 
                             try { yarns.firstOrNull { it.id == yarnId }?.name ?: repo.getYarnById(yarnId).name }
                             catch (e: NoSuchElementException) { "?" }
                         },
@@ -134,15 +149,14 @@ fun App(repo: JsonRepository) {
                             )
                             scope.launch {
                                 val savedProjectWithData = withContext(Dispatchers.Default) { repo.addOrUpdateProject(toSave) }
-                                // It's crucial to get the potentially new ID and full project data after saving
                                 val finalProject = savedProjectWithData.projects.find { it.id == toSave.id } ?: 
                                                    (if (toSave.id == -1 && savedProjectWithData.projects.isNotEmpty()) savedProjectWithData.projects.last() else toSave)
 
-                                reloadAllData() // Reload to get consistent data
+                                reloadAllData()
                                 
-                                if (s.projectId == null) { // New project was saved
+                                if (s.projectId == null) { 
                                     screen = Screen.ProjectAssignments(finalProject.id, finalProject.name)
-                                } else { // Existing project was saved
+                                } else { 
                                     screen = Screen.ProjectList 
                                 }
                             }
