@@ -41,6 +41,10 @@
     <string name="project_label_name">Name</string>
     <string name="project_label_url">URL (optional)</string>
     <string name="project_label_date">Datum (optional)</string>
+    <string name="project_form_button_assignments">Wolle zuweisen</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Wollzuweisungen für %1$s</string>
 
     <!-- Usage -->
     <string name="usage_section_title">Zugewiesene Wolle</string>

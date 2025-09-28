@@ -13,8 +13,8 @@
     <!-- Project list -->
     <string name="project_list_title">Projects</string>
     <string name="project_list_empty">No projects yet. Tap +</string>
-    <string name="item_label_name">Name: %1$s</string> <!-- Assuming this was also intended, based on ProjectListScreen.kt -->
-    <string name="item_label_url">URL: %1$s</string> <!-- Assuming this was also intended -->
+    <string name="item_label_name">Name: %1$s</string>
+    <string name="item_label_url">URL: %1$s</string>
     <string name="item_label_date">Date: %1$s</string>
 
     <!-- Common labels/actions -->
@@ -41,6 +41,10 @@
     <string name="project_label_name">Name</string>
     <string name="project_label_url">URL (optional)</string>
     <string name="project_label_date">Date (optional)</string>
+    <string name="project_form_button_assignments">Assign yarn</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Yarn Assignments for %1$s</string>
 
     <!-- Usage -->
     <string name="usage_section_title">Assigned yarn</string>

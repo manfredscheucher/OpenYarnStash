@@ -1,10 +1,4 @@
 package org.example.project
 
-sealed interface Screen {
-    data object Home : Screen
-    data object YarnList : Screen
-    data class YarnForm(val yarnId: Int?) : Screen
-
-    data object ProjectList : Screen
-    data class ProjectForm(val projectId: Int?) : Screen
-}
+// This file can be deleted if no longer needed, 
+// as the Screen sealed class is now defined in App.kt
