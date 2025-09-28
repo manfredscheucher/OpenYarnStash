@@ -31,7 +31,7 @@
     <string name="project_form_title_edit">Edit Project</string>
     <string name="project_form_label_name">Name</string>
 
-    <string name="home_title">OpenKnit</string>
+    <string name="home_title">OpenStash</string>
     <string name="home_button_yarns">Yarns</string>
     <string name="home_button_projects">Projects</string>
 </resources>
