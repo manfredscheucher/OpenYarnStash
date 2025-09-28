@@ -34,6 +34,9 @@
     <string name="yarn_label_color">Farbe (optional)</string>
     <string name="yarn_label_brand">Marke (optional)</string>
     <string name="yarn_label_amount">Menge (g)</string>
+    <string name="yarn_label_grams_per_ball">g / Knäuel (optional)</string>
+    <string name="yarn_label_meters_per_ball">m / Knäuel (optional)</string>
+    <string name="yarn_label_number_of_balls">Anzahl Knäuel</string>
     <string name="yarn_label_url">URL (optional)</string>
     <string name="yarn_label_date_added">Hinzugefügt am (optional)</string>
     <string name="date_format_hint_yarn_added">Hinzugefügt am (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>

@@ -34,6 +34,9 @@
     <string name="yarn_label_color">Color (optional)</string>
     <string name="yarn_label_brand">Brand (optional)</string>
     <string name="yarn_label_amount">Amount (g)</string>
+    <string name="yarn_label_grams_per_ball">g / ball (optional)</string>
+    <string name="yarn_label_meters_per_ball">m / ball (optional)</string>
+    <string name="yarn_label_number_of_balls">Number of balls</string>
     <string name="yarn_label_url">URL (optional)</string>
     <string name="yarn_label_date_added">Added on (optional)</string>
     <string name="date_format_hint_yarn_added">Added on (YYYY, YYYY-MM, YYYY-MM-DD)</string>
