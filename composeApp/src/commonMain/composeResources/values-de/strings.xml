@@ -1,0 +1,37 @@
+<resources>
+    <string name="common_back">Zurück</string>
+    <string name="common_button_save">Speichern</string>
+    <string name="common_button_cancel">Abbrechen</string>
+    <string name="common_button_delete">Löschen</string>
+    <string name="common_plus_symbol">+</string>
+
+    <string name="form_label_name_required">Name*</string>
+    <string name="form_label_color">Farbe</string>
+    <string name="form_label_amount_required">Menge (g)*</string>
+    <string name="form_label_url_optional">URL (optional)</string>
+    <string name="form_label_date_optional">Datum (optional, z.B. 2025-09-26)</string>
+
+    <string name="item_label_url">URL: %1$s</string>
+    <string name="item_label_date">Datum: %1$s</string>
+    <string name="item_label_name">Name: %1$s</string>
+
+    <string name="yarn_list_title">Woll-Stash</string>
+    <string name="yarn_list_empty">Noch keine Wolle. Tippe auf +</string>
+    <string name="yarn_item_display_name_color">%1$s (%2$s)</string>
+    <string name="yarn_item_display_amount_g">%1$d g</string>
+
+    <string name="yarn_form_title_new">Neue Wolle</string>
+    <string name="yarn_form_title_edit">Wolle bearbeiten</string>
+    <string name="yarn_form_error_name_empty">Name darf nicht leer sein</string>
+    <string name="yarn_form_error_amount_invalid">Menge muss eine Zahl ≥ 0 sein</string>
+
+    <string name="project_list_title">Projekte</string>
+    <string name="project_list_empty">Noch keine Projekte. Tippe auf +</string>
+    <string name="project_form_title_new">Neues Projekt</string>
+    <string name="project_form_title_edit">Projekt bearbeiten</string>
+    <string name="project_form_label_name">Name</string>
+
+    <string name="home_title">OpenKnit</string>
+    <string name="home_button_yarns">Wolle</string>
+    <string name="home_button_projects">Projekte</string>
+</resources>

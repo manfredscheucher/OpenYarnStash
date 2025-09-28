@@ -10,6 +10,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import knittingappmultiplatt.composeapp.generated.resources.Res
+import knittingappmultiplatt.composeapp.generated.resources.common_back
+import knittingappmultiplatt.composeapp.generated.resources.yarn_list_empty
+import knittingappmultiplatt.composeapp.generated.resources.yarn_list_title
+import knittingappmultiplatt.composeapp.generated.resources.common_plus_symbol
+import knittingappmultiplatt.composeapp.generated.resources.yarn_item_display_name_color
+import knittingappmultiplatt.composeapp.generated.resources.yarn_item_display_amount_g
+import knittingappmultiplatt.composeapp.generated.resources.item_label_url
+import knittingappmultiplatt.composeapp.generated.resources.item_label_date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,19 +32,19 @@ fun YarnListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Yarn Stash") },
+                title = { Text(stringResource(Res.string.yarn_list_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(Res.string.common_back)
                         )
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) { Text("+") }
+            FloatingActionButton(onClick = onAddClick) { Text(stringResource(Res.string.common_plus_symbol)) }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
@@ -45,7 +55,7 @@ fun YarnListScreen(
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                Text("No yarn yet. Tap on +")
+                Text(stringResource(Res.string.yarn_list_empty))
             }
         } else {
             LazyColumn(
@@ -60,10 +70,10 @@ fun YarnListScreen(
                             .padding(16.dp)
                     ) {
                         Column {
-                            Text("${yarn.name} (${yarn.color ?: "?"})")
-                            Text("${yarn.amount} g")
-                            yarn.url?.let { Text(it) }
-                            yarn.date?.let { Text(it) }
+                            Text(stringResource(Res.string.yarn_item_display_name_color, yarn.name, yarn.color ?: "?"))
+                            Text(stringResource(Res.string.yarn_item_display_amount_g, yarn.amount))
+                            yarn.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
+                            yarn.date?.let { Text(stringResource(Res.string.item_label_date, it)) }
                         }
                     }
                     Divider()

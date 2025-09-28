@@ -1,0 +1,37 @@
+<resources>
+    <string name="common_back">Back</string>
+    <string name="common_button_save">Save</string>
+    <string name="common_button_cancel">Cancel</string>
+    <string name="common_button_delete">Delete</string>
+    <string name="common_plus_symbol">+</string>
+
+    <string name="form_label_name_required">Name*</string>
+    <string name="form_label_color">Color</string>
+    <string name="form_label_amount_required">Amount (g)*</string>
+    <string name="form_label_url_optional">URL (optional)</string>
+    <string name="form_label_date_optional">Date (optional, e.g. 2025-09-26)</string>
+
+    <string name="item_label_url">URL: %1$s</string>
+    <string name="item_label_date">Date: %1$s</string>
+    <string name="item_label_name">Name: %1$s</string>
+
+    <string name="yarn_list_title">Yarn Stash</string>
+    <string name="yarn_list_empty">No yarn yet. Tap on +</string>
+    <string name="yarn_item_display_name_color">%1$s (%2$s)</string>
+    <string name="yarn_item_display_amount_g">%1$d g</string>
+
+    <string name="yarn_form_title_new">New Yarn</string>
+    <string name="yarn_form_title_edit">Edit Yarn</string>
+    <string name="yarn_form_error_name_empty">Name cannot be empty</string>
+    <string name="yarn_form_error_amount_invalid">Amount must be a number ≥ 0</string>
+
+    <string name="project_list_title">Projects</string>
+    <string name="project_list_empty">No projects yet. Tap +</string>
+    <string name="project_form_title_new">New Project</string>
+    <string name="project_form_title_edit">Edit Project</string>
+    <string name="project_form_label_name">Name</string>
+
+    <string name="home_title">OpenKnit</string>
+    <string name="home_button_yarns">Yarns</string>
+    <string name="home_button_projects">Projects</string>
+</resources>

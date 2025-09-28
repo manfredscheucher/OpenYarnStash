@@ -5,7 +5,7 @@ import androidx.compose.ui.window.ComposeViewport
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    println("auch hier wieder die frage, wo ich denn herkomme und was ich denn möchte?!")
+    println("again the question, where do I come from and what do I want?!")
     ComposeViewport {
         App()
     }

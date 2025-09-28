@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    kotlin("plugin.serialization") version "2.0.0" // Beispiel – an eure Version anpassen
+    kotlin("plugin.serialization") version "2.0.0" // Example – adapt to your version
 }
 
 kotlin {
