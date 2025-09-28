@@ -11,14 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import knittingappmultiplatt.composeapp.generated.resources.Res
-import knittingappmultiplatt.composeapp.generated.resources.common_back
-import knittingappmultiplatt.composeapp.generated.resources.common_plus_symbol
-import knittingappmultiplatt.composeapp.generated.resources.project_list_empty
-import knittingappmultiplatt.composeapp.generated.resources.project_list_title
-import knittingappmultiplatt.composeapp.generated.resources.item_label_name
-import knittingappmultiplatt.composeapp.generated.resources.item_label_url
-import knittingappmultiplatt.composeapp.generated.resources.item_label_date
+import knittingappmultiplatt.composeapp.generated.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,37 +1,51 @@
 <resources>
-    <string name="common_back">Zurück</string>
-    <string name="common_button_save">Speichern</string>
-    <string name="common_button_cancel">Abbrechen</string>
-    <string name="common_button_delete">Löschen</string>
-    <string name="common_plus_symbol">+</string>
+    <string name="app_name">OpenStash</string>
 
-    <string name="form_label_name_required">Name*</string>
-    <string name="form_label_color">Farbe</string>
-    <string name="form_label_amount_required">Menge (g)*</string>
-    <string name="form_label_url_optional">URL (optional)</string>
-    <string name="form_label_date_optional">Datum (optional, z.B. 2025-09-26)</string>
-
-    <string name="item_label_url">URL: %1$s</string>
-    <string name="item_label_date">Datum: %1$s</string>
-    <string name="item_label_name">Name: %1$s</string>
-
-    <string name="yarn_list_title">Woll-Stash</string>
-    <string name="yarn_list_empty">Noch keine Wolle. Tippe auf +</string>
-    <string name="yarn_item_display_name_color">%1$s (%2$s)</string>
-    <string name="yarn_item_display_amount_g">%1$d g</string>
-
-    <string name="yarn_form_title_new">Neue Wolle</string>
-    <string name="yarn_form_title_edit">Wolle bearbeiten</string>
-    <string name="yarn_form_error_name_empty">Name darf nicht leer sein</string>
-    <string name="yarn_form_error_amount_invalid">Menge muss eine Zahl ≥ 0 sein</string>
-
-    <string name="project_list_title">Projekte</string>
-    <string name="project_list_empty">Noch keine Projekte. Tippe auf +</string>
-    <string name="project_form_title_new">Neues Projekt</string>
-    <string name="project_form_title_edit">Projekt bearbeiten</string>
-    <string name="project_form_label_name">Name</string>
-
+    <!-- Home -->
     <string name="home_title">OpenStash</string>
     <string name="home_button_yarns">Wolle</string>
     <string name="home_button_projects">Projekte</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Woll-Stash</string>
+    <string name="yarn_list_empty">Noch keine Wolle. Tippe auf +</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projekte</string>
+    <string name="project_list_empty">Noch keine Projekte. Tippe auf +</string>
+    <string name="item_label_name">Name: %1$s</string>
+    <string name="item_label_url">URL: %1$s</string>
+    <string name="item_label_date">Datum: %1$s</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Zurück</string>
+    <string name="common_cancel">Abbrechen</string>
+    <string name="common_delete">Löschen</string>
+    <string name="common_save">Speichern</string>
+    <string name="common_add">Hinzufügen</string>
+    <string name="common_plus_symbol">+</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Neue Wolle</string>
+    <string name="yarn_form_edit">Wolle bearbeiten</string>
+    <string name="yarn_label_name">Name</string>
+    <string name="yarn_label_color">Farbe (optional)</string>
+    <string name="yarn_label_amount">Menge (g)</string>
+    <string name="yarn_label_url">URL (optional)</string>
+    <string name="yarn_label_date">Datum (optional)</string>
+    <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Neues Projekt</string>
+    <string name="project_form_edit">Projekt bearbeiten</string>
+    <string name="project_label_name">Name</string>
+    <string name="project_label_url">URL (optional)</string>
+    <string name="project_label_date">Datum (optional)</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Zugewiesene Wolle</string>
+    <string name="usage_amount_label">Menge (g)</string>
+    <string name="usage_available">Verfügbar: %1$d g</string>
+    <string name="usage_used">Verwendet: %1$d g</string>
+    <string name="usage_projects_title">Projekte</string>
 </resources>
