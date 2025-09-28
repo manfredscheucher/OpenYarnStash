@@ -12,7 +12,7 @@ fun App(repo: JsonRepository) {
 
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
-    // usages lassen wir für später (Verknüpfung)
+    // usages we leave for later (linking)
 
     val scope = rememberCoroutineScope()
 
@@ -30,7 +30,7 @@ fun App(repo: JsonRepository) {
                 onOpenProjects = { screen = Screen.ProjectList }
             )
 
-            // ------- Yarns (dein bestehender Code, hier kurz) -------
+            // ------- Yarns (your existing code, short here) -------
             Screen.YarnList -> YarnListScreen(
                 yarns = yarns,
                 onAddClick = { screen = Screen.YarnForm(null) },

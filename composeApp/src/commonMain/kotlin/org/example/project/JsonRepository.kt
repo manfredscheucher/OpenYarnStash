@@ -67,7 +67,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
     fun nextProjectId(): Int = (cache.projects.maxOfOrNull { it.id } ?: 0) + 1
 
     // =========================================================
-    // USAGE (Verknüpfung Project ↔ Yarn)
+    // USAGE (Link Project ↔ Yarn)
     // =========================================================
     suspend fun upsertUsage(u: Usage): AppData {
         val idx = cache.usages.indexOfFirst { it.projectId == u.projectId && it.yarnId == u.yarnId }

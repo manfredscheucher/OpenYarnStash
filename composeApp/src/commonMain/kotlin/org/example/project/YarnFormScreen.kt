@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YarnFormScreen(
-    initial: Yarn?,                  // null = neu
+    initial: Yarn?,                  // null = new
     onCancel: () -> Unit,
-    onDelete: (Int) -> Unit,         // gibt id
+    onDelete: (Int) -> Unit,         // returns id
     onSave: (Yarn) -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
@@ -26,7 +26,7 @@ fun YarnFormScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(if (initial == null) "Neue Wolle" else "Wolle bearbeiten") })
+            TopAppBar(title = { Text(if (initial == null) "New Yarn" else "Edit Yarn") })
         }
     ) { padding ->
         Column(
@@ -37,13 +37,13 @@ fun YarnFormScreen(
         ) {
             OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name*") }, singleLine = true)
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = color, onValueChange = { color = it }, label = { Text("Farbe") }, singleLine = true)
+            OutlinedTextField(value = color, onValueChange = { color = it }, label = { Text("Color") }, singleLine = true)
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = amountText, onValueChange = { amountText = it }, label = { Text("Menge (g)*") }, singleLine = true)
+            OutlinedTextField(value = amountText, onValueChange = { amountText = it }, label = { Text("Amount (g)*") }, singleLine = true)
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text("URL (optional)") }, singleLine = true)
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = date, onValueChange = { date = it }, label = { Text("Datum (optional, z.B. 2025-09-26)") }, singleLine = true)
+            OutlinedTextField(value = date, onValueChange = { date = it }, label = { Text("Date (optional, e.g. 2025-09-26)") }, singleLine = true)
 
             if (error != null) {
                 Spacer(Modifier.height(8.dp))
@@ -53,13 +53,13 @@ fun YarnFormScreen(
             Spacer(Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Button(onClick = {
-                    // Validierung
+                    // Validation
                     val amt = amountText.toIntOrNull()
-                    if (name.isBlank()) { error = "Name darf nicht leer sein"; return@Button }
-                    if (amt == null || amt < 0) { error = "Menge muss eine Zahl ≥ 0 sein"; return@Button }
+                    if (name.isBlank()) { error = "Name cannot be empty"; return@Button }
+                    if (amt == null || amt < 0) { error = "Amount must be a number ≥ 0"; return@Button }
 
                     val y = Yarn(
-                        id = initial?.id ?: -1, // -1 = wird in App vergeben
+                        id = initial?.id ?: -1, // -1 = will be assigned in App
                         name = name.trim(),
                         color = color.ifBlank { null },
                         amount = amt,
@@ -68,14 +68,14 @@ fun YarnFormScreen(
                     )
                     onSave(y)
                 }) {
-                    Text("Speichern")
+                    Text("Save")
                 }
-                OutlinedButton(onClick = onCancel) { Text("Abbrechen") }
+                OutlinedButton(onClick = onCancel) { Text("Cancel") }
                 if (initial != null) {
                     OutlinedButton(
                         onClick = { onDelete(initial.id) },
                         colors = ButtonDefaults.outlinedButtonColors()
-                    ) { Text("Löschen") }
+                    ) { Text("Delete") }
                 }
             }
         }

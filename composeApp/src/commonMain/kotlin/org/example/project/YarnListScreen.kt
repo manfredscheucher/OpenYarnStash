@@ -17,17 +17,17 @@ fun YarnListScreen(
     yarns: List<Yarn>,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
-    onBack: () -> Unit      // <-- neu
+    onBack: () -> Unit      // <-- new
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Woll-Stash") },
+                title = { Text("Yarn Stash") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Zurück"
+                            contentDescription = "Back"
                         )
                     }
                 }
@@ -45,7 +45,7 @@ fun YarnListScreen(
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                Text("Noch keine Wolle. Tippe auf +")
+                Text("No yarn yet. Tap on +")
             }
         } else {
             LazyColumn(
