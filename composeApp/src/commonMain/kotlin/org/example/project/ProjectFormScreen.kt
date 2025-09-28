@@ -16,8 +16,8 @@ import knittingappmultiplatt.composeapp.generated.resources.*
 @Composable
 fun ProjectFormScreen(
     initial: Project?,
-    usagesForProject: List<Usage>, // New parameter
-    yarnNameById: (Int) -> String, // New parameter
+    usagesForProject: List<Usage>, 
+    yarnNameById: (Int) -> String, 
     onCancel: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project) -> Unit,
@@ -25,7 +25,7 @@ fun ProjectFormScreen(
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var url by remember { mutableStateOf(initial?.url ?: "") }
-    var date by remember { mutableStateOf(initial?.date ?: "") }
+    var date by remember { mutableStateOf(initial?.date ?: "") } // Raw date string from TextField
 
     Scaffold(
         topBar = {
@@ -55,11 +55,12 @@ fun ProjectFormScreen(
                         Spacer(Modifier.width(8.dp))
                     }
                     Button(onClick = {
+                        val normalizedDate = normalizeDateString(date) // Normalize date
                         val project = (initial ?: Project(id = -1, name = ""))
                             .copy(
                                 name = name,
                                 url = url.ifBlank { null },
-                                date = date.ifBlank { null }
+                                date = normalizedDate // Save normalized date
                             )
                         onSave(project)
                     }) { Text(stringResource(Res.string.common_save)) }
@@ -80,7 +81,13 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.project_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = date, onValueChange = { date = it }, label = { Text(stringResource(Res.string.project_label_date)) }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(
+                value = date,
+                onValueChange = { date = it },
+                label = { Text(stringResource(Res.string.project_label_date)) },
+                supportingText = { Text(stringResource(Res.string.date_format_hint_project)) }, // Added hint
+                modifier = Modifier.fillMaxWidth()
+            )
 
             if (initial != null) {
                 Spacer(Modifier.height(16.dp))
@@ -88,14 +95,14 @@ fun ProjectFormScreen(
                 Spacer(Modifier.height(8.dp))
 
                 if (usagesForProject.isEmpty()) {
-                    Text("Noch keine Wolle diesem Projekt zugewiesen.") // Consider a string resource
+                    Text(stringResource(Res.string.project_form_no_yarn_assigned)) // Changed to use string resource
                 } else {
                     usagesForProject.forEach { usage ->
                         Text("- ${yarnNameById(usage.yarnId)}: ${usage.amount} g")
                     }
                 }
 
-                Spacer(Modifier.height(16.dp)) // Space before the button
+                Spacer(Modifier.height(16.dp)) 
                 Button(
                     onClick = onNavigateToAssignments,
                     modifier = Modifier.fillMaxWidth()
@@ -106,3 +113,8 @@ fun ProjectFormScreen(
         }
     }
 }
+
+// Add a string resource for this if you haven't already:
+// <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
+// For German (values-de/strings.xml):
+// <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>

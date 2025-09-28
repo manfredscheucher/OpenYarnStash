@@ -1,15 +1,18 @@
 package org.example.project
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames // Import für JsonNames
 
 @Serializable
 data class Yarn(
     val id: Int,
     val name: String,
     val color: String? = null,
+    val brand: String? = null,
     val amount: Int = 0,
     val url: String? = null,
-    val date: String? = null
+    @JsonNames("date") // Für Abwärtskompatibilität mit alten Speicherdaten
+    val dateAdded: String? = null // Umbenannt von 'date'
 )
 
 @Serializable
@@ -17,7 +20,7 @@ data class Project(
     val id: Int,
     val name: String,
     val url: String? = null,
-    val date: String? = null
+    val date: String? = null // Bleibt unverändert
 )
 
 @Serializable

@@ -10,10 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource // Added import
+import org.jetbrains.compose.resources.stringResource
 import knittingappmultiplatt.composeapp.generated.resources.*
 
-@OptIn(ExperimentalMaterial3Api::class) // Added OptIn as it's good practice for Material 3 components
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YarnListScreen(
     yarns: List<Yarn>,
@@ -36,7 +36,6 @@ fun YarnListScreen(
                 }
             )
         },
-        // Assuming you want to use the common_plus_symbol for the FAB text as discussed for ProjectListScreen
         floatingActionButton = { FloatingActionButton(onClick = onAddClick) { Text(stringResource(Res.string.common_plus_symbol)) } },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
@@ -44,9 +43,8 @@ fun YarnListScreen(
             if (yarns.isEmpty()) {
                  Box(
                     modifier = Modifier
-                        // .padding(padding) // Padding is already applied by the parent Column to the whole content
                         .fillMaxSize()
-                        .padding(16.dp) // Inner padding for the empty text
+                        .padding(16.dp) 
                 ) {
                     Text(stringResource(Res.string.yarn_list_empty))
                 }
@@ -55,7 +53,7 @@ fun YarnListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(bottom = 96.dp) // For FAB overlap
+                    contentPadding = PaddingValues(bottom = 96.dp) 
                 ) {
                     items(yarns) { yarn ->
                         val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
@@ -69,11 +67,12 @@ fun YarnListScreen(
                         ) {
                             Column {
                                 Text("${yarn.name} (${yarn.color ?: "?"})")
+                                yarn.brand?.let { Text(stringResource(Res.string.yarn_label_brand) + ": " + it) } // Display brand if available
                                 Text("${yarn.amount} g")
                                 Text(stringResource(Res.string.usage_used, used))
                                 Text(stringResource(Res.string.usage_available, available))
-                                yarn.url?.let { Text(it) } // No direct stringResource here, consider item_label_url if desired
-                                yarn.date?.let { Text(it) } // No direct stringResource here, consider item_label_date if desired
+                                yarn.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
+                                yarn.dateAdded?.let { Text(stringResource(Res.string.yarn_item_label_date_added, it)) } // Changed to dateAdded and new string resource
                             }
                         }
                         Divider()

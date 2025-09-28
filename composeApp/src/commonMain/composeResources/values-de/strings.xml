@@ -9,6 +9,7 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Stash</string>
     <string name="yarn_list_empty">Noch keine Wolle. Tippe auf +</string>
+    <string name="yarn_item_label_date_added">Hinzugefügt: %1$s</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
@@ -30,9 +31,11 @@
     <string name="yarn_form_edit">Wolle bearbeiten</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Farbe (optional)</string>
+    <string name="yarn_label_brand">Marke (optional)</string>
     <string name="yarn_label_amount">Menge (g)</string>
     <string name="yarn_label_url">URL (optional)</string>
-    <string name="yarn_label_date">Datum (optional)</string>
+    <string name="yarn_label_date_added">Hinzugefügt am (optional)</string>
+    <string name="date_format_hint_yarn_added">Hinzugefügt am (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restbestand auf 0 setzen</string>
 
@@ -42,9 +45,9 @@
     <string name="project_label_name">Name</string>
     <string name="project_label_url">URL (optional)</string>
     <string name="project_label_date">Datum (optional)</string>
+    <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="project_form_button_assignments">Wolle zuweisen</string>
-    <!-- Optional: Add if you want to make "Noch keine Wolle diesem Projekt zugewiesen." localizable -->
-    <!-- <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string> -->
+    <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Wollzuweisungen für %1$s</string>
