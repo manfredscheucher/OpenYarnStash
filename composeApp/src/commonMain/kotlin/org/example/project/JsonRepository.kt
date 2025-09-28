@@ -1,31 +1,64 @@
 package org.example.project
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
-import kotlin.NoSuchElementException // Ensure this import is present
+import kotlin.NoSuchElementException
 
 class JsonRepository(private val fileHandler: FileHandler) {
     private val json = Json {
         prettyPrint = true
         ignoreUnknownKeys = true
+        explicitNulls = false
     }
+
     private var cache: AppData = AppData()
 
-    // ---------- Load (with normalize to enforce uniqueness) ----------
+    // ---------- On-disk schema (v2) ----------
+    // usages as flat map: "yarnId,projectId" -> amount
+    @Serializable
+    private data class DiskV2(
+        val yarns: List<Yarn> = emptyList(),
+        val projects: List<Project> = emptyList(),
+        val usages: Map<String, Int> = emptyMap()
+    )
+
+    // ---------- Load ----------
     suspend fun load(): AppData {
         val text = fileHandler.readFile()
         cache = if (text.isNotBlank()) {
-            val parsed = json.decodeFromString<AppData>(text)
-            parsed.normalize()
-        } else AppData()
+            val disk = json.decodeFromString<DiskV2>(text)
+            AppData(
+                yarns = disk.yarns,
+                projects = disk.projects,
+                usages = disk.usages.mapNotNull { (key, amount) ->
+                    parseKey(key)?.let { (yarnId, projectId) ->
+                        Usage(projectId = projectId, yarnId = yarnId, amount = amount)
+                    }
+                }
+            )
+        } else {
+            AppData()
+        }
         return cache
     }
 
     // ---------- Save ----------
     private suspend fun save(data: AppData): AppData {
         cache = data
-        fileHandler.writeFile(json.encodeToString(data))
+        // Build flat map; last write wins if duplicates are present in memory.
+        val flatUsages: Map<String, Int> = buildMap {
+            data.usages.forEach { u ->
+                put("${u.yarnId},${u.projectId}", u.amount)
+            }
+        }
+        val disk = DiskV2(
+            yarns = data.yarns,
+            projects = data.projects,
+            usages = flatUsages
+        )
+        fileHandler.writeFile(json.encodeToString<DiskV2>(disk))
         return cache
     }
 
@@ -36,9 +69,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
         val exists = cache.yarns.any { it.id == y.id }
         val newList = if (exists) {
             cache.yarns.map { if (it.id == y.id) y else it }
-        } else {
-            cache.yarns + y
-        }
+        } else cache.yarns + y
         return save(cache.copy(yarns = newList))
     }
 
@@ -48,10 +79,10 @@ class JsonRepository(private val fileHandler: FileHandler) {
         return save(cache.copy(yarns = newYarns, usages = newUsages))
     }
 
-    fun getYarnById(id: Int): Yarn = 
+    fun getYarnById(id: Int): Yarn =
         cache.yarns.firstOrNull { it.id == id } ?: throw NoSuchElementException("Yarn with id $id not found")
 
-    fun nextYarnId(): Int = if (cache.yarns.isEmpty()) 1 else (cache.yarns.maxOf { it.id }) + 1
+    fun nextYarnId(): Int = (cache.yarns.maxOfOrNull { it.id } ?: 0) + 1
 
     // =========================================================
     // PROJECT
@@ -60,9 +91,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
         val exists = cache.projects.any { it.id == p.id }
         val newList = if (exists) {
             cache.projects.map { if (it.id == p.id) p else it }
-        } else {
-            cache.projects + p
-        }
+        } else cache.projects + p
         return save(cache.copy(projects = newList))
     }
 
@@ -72,16 +101,14 @@ class JsonRepository(private val fileHandler: FileHandler) {
         return save(cache.copy(projects = newProjects, usages = newUsages))
     }
 
-    fun getProjectById(id: Int): Project = 
+    fun getProjectById(id: Int): Project =
         cache.projects.firstOrNull { it.id == id } ?: throw NoSuchElementException("Project with id $id not found")
 
-    fun nextProjectId(): Int = if (cache.projects.isEmpty()) 1 else (cache.projects.maxOf { it.id }) + 1
+    fun nextProjectId(): Int = (cache.projects.maxOfOrNull { it.id } ?: 0) + 1
 
     // =========================================================
-    // USAGE (unique per (projectId, yarnId))
+    // USAGE (unique per (projectId, yarnId) logically)
     // =========================================================
-
-    /** Replace all assignments for a project atomically. */
     suspend fun setProjectAssignments(projectId: Int, assignments: Map<Int, Int>): AppData {
         val remaining = cache.usages.filterNot { it.projectId == projectId }
         val newOnes = assignments
@@ -90,7 +117,6 @@ class JsonRepository(private val fileHandler: FileHandler) {
         return save(cache.copy(usages = remaining + newOnes))
     }
 
-    /** Upsert a single usage; replaces any existing pair. */
     suspend fun upsertUsage(u: Usage): AppData {
         val without = cache.usages.filterNot { it.projectId == u.projectId && it.yarnId == u.yarnId }
         return save(cache.copy(usages = without + u))
@@ -114,27 +140,19 @@ class JsonRepository(private val fileHandler: FileHandler) {
     fun assignedForYarnInProject(yarnId: Int, projectId: Int): Int =
         cache.usages.firstOrNull { it.yarnId == yarnId && it.projectId == projectId }?.amount ?: 0
 
-    /**
-     * Available amount for a yarn. If [forProjectId] is set, the current assignment
-     * in that project is "given back" so editing doesn't block you.
-     * Throws NoSuchElementException if yarnId does not exist.
-     */
     fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
-        val yarn = getYarnById(yarnId) // This will throw if yarn not found
+        val yarn = getYarnById(yarnId)
         val totalAssigned = assignedForYarn(yarnId)
         val currentInThisProject = forProjectId?.let { assignedForYarnInProject(yarnId, it) } ?: 0
         return (yarn.amount - (totalAssigned - currentInThisProject)).coerceAtLeast(0)
     }
-}
 
-// ---------- Internal: normalize duplicates after reading ----------
-private fun AppData.normalize(): AppData {
-    // Keep only one Usage per (projectId, yarnId). Last one wins.
-    val deduped = usages
-        .asReversed()
-        .associateBy { it.projectId to it.yarnId }
-        .values
-        .toList()
-        .asReversed()
-    return copy(usages = deduped)
+    // parse "yarnId,projectId" -> Pair<yarnId, projectId>
+    private fun parseKey(key: String): Pair<Int, Int>? {
+        val parts = key.split(',').map { it.trim() }
+        if (parts.size != 2) return null
+        val yarnId = parts[0].toIntOrNull() ?: return null
+        val projectId = parts[1].toIntOrNull() ?: return null
+        return yarnId to projectId
+    }
 }
