@@ -76,7 +76,8 @@ fun YarnFormScreen(
             val formattedBalls = if (calculatedBalls == calculatedBalls.toInt().toDouble()) {
                 calculatedBalls.toInt().toString()
             } else {
-                String.format("%.2f", calculatedBalls).replace(",", ".")
+                val rounded2 = kotlin.math.round(calculatedBalls * 100.0) / 100.0
+                rounded2.toString().trimEnd('0').trimEnd('.')
             }
             if (numberOfBallsText != formattedBalls) {
                 numberOfBallsText = formattedBalls

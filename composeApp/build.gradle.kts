@@ -72,6 +72,9 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
+        wasmJsMain.dependencies {
+            implementation(libs.kotlin.browser)
+        }
     }
 }
 
