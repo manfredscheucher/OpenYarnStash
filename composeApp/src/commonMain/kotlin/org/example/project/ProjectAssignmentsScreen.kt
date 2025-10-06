@@ -36,19 +36,6 @@ fun ProjectAssignmentsScreen(
                     }
                 }
             )
-        },
-        bottomBar = {
-            Row(
-                Modifier.fillMaxWidth().padding(16.dp),
-                horizontalArrangement = Arrangement.End // Save button to the right
-            ) {
-                TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
-                Spacer(Modifier.width(8.dp))
-                Button(onClick = {
-                    val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
-                    onSave(finalAssignments)
-                }) { Text(stringResource(Res.string.common_save)) }
-            }
         }
     ) { paddingValues ->
         if (allYarns.isEmpty()) {
@@ -63,7 +50,7 @@ fun ProjectAssignmentsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .padding(paddingValues) 
+                    .padding(paddingValues)
                     .fillMaxSize()
                     .imePadding()
                     .navigationBarsPadding(),
@@ -71,16 +58,10 @@ fun ProjectAssignmentsScreen(
             ) {
                 items(allYarns, key = { it.id }) { yarn ->
                     val assignedAmountInTextField = currentAssignments[yarn.id] ?: 0
-                    
-                    // maxAmountThisProjectCanTake is the total amount of this yarn that can be assigned 
-                    // to THIS project, considering the yarn's total stock and what's assigned to OTHER projects.
-                    // This comes directly from getAvailableAmountForYarn().
                     val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 
                     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                         Text("${yarn.name} (${yarn.color ?: "?"}) - Gesamt im Stash: ${yarn.amount}g", style = MaterialTheme.typography.titleMedium)
-                        // This text should show how much MORE can be assigned to THIS project from the yarn's total stock
-                        // OR simply, the maximum this project can take from this yarn.
                         Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
                         Spacer(Modifier.height(4.dp))
                         OutlinedTextField(
@@ -88,7 +69,6 @@ fun ProjectAssignmentsScreen(
                             onValueChange = { textValue ->
                                 val rawValue = textValue.filter { it.isDigit() }
                                 val numericValue = rawValue.toIntOrNull() ?: 0
-                                // Clamp the value against the maximum this project can take for this yarn
                                 val clampedValue = numericValue.coerceIn(0, maxAmountThisProjectCanTake)
                                 currentAssignments = currentAssignments.toMutableMap().apply {
                                     this[yarn.id] = clampedValue
@@ -100,6 +80,21 @@ fun ProjectAssignmentsScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
                         Divider(Modifier.padding(top = 16.dp, bottom = 8.dp))
+                    }
+                }
+
+                item {
+                    Spacer(Modifier.height(24.dp))
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End // Save button to the right
+                    ) {
+                        TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
+                        Spacer(Modifier.width(8.dp))
+                        Button(onClick = {
+                            val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
+                            onSave(finalAssignments)
+                        }) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

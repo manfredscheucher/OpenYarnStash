@@ -51,7 +51,12 @@ fun ProjectListScreen(
                         Column {
                             Text(stringResource(Res.string.item_label_name, p.name))
                             p.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
-                            p.date?.let { Text(stringResource(Res.string.item_label_date, it)) }
+                            val statusText = when (p.status) {
+                                ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                                ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                                ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                            }
+                            Text(statusText)
                         }
                     }
                     Divider()

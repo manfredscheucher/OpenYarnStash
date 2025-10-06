@@ -16,7 +16,6 @@
     <string name="project_list_empty">No projects yet. Tap +</string>
     <string name="item_label_name">Name: %1$s</string>
     <string name="item_label_url">URL: %1$s</string>
-    <string name="item_label_date">Date: %1$s</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Back</string>
@@ -32,6 +31,7 @@
     <string name="yarn_form_edit">Edit yarn</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Color (optional)</string>
+    <string name="yarn_label_color_lot">Color lot (optional)</string>
     <string name="yarn_label_brand">Brand (optional)</string>
     <string name="yarn_label_amount">Amount (g)</string>
     <string name="yarn_label_grams_per_ball">g / ball (optional)</string>
@@ -43,20 +43,25 @@
     <string name="yarn_label_notes">Notes (optional)</string>
     <string name="yarn_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Set remaining wool to 0</string>
+    <string name="yarn_new_default_name">New Yarn (%1$d)</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>
     <string name="project_form_edit">Edit project</string>
     <string name="project_label_name">Name</string>
     <string name="project_label_url">URL (optional)</string>
-    <string name="project_label_date">Date (optional)</string>
+    <string name="project_label_start_date">Start date (optional)</string>
+    <string name="project_label_end_date">End date (optional)</string>
     <string name="date_format_hint_project">Date (YYYY, YYYY-MM, YYYY-MM-DD)</string>
     <string name="project_label_notes">Notes (optional)</string>
     <string name="project_form_button_assignments">Assign yarn</string>
     <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
     <string name="delete_project_restricted_title">Deletion Not Possible</string>
     <string name="delete_project_restricted_message">Deletion is only possible if no yarn is assigned. Return assigned yarn to the stash to proceed with deletion.</string>
-
+    <string name="project_status_planning">Planning</string>
+    <string name="project_status_in_progress">In Progress</string>
+    <string name="project_status_finished">Finished</string>
+    <string name="project_new_default_name">New Project (%1$d)</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

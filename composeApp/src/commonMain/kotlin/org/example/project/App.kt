@@ -5,14 +5,16 @@ import androidx.compose.runtime.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
+import knittingappmultiplatt.composeapp.generated.resources.*
 import kotlin.NoSuchElementException // Ensure this import is present
 
 sealed class Screen {
     data object Home : Screen()
     data object YarnList : Screen()
-    data class YarnForm(val yarnId: Int?) : Screen()
+    data class YarnForm(val yarnId: Int) : Screen() // yarnId is no longer nullable
     data object ProjectList : Screen()
-    data class ProjectForm(val projectId: Int?) : Screen()
+    data class ProjectForm(val projectId: Int) : Screen() // projectId is no longer nullable
     data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
 }
 
@@ -44,30 +46,38 @@ fun App(repo: JsonRepository) {
                 onOpenProjects = { screen = Screen.ProjectList }
             )
 
-            Screen.YarnList -> YarnListScreen(
-                yarns = yarns,
-                usages = usages,
-                onAddClick = { screen = Screen.YarnForm(null) },
-                onOpen = { id -> screen = Screen.YarnForm(id) },
-                onBack = { screen = Screen.Home }
-            )
+            Screen.YarnList -> {
+                YarnListScreen(
+                    yarns = yarns,
+                    usages = usages,
+                    onAddClick = {
+                        scope.launch {
+                            val newId = repo.nextYarnId()
+                            val newYarn = Yarn(id = newId, name = "New Yarn ($newId)") // Default name in English as fallback
+                            withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
+                            reloadAllData()
+                            screen = Screen.YarnForm(newId)
+                        }
+                    },
+                    onOpen = { id -> screen = Screen.YarnForm(id) },
+                    onBack = { screen = Screen.Home }
+                )
+            }
 
             is Screen.YarnForm -> {
                 val existingYarn = remember(s.yarnId, yarns) {
-                    s.yarnId?.let { id -> 
-                        try { repo.getYarnById(id) } catch (e: NoSuchElementException) { null }
-                    }
+                    try { repo.getYarnById(s.yarnId) } catch (e: NoSuchElementException) { null }
                 }
 
-                if (s.yarnId != null && existingYarn == null) {
+                if (existingYarn == null) {
                     LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
                 } else {
-                    val relatedUsages = existingYarn?.id?.let { id -> usages.filter { it.yarnId == id } } ?: emptyList()
+                    val relatedUsages = usages.filter { it.yarnId == existingYarn.id }
                     YarnFormScreen(
                         initial = existingYarn,
                         usagesForYarn = relatedUsages,
                         projectNameById = { pid ->
-                            try { projects.firstOrNull { it.id == pid }?.name ?: repo.getProjectById(pid).name } 
+                            try { projects.firstOrNull { it.id == pid }?.name ?: "?" } 
                             catch (e: NoSuchElementException) { "?" }
                         },
                         onCancel = { screen = Screen.YarnList },
@@ -79,60 +89,56 @@ fun App(repo: JsonRepository) {
                             }
                         },
                         onSave = { editedYarn ->
-                            val yarnToSave = editedYarn.copy(
-                                id = editedYarn.id.takeIf { it > 0 } ?: repo.nextYarnId()
-                            )
                             scope.launch {
-                                withContext(Dispatchers.Default) { repo.addOrUpdateYarn(yarnToSave) }
+                                withContext(Dispatchers.Default) { repo.addOrUpdateYarn(editedYarn) }
                                 reloadAllData()
                                 screen = Screen.YarnList
                             }
                         },
                         onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
                             scope.launch {
-                                try {
-                                    val yarnToUpdate = repo.getYarnById(yarnIdToUpdate)
-                                    val updatedYarn = yarnToUpdate.copy(amount = newAmount)
-                                    withContext(Dispatchers.Default) { repo.addOrUpdateYarn(updatedYarn) }
-                                    reloadAllData()
-                                    screen = Screen.YarnList
-                                } catch (e: NoSuchElementException) {
-                                    // Handle case where yarn might have been deleted in the meantime, though unlikely here
-                                    reloadAllData() // Reload to be safe
-                                    screen = Screen.YarnList 
-                                }
+                                val yarnToUpdate = repo.getYarnById(yarnIdToUpdate)
+                                val updatedYarn = yarnToUpdate.copy(amount = newAmount)
+                                withContext(Dispatchers.Default) { repo.addOrUpdateYarn(updatedYarn) }
+                                reloadAllData()
+                                screen = Screen.YarnList
                             }
                         }
                     )
                 }
             }
 
-            Screen.ProjectList -> ProjectListScreen(
-                projects = projects,
-                onAddClick = { screen = Screen.ProjectForm(null) },
-                onOpen = { id -> screen = Screen.ProjectForm(id) },
-                onBack = { screen = Screen.Home }
-            )
+            Screen.ProjectList -> {
+                ProjectListScreen(
+                    projects = projects,
+                    onAddClick = {
+                        scope.launch {
+                            val newId = repo.nextProjectId()
+                            val newProject = Project(id = newId, name = "New Project ($newId)") // Default name
+                            withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
+                            reloadAllData()
+                            screen = Screen.ProjectForm(newId)
+                        }
+                    },
+                    onOpen = { id -> screen = Screen.ProjectForm(id) },
+                    onBack = { screen = Screen.Home }
+                )
+            }
 
             is Screen.ProjectForm -> {
                 val existingProject = remember(s.projectId, projects) {
-                    s.projectId?.let { id ->
-                        try { repo.getProjectById(id) } catch (e: NoSuchElementException) { null }
-                    }
+                    try { repo.getProjectById(s.projectId) } catch (e: NoSuchElementException) { null }
                 }
 
-                if (s.projectId != null && existingProject == null) {
+                if (existingProject == null) {
                     LaunchedEffect(s.projectId) { screen = Screen.ProjectList }
                 } else {
-                    val usagesForCurrentProject = existingProject?.id?.let { pid -> 
-                        usages.filter { it.projectId == pid } 
-                    } ?: emptyList()
-
+                    val usagesForCurrentProject = usages.filter { it.projectId == existingProject.id }
                     ProjectFormScreen(
                         initial = existingProject,
                         usagesForProject = usagesForCurrentProject, 
                         yarnNameById = { yarnId -> 
-                            try { yarns.firstOrNull { it.id == yarnId }?.name ?: repo.getYarnById(yarnId).name }
+                            try { yarns.firstOrNull { it.id == yarnId }?.name ?: "?" }
                             catch (e: NoSuchElementException) { "?" }
                         },
                         onCancel = { screen = Screen.ProjectList },
@@ -144,27 +150,14 @@ fun App(repo: JsonRepository) {
                             }
                         },
                         onSave = { editedProject ->
-                            val toSave = editedProject.copy(
-                                id = editedProject.id.takeIf { it > 0 } ?: repo.nextProjectId()
-                            )
                             scope.launch {
-                                val savedProjectWithData = withContext(Dispatchers.Default) { repo.addOrUpdateProject(toSave) }
-                                val finalProject = savedProjectWithData.projects.find { it.id == toSave.id } ?: 
-                                                   (if (toSave.id == -1 && savedProjectWithData.projects.isNotEmpty()) savedProjectWithData.projects.last() else toSave)
-
+                                withContext(Dispatchers.Default) { repo.addOrUpdateProject(editedProject) }
                                 reloadAllData()
-                                
-                                if (s.projectId == null) { 
-                                    screen = Screen.ProjectAssignments(finalProject.id, finalProject.name)
-                                } else { 
-                                    screen = Screen.ProjectList 
-                                }
+                                screen = Screen.ProjectList
                             }
                         },
                         onNavigateToAssignments = {
-                            existingProject?.let { proj ->
-                                screen = Screen.ProjectAssignments(proj.id, proj.name)
-                            }
+                            screen = Screen.ProjectAssignments(existingProject.id, existingProject.name)
                         }
                     )
                 }

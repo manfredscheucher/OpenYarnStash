@@ -1,7 +1,8 @@
 package org.example.project
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames // Import für JsonNames
+import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
 
 @Serializable
 data class Yarn(
@@ -10,22 +11,37 @@ data class Yarn(
     val color: String? = null,
     val brand: String? = null,
     val amount: Int = 0, // Gesamte Menge in Gramm
+    val colorLot: String? = null, // Farbcharge
     val url: String? = null,
-    @JsonNames("date") // Für Abwärtskompatibilität mit alten Speicherdaten
-    val dateAdded: String? = null, // Umbenannt von 'date'
+    val dateAdded: String? = null,
     val notes: String? = null, // Added notes for Yarn
     val gramsPerBall: Int? = null, // Gramm pro Knäuel
     val metersPerBall: Int? = null // Meter pro Knäuel
 )
+
+enum class ProjectStatus {
+    PLANNING,
+    IN_PROGRESS,
+    FINISHED
+}
 
 @Serializable
 data class Project(
     val id: Int,
     val name: String,
     val url: String? = null,
-    val date: String? = null, // Bleibt unverändert
+    @JsonNames("date") // Maps old "date" field to "startDate" for backward compatibility
+    val startDate: String? = null,
+    val endDate: String? = null,
     val notes: String? = null // Added notes for Project
-)
+) {
+    @Transient
+    val status: ProjectStatus = when {
+        endDate != null && endDate.isNotBlank() -> ProjectStatus.FINISHED
+        startDate != null && startDate.isNotBlank() -> ProjectStatus.IN_PROGRESS
+        else -> ProjectStatus.PLANNING
+    }
+}
 
 @Serializable
 data class Usage(
