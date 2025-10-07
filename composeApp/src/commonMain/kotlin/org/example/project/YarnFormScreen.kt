@@ -90,8 +90,16 @@ fun YarnFormScreen(
     }
 
     Scaffold(
-        topBar = { /* ... TopAppBar ... */ },
-        // REMOVED bottomBar
+        topBar = {
+            TopAppBar(
+                title = { Text(if (initial == null) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit)) },
+                navigationIcon = {
+                    IconButton(onClick = onCancel) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
+                    }
+                }
+            )
+        },
     ) { padding ->
         Column(
             modifier = Modifier
@@ -198,9 +206,21 @@ fun YarnFormScreen(
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
 
-            if (initial != null) { /* ... Usages section ... */ }
+            if (initial != null) {
+                Spacer(Modifier.height(16.dp))
+                Text(stringResource(Res.string.usage_projects_title), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
 
-            // MOVED button bar here
+                if (usagesForYarn.isEmpty()) {
+                    // TODO: localize this string
+                    Text("stringResource(Res.string.yarn_form_not_used_in_projects)")
+                } else {
+                    usagesForYarn.forEach { usage ->
+                        Text("- ${projectNameById(usage.projectId)}: ${usage.amount} g")
+                    }
+                }
+            }
+
             Spacer(Modifier.height(24.dp))
             Row(
                 Modifier.fillMaxWidth(),
@@ -241,8 +261,3 @@ fun YarnFormScreen(
         }
     }
 }
-
-// Placeholder for TopAppBar and Usages section to keep the snippet focused, assuming they are complex and mostly unchanged.
-// Actual implementation would include the full Scaffold content.
-// TopAppBar should be: TopAppBar(title = { Text(if (initial == null) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit)) }, navigationIcon = { IconButton(onClick = onCancel) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } })
-// Usages section: if (initial != null) { Spacer(Modifier.height(16.dp)); Text(stringResource(Res.string.usage_projects_title), style = MaterialTheme.typography.titleMedium); /* ... rest of usage display ... */ } 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KnittingAppMultiplatt</string>
+    <string name="yarn_form_not_used_in_projects">Not yet used in any projects</string>
 </resources>
