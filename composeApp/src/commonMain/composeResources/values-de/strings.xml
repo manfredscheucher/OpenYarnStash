@@ -72,4 +72,11 @@
     <string name="usage_available">Verfügbar: %1$d g</string>
     <string name="usage_used">Verwendet: %1$d g</string>
     <string name="usage_projects_title">Projekte</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_authors">Autoren: Helena und Manfred</string>
+    <string name="info_github_text">Diese App ist Open Source und auf GitHub verfügbar.</string>
+    <string name="info_github_button">Auf GitHub öffnen</string>
+    <string name="info_feedback_button">Feedback senden</string>
 </resources>

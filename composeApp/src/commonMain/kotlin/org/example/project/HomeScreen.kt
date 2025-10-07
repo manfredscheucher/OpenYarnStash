@@ -19,7 +19,8 @@ import knittingappmultiplatt.composeapp.generated.resources.logo
 @Composable
 fun HomeScreen(
     onOpenYarns: () -> Unit,
-    onOpenProjects: () -> Unit
+    onOpenProjects: () -> Unit,
+    onOpenInfo: () -> Unit
 ) {
     Scaffold(
         topBar = { 
@@ -40,6 +41,8 @@ fun HomeScreen(
             Button(onClick = onOpenYarns) { Text(stringResource(Res.string.home_button_yarns)) }
             Spacer(Modifier.height(12.dp))
             Button(onClick = onOpenProjects) { Text(stringResource(Res.string.home_button_projects)) }
+            Spacer(Modifier.height(24.dp))
+            Button(onClick = onOpenInfo) { Text("stringResource(Res.string.info_screen_title)") } // TODO
         }
     }
 }
