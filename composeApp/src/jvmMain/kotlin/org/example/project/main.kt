@@ -7,7 +7,7 @@ fun main() = application {
     print("na sowas, wie komm ich denn hier her?!")
     Window(
         onCloseRequest = ::exitApplication,
-        title = "KnittingAppMultiplatt",
+        title = "OpenYarnStash",
     ) {
         App()
     }

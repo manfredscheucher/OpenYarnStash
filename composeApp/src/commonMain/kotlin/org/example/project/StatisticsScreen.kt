@@ -26,14 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import knittingappmultiplatt.composeapp.generated.resources.Res
-import knittingappmultiplatt.composeapp.generated.resources.common_back
-import knittingappmultiplatt.composeapp.generated.resources.statistics_label_month
-import knittingappmultiplatt.composeapp.generated.resources.statistics_label_year
-import knittingappmultiplatt.composeapp.generated.resources.statistics_option_month
-import knittingappmultiplatt.composeapp.generated.resources.statistics_option_total
-import knittingappmultiplatt.composeapp.generated.resources.statistics_option_year
-import knittingappmultiplatt.composeapp.generated.resources.statistics_title
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.statistics_label_month
+import openyarnstash.composeapp.generated.resources.statistics_label_year
+import openyarnstash.composeapp.generated.resources.statistics_option_month
+import openyarnstash.composeapp.generated.resources.statistics_option_total
+import openyarnstash.composeapp.generated.resources.statistics_option_year
+import openyarnstash.composeapp.generated.resources.statistics_title
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

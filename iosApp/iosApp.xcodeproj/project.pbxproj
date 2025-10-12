@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		13957BE36CE4387F68A3A1CF /* KnittingAppMultiplatt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KnittingAppMultiplatt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13957BE36CE4387F68A3A1CF /* OpenYarnStash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenYarnStash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,7 +59,7 @@
 		CD7B1084408EE2F12781A7CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13957BE36CE4387F68A3A1CF /* KnittingAppMultiplatt.app */,
+				13957BE36CE4387F68A3A1CF /* OpenYarnStash.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 13957BE36CE4387F68A3A1CF /* KnittingAppMultiplatt.app */;
+			productReference = 13957BE36CE4387F68A3A1CF /* OpenYarnStash.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

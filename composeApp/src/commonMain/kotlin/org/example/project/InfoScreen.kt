@@ -18,12 +18,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import knittingappmultiplatt.composeapp.generated.resources.Res
-import knittingappmultiplatt.composeapp.generated.resources.info_screen_title
-import knittingappmultiplatt.composeapp.generated.resources.info_authors
-import knittingappmultiplatt.composeapp.generated.resources.info_github_text
-import knittingappmultiplatt.composeapp.generated.resources.info_github_button
-import knittingappmultiplatt.composeapp.generated.resources.info_feedback_button
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.info_screen_title
+import openyarnstash.composeapp.generated.resources.info_authors
+import openyarnstash.composeapp.generated.resources.info_github_text
+import openyarnstash.composeapp.generated.resources.info_github_button
+import openyarnstash.composeapp.generated.resources.info_feedback_button
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

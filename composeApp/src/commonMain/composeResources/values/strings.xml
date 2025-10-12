@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">OpenStash</string>
+    <string name="app_name">OpenYarnStash</string>
 
     <!-- Home -->
-    <string name="home_title">OpenStash</string>
+    <string name="home_title">OpenYarnStash</string>
     <string name="home_button_yarns">Yarns</string>
     <string name="home_button_projects">Projects</string>
     <string name="home_button_statistics">Statistics</string>

@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import knittingappmultiplatt.composeapp.generated.resources.Res
-import knittingappmultiplatt.composeapp.generated.resources.home_title
-import knittingappmultiplatt.composeapp.generated.resources.home_button_yarns
-import knittingappmultiplatt.composeapp.generated.resources.home_button_projects
-import knittingappmultiplatt.composeapp.generated.resources.home_button_statistics
-import knittingappmultiplatt.composeapp.generated.resources.logo
-import knittingappmultiplatt.composeapp.generated.resources.info_screen_title
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.home_title
+import openyarnstash.composeapp.generated.resources.home_button_yarns
+import openyarnstash.composeapp.generated.resources.home_button_projects
+import openyarnstash.composeapp.generated.resources.home_button_statistics
+import openyarnstash.composeapp.generated.resources.logo
+import openyarnstash.composeapp.generated.resources.info_screen_title
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +31,7 @@ fun HomeScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = painterResource(Res.drawable.logo),
-                        contentDescription = "OpenStash Logo",
+                        contentDescription = "OpenYarnStash Logo",
                         modifier = Modifier.size(40.dp)
                     )
                     Spacer(Modifier.width(12.dp))

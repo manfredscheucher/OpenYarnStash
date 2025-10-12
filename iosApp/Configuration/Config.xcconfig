@@ -1,7 +1,7 @@
 TEAM_ID=
 
-PRODUCT_NAME=KnittingAppMultiplatt
-PRODUCT_BUNDLE_IDENTIFIER=org.example.project.KnittingAppMultiplatt$(TEAM_ID)
+PRODUCT_NAME=OpenYarnStash
+PRODUCT_BUNDLE_IDENTIFIER=org.example.project.OpenYarnStash$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
 MARKETING_VERSION=1.0

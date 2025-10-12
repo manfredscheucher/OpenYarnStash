@@ -1,4 +1,4 @@
-rootProject.name = "KnittingAppMultiplatt"
+rootProject.name = "OpenYarnStash"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

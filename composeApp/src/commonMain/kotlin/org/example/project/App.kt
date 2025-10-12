@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
-import knittingappmultiplatt.composeapp.generated.resources.*
+import openyarnstash.composeapp.generated.resources.*
 import kotlin.NoSuchElementException // Ensure this import is present
 
 sealed class Screen {
