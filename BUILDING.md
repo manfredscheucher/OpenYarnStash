@@ -1,78 +1,58 @@
 # Building OpenYarnStash
 
-This is a Kotlin Multiplatform project targeting **Android**, **iOS**, **Web**, and **Desktop (JVM)**.
+This guide provides instructions on how to build and run the OpenYarnStash project on its supported platforms: **Android**, **iOS**, **Web**, and **Desktop (JVM)**.
 
-## Project layout
+## Project Layout
 
-- **[/composeApp](./composeApp/src)** contains code shared across Compose Multiplatform targets.
-  - **[commonMain](./composeApp/src/commonMain/kotlin)** – code common to all targets.
-  - Other folders contain Kotlin code compiled only for the platform indicated by the folder name.
-    - For example, iOS-specific APIs belong in **[iosMain](./composeApp/src/iosMain/kotlin)**.
-    - Desktop (JVM) specifics go to **[jvmMain](./composeApp/src/jvmMain/kotlin)**.
-- **[/iosApp](./iosApp/iosApp)** contains the iOS application entry point (add SwiftUI code here if needed).
+- **/composeApp**: Contains the shared Kotlin Multiplatform source code.
+  - **commonMain**: Code common to all targets.
+  - **androidMain**, **iosMain**, etc.: Platform-specific code.
+- **/iosApp**: The iOS application entry point and Xcode project.
 
 ## Build & Run
 
+You can build and run the project directly from your IDE (like Android Studio) or use the Gradle wrapper (`gradlew`) from your terminal.
+
+*On Windows, use `gradlew.bat` instead of `./gradlew` for all terminal commands.*
+
 ### Android
-Use your IDE’s run configuration or build from the terminal:
 
-- macOS/Linux:
-  ```bash
-  ./gradlew :composeApp:assembleDebug
-  ```
+To build the debug version of the app, run:
 
-- Windows:
-  ```bash
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+```bash
+./gradlew :composeApp:assembleDebug
+```
 
 ### Desktop (JVM)
 
-Run via IDE or terminal:
-- macOS/Linux:
-  ```bash
-  ./gradlew :composeApp:run
-  ```
+To run the desktop application:
 
-- Windows:
-  ```bash
-  .\gradlew.bat :composeApp:run
-  ```
+```bash
+./gradlew :composeApp:run
+```
 
 ### Web
 
-Run via IDE or terminal.
-- Wasm target (faster, modern browsers):
-  - macOS/Linux:
-    ```bash
-    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-    ```
+Run one of the following commands to start the development server:
 
-  - Windows:
-    ```bash
-    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
-    ```
+- **Wasm (recommended for modern browsers):**
+  
+  ```bash
+  ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+  ```
 
-- JS target (slower, supports older browsers):
-  - macOS/Linux:
-    ```bash
-    ./gradlew :composeApp:jsBrowserDevelopmentRun
-    ```
-
-  - Windows:
-    ```bash
-    .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
-    ```
+- **JS (for broader browser compatibility):**
+  
+  ```bash
+  ./gradlew :composeApp:jsBrowserDevelopmentRun
+  ```
 
 ### iOS
 
-Use your IDE’s run configuration or open /iosApp in Xcode and run from there.
+Open the `/iosApp` directory in Xcode and run the project from there.
 
-## Learn more
+## Learn More
+
 - [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
-- [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform)
+- [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/)
 - [Kotlin/Wasm](https://kotl.in/wasm/)
-
-## Feedback & issues
-
-Please open an issue in this repository or contact us by email. We appreciate your feedback and contributions!
