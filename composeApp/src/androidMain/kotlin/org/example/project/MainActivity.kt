@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         println("ach ich glaub ich weiß jetz wies geht!")
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
+        CONTEXT = this.applicationContext
         setContent {
             App(JsonRepository(AndroidFileHandler(this)))
         }

@@ -5,6 +5,7 @@
     <string name="home_title">OpenStash</string>
     <string name="home_button_yarns">Yarns</string>
     <string name="home_button_projects">Projects</string>
+    <string name="home_button_statistics">Statistics</string>
 
     <!-- Yarn list -->
     <string name="yarn_list_title">Yarn stash</string>
@@ -72,6 +73,14 @@
     <string name="usage_available">Available: %1$d g</string>
     <string name="usage_used">Used: %1$d g</string>
     <string name="usage_projects_title">Projects</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistics</string>
+    <string name="statistics_option_total">Total</string>
+    <string name="statistics_option_year">Year</string>
+    <string name="statistics_option_month">Month</string>
+    <string name="statistics_label_year">Year</string>
+    <string name="statistics_label_month">Month</string>
     
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>

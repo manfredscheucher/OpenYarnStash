@@ -20,6 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import knittingappmultiplatt.composeapp.generated.resources.Res
 import knittingappmultiplatt.composeapp.generated.resources.info_screen_title
+import knittingappmultiplatt.composeapp.generated.resources.info_authors
+import knittingappmultiplatt.composeapp.generated.resources.info_github_text
+import knittingappmultiplatt.composeapp.generated.resources.info_github_button
+import knittingappmultiplatt.composeapp.generated.resources.info_feedback_button
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,16 +42,16 @@ fun InfoScreen(onBack: () -> Unit) {
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
-            Text("Authors: Helena and Manfred", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(Res.string.info_authors), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
-            Text("This app is open source and available on GitHub.", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(Res.string.info_github_text), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { /* TODO: Open Github Link */ }, modifier = Modifier.fillMaxWidth()) {
-                Text("Open on GitHub")
+            Button(onClick = { openUrl("https://github.com/manfred.scheucher/OpenYarnStash") }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.info_github_button))
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { /* TODO: Send Email */ }, modifier = Modifier.fillMaxWidth()) {
-                Text("Send Feedback")
+            Button(onClick = { sendEmail("OpenYarnStash@proton.me", "feedback") }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(Res.string.info_feedback_button))
             }
         }
     }

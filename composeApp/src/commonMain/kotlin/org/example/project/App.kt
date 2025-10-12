@@ -17,6 +17,7 @@ sealed class Screen {
     data class ProjectForm(val projectId: Int) : Screen() // projectId is no longer nullable
     data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
     data object Info : Screen()
+    data object Statistics : Screen()
 }
 
 @Composable
@@ -45,7 +46,8 @@ fun App(repo: JsonRepository) {
             Screen.Home -> HomeScreen(
                 onOpenYarns = { screen = Screen.YarnList },
                 onOpenProjects = { screen = Screen.ProjectList },
-                onOpenInfo = { screen = Screen.Info }
+                onOpenInfo = { screen = Screen.Info },
+                onOpenStatistics = { screen = Screen.Statistics }
             )
 
             Screen.YarnList -> {
@@ -195,6 +197,9 @@ fun App(repo: JsonRepository) {
             }
             Screen.Info -> {
                 InfoScreen(onBack = { screen = Screen.Home })
+            }
+            Screen.Statistics -> {
+                StatisticsScreen(onBack = { screen = Screen.Home })
             }
         }
     }

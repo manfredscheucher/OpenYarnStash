@@ -13,14 +13,17 @@ import knittingappmultiplatt.composeapp.generated.resources.Res
 import knittingappmultiplatt.composeapp.generated.resources.home_title
 import knittingappmultiplatt.composeapp.generated.resources.home_button_yarns
 import knittingappmultiplatt.composeapp.generated.resources.home_button_projects
+import knittingappmultiplatt.composeapp.generated.resources.home_button_statistics
 import knittingappmultiplatt.composeapp.generated.resources.logo
+import knittingappmultiplatt.composeapp.generated.resources.info_screen_title
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onOpenYarns: () -> Unit,
     onOpenProjects: () -> Unit,
-    onOpenInfo: () -> Unit
+    onOpenInfo: () -> Unit,
+    onOpenStatistics: () -> Unit
 ) {
     Scaffold(
         topBar = { 
@@ -41,8 +44,10 @@ fun HomeScreen(
             Button(onClick = onOpenYarns) { Text(stringResource(Res.string.home_button_yarns)) }
             Spacer(Modifier.height(12.dp))
             Button(onClick = onOpenProjects) { Text(stringResource(Res.string.home_button_projects)) }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = onOpenStatistics) { Text(stringResource(Res.string.home_button_statistics)) }
             Spacer(Modifier.height(24.dp))
-            Button(onClick = onOpenInfo) { Text("stringResource(Res.string.info_screen_title)") } // TODO
+            Button(onClick = onOpenInfo) { Text(stringResource(Res.string.info_screen_title)) }
         }
     }
 }
