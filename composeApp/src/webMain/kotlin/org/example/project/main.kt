@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 
@@ -8,6 +9,10 @@ import androidx.compose.ui.window.ComposeViewport
 fun main() {
     val repo = JsonRepository(WebFileHandler())
     ComposeViewport {
-        App(repo)
+        CompositionLocalProvider(
+            LocalFileDownloader provides JsFileDownloader()
+        ) {
+            App(repo)
+        }
     }
 }

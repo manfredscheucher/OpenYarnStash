@@ -30,6 +30,7 @@ fun App(repo: JsonRepository) {
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
 
     val scope = rememberCoroutineScope()
+    val fileDownloader = LocalFileDownloader.current
 
     suspend fun reloadAllData() {
         val data = withContext(Dispatchers.Default) { repo.load() }
@@ -209,7 +210,7 @@ fun App(repo: JsonRepository) {
                     onExport = {
                         scope.launch {
                             val json = withContext(Dispatchers.Default) { repo.getRawJson() }
-                            // TODO: trigger download
+                            fileDownloader.download("open-yarn-stash.json", json)
                         }
                     }
                 )

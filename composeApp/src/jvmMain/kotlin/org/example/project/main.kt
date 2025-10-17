@@ -1,14 +1,18 @@
 package org.example.project
 
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 
 fun main() = application {
-    print("na sowas, wie komm ich denn hier her?!")
     Window(
         onCloseRequest = ::exitApplication,
         title = "OpenYarnStash",
     ) {
-        App()
+        CompositionLocalProvider(
+            LocalFileDownloader provides JvmFileDownloader()
+        ) {
+            App(JsonRepository(JvmFileHandler()))
+        }
     }
 }

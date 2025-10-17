@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +15,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         CONTEXT = this.applicationContext
         setContent {
-            App(JsonRepository(AndroidFileHandler(this)))
+            CompositionLocalProvider(
+                LocalFileDownloader provides AndroidFileDownloader(applicationContext)
+            ) {
+                App(JsonRepository(AndroidFileHandler(this)))
+            }
         }
     }
 }
