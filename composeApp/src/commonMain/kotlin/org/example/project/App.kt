@@ -88,7 +88,7 @@ fun App(repo: JsonRepository) {
                             onAddClick = {
                                 scope.launch {
                                     val newId = repo.nextYarnId()
-                                    val newYarn = Yarn(id = newId, name = "Yarn#$newId", dateAdded = getCurrentTimestamp()) // Default name in English as fallback
+                                    val newYarn = Yarn(id = newId, name = "Yarn#$newId", lastModified = getCurrentTimestamp()) // Default name in English as fallback
                                     withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
                                     reloadAllData()
                                     screen = Screen.YarnForm(newId)
@@ -157,7 +157,7 @@ fun App(repo: JsonRepository) {
                             onAddClick = {
                                 scope.launch {
                                     val newId = repo.nextProjectId()
-                                    val newProject = Project(id = newId, name = "Project#$newId", dateAdded = getCurrentTimestamp()) // Default name
+                                    val newProject = Project(id = newId, name = "Project#$newId", lastModified = getCurrentTimestamp()) // Default name
                                     withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
                                     reloadAllData()
                                     screen = Screen.ProjectForm(newId)

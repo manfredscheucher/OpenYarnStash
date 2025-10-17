@@ -43,7 +43,6 @@ import openyarnstash.composeapp.generated.resources.common_save
 import openyarnstash.composeapp.generated.resources.common_stay
 import openyarnstash.composeapp.generated.resources.common_yes
 import openyarnstash.composeapp.generated.resources.date_format_hint_project
-import openyarnstash.composeapp.generated.resources.date_format_hint_yarn_added
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_message
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
@@ -63,7 +62,7 @@ import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
 import openyarnstash.composeapp.generated.resources.usage_section_title
-import openyarnstash.composeapp.generated.resources.yarn_label_date_added
+import openyarnstash.composeapp.generated.resources.yarn_item_label_last_modified
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -87,7 +86,7 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
-    val lastModifiedState by remember { mutableStateOf(initial.lastModified ?: getCurrentTimestamp()) }
+    val lastModifiedState by remember { mutableStateOf(initial.lastModified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
@@ -203,7 +202,7 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = lastModifiedState, onValueChange = {}, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
+            Text(stringResource(Res.string.yarn_item_label_last_modified, lastModifiedState))
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = notes,
