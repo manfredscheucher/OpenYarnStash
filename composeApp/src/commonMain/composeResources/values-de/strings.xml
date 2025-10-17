@@ -79,4 +79,8 @@
     <string name="info_github_text">Diese App ist Open Source und auf GitHub verfügbar.</string>
     <string name="info_github_button">Auf GitHub öffnen</string>
     <string name="info_feedback_button">Feedback senden</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="export_json">JSON exportieren</string>
 </resources>

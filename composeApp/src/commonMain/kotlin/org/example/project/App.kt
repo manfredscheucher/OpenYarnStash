@@ -18,11 +18,13 @@ sealed class Screen {
     data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
     data object Info : Screen()
     data object Statistics : Screen()
+    data object Settings : Screen()
 }
 
 @Composable
 fun App(repo: JsonRepository) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
@@ -46,7 +48,8 @@ fun App(repo: JsonRepository) {
                 onOpenYarns = { screen = Screen.YarnList },
                 onOpenProjects = { screen = Screen.ProjectList },
                 onOpenInfo = { screen = Screen.Info },
-                onOpenStatistics = { screen = Screen.Statistics }
+                onOpenStatistics = { screen = Screen.Statistics },
+                onOpenSettings = { screen = Screen.Settings }
             )
 
             Screen.YarnList -> {
@@ -199,6 +202,17 @@ fun App(repo: JsonRepository) {
             }
             Screen.Statistics -> {
                 StatisticsScreen(onBack = { screen = Screen.Home })
+            }
+            Screen.Settings -> {
+                SettingsScreen(
+                    onBack = { screen = Screen.Home },
+                    onExport = {
+                        scope.launch {
+                            val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                            // TODO: trigger download
+                        }
+                    }
+                )
             }
         }
     }

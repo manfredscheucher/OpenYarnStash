@@ -88,4 +88,8 @@
     <string name="info_github_text">This app is open source and available on GitHub.</string>
     <string name="info_github_button">Open on GitHub</string>
     <string name="info_feedback_button">Send Feedback</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="export_json">Export JSON</string>
 </resources>

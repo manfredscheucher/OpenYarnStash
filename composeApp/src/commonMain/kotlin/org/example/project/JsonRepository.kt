@@ -15,6 +15,10 @@ class JsonRepository(private val fileHandler: FileHandler) {
 
     private var cache: AppData = AppData()
 
+    suspend fun getRawJson(): String {
+        return fileHandler.readFile()
+    }
+
     // ---------- Load ----------
     suspend fun load(): AppData {
         val text = fileHandler.readFile()
@@ -66,7 +70,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
             newId = Random.nextInt(1, Int.MAX_VALUE)
         } while (cache.yarns.any { it.id == newId })
         return newId
-    }
+    } 
 
     // =========================================================
     // PROJECT
