@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import kotlin.NoSuchElementException // Ensure this import is present
+import kotlin.random.Random
 
 sealed class Screen {
     data object Home : Screen()
@@ -87,7 +88,11 @@ fun App(repo: JsonRepository) {
                             usages = usages,
                             onAddClick = {
                                 scope.launch {
-                                    val newId = repo.nextYarnId()
+                                    val existingIds = yarns.map { it.id }.toSet()
+                                    var newId: Int
+                                    do {
+                                        newId = Random.nextInt(1_000_000, 10_000_000)
+                                    } while (existingIds.contains(newId))
                                     val newYarn = Yarn(id = newId, name = "Yarn#$newId", lastModified = getCurrentTimestamp()) // Default name in English as fallback
                                     withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
                                     reloadAllData()
@@ -156,7 +161,11 @@ fun App(repo: JsonRepository) {
                             projects = projects,
                             onAddClick = {
                                 scope.launch {
-                                    val newId = repo.nextProjectId()
+                                    val existingIds = projects.map { it.id }.toSet()
+                                    var newId: Int
+                                    do {
+                                        newId = Random.nextInt(1_000_000, 10_000_000)
+                                    } while (existingIds.contains(newId))
                                     val newProject = Project(id = newId, name = "Project#$newId", lastModified = getCurrentTimestamp()) // Default name
                                     withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
                                     reloadAllData()

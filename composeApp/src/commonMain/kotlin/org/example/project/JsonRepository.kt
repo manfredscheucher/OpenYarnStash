@@ -83,8 +83,6 @@ class JsonRepository(private val fileHandler: FileHandler) {
         save()
     }
 
-    fun nextYarnId(): Int = (data.yarns.maxOfOrNull { it.id } ?: 0) + 1
-
     fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id }
 
     suspend fun addOrUpdateProject(project: Project) {
@@ -102,8 +100,6 @@ class JsonRepository(private val fileHandler: FileHandler) {
         data.usages.removeAll { it.projectId == id }
         save()
     }
-
-    fun nextProjectId(): Int = (data.projects.maxOfOrNull { it.id } ?: 0) + 1
 
     fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
         val yarn = getYarnById(yarnId) ?: return 0
