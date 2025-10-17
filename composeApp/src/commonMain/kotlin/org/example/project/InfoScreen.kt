@@ -17,18 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.info_screen_title
 import openyarnstash.composeapp.generated.resources.info_authors
-import openyarnstash.composeapp.generated.resources.info_github_text
-import openyarnstash.composeapp.generated.resources.info_github_button
 import openyarnstash.composeapp.generated.resources.info_feedback_button
+import openyarnstash.composeapp.generated.resources.info_github_button
+import openyarnstash.composeapp.generated.resources.info_github_text
+import openyarnstash.composeapp.generated.resources.info_screen_title
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfoScreen(onBack: () -> Unit) {
+    val uriHandler = LocalUriHandler.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,11 +49,17 @@ fun InfoScreen(onBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(stringResource(Res.string.info_github_text), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { openUrl("https://github.com/manfred.scheucher/OpenYarnStash") }, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { uriHandler.openUri("https://github.com/manfredscheucher/OpenYarnStash") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(stringResource(Res.string.info_github_button))
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { sendEmail("OpenYarnStash@proton.me", "feedback") }, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { uriHandler.openUri("mailto:OpenYarnStash@proton.me?subject=feedback") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(stringResource(Res.string.info_feedback_button))
             }
         }
