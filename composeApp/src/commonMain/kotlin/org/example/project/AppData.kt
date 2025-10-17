@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppData(
-    val yarns: List<Yarn> = emptyList(),
-    val projects: List<Project> = emptyList(),
-    val usages: List<Usage> = emptyList()
+    val yarns: MutableList<Yarn> = mutableListOf(),
+    val projects: MutableList<Project> = mutableListOf(),
+    val usages: MutableList<Usage> = mutableListOf()
 )
