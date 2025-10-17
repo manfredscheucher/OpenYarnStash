@@ -84,7 +84,6 @@ fun YarnListScreen(
                                     Text(stringResource(Res.string.usage_used, used))
                                     Text(stringResource(Res.string.usage_available, available))
                                 }
-                                yarn.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
                             }
                         }
                     }

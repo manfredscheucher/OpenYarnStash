@@ -53,8 +53,11 @@ import openyarnstash.composeapp.generated.resources.project_form_edit
 import openyarnstash.composeapp.generated.resources.project_form_new
 import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
 import openyarnstash.composeapp.generated.resources.project_label_end_date
+import openyarnstash.composeapp.generated.resources.project_label_gauge
 import openyarnstash.composeapp.generated.resources.project_label_name
+import openyarnstash.composeapp.generated.resources.project_label_needle_size
 import openyarnstash.composeapp.generated.resources.project_label_notes
+import openyarnstash.composeapp.generated.resources.project_label_size
 import openyarnstash.composeapp.generated.resources.project_label_start_date
 import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
@@ -81,16 +84,22 @@ fun ProjectFormScreen(
     var startDate by remember { mutableStateOf(initial.startDate ?: "") }
     var endDate by remember { mutableStateOf(initial.endDate ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
+    var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
+    var size by remember { mutableStateOf(initial.size ?: "") }
+    var gauge by remember { mutableStateOf(initial.gauge ?: "") }
     val dateAddedState by remember { mutableStateOf(initial.dateAdded ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(initial, name, startDate, endDate, notes) {
+    val hasChanges by remember(initial, name, startDate, endDate, notes, needleSize, size, gauge) {
         derivedStateOf {
             name != initial.name ||
                     startDate != (initial.startDate ?: "") ||
                     endDate != (initial.endDate ?: "") ||
-                    notes != (initial.notes ?: "")
+                    notes != (initial.notes ?: "") ||
+                    needleSize != (initial.needleSize ?: "") ||
+                    size != (initial.size ?: "") ||
+                    gauge != (initial.gauge ?: "")
         }
     }
 
@@ -102,7 +111,10 @@ fun ProjectFormScreen(
             startDate = normalizedStartDate,
             endDate = normalizedEndDate,
             notes = notes.ifBlank { null },
-            dateAdded = dateAddedState
+            dateAdded = dateAddedState,
+            needleSize = needleSize.ifBlank { null },
+            size = size.ifBlank { null },
+            gauge = gauge.ifBlank { null }
         )
         onSave(project)
     }
@@ -177,6 +189,12 @@ fun ProjectFormScreen(
                 supportingText = { Text(stringResource(Res.string.date_format_hint_project)) },
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.project_label_gauge)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             val statusText = when (status) {
                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)

@@ -68,6 +68,9 @@
     <string name="project_status_in_progress">In Progress</string>
     <string name="project_status_finished">Finished</string>
     <string name="project_new_default_name">New Project (%1$d)</string>
+    <string name="project_label_needle_size">Needle Size (optional)</string>
+    <string name="project_label_size">Size (optional)</string>
+    <string name="project_label_gauge">Gauge (optional)</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

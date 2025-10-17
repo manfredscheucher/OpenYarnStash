@@ -62,7 +62,6 @@ fun ProjectListScreen(
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(p.name, fontWeight = FontWeight.Bold)
-                            p.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
                             val statusText = when (p.status) {
                                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
                                 ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)

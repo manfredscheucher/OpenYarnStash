@@ -5,16 +5,16 @@
     <string name="home_title">OpenYarnStash</string>
     <string name="home_button_yarns">Wolle</string>
     <string name="home_button_projects">Projekte</string>
-    <string name="home_button_statistics">Statistiken</string>
+    <string name="home_button_statistics">Statistik</string>
 
     <!-- Yarn list -->
-    <string name="yarn_list_title">Woll-Stash</string>
-    <string name="yarn_list_empty">Noch keine Wolle. Tippe auf +</string>
+    <string name="yarn_list_title">Woll-Lager</string>
+    <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
     <string name="yarn_item_label_date_added">Hinzugefügt: %1$s</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
-    <string name="project_list_empty">Noch keine Projekte. Tippe auf +</string>
+    <string name="project_list_empty">Keine Projekte. Klicke +</string>
     <string name="item_label_name">Name: %1$s</string>
     <string name="item_label_url">URL: %1$s</string>
 
@@ -45,11 +45,11 @@
     <string name="yarn_label_date_added">Hinzugefügt am (optional)</string>
     <string name="date_format_hint_yarn_added">Hinzugefügt am (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="yarn_label_notes">Notizen (optional)</string>
-    <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
-    <string name="yarn_form_button_set_remaining_to_zero">Restbestand auf 0 setzen</string>
+    <string name="yarn_form_no_projects_assigned">Bisher keinen Projekten zugeordnet.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Restwolle auf 0 setzen</string>
     <string name="yarn_new_default_name">Neue Wolle (%1$d)</string>
     <string name="form_unsaved_changes_title">Ungespeicherte Änderungen</string>
-    <string name="form_unsaved_changes_message">Möchtest du die Änderungen speichern?</string>
+    <string name="form_unsaved_changes_message">Möchten Sie die Änderungen speichern?</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>
@@ -60,30 +60,30 @@
     <string name="project_label_end_date">Enddatum (optional)</string>
     <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="project_label_notes">Notizen (optional)</string>
-    <string name="project_form_button_assignments">Wolle zuweisen</string>
-    <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>
+    <string name="project_form_button_assignments">Wolle zuordnen</string>
+    <string name="project_form_no_yarn_assigned">Diesem Projekt ist noch keine Wolle zugeordnet.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
-    <string name="delete_project_restricted_message">Löschen nur möglich, wenn keine Wolle zugewiesen ist. Geben Sie zugewiesene Wolle in den Stash zurück, um mit dem Löschen fortzufahren.</string>
-    <string name="project_status_planning">In Planung</string>
+    <string name="delete_project_restricted_message">Löschen ist nur möglich, wenn keine Wolle zugeordnet ist. Um mit dem Löschen fortzufahren, geben Sie die zugewiesene Wolle in den Vorrat zurück.</string>
+    <string name="project_status_planning">Planung</string>
     <string name="project_status_in_progress">In Arbeit</string>
-    <string name="project_status_finished">Fertiggestellt</string>
+    <string name="project_status_finished">Fertig</string>
     <string name="project_new_default_name">Neues Projekt (%1$d)</string>
-    <string name="import_button_text">Importieren</string>
-    <string name="import_dialog_title">Achtung</string>
-    <string name="import_dialog_message">Die aktuelle Konfiguration wird durch den Import überschrieben. Sind Sie sicher, dass Sie fortfahren möchten?</string>
+    <string name="project_label_needle_size">Nadelstärke (optional)</string>
+    <string name="project_label_size">Größe (optional)</string>
+    <string name="project_label_gauge">Maschenprobe (optional)</string>
 
     <!-- Project Assignments -->
-    <string name="project_assignments_title">Wollzuweisungen für %1$s</string>
+    <string name="project_assignments_title">Woll-Zuweisungen für %1$s</string>
 
     <!-- Usage -->
-    <string name="usage_section_title">Zugewiesene Wolle</string>
+    <string name="usage_section_title">Zugeordnete Wolle</string>
     <string name="usage_amount_label">Menge (g)</string>
     <string name="usage_available">Verfügbar: %1$d g</string>
-    <string name="usage_used">Verwendet: %1$d g</string>
+    <string name="usage_used">Verbraucht: %1$d g</string>
     <string name="usage_projects_title">Projekte</string>
 
     <!-- Statistics Screen -->
-    <string name="statistics_title">Statistiken</string>
+    <string name="statistics_title">Statistik</string>
     <string name="statistics_option_total">Gesamt</string>
     <string name="statistics_option_year">Jahr</string>
     <string name="statistics_option_month">Monat</string>
@@ -92,7 +92,7 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
-    <string name="info_description">OpenYarnStash ist ein Open-Source-Projekt von Helena und Manfred zur Verwaltung deiner Garnvorräte und Strickprojekte. Sie bietet Überblick, Statistiken und Fortschrittsanzeigen. Die App ist noch in Entwicklung – Feedback ist herzlich willkommen!</string>
+    <string name="info_description">OpenYarnStash ist eine Open-Source-App von Helena und Manfred, mit der du deine Wollvorräte und Strickprojekte verwalten kannst. Sie bietet eine Übersicht, Statistiken und Fortschrittsanzeigen. Die App befindet sich noch in der Entwicklung – Feedback ist sehr willkommen!</string>
     <string name="info_github_button">Auf GitHub öffnen</string>
     <string name="info_feedback_button">Feedback senden</string>
 
@@ -100,6 +100,9 @@
     <string name="settings_title">Einstellungen</string>
     <string name="export_json">JSON exportieren</string>
     <string name="import_json">JSON importieren</string>
+    <string name="import_button_text">Importieren</string>
+    <string name="import_dialog_title">Warnung</string>
+    <string name="import_dialog_message">Die aktuelle Konfiguration wird durch den Import überschrieben. Sind Sie sicher, dass Sie fortfahren möchten?</string>
     <string name="language_label">Sprache</string>
 
     <!-- Not Implemented Dialog -->

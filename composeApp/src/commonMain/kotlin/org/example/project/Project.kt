@@ -18,6 +18,9 @@ data class Project(
     val startDate: String? = null,
     val endDate: String? = null,
     val notes: String? = null,
+    val needleSize: String? = null,
+    val size: String? = null,
+    val gauge: String? = null,
 ) {
     @Transient
     val status: ProjectStatus = when {
