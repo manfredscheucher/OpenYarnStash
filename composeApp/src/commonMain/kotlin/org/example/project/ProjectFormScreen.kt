@@ -1,64 +1,118 @@
 package org.example.project
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.common_cancel
+import openyarnstash.composeapp.generated.resources.common_delete
+import openyarnstash.composeapp.generated.resources.common_no
+import openyarnstash.composeapp.generated.resources.common_ok
+import openyarnstash.composeapp.generated.resources.common_save
+import openyarnstash.composeapp.generated.resources.common_stay
+import openyarnstash.composeapp.generated.resources.common_yes
+import openyarnstash.composeapp.generated.resources.date_format_hint_project
+import openyarnstash.composeapp.generated.resources.date_format_hint_yarn_added
+import openyarnstash.composeapp.generated.resources.delete_project_restricted_message
+import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
+import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
+import openyarnstash.composeapp.generated.resources.form_unsaved_changes_title
+import openyarnstash.composeapp.generated.resources.import_button_text
+import openyarnstash.composeapp.generated.resources.import_dialog_message
+import openyarnstash.composeapp.generated.resources.import_dialog_title
+import openyarnstash.composeapp.generated.resources.project_form_button_assignments
+import openyarnstash.composeapp.generated.resources.project_form_edit
+import openyarnstash.composeapp.generated.resources.project_form_new
+import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
+import openyarnstash.composeapp.generated.resources.project_label_end_date
+import openyarnstash.composeapp.generated.resources.project_label_name
+import openyarnstash.composeapp.generated.resources.project_label_notes
+import openyarnstash.composeapp.generated.resources.project_label_start_date
+import openyarnstash.composeapp.generated.resources.project_label_url
+import openyarnstash.composeapp.generated.resources.project_status_finished
+import openyarnstash.composeapp.generated.resources.project_status_in_progress
+import openyarnstash.composeapp.generated.resources.project_status_planning
+import openyarnstash.composeapp.generated.resources.usage_section_title
+import openyarnstash.composeapp.generated.resources.yarn_label_date_added
 import org.jetbrains.compose.resources.stringResource
-import openyarnstash.composeapp.generated.resources.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectFormScreen(
-    initial: Project?,
+    initial: Project,
     usagesForProject: List<Usage>,
     yarnNameById: (Int) -> String,
     onCancel: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project) -> Unit,
+    onImport: () -> Unit,
     onNavigateToAssignments: () -> Unit
 ) {
-    var name by remember { mutableStateOf(initial?.name ?: "") }
-    var url by remember { mutableStateOf(initial?.url ?: "") }
-    var startDate by remember { mutableStateOf(initial?.startDate ?: "") }
-    var endDate by remember { mutableStateOf(initial?.endDate ?: "") }
-    var notes by remember { mutableStateOf(initial?.notes ?: "") }
-    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
+    val isNewProject = initial.id == -1
+
+    var name by remember { mutableStateOf(initial.name) }
+    var url by remember { mutableStateOf(initial.url ?: "") }
+    var startDate by remember { mutableStateOf(initial.startDate ?: "") }
+    var endDate by remember { mutableStateOf(initial.endDate ?: "") }
+    var notes by remember { mutableStateOf(initial.notes ?: "") }
+    val dateAddedState by remember { mutableStateOf(initial.dateAdded ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    var showImportDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(name, url, startDate, endDate, notes, dateAddedState) {
+    val hasChanges by remember(initial, name, url, startDate, endDate, notes) {
         derivedStateOf {
-            if (initial == null) {
-                name.isNotEmpty() || url.isNotEmpty() || startDate.isNotEmpty() || endDate.isNotEmpty() || notes.isNotEmpty() || dateAddedState != getCurrentTimestamp()
-            } else {
-                name != initial.name ||
-                        url != (initial.url ?: "") ||
-                        startDate != (initial.startDate ?: "") ||
-                        endDate != (initial.endDate ?: "") ||
-                        notes != (initial.notes ?: "") ||
-                        dateAddedState != initial.dateAdded
-            }
+            name != initial.name ||
+                    url != (initial.url ?: "") ||
+                    startDate != (initial.startDate ?: "") ||
+                    endDate != (initial.endDate ?: "") ||
+                    notes != (initial.notes ?: "")
         }
     }
 
     val saveAction = {
         val normalizedStartDate = normalizeDateString(startDate)
         val normalizedEndDate = normalizeDateString(endDate)
-        val project = (initial ?: Project(id = -1, name = ""))
-            .copy(
-                name = name,
-                url = url.ifBlank { null },
-                startDate = normalizedStartDate,
-                endDate = normalizedEndDate,
-                notes = notes.ifBlank { null },
-                dateAdded = dateAddedState
-            )
+        val project = initial.copy(
+            name = name,
+            url = url.ifBlank { null },
+            startDate = normalizedStartDate,
+            endDate = normalizedEndDate,
+            notes = notes.ifBlank { null },
+            dateAdded = dateAddedState
+        )
         onSave(project)
     }
 
@@ -71,35 +125,44 @@ fun ProjectFormScreen(
     }
 
     if (showUnsavedDialog) {
+        UnsavedChangesDialog(
+            onDismiss = { showUnsavedDialog = false },
+            onStay = { showUnsavedDialog = false },
+            onDiscard = {
+                showUnsavedDialog = false
+                onCancel()
+            },
+            onSave = {
+                saveAction()
+                showUnsavedDialog = false
+            }
+        )
+    }
+
+    if (showDeleteRestrictionDialog) {
+        DeleteRestrictionDialog(
+            onDismiss = { showDeleteRestrictionDialog = false }
+        )
+    }
+
+    if (showImportDialog) {
         AlertDialog(
-            onDismissRequest = { showUnsavedDialog = false },
-            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
-            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+            onDismissRequest = { showImportDialog = false },
+            title = { Text(stringResource(Res.string.import_dialog_title)) },
+            text = { Text(stringResource(Res.string.import_dialog_message)) },
             confirmButton = {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = { showUnsavedDialog = false }) {
-                        Text(stringResource(Res.string.common_stay))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        showUnsavedDialog = false
-                        onCancel()
-                    }) {
-                        Text(stringResource(Res.string.common_no))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        saveAction()
-                        showUnsavedDialog = false
-                    }) {
-                        Text(stringResource(Res.string.common_yes))
-                    }
+                TextButton(onClick = {
+                    showImportDialog = false
+                    onImport()
+                }) {
+                    Text(stringResource(Res.string.common_yes))
                 }
             },
-            dismissButton = null
+            dismissButton = {
+                TextButton(onClick = { showImportDialog = false }) {
+                    Text(stringResource(Res.string.common_cancel))
+                }
+            }
         )
     }
 
@@ -111,8 +174,9 @@ fun ProjectFormScreen(
 
     Scaffold(
         topBar = {
+            val titleRes = if (isNewProject) Res.string.project_form_new else Res.string.project_form_edit
             TopAppBar(
-                title = { Text(if (initial == null) stringResource(Res.string.project_form_new) else stringResource(Res.string.project_form_edit)) },
+                title = { Text(stringResource(titleRes)) },
                 navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
             )
         }
@@ -153,7 +217,7 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
+            OutlinedTextField(value = dateAddedState, onValueChange = {}, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
                 value = notes,
@@ -164,7 +228,7 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            if (initial != null) {
+            if (!isNewProject) {
                 Spacer(Modifier.height(16.dp))
                 Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
@@ -193,7 +257,7 @@ fun ProjectFormScreen(
             ) {
                 TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
-                    if (initial != null) {
+                    if (!isNewProject) {
                         TextButton(onClick = {
                             if (usagesForProject.isNotEmpty()) {
                                 showDeleteRestrictionDialog = true
@@ -203,19 +267,58 @@ fun ProjectFormScreen(
                         }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
                     }
+                    TextButton(onClick = { showImportDialog = true }) {
+                        Text(stringResource(Res.string.import_button_text))
+                    }
+                    Spacer(Modifier.width(8.dp))
                     Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
         }
-        if (showDeleteRestrictionDialog) {
-            AlertDialog(
-                onDismissRequest = { showDeleteRestrictionDialog = false },
-                title = { Text(stringResource(Res.string.delete_project_restricted_title)) },
-                text = { Text(stringResource(Res.string.delete_project_restricted_message)) },
-                confirmButton = {
-                    TextButton(onClick = { showDeleteRestrictionDialog = false }) { Text(stringResource(Res.string.common_ok)) }
-                }
-            )
-        }
     }
+}
+
+@Composable
+private fun UnsavedChangesDialog(
+    onDismiss: () -> Unit,
+    onStay: () -> Unit,
+    onDiscard: () -> Unit,
+    onSave: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
+        text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+        confirmButton = {
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = onStay) {
+                    Text(stringResource(Res.string.common_stay))
+                }
+                Spacer(Modifier.width(8.dp))
+                TextButton(onClick = onDiscard) {
+                    Text(stringResource(Res.string.common_no))
+                }
+                Spacer(Modifier.width(8.dp))
+                TextButton(onClick = onSave) {
+                    Text(stringResource(Res.string.common_yes))
+                }
+            }
+        },
+        dismissButton = null
+    )
+}
+
+@Composable
+private fun DeleteRestrictionDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(Res.string.delete_project_restricted_title)) },
+        text = { Text(stringResource(Res.string.delete_project_restricted_message)) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.common_ok)) }
+        }
+    )
 }
