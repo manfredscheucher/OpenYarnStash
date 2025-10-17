@@ -25,13 +25,64 @@ fun ProjectAssignmentsScreen(
     onCancel: () -> Unit
 ) {
     var currentAssignments by remember { mutableStateOf(initialAssignments.toMutableMap()) }
+    var showUnsavedDialog by remember { mutableStateOf(false) }
+
+    val hasChanges by remember(currentAssignments) {
+        derivedStateOf { currentAssignments != initialAssignments }
+    }
+
+    val backAction = {
+        if (hasChanges) {
+            showUnsavedDialog = true
+        } else {
+            onCancel()
+        }
+    }
+
+    val saveAction = {
+        val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
+        onSave(finalAssignments)
+    }
+
+    if (showUnsavedDialog) {
+        AlertDialog(
+            onDismissRequest = { showUnsavedDialog = false },
+            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
+            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showUnsavedDialog = false }) {
+                        Text(stringResource(Res.string.common_stay))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        showUnsavedDialog = false
+                        onCancel()
+                    }) {
+                        Text(stringResource(Res.string.common_no))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        saveAction()
+                        showUnsavedDialog = false
+                    }) {
+                        Text(stringResource(Res.string.common_yes))
+                    }
+                }
+            },
+            dismissButton = null
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.project_assignments_title, projectName)) },
                 navigationIcon = {
-                    IconButton(onClick = onCancel) {
+                    IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
                 }
@@ -92,12 +143,9 @@ fun ProjectAssignmentsScreen(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End // Save button to the right
                     ) {
-                        TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
+                        TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                         Spacer(Modifier.width(8.dp))
-                        Button(onClick = {
-                            val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
-                            onSave(finalAssignments)
-                        }) { Text(stringResource(Res.string.common_save)) }
+                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

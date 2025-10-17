@@ -188,11 +188,6 @@ fun App(repo: JsonRepository) {
                                         screen = Screen.ProjectList
                                     }
                                 },
-                                onImport = {
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar("Import-Funktion ist für Projekte noch nicht implementiert.")
-                                    }
-                                },
                                 onNavigateToAssignments = {
                                     screen = Screen.ProjectAssignments(existingProject.id, existingProject.name)
                                 }

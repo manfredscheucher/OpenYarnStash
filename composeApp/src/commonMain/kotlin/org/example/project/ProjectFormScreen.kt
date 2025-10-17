@@ -49,9 +49,6 @@ import openyarnstash.composeapp.generated.resources.delete_project_restricted_me
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_title
-import openyarnstash.composeapp.generated.resources.import_button_text
-import openyarnstash.composeapp.generated.resources.import_dialog_message
-import openyarnstash.composeapp.generated.resources.import_dialog_title
 import openyarnstash.composeapp.generated.resources.project_form_button_assignments
 import openyarnstash.composeapp.generated.resources.project_form_edit
 import openyarnstash.composeapp.generated.resources.project_form_new
@@ -77,7 +74,6 @@ fun ProjectFormScreen(
     onCancel: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project) -> Unit,
-    onImport: () -> Unit,
     onNavigateToAssignments: () -> Unit
 ) {
     val isNewProject = initial.id == -1
@@ -90,7 +86,6 @@ fun ProjectFormScreen(
     val dateAddedState by remember { mutableStateOf(initial.dateAdded ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
-    var showImportDialog by remember { mutableStateOf(false) }
 
     val hasChanges by remember(initial, name, url, startDate, endDate, notes) {
         derivedStateOf {
@@ -142,27 +137,6 @@ fun ProjectFormScreen(
     if (showDeleteRestrictionDialog) {
         DeleteRestrictionDialog(
             onDismiss = { showDeleteRestrictionDialog = false }
-        )
-    }
-
-    if (showImportDialog) {
-        AlertDialog(
-            onDismissRequest = { showImportDialog = false },
-            title = { Text(stringResource(Res.string.import_dialog_title)) },
-            text = { Text(stringResource(Res.string.import_dialog_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showImportDialog = false
-                    onImport()
-                }) {
-                    Text(stringResource(Res.string.common_yes))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showImportDialog = false }) {
-                    Text(stringResource(Res.string.common_cancel))
-                }
-            }
         )
     }
 
@@ -267,10 +241,6 @@ fun ProjectFormScreen(
                         }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
                     }
-                    TextButton(onClick = { showImportDialog = true }) {
-                        Text(stringResource(Res.string.import_button_text))
-                    }
-                    Spacer(Modifier.width(8.dp))
                     Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
