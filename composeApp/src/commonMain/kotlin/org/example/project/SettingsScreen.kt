@@ -20,12 +20,19 @@ import openyarnstash.composeapp.generated.resources.import_dialog_title
 import openyarnstash.composeapp.generated.resources.import_dialog_message
 import openyarnstash.composeapp.generated.resources.common_yes
 import openyarnstash.composeapp.generated.resources.common_cancel
+import openyarnstash.composeapp.generated.resources.language_label
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onExport: () -> Unit, onImport: (String) -> Unit) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    onExport: () -> Unit,
+    onImport: (String) -> Unit,
+    onLocaleChange: (String) -> Unit
+) {
     var showFilePicker by remember { mutableStateOf(false) }
     var showImportConfirmDialog by remember { mutableStateOf(false) }
+    var languageDropdownExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -40,6 +47,41 @@ fun SettingsScreen(onBack: () -> Unit, onExport: () -> Unit, onImport: (String) 
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+            ExposedDropdownMenuBox(
+                expanded = languageDropdownExpanded,
+                onExpandedChange = { languageDropdownExpanded = it }
+            ) {
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = {},
+                    label = { Text(stringResource(Res.string.language_label)) },
+                    readOnly = true,
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = languageDropdownExpanded) },
+                    modifier = Modifier.fillMaxWidth().menuAnchor()
+                )
+                ExposedDropdownMenu(
+                    expanded = languageDropdownExpanded,
+                    onDismissRequest = { languageDropdownExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Deutsch") },
+                        onClick = {
+                            onLocaleChange("de")
+                            languageDropdownExpanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("English") },
+                        onClick = {
+                            onLocaleChange("en")
+                            languageDropdownExpanded = false
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(Res.string.export_json))
             }

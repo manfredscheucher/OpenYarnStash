@@ -249,6 +249,10 @@ fun App(repo: JsonRepository) {
                                     reloadAllData()
                                     snackbarHostState.showSnackbar("Import erfolgreich")
                                 }
+                            },
+                            onLocaleChange = { locale ->
+                                // TODO: Implement locale change
+                                throw NotImplementedError("Locale change not implemented yet")
                             }
                         )
                     }

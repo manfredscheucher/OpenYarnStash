@@ -49,9 +49,9 @@ fun HomeScreen(
             Spacer(Modifier.height(12.dp))
             Button(onClick = onOpenStatistics) { Text(stringResource(Res.string.home_button_statistics)) }
             Spacer(Modifier.height(24.dp))
-            Button(onClick = onOpenInfo) { Text(stringResource(Res.string.info_screen_title)) }
-            Spacer(Modifier.height(12.dp))
             Button(onClick = onOpenSettings) { Text(stringResource(Res.string.settings_title)) }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = onOpenInfo) { Text(stringResource(Res.string.info_screen_title)) }
         }
     }
 }
