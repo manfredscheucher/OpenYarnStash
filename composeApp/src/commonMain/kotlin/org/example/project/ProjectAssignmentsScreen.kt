@@ -57,7 +57,7 @@ fun ProjectAssignmentsScreen(
                 contentPadding = PaddingValues(16.dp)
             ) {
                 items(allYarns, key = { it.id }) { yarn ->
-                    val assignedAmountInTextField = currentAssignments[yarn.id] ?: 0
+                    val assignedAmount = currentAssignments[yarn.id]
                     val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 
                     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
@@ -65,13 +65,16 @@ fun ProjectAssignmentsScreen(
                         Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
                         Spacer(Modifier.height(4.dp))
                         OutlinedTextField(
-                            value = assignedAmountInTextField.toString(),
+                            value = assignedAmount?.toString() ?: "",
                             onValueChange = { textValue ->
-                                val rawValue = textValue.filter { it.isDigit() }
-                                val numericValue = rawValue.toIntOrNull() ?: 0
-                                val clampedValue = numericValue.coerceIn(0, maxAmountThisProjectCanTake)
+                                val numericValue = textValue.toIntOrNull()
+                                val clampedValue = numericValue?.coerceIn(0, maxAmountThisProjectCanTake)
                                 currentAssignments = currentAssignments.toMutableMap().apply {
-                                    this[yarn.id] = clampedValue
+                                    if (clampedValue != null) {
+                                        this[yarn.id] = clampedValue
+                                    } else {
+                                        remove(yarn.id)
+                                    }
                                 }
                             },
                             label = { Text(stringResource(Res.string.usage_amount_label)) },
