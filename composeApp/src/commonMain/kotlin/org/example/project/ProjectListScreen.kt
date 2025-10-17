@@ -33,7 +33,14 @@ fun ProjectListScreen(
                 }
             )
         },
-        floatingActionButton = { FloatingActionButton(onClick = onAddClick) { Text(stringResource(Res.string.common_plus_symbol)) } },
+        floatingActionButton = {
+            LargeFloatingActionButton(onClick = onAddClick) {
+                Text(
+                    text = stringResource(Res.string.common_plus_symbol),
+                    style = MaterialTheme.typography.displayMedium
+                )
+            }
+        },
         floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
         if (projects.isEmpty()) {
