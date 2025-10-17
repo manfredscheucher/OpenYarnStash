@@ -68,9 +68,6 @@
     <string name="project_status_in_progress">In Progress</string>
     <string name="project_status_finished">Finished</string>
     <string name="project_new_default_name">New Project (%1$d)</string>
-    <string name="import_button_text">Import</string>
-    <string name="import_dialog_title">Warning</string>
-    <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>
@@ -100,4 +97,7 @@
     <string name="settings_title">Settings</string>
     <string name="export_json">Export JSON</string>
     <string name="import_json">Import JSON</string>
+    <string name="import_button_text">Import</string>
+    <string name="import_dialog_title">Warning</string>
+    <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
 </resources>

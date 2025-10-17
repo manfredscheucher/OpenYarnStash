@@ -16,11 +16,16 @@ import openyarnstash.composeapp.generated.resources.export_json
 import openyarnstash.composeapp.generated.resources.import_json
 import openyarnstash.composeapp.generated.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
+import openyarnstash.composeapp.generated.resources.import_dialog_title
+import openyarnstash.composeapp.generated.resources.import_dialog_message
+import openyarnstash.composeapp.generated.resources.common_yes
+import openyarnstash.composeapp.generated.resources.common_cancel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(onBack: () -> Unit, onExport: () -> Unit, onImport: (String) -> Unit) {
     var showFilePicker by remember { mutableStateOf(false) }
+    var showImportConfirmDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -41,8 +46,33 @@ fun SettingsScreen(onBack: () -> Unit, onExport: () -> Unit, onImport: (String) 
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { showFilePicker = true }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { showImportConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                 Text(stringResource(Res.string.import_json))
+            }
+
+            if (showImportConfirmDialog) {
+                AlertDialog(
+                    onDismissRequest = { showImportConfirmDialog = false },
+                    title = { Text(stringResource(Res.string.import_dialog_title)) },
+                    text = { Text(stringResource(Res.string.import_dialog_message)) },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showImportConfirmDialog = false
+                                showFilePicker = true
+                            }
+                        ) {
+                            Text(stringResource(Res.string.common_yes))
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = { showImportConfirmDialog = false }
+                        ) {
+                            Text(stringResource(Res.string.common_cancel))
+                        }
+                    }
+                )
             }
 
             if (showFilePicker) {
