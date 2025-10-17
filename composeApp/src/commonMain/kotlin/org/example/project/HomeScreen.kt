@@ -73,8 +73,9 @@ fun HomeScreen(
                 HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title))
             }
             Spacer(Modifier.height(16.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 HomeButton(onClick = onOpenInfo, icon = Res.drawable.info, text = stringResource(Res.string.info_screen_title))
+                Spacer(Modifier.size(140.dp)) // Add a spacer to align the button
             }
         }
     }
@@ -83,8 +84,8 @@ fun HomeScreen(
 @Composable
 private fun HomeButton(onClick: () -> Unit, icon: org.jetbrains.compose.resources.DrawableResource, text: String) {
     Button(
-        onClick = onClick, 
-        shape = RectangleShape, 
+        onClick = onClick,
+        shape = RectangleShape,
         modifier = Modifier.size(140.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black)
     ) {
