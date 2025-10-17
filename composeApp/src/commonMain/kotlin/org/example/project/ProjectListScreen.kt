@@ -1,19 +1,17 @@
 package org.example.project
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,16 +47,20 @@ fun ProjectListScreen(
                 Text(stringResource(Res.string.project_list_empty))
             }
         } else {
-            LazyColumn(contentPadding = padding, modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(projects) { p ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color = ColorPalette.idToColor(p.id))
-                            .clickable { onOpen(p.id) }
-                            .padding(16.dp)
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onOpen(p.id) },
+                        colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
                     ) {
-                        Column {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             Text(p.name, fontWeight = FontWeight.Bold)
                             p.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
                             val statusText = when (p.status) {
@@ -69,7 +71,6 @@ fun ProjectListScreen(
                             Text(statusText)
                         }
                     }
-                    Divider()
                 }
             }
         }

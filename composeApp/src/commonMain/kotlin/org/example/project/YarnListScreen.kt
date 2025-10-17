@@ -1,7 +1,5 @@
 package org.example.project
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,9 +8,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,10 +48,10 @@ fun YarnListScreen(
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             if (yarns.isEmpty()) {
-                 Box(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp) 
+                        .padding(16.dp)
                 ) {
                     Text(stringResource(Res.string.yarn_list_empty))
                 }
@@ -61,30 +60,33 @@ fun YarnListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(bottom = 96.dp) 
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(yarns) { yarn ->
                         val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                         val available = (yarn.amount - used).coerceAtLeast(0)
 
-                        Row(
+                        Card(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = ColorPalette.idToColor(yarn.id))
-                                .clickable { onOpen(yarn.id) }
-                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            onClick = { onOpen(yarn.id) },
+                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
                         ) {
-                            Column {
-                                Text("${yarn.name} (${yarn.color ?: "?"})")
-                                yarn.brand?.let { Text(stringResource(Res.string.yarn_label_brand) + ": " + it) } // Display brand if available
-                                Text("${yarn.amount} g")
-                                Text(stringResource(Res.string.usage_used, used))
-                                Text(stringResource(Res.string.usage_available, available))
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                val brandText = yarn.brand?.let { "$it " } ?: ""
+                                Text("$brandText${yarn.name} (${yarn.color ?: "?"})", fontWeight = FontWeight.Bold)
+                                Spacer(Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(stringResource(Res.string.usage_used, used))
+                                    Text(stringResource(Res.string.usage_available, available))
+                                }
                                 yarn.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
-                                yarn.dateAdded?.let { Text(stringResource(Res.string.yarn_item_label_date_added, it)) } // Changed to dateAdded and new string resource
                             }
                         }
-                        Divider()
                     }
                 }
             }

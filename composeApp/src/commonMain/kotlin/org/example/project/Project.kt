@@ -15,7 +15,6 @@ data class Project(
     val dateAdded: String,
     val id: Int,
     val name: String,
-    val url: String? = null,
     val startDate: String? = null,
     val endDate: String? = null,
     val notes: String? = null,

@@ -56,7 +56,6 @@ import openyarnstash.composeapp.generated.resources.project_label_end_date
 import openyarnstash.composeapp.generated.resources.project_label_name
 import openyarnstash.composeapp.generated.resources.project_label_notes
 import openyarnstash.composeapp.generated.resources.project_label_start_date
-import openyarnstash.composeapp.generated.resources.project_label_url
 import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
@@ -79,7 +78,6 @@ fun ProjectFormScreen(
     val isNewProject = initial.id == -1
 
     var name by remember { mutableStateOf(initial.name) }
-    var url by remember { mutableStateOf(initial.url ?: "") }
     var startDate by remember { mutableStateOf(initial.startDate ?: "") }
     var endDate by remember { mutableStateOf(initial.endDate ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
@@ -87,10 +85,9 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(initial, name, url, startDate, endDate, notes) {
+    val hasChanges by remember(initial, name, startDate, endDate, notes) {
         derivedStateOf {
             name != initial.name ||
-                    url != (initial.url ?: "") ||
                     startDate != (initial.startDate ?: "") ||
                     endDate != (initial.endDate ?: "") ||
                     notes != (initial.notes ?: "")
@@ -102,7 +99,6 @@ fun ProjectFormScreen(
         val normalizedEndDate = normalizeDateString(endDate)
         val project = initial.copy(
             name = name,
-            url = url.ifBlank { null },
             startDate = normalizedStartDate,
             endDate = normalizedEndDate,
             notes = notes.ifBlank { null },
@@ -165,8 +161,6 @@ fun ProjectFormScreen(
                 .padding(16.dp)
         ) {
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
-            Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.project_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = startDate,

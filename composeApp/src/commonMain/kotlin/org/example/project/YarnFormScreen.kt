@@ -67,7 +67,6 @@ fun YarnFormScreen(
     var amountState by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
-    var url by remember { mutableStateOf(initial?.url ?: "") }
     var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
@@ -82,7 +81,6 @@ fun YarnFormScreen(
         gramsPerBallText,
         metersPerBallText,
         amountState,
-        url,
         dateAddedState,
         notes
     ) {
@@ -90,7 +88,7 @@ fun YarnFormScreen(
             if (initial == null) {
                 name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
                         colorLot.isNotEmpty() || gramsPerBallText.isNotEmpty() || metersPerBallText.isNotEmpty() ||
-                        amountState.isNotEmpty() || url.isNotEmpty() ||
+                        amountState.isNotEmpty() ||
                         dateAddedState != getCurrentTimestamp() || notes.isNotEmpty()
             } else {
                 name != initial.name ||
@@ -100,7 +98,6 @@ fun YarnFormScreen(
                         gramsPerBallText != (initial.gramsPerBall?.toString() ?: "") ||
                         metersPerBallText != (initial.metersPerBall?.toString() ?: "") ||
                         amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
-                        url != (initial.url ?: "") ||
                         dateAddedState != initial.dateAdded ||
                         notes != (initial.notes ?: "")
             }
@@ -120,7 +117,6 @@ fun YarnFormScreen(
                 amount = finalAmountToSave,
                 gramsPerBall = gramsPerBallText.toIntOrNull(),
                 metersPerBall = metersPerBallText.toIntOrNull(),
-                url = url.ifBlank { null },
                 dateAdded = dateAddedState,
                 notes = notes.ifBlank { null }
             )
@@ -296,8 +292,6 @@ fun YarnFormScreen(
             }
             Spacer(Modifier.height(8.dp))
 
-            SelectAllOutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
-            Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
