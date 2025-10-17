@@ -2,16 +2,20 @@ package org.example.project
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import kotlin.NoSuchElementException // Ensure this import is present
 
 sealed class Screen {
@@ -33,6 +37,7 @@ fun App(repo: JsonRepository) {
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
+    var showNotImplementedDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val fileDownloader = LocalFileDownloader.current
@@ -47,6 +52,19 @@ fun App(repo: JsonRepository) {
 
     LaunchedEffect(Unit) {
         reloadAllData()
+    }
+
+    if (showNotImplementedDialog) {
+        AlertDialog(
+            onDismissRequest = { showNotImplementedDialog = false },
+            title = { Text(stringResource(Res.string.not_implemented_title)) },
+            text = { Text(stringResource(Res.string.not_implemented_message)) },
+            confirmButton = {
+                TextButton(onClick = { showNotImplementedDialog = false }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
     }
 
     MaterialTheme {
@@ -251,8 +269,7 @@ fun App(repo: JsonRepository) {
                                 }
                             },
                             onLocaleChange = { locale ->
-                                // TODO: Implement locale change
-                                throw NotImplementedError("Locale change not implemented yet")
+                                showNotImplementedDialog = true
                             }
                         )
                     }

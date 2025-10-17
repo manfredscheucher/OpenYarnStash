@@ -92,4 +92,8 @@
     <string name="export_json">JSON exportieren</string>
     <string name="import_json">JSON importieren</string>
     <string name="language_label">Sprache</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Nicht implementiert</string>
+    <string name="not_implemented_message">Diese Funktion ist noch nicht implementiert.</string>
 </resources>

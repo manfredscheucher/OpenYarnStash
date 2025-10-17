@@ -101,4 +101,8 @@
     <string name="import_dialog_title">Warning</string>
     <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
     <string name="language_label">Language</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Not Implemented</string>
+    <string name="not_implemented_message">This feature is not yet implemented.</string>
 </resources>
