@@ -10,13 +10,12 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Yarn stash</string>
     <string name="yarn_list_empty">No yarns yet. Tap +</string>
-    <string name="yarn_item_label_date_added">Added: %1$s</string>
+    <string name="yarn_item_label_last_modified">Last modified: %1$s</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projects</string>
     <string name="project_list_empty">No projects yet. Tap +</string>
     <string name="item_label_name">Name: %1$s</string>
-    <string name="item_label_url">URL: %1$s</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Back</string>
@@ -41,9 +40,8 @@
     <string name="yarn_label_grams_per_ball">g / ball (optional)</string>
     <string name="yarn_label_meters_per_ball">m / ball (optional)</string>
     <string name="yarn_label_number_of_balls">Number of balls</string>
-    <string name="yarn_label_url">URL (optional)</string>
-    <string name="yarn_label_date_added">Added on (optional)</string>
-    <string name="date_format_hint_yarn_added">Added on (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_last_modified">Last modified (optional)</string>
+    <string name="date_format_hint_last_modified">Last modified (YYYY, YYYY-MM, YYYY-MM-DD)</string>
     <string name="yarn_label_notes">Notes (optional)</string>
     <string name="yarn_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Set remaining wool to 0</string>
@@ -55,7 +53,6 @@
     <string name="project_form_new">New project</string>
     <string name="project_form_edit">Edit project</string>
     <string name="project_label_name">Name</string>
-    <string name="project_label_url">URL (optional)</string>
     <string name="project_label_start_date">Start date (optional)</string>
     <string name="project_label_end_date">End date (optional)</string>
     <string name="date_format_hint_project">Date (YYYY, YYYY-MM, YYYY-MM-DD)</string>

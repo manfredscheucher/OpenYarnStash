@@ -87,7 +87,7 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
-    val dateAddedState by remember { mutableStateOf(initial.dateAdded ?: getCurrentTimestamp()) }
+    val lastModifiedState by remember { mutableStateOf(initial.lastModified ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
@@ -111,7 +111,7 @@ fun ProjectFormScreen(
             startDate = normalizedStartDate,
             endDate = normalizedEndDate,
             notes = notes.ifBlank { null },
-            dateAdded = dateAddedState,
+            lastModified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
             gauge = gauge.ifBlank { null }
@@ -203,7 +203,7 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = dateAddedState, onValueChange = {}, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
+            SelectAllOutlinedTextField(value = lastModifiedState, onValueChange = {}, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = notes,

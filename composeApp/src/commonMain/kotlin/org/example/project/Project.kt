@@ -12,7 +12,7 @@ enum class ProjectStatus {
 
 @Serializable
 data class Project(
-    val dateAdded: String,
+    val lastModified: String,
     val id: Int,
     val name: String,
     val startDate: String? = null,

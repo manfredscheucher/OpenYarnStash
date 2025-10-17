@@ -67,7 +67,7 @@ fun YarnFormScreen(
     var amountState by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
-    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
+    var lastModifiedState by remember { mutableStateOf(initial?.lastModified ?: getCurrentTimestamp()) }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
@@ -81,7 +81,7 @@ fun YarnFormScreen(
         gramsPerBallText,
         metersPerBallText,
         amountState,
-        dateAddedState,
+        lastModifiedState,
         notes
     ) {
         derivedStateOf {
@@ -89,7 +89,7 @@ fun YarnFormScreen(
                 name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
                         colorLot.isNotEmpty() || gramsPerBallText.isNotEmpty() || metersPerBallText.isNotEmpty() ||
                         amountState.isNotEmpty() ||
-                        dateAddedState != getCurrentTimestamp() || notes.isNotEmpty()
+                        lastModifiedState != getCurrentTimestamp() || notes.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
@@ -98,7 +98,7 @@ fun YarnFormScreen(
                         gramsPerBallText != (initial.gramsPerBall?.toString() ?: "") ||
                         metersPerBallText != (initial.metersPerBall?.toString() ?: "") ||
                         amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
-                        dateAddedState != initial.dateAdded ||
+                        lastModifiedState != initial.lastModified ||
                         notes != (initial.notes ?: "")
             }
         }
@@ -108,7 +108,7 @@ fun YarnFormScreen(
         val enteredAmount = amountState.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
-        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, dateAdded = getCurrentTimestamp()))
+        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, lastModified = getCurrentTimestamp()))
             .copy(
                 name = name,
                 brand = brand.ifBlank { null },
@@ -117,7 +117,7 @@ fun YarnFormScreen(
                 amount = finalAmountToSave,
                 gramsPerBall = gramsPerBallText.toIntOrNull(),
                 metersPerBall = metersPerBallText.toIntOrNull(),
-                dateAdded = dateAddedState,
+                lastModified = getCurrentTimestamp(),
                 notes = notes.ifBlank { null }
             )
         onSave(yarn)
@@ -292,7 +292,7 @@ fun YarnFormScreen(
             }
             Spacer(Modifier.height(8.dp))
 
-            SelectAllOutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
+            SelectAllOutlinedTextField(value = lastModifiedState, onValueChange = { lastModifiedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
 

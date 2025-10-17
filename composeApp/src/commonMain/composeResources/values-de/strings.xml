@@ -10,13 +10,12 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Lager</string>
     <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
-    <string name="yarn_item_label_date_added">Hinzugefügt: %1$s</string>
+    <string name="yarn_item_label_last_modified">Zuletzt geändert: %1$s</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
     <string name="project_list_empty">Keine Projekte. Klicke +</string>
     <string name="item_label_name">Name: %1$s</string>
-    <string name="item_label_url">URL: %1$s</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Zurück</string>
@@ -41,9 +40,8 @@
     <string name="yarn_label_grams_per_ball">g / Knäuel (optional)</string>
     <string name="yarn_label_meters_per_ball">m / Knäuel (optional)</string>
     <string name="yarn_label_number_of_balls">Anzahl Knäuel</string>
-    <string name="yarn_label_url">URL (optional)</string>
-    <string name="yarn_label_date_added">Hinzugefügt am (optional)</string>
-    <string name="date_format_hint_yarn_added">Hinzugefügt am (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
+    <string name="yarn_label_last_modified">Zuletzt geändert (optional)</string>
+    <string name="date_format_hint_last_modified">Zuletzt geändert (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="yarn_label_notes">Notizen (optional)</string>
     <string name="yarn_form_no_projects_assigned">Bisher keinen Projekten zugeordnet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restwolle auf 0 setzen</string>
@@ -55,7 +53,6 @@
     <string name="project_form_new">Neues Projekt</string>
     <string name="project_form_edit">Projekt bearbeiten</string>
     <string name="project_label_name">Name</string>
-    <string name="project_label_url">URL (optional)</string>
     <string name="project_label_start_date">Startdatum (optional)</string>
     <string name="project_label_end_date">Enddatum (optional)</string>
     <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
