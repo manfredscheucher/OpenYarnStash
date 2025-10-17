@@ -308,8 +308,7 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(8.dp))
 
                 if (usagesForYarn.isEmpty()) {
-                    // TODO: localize this string
-                    Text("stringResource(Res.string.yarn_form_not_used_in_projects)")
+                    Text(stringResource(Res.string.yarn_form_no_projects_assigned))
                 } else {
                     usagesForYarn.forEach { usage ->
                         Text("- ${projectNameById(usage.projectId)}: ${usage.amount} g")
