@@ -30,6 +30,78 @@ fun ProjectFormScreen(
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
     var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
+    var showUnsavedDialog by remember { mutableStateOf(false) }
+
+    val hasChanges by remember(name, url, startDate, endDate, notes, dateAddedState) {
+        derivedStateOf {
+            if (initial == null) {
+                name.isNotEmpty() || url.isNotEmpty() || startDate.isNotEmpty() || endDate.isNotEmpty() || notes.isNotEmpty() || dateAddedState != getCurrentTimestamp()
+            } else {
+                name != initial.name ||
+                        url != (initial.url ?: "") ||
+                        startDate != (initial.startDate ?: "") ||
+                        endDate != (initial.endDate ?: "") ||
+                        notes != (initial.notes ?: "") ||
+                        dateAddedState != initial.dateAdded
+            }
+        }
+    }
+
+    val saveAction = {
+        val normalizedStartDate = normalizeDateString(startDate)
+        val normalizedEndDate = normalizeDateString(endDate)
+        val project = (initial ?: Project(id = -1, name = ""))
+            .copy(
+                name = name,
+                url = url.ifBlank { null },
+                startDate = normalizedStartDate,
+                endDate = normalizedEndDate,
+                notes = notes.ifBlank { null },
+                dateAdded = dateAddedState
+            )
+        onSave(project)
+    }
+
+    val backAction = {
+        if (hasChanges) {
+            showUnsavedDialog = true
+        } else {
+            onCancel()
+        }
+    }
+
+    if (showUnsavedDialog) {
+        AlertDialog(
+            onDismissRequest = { showUnsavedDialog = false },
+            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
+            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showUnsavedDialog = false }) {
+                        Text(stringResource(Res.string.common_stay))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        showUnsavedDialog = false
+                        onCancel()
+                    }) {
+                        Text(stringResource(Res.string.common_no))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        saveAction()
+                        showUnsavedDialog = false
+                    }) {
+                        Text(stringResource(Res.string.common_yes))
+                    }
+                }
+            },
+            dismissButton = null
+        )
+    }
 
     val status = when {
         endDate.isNotBlank() -> ProjectStatus.FINISHED
@@ -41,7 +113,7 @@ fun ProjectFormScreen(
         topBar = {
             TopAppBar(
                 title = { Text(if (initial == null) stringResource(Res.string.project_form_new) else stringResource(Res.string.project_form_edit)) },
-                navigationIcon = { IconButton(onClick = onCancel) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
+                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
             )
         }
     ) { padding ->
@@ -119,7 +191,7 @@ fun ProjectFormScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
+                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (initial != null) {
                         TextButton(onClick = {
@@ -131,20 +203,7 @@ fun ProjectFormScreen(
                         }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
                     }
-                    Button(onClick = {
-                        val normalizedStartDate = normalizeDateString(startDate)
-                        val normalizedEndDate = normalizeDateString(endDate)
-                        val project = (initial ?: Project(id = -1, name = ""))
-                            .copy(
-                                name = name,
-                                url = url.ifBlank { null },
-                                startDate = normalizedStartDate,
-                                endDate = normalizedEndDate,
-                                notes = notes.ifBlank { null },
-                                dateAdded = dateAddedState
-                            )
-                        onSave(project)
-                    }) { Text(stringResource(Res.string.common_save)) }
+                    Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
         }

@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
 import kotlin.math.round
 
@@ -71,6 +71,102 @@ fun YarnFormScreen(
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
+    var showUnsavedDialog by remember { mutableStateOf(false) }
+
+    val hasChanges by remember(
+        name,
+        color,
+        brand,
+        colorLot,
+        gramsPerBallText,
+        metersPerBallText,
+        amountState,
+        url,
+        dateAddedState,
+        notes
+    ) {
+        derivedStateOf {
+            if (initial == null) {
+                name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
+                        colorLot.isNotEmpty() || gramsPerBallText.isNotEmpty() || metersPerBallText.isNotEmpty() ||
+                        amountState.isNotEmpty() || url.isNotEmpty() ||
+                        dateAddedState != getCurrentTimestamp() || notes.isNotEmpty()
+            } else {
+                name != initial.name ||
+                        color != (initial.color ?: "") ||
+                        brand != (initial.brand ?: "") ||
+                        colorLot != (initial.colorLot ?: "") ||
+                        gramsPerBallText != (initial.gramsPerBall?.toString() ?: "") ||
+                        metersPerBallText != (initial.metersPerBall?.toString() ?: "") ||
+                        amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
+                        url != (initial.url ?: "") ||
+                        dateAddedState != initial.dateAdded ||
+                        notes != (initial.notes ?: "")
+            }
+        }
+    }
+
+    val saveAction = {
+        val enteredAmount = amountState.toIntOrNull() ?: 0
+        val finalAmountToSave = max(enteredAmount, totalUsedAmount)
+        val normalizedDate = normalizeDateString(dateAddedState)
+
+        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0))
+            .copy(
+                name = name,
+                brand = brand.ifBlank { null },
+                color = color.ifBlank { null },
+                colorLot = colorLot.ifBlank { null },
+                amount = finalAmountToSave,
+                gramsPerBall = gramsPerBallText.toIntOrNull(),
+                metersPerBall = metersPerBallText.toIntOrNull(),
+                url = url.ifBlank { null },
+                dateAdded = normalizedDate,
+                notes = notes.ifBlank { null }
+            )
+        onSave(yarn)
+    }
+
+    val backAction = {
+        if (hasChanges) {
+            showUnsavedDialog = true
+        } else {
+            onCancel()
+        }
+    }
+
+    if (showUnsavedDialog) {
+        AlertDialog(
+            onDismissRequest = { showUnsavedDialog = false },
+            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
+            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showUnsavedDialog = false }) {
+                        Text(stringResource(Res.string.common_stay))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        showUnsavedDialog = false
+                        onCancel()
+                    }) {
+                        Text(stringResource(Res.string.common_no))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        saveAction()
+                        showUnsavedDialog = false
+                    }) {
+                        Text(stringResource(Res.string.common_yes))
+                    }
+                }
+            },
+            dismissButton = null
+        )
+    }
 
     LaunchedEffect(initial) {
         if (initial != null) {
@@ -84,7 +180,7 @@ fun YarnFormScreen(
                     (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
                 }
             } else if (gpb != null && gpb > 0 && amount == 0) {
-                 numberOfBallsText = "0"
+                numberOfBallsText = "0"
             }
         }
     }
@@ -94,7 +190,7 @@ fun YarnFormScreen(
             TopAppBar(
                 title = { Text(if (initial == null) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit)) },
                 navigationIcon = {
-                    IconButton(onClick = onCancel) {
+                    IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
                 }
@@ -179,7 +275,7 @@ fun YarnFormScreen(
                                 (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
                             }
                         } else if (amount == 0) {
-                             numberOfBallsText = "0"
+                            numberOfBallsText = "0"
                         }
                     },
                     label = { Text(stringResource(Res.string.yarn_label_amount)) },
@@ -189,8 +285,8 @@ fun YarnFormScreen(
                 Spacer(Modifier.width(8.dp))
                 Column {
                     IconButton(onClick = {
-                         val newValue = (amountState.toIntOrNull() ?: 0) + 1
-                         amountState = newValue.toString()
+                        val newValue = (amountState.toIntOrNull() ?: 0) + 1
+                        amountState = newValue.toString()
                     }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowUp, "Increment") }
                     IconButton(onClick = {
                         val decremented = (amountState.toIntOrNull() ?: 0) - 1
@@ -199,7 +295,7 @@ fun YarnFormScreen(
                 }
             }
             Spacer(Modifier.height(8.dp))
-            
+
             OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
@@ -226,7 +322,7 @@ fun YarnFormScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = onCancel) { Text(stringResource(Res.string.common_cancel)) }
+                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (initial != null) {
                         if (isUsedInProjects) {
@@ -236,26 +332,7 @@ fun YarnFormScreen(
                         }
                         Spacer(Modifier.width(8.dp))
                     }
-                    Button(onClick = {
-                        val enteredAmount = amountState.toIntOrNull() ?: 0
-                        val finalAmountToSave = max(enteredAmount, totalUsedAmount)
-                        val normalizedDate = normalizeDateString(dateAddedState)
-
-                        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0))
-                            .copy(
-                                name = name,
-                                brand = brand.ifBlank { null },
-                                color = color.ifBlank { null },
-                                colorLot = colorLot.ifBlank { null },
-                                amount = finalAmountToSave,
-                                gramsPerBall = gramsPerBallText.toIntOrNull(),
-                                metersPerBall = metersPerBallText.toIntOrNull(),
-                                url = url.ifBlank { null },
-                                dateAdded = normalizedDate,
-                                notes = notes.ifBlank { null }
-                            )
-                        onSave(yarn)
-                    }) { Text(stringResource(Res.string.common_save)) }
+                    Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
         }

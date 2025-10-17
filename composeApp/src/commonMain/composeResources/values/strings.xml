@@ -26,6 +26,9 @@
     <string name="common_add">Add</string>
     <string name="common_plus_symbol">+</string>
     <string name="common_ok">OK</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
+    <string name="common_stay">Stay</string>
 
     <!-- Yarn form -->
     <string name="yarn_form_new">New yarn</string>
@@ -45,6 +48,8 @@
     <string name="yarn_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Set remaining wool to 0</string>
     <string name="yarn_new_default_name">New Yarn (%1$d)</string>
+    <string name="form_unsaved_changes_title">Unsaved Changes</string>
+    <string name="form_unsaved_changes_message">Do you want to save the changes?</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>
@@ -81,14 +86,15 @@
     <string name="statistics_option_month">Month</string>
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
-    
+
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
     <string name="info_description">OpenYarnStash is an open-source app by Helena and Manfred for managing your yarn supplies and knitting projects. It provides an overview, statistics, and progress indicators. The app is still under development – feedback is very welcome!</string>
     <string name="info_github_button">Open on GitHub</string>
     <string name="info_feedback_button">Send Feedback</string>
-    
+
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
     <string name="export_json">Export JSON</string>
+    <string name="import_json">Import JSON</string>
 </resources>

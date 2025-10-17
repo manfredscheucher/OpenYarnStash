@@ -25,6 +25,9 @@
     <string name="common_add">Hinzufügen</string>
     <string name="common_plus_symbol">+</string>
     <string name="common_ok">OK</string>
+    <string name="common_yes">Ja</string>
+    <string name="common_no">Nein</string>
+    <string name="common_stay">Bleiben</string>
 
     <!-- Yarn form -->
     <string name="yarn_form_new">Neue Wolle</string>
@@ -44,6 +47,8 @@
     <string name="yarn_form_no_projects_assigned">Noch keinen Projekten zugewiesen.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restbestand auf 0 setzen</string>
     <string name="yarn_new_default_name">Neue Wolle (%1$d)</string>
+    <string name="form_unsaved_changes_title">Ungespeicherte Änderungen</string>
+    <string name="form_unsaved_changes_message">Möchtest du die Änderungen speichern?</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>
@@ -82,4 +87,5 @@
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>
     <string name="export_json">JSON exportieren</string>
+    <string name="import_json">JSON importieren</string>
 </resources>
