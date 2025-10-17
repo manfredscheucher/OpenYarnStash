@@ -5,6 +5,7 @@
     <string name="home_title">OpenYarnStash</string>
     <string name="home_button_yarns">Wolle</string>
     <string name="home_button_projects">Projekte</string>
+    <string name="home_button_statistics">Statistiken</string>
 
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Stash</string>
@@ -80,6 +81,14 @@
     <string name="usage_available">Verfügbar: %1$d g</string>
     <string name="usage_used">Verwendet: %1$d g</string>
     <string name="usage_projects_title">Projekte</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistiken</string>
+    <string name="statistics_option_total">Gesamt</string>
+    <string name="statistics_option_year">Jahr</string>
+    <string name="statistics_option_month">Monat</string>
+    <string name="statistics_label_year">Jahr</string>
+    <string name="statistics_label_month">Monat</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>

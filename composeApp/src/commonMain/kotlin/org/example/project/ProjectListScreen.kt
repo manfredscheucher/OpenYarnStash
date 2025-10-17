@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
@@ -58,7 +59,7 @@ fun ProjectListScreen(
                             .padding(16.dp)
                     ) {
                         Column {
-                            Text(stringResource(Res.string.item_label_name, p.name))
+                            Text(p.name, fontWeight = FontWeight.Bold)
                             p.url?.let { Text(stringResource(Res.string.item_label_url, it)) }
                             val statusText = when (p.status) {
                                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
