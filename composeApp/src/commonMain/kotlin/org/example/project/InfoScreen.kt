@@ -20,10 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.info_authors
+import openyarnstash.composeapp.generated.resources.info_description
 import openyarnstash.composeapp.generated.resources.info_feedback_button
 import openyarnstash.composeapp.generated.resources.info_github_button
-import openyarnstash.composeapp.generated.resources.info_github_text
 import openyarnstash.composeapp.generated.resources.info_screen_title
 import org.jetbrains.compose.resources.stringResource
 
@@ -45,10 +44,8 @@ fun InfoScreen(onBack: () -> Unit) {
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
-            Text(stringResource(Res.string.info_authors), style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(Res.string.info_description), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
-            Text(stringResource(Res.string.info_github_text), style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(8.dp))
             Button(
                 onClick = { uriHandler.openUri("https://github.com/manfredscheucher/OpenYarnStash") },
                 modifier = Modifier.fillMaxWidth()

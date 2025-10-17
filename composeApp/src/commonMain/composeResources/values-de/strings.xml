@@ -75,8 +75,7 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
-    <string name="info_authors">Autoren: Helena und Manfred</string>
-    <string name="info_github_text">Diese App ist Open Source und auf GitHub verfügbar.</string>
+    <string name="info_description">OpenYarnStash ist ein Open-Source-Projekt von Helena und Manfred zur Verwaltung deiner Garnvorräte und Strickprojekte. Sie bietet Überblick, Statistiken und Fortschrittsanzeigen. Die App ist noch in Entwicklung – Feedback ist herzlich willkommen!</string>
     <string name="info_github_button">Auf GitHub öffnen</string>
     <string name="info_feedback_button">Feedback senden</string>
 
