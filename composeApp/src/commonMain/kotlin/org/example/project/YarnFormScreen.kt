@@ -109,9 +109,8 @@ fun YarnFormScreen(
     val saveAction = {
         val enteredAmount = amountState.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
-        val normalizedDate = normalizeDateString(dateAddedState)
 
-        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0))
+        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, dateAdded = getCurrentTimestamp()))
             .copy(
                 name = name,
                 brand = brand.ifBlank { null },
@@ -121,7 +120,7 @@ fun YarnFormScreen(
                 gramsPerBall = gramsPerBallText.toIntOrNull(),
                 metersPerBall = metersPerBallText.toIntOrNull(),
                 url = url.ifBlank { null },
-                dateAdded = normalizedDate,
+                dateAdded = dateAddedState,
                 notes = notes.ifBlank { null }
             )
         onSave(yarn)

@@ -12,14 +12,13 @@ enum class ProjectStatus {
 
 @Serializable
 data class Project(
+    val dateAdded: String,
     val id: Int,
     val name: String,
     val url: String? = null,
-    @JsonNames("date") // Maps old "date" field to "startDate" for backward compatibility
     val startDate: String? = null,
     val endDate: String? = null,
-    val notes: String? = null, // Added notes for Project
-    val dateAdded: String? = null
+    val notes: String? = null,
 ) {
     @Transient
     val status: ProjectStatus = when {

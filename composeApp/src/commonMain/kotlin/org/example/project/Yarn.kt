@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Yarn(
+    val dateAdded: String,
     val id: Int,
     val name: String,
     val color: String? = null,
@@ -11,7 +12,6 @@ data class Yarn(
     val amount: Int = 0, // Gesamte Menge in Gramm
     val colorLot: String? = null, // Farbcharge
     val url: String? = null,
-    val dateAdded: String? = null,
     val notes: String? = null, // Added notes for Yarn
     val gramsPerBall: Int? = null, // Gramm pro Knäuel
     val metersPerBall: Int? = null // Meter pro Knäuel
