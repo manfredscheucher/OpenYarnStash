@@ -5,7 +5,6 @@ import androidx.compose.runtime.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
 import kotlin.NoSuchElementException // Ensure this import is present
 
@@ -211,6 +210,14 @@ fun App(repo: JsonRepository) {
                         scope.launch {
                             val json = withContext(Dispatchers.Default) { repo.getRawJson() }
                             fileDownloader.download("open-yarn-stash.json", json)
+                        }
+                    },
+                    onImport = { fileContent ->
+                        scope.launch {
+                            withContext(Dispatchers.Default) {
+                                repo.importData(fileContent)
+                            }
+                            reloadAllData()
                         }
                     }
                 )
