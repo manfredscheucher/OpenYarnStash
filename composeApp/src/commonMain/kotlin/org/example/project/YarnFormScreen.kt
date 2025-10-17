@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
+import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
 import kotlin.math.round
@@ -205,16 +206,16 @@ fun YarnFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
-            OutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.yarn_label_name)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.yarn_label_name)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = colorLot, onValueChange = { colorLot = it }, label = { Text(stringResource(Res.string.yarn_label_color_lot)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = colorLot, onValueChange = { colorLot = it }, label = { Text(stringResource(Res.string.yarn_label_color_lot)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
 
-            OutlinedTextField(
+            SelectAllOutlinedTextField(
                 value = gramsPerBallText,
                 onValueChange = { newValue ->
                     val normalized = normalizeIntInput(newValue)
@@ -230,7 +231,7 @@ fun YarnFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
+            SelectAllOutlinedTextField(
                 value = metersPerBallText,
                 onValueChange = { metersPerBallText = normalizeIntInput(it) },
                 label = { Text(stringResource(Res.string.yarn_label_meters_per_ball)) },
@@ -239,7 +240,7 @@ fun YarnFormScreen(
             )
             Spacer(Modifier.height(8.dp))
 
-            OutlinedTextField(
+            SelectAllOutlinedTextField(
                 value = numberOfBallsText,
                 onValueChange = { newValue ->
                     val normalized = newValue.replace(",", ".")
@@ -259,7 +260,7 @@ fun YarnFormScreen(
             Spacer(Modifier.height(8.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                OutlinedTextField(
+                SelectAllOutlinedTextField(
                     value = amountState,
                     onValueChange = { newValue ->
                         val normalized = normalizeIntInput(newValue)
@@ -295,11 +296,11 @@ fun YarnFormScreen(
             }
             Spacer(Modifier.height(8.dp))
 
-            OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
+            SelectAllOutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
 
             if (initial != null) {
                 Spacer(Modifier.height(16.dp))
