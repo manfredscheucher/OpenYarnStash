@@ -20,11 +20,14 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         file.writeText(content)
     }
 
-    override suspend fun backupFile() {
+    override suspend fun backupFile(): String? {
         if (file.exists()) {
             val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
-            val backupFile = File(context.filesDir, "${file.name}.backup.$timestamp")
-            file.renameTo(backupFile)
+            val backupFileName = "${file.nameWithoutExtension}-$timestamp.${file.extension}"
+            val backupFile = File(context.filesDir, backupFileName)
+            file.copyTo(backupFile, overwrite = true)
+            return backupFileName
         }
+        return null
     }
 }

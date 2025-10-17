@@ -103,8 +103,7 @@ fun App(repo: JsonRepository) {
                         },
                         onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
                             scope.launch {
-                                val yarnToUpdate = repo.getYarnById(yarnIdToUpdate)
-                                val updatedYarn = yarnToUpdate.copy(amount = newAmount)
+                                val updatedYarn = repo.getYarnById(yarnIdToUpdate)!!.copy(amount = newAmount)
                                 withContext(Dispatchers.Default) { repo.addOrUpdateYarn(updatedYarn) }
                                 reloadAllData()
                                 screen = Screen.YarnList
@@ -208,8 +207,11 @@ fun App(repo: JsonRepository) {
                     onBack = { screen = Screen.Home },
                     onExport = {
                         scope.launch {
-                            val json = withContext(Dispatchers.Default) { repo.getRawJson() }
-                            fileDownloader.download("open-yarn-stash.json", json)
+                            val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
+                            if (backupFileName != null) {
+                                val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                                fileDownloader.download(backupFileName, json)
+                            }
                         }
                     },
                     onImport = { fileContent ->

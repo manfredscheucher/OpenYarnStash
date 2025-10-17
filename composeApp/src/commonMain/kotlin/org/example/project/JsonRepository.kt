@@ -17,7 +17,12 @@ class JsonRepository(private val fileHandler: FileHandler) {
     suspend fun load(): AppData {
         val content = fileHandler.readFile()
         data = if (content.isNotEmpty()) {
-            Json.decodeFromString(content)
+            try {
+                Json.decodeFromString<AppData>(content)
+            } catch (e: Exception) {
+                // Handle decoding error, maybe log it and return default data
+                AppData()
+            }
         } else {
             AppData()
         }
@@ -35,21 +40,32 @@ class JsonRepository(private val fileHandler: FileHandler) {
     /**
      * Provides the raw JSON content of the current data.
      */
-    suspend fun getRawJson(): String {
+    fun getRawJson(): String {
         return Json.encodeToString(data)
+    }
+
+    /**
+     * Backs up the current data file.
+     * @return The name of the backup file, or null if backup failed.
+     */
+    suspend fun backup(): String? {
+        return fileHandler.backupFile()
     }
 
     /**
      * Backs up the current data file and overwrites it with new content.
      */
     suspend fun importData(content: String) {
+        // First, backup the existing file.
         fileHandler.backupFile()
+        // Then, write the new content to the main file.
         fileHandler.writeFile(content)
-        load() // Reload data after import
+        // Finally, reload the data in the repository.
+        load()
     }
 
     // ... (rest of the functions for yarn, project, and usage management)
-    fun getYarnById(id: Int): Yarn = data.yarns.first { it.id == id }
+    fun getYarnById(id: Int): Yarn? = data.yarns.firstOrNull { it.id == id }
 
     suspend fun addOrUpdateYarn(yarn: Yarn) {
         val index = data.yarns.indexOfFirst { it.id == yarn.id }
@@ -69,7 +85,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
 
     fun nextYarnId(): Int = (data.yarns.maxOfOrNull { it.id } ?: 0) + 1
 
-    fun getProjectById(id: Int): Project = data.projects.first { it.id == id }
+    fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id }
 
     suspend fun addOrUpdateProject(project: Project) {
         val index = data.projects.indexOfFirst { it.id == project.id }
@@ -90,7 +106,7 @@ class JsonRepository(private val fileHandler: FileHandler) {
     fun nextProjectId(): Int = (data.projects.maxOfOrNull { it.id } ?: 0) + 1
 
     fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
-        val yarn = getYarnById(yarnId)
+        val yarn = getYarnById(yarnId) ?: return 0
         val used = data.usages
             .filter { it.yarnId == yarnId && it.projectId != forProjectId }
             .sumOf { it.amount }
