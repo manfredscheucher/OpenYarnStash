@@ -68,6 +68,7 @@ fun YarnFormScreen(
     var numberOfBallsText by remember { mutableStateOf("1") }
 
     val lastModifiedState by remember { mutableStateOf(initial?.lastModified ?: getCurrentTimestamp()) }
+    var dateAdded by remember { mutableStateOf(initial?.dateAdded ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
@@ -81,6 +82,7 @@ fun YarnFormScreen(
         gramsPerBallText,
         metersPerBallText,
         amountState,
+        dateAdded,
         notes
     ) {
         derivedStateOf {
@@ -88,7 +90,7 @@ fun YarnFormScreen(
                 name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
                         colorLot.isNotEmpty() || gramsPerBallText.isNotEmpty() || metersPerBallText.isNotEmpty() ||
                         amountState.isNotEmpty() ||
-                        notes.isNotEmpty()
+                        dateAdded.isNotEmpty() || notes.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
@@ -97,6 +99,7 @@ fun YarnFormScreen(
                         gramsPerBallText != (initial.gramsPerBall?.toString() ?: "") ||
                         metersPerBallText != (initial.metersPerBall?.toString() ?: "") ||
                         amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
+                        dateAdded != (initial.dateAdded ?: "") ||
                         notes != (initial.notes ?: "")
             }
         }
@@ -116,6 +119,7 @@ fun YarnFormScreen(
                 gramsPerBall = gramsPerBallText.toIntOrNull(),
                 metersPerBall = metersPerBallText.toIntOrNull(),
                 lastModified = getCurrentTimestamp(),
+                dateAdded = normalizeDateString(dateAdded),
                 notes = notes.ifBlank { null }
             )
         onSave(yarn)
@@ -290,6 +294,14 @@ fun YarnFormScreen(
             }
             Spacer(Modifier.height(8.dp))
 
+            SelectAllOutlinedTextField(
+                value = dateAdded,
+                onValueChange = { dateAdded = it },
+                label = { Text(stringResource(Res.string.yarn_label_last_modified)) },
+                supportingText = { Text(stringResource(Res.string.date_format_hint_last_modified)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
             Text(stringResource(Res.string.yarn_item_label_last_modified, lastModifiedState))
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())

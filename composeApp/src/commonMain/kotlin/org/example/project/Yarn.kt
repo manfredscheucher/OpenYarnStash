@@ -13,5 +13,6 @@ data class Yarn(
     val colorLot: String? = null, // Farbpartie
     val notes: String? = null, // Added notes for Yarn
     val gramsPerBall: Int? = null, // Gramm pro Knäuel
-    val metersPerBall: Int? = null // Meter pro Knäuel
+    val metersPerBall: Int? = null, // Meter pro Knäuel
+    val dateAdded: String? = null
 )
