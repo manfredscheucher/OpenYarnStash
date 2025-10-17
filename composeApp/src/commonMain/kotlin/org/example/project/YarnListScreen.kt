@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -62,6 +63,7 @@ fun YarnListScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(color = ColorPalette.idToColor(yarn.id))
                                 .clickable { onOpen(yarn.id) }
                                 .padding(16.dp)
                         ) {

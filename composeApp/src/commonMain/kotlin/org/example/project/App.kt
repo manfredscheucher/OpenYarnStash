@@ -23,7 +23,6 @@ sealed class Screen {
 @Composable
 fun App(repo: JsonRepository) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
-
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }

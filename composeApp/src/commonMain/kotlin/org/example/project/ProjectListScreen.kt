@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,6 +46,7 @@ fun ProjectListScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .background(color = ColorPalette.idToColor(p.id))
                             .clickable { onOpen(p.id) }
                             .padding(16.dp)
                     ) {
