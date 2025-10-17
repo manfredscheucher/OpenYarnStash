@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Usage(
     val projectId: Int,
     val yarnId: Int,
-    val amount: Int
+    val amount: Int,
+    val dateAdded: String? = null
 )

@@ -67,7 +67,7 @@ fun YarnFormScreen(
     var numberOfBallsText by remember { mutableStateOf("1") }
 
     var url by remember { mutableStateOf(initial?.url ?: "") }
-    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: "") }
+    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
@@ -202,7 +202,7 @@ fun YarnFormScreen(
             
             OutlinedTextField(value = url, onValueChange = { url = it }, label = { Text(stringResource(Res.string.yarn_label_url)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
 

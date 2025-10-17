@@ -28,6 +28,7 @@ fun ProjectFormScreen(
     var startDate by remember { mutableStateOf(initial?.startDate ?: "") }
     var endDate by remember { mutableStateOf(initial?.endDate ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
+    var dateAddedState by remember { mutableStateOf(initial?.dateAdded ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
 
     val status = when {
@@ -79,6 +80,8 @@ fun ProjectFormScreen(
                 ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(value = dateAddedState, onValueChange = { dateAddedState = it }, label = { Text(stringResource(Res.string.yarn_label_date_added)) }, supportingText = { Text(stringResource(Res.string.date_format_hint_yarn_added)) }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
                 value = notes,
@@ -137,7 +140,8 @@ fun ProjectFormScreen(
                                 url = url.ifBlank { null },
                                 startDate = normalizedStartDate,
                                 endDate = normalizedEndDate,
-                                notes = notes.ifBlank { null }
+                                notes = notes.ifBlank { null },
+                                dateAdded = dateAddedState
                             )
                         onSave(project)
                     }) { Text(stringResource(Res.string.common_save)) }

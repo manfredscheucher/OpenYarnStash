@@ -18,7 +18,8 @@ data class Project(
     @JsonNames("date") // Maps old "date" field to "startDate" for backward compatibility
     val startDate: String? = null,
     val endDate: String? = null,
-    val notes: String? = null // Added notes for Project
+    val notes: String? = null, // Added notes for Project
+    val dateAdded: String? = null
 ) {
     @Transient
     val status: ProjectStatus = when {
