@@ -34,7 +34,7 @@
     <string name="yarn_form_edit">Wolle bearbeiten</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Farbe (optional)</string>
-    <string name="yarn_label_color_lot">Farbcharge (optional)</string>
+    <string name="yarn_label_color_lot">Farbpartie (optional)</string>
     <string name="yarn_label_brand">Marke (optional)</string>
     <string name="yarn_label_amount">Menge (g)</string>
     <string name="yarn_label_grams_per_ball">g / Knäuel (optional)</string>
@@ -62,11 +62,14 @@
     <string name="project_form_button_assignments">Wolle zuweisen</string>
     <string name="project_form_no_yarn_assigned">Noch keine Wolle diesem Projekt zugewiesen.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
-    <string name="delete_project_restricted_message">Löschen nur möglich, wenn keine Wolle zugewiesen ist. Geben Sie zugewiesene Wolle in den Stash zurück, um das Löschen fortzusetzen.</string>
+    <string name="delete_project_restricted_message">Löschen nur möglich, wenn keine Wolle zugewiesen ist. Geben Sie zugewiesene Wolle in den Stash zurück, um mit dem Löschen fortzufahren.</string>
     <string name="project_status_planning">In Planung</string>
     <string name="project_status_in_progress">In Arbeit</string>
     <string name="project_status_finished">Fertiggestellt</string>
     <string name="project_new_default_name">Neues Projekt (%1$d)</string>
+    <string name="import_button_text">Importieren</string>
+    <string name="import_dialog_title">Achtung</string>
+    <string name="import_dialog_message">Die aktuelle Konfiguration wird durch den Import überschrieben. Sind Sie sicher, dass Sie fortfahren möchten?</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Wollzuweisungen für %1$s</string>
