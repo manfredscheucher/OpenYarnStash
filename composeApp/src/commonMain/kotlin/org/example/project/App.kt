@@ -84,7 +84,7 @@ fun App(repo: JsonRepository) {
 
                     Screen.YarnList -> {
                         YarnListScreen(
-                            yarns = yarns,
+                            yarns = yarns.sortedByDescending { it.lastModified },
                             usages = usages,
                             onAddClick = {
                                 scope.launch {
@@ -158,7 +158,7 @@ fun App(repo: JsonRepository) {
 
                     Screen.ProjectList -> {
                         ProjectListScreen(
-                            projects = projects,
+                            projects = projects.sortedByDescending { it.lastModified },
                             onAddClick = {
                                 scope.launch {
                                     val existingIds = projects.map { it.id }.toSet()
