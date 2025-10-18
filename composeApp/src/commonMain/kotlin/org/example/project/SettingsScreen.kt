@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,10 @@ fun SettingsScreen(
     var showFilePicker by remember { mutableStateOf(false) }
     var showImportConfirmDialog by remember { mutableStateOf(false) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
+
+    BackHandler {
+        onBack()
+    }
 
     Scaffold(
         topBar = {

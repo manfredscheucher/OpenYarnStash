@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun InfoScreen(onBack: () -> Unit) {
     val uriHandler = LocalUriHandler.current
+    BackHandler {
+        onBack()
+    }
 
     Scaffold(
         topBar = {

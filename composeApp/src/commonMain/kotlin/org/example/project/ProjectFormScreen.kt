@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -124,6 +125,10 @@ fun ProjectFormScreen(
         } else {
             onCancel()
         }
+    }
+
+    BackHandler {
+        backAction()
     }
 
     if (showUnsavedDialog) {
