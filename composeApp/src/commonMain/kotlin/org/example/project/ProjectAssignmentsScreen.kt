@@ -23,7 +23,7 @@ fun ProjectAssignmentsScreen(
     initialAssignments: Map<Int, Int>,
     getAvailableAmountForYarn: (yarnId: Int) -> Int, // This is the max that can be assigned from the yarn's total
     onSave: (updatedAssignments: Map<Int, Int>) -> Unit,
-    onBack: () -> Unit
+    onCancel: () -> Unit
 ) {
     var currentAssignments by remember { mutableStateOf(initialAssignments.toMutableMap()) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -32,16 +32,16 @@ fun ProjectAssignmentsScreen(
         derivedStateOf { currentAssignments != initialAssignments }
     }
 
-    val onBackHandler = {
+    val backAction = {
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onBack()
+            onCancel()
         }
     }
 
     BackHandler {
-        onBackHandler()
+        backAction()
     }
 
     val saveAction = {
@@ -65,7 +65,7 @@ fun ProjectAssignmentsScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onBack()
+                        onCancel()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }
@@ -87,7 +87,7 @@ fun ProjectAssignmentsScreen(
             TopAppBar(
                 title = { Text(stringResource(Res.string.project_assignments_title, projectName)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackHandler) {
+                    IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
                 }
@@ -148,7 +148,7 @@ fun ProjectAssignmentsScreen(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End // Save button to the right
                     ) {
-                        TextButton(onClick = onBackHandler) { Text(stringResource(Res.string.common_cancel)) }
+                        TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                         Spacer(Modifier.width(8.dp))
                         Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                     }

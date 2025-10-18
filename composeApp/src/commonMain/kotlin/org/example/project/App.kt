@@ -127,7 +127,7 @@ fun App(repo: JsonRepository) {
                                         "?"
                                     }
                                 },
-                                commonCancel = { screen = Screen.YarnList },
+                                onBack = { screen = Screen.YarnList },
                                 onDelete = { yarnIdToDelete ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) { repo.deleteYarn(yarnIdToDelete) }
@@ -200,7 +200,7 @@ fun App(repo: JsonRepository) {
                                         "?"
                                     }
                                 },
-                                onCancel = { screen = Screen.ProjectList },
+                                onBack = { screen = Screen.ProjectList },
                                 onDelete = { id ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) { repo.deleteProject(id) }
@@ -245,40 +245,54 @@ fun App(repo: JsonRepository) {
                                     screen = Screen.ProjectForm(s.projectId)
                                 }
                             },
-                            onCancel = {
-                                screen = Screen.ProjectForm(s.projectId)
-                            }
+                            onBack = { screen = Screen.ProjectForm(s.projectId) }
                         )
                     }
+
                     Screen.Info -> {
                         InfoScreen(onBack = { screen = Screen.Home })
                     }
+
                     Screen.Statistics -> {
                         StatisticsScreen(onBack = { screen = Screen.Home })
                     }
+
                     Screen.Settings -> {
                         SettingsScreen(
                             onBack = { screen = Screen.Home },
                             onExport = {
                                 scope.launch {
-                                    val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
-                                    if (backupFileName != null) {
-                                        val json = withContext(Dispatchers.Default) { repo.getRawJson() }
-                                        fileDownloader.download(backupFileName, json)
+                                    val data = withContext(Dispatchers.Default) { repo.load() }
+                                    val jsonString = Json.encodeToString(data)
+                                    val success = fileDownloader.downloadFile(jsonString, "open-yarn-stash.json", "application/json")
+                                    if (success) {
+                                        snackbarHostState.showSnackbar(message = "Export successful")
+                                    } else {
+                                        snackbarHostState.showSnackbar(message = "Export failed")
                                     }
                                 }
                             },
                             onImport = { fileContent ->
                                 scope.launch {
-                                    withContext(Dispatchers.Default) {
-                                        repo.importData(fileContent)
+                                    val success = withContext(Dispatchers.Default) {
+                                        try {
+                                            val data = Json.decodeFromString<Database>(fileContent)
+                                            repo.save(data)
+                                            true
+                                        } catch (e: Exception) {
+                                            false
+                                        }
                                     }
-                                    reloadAllData()
-                                    snackbarHostState.showSnackbar("Import erfolgreich")
+                                    if (success) {
+                                        reloadAllData()
+                                        snackbarHostState.showSnackbar(message = "Import successful")
+                                    } else {
+                                        snackbarHostState.showSnackbar(message = "Import failed")
+                                    }
                                 }
                             },
                             onLocaleChange = { locale ->
-                                showNotImplementedDialog = true
+                                // locale change logic
                             }
                         )
                     }

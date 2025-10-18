@@ -73,7 +73,7 @@ fun ProjectFormScreen(
     initial: Project,
     usagesForProject: List<Usage>,
     yarnNameById: (Int) -> String,
-    onBack: () -> Unit,
+    onCancel: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project) -> Unit,
     onNavigateToAssignments: () -> Unit
@@ -119,16 +119,16 @@ fun ProjectFormScreen(
         onSave(project)
     }
 
-    val onBackHandler = {
+    val backAction = {
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onBack()
+            onCancel()
         }
     }
 
     BackHandler {
-        onBackHandler()
+        backAction()
     }
 
     if (showUnsavedDialog) {
@@ -137,7 +137,7 @@ fun ProjectFormScreen(
             onStay = { showUnsavedDialog = false },
             onDiscard = {
                 showUnsavedDialog = false
-                onBack()
+                onCancel()
             },
             onSave = {
                 saveAction()
@@ -163,7 +163,7 @@ fun ProjectFormScreen(
             val titleRes = if (isNewProject) Res.string.project_form_new else Res.string.project_form_edit
             TopAppBar(
                 title = { Text(stringResource(titleRes)) },
-                navigationIcon = { IconButton(onClick = onBackHandler) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
+                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
             )
         }
     ) { padding ->
@@ -245,7 +245,7 @@ fun ProjectFormScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = onBackHandler) { Text(stringResource(Res.string.common_cancel)) }
+                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (!isNewProject) {
                         TextButton(onClick = {
