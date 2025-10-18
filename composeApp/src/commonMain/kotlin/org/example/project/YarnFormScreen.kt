@@ -51,7 +51,7 @@ fun YarnFormScreen(
     initial: Yarn?,
     usagesForYarn: List<Usage>,
     projectNameById: (Int) -> String,
-    onCancel: () -> Unit,
+    onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Yarn) -> Unit,
     onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
@@ -126,16 +126,16 @@ fun YarnFormScreen(
         onSave(yarn)
     }
 
-    val backAction = {
+    val onBackHandler = {
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onCancel()
+            onBack()
         }
     }
 
     BackHandler {
-        backAction()
+        onBackHandler()
     }
 
     if (showUnsavedDialog) {
@@ -154,7 +154,7 @@ fun YarnFormScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onCancel()
+                        onBack()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }
@@ -193,7 +193,7 @@ fun YarnFormScreen(
             TopAppBar(
                 title = { Text(if (initial == null) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit)) },
                 navigationIcon = {
-                    IconButton(onClick = backAction) {
+                    IconButton(onClick = onBackHandler) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
                 }
@@ -330,7 +330,7 @@ fun YarnFormScreen(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
+                TextButton(onClick = onBackHandler) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (initial != null) {
                         if (isUsedInProjects) {

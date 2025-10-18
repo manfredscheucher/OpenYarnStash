@@ -127,7 +127,7 @@ fun App(repo: JsonRepository) {
                                         "?"
                                     }
                                 },
-                                onCancel = { screen = Screen.YarnList },
+                                commonCancel = { screen = Screen.YarnList },
                                 onDelete = { yarnIdToDelete ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) { repo.deleteYarn(yarnIdToDelete) }
