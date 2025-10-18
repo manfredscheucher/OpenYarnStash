@@ -23,7 +23,7 @@ fun ProjectAssignmentsScreen(
     initialAssignments: Map<Int, Int>,
     getAvailableAmountForYarn: (yarnId: Int) -> Int, // This is the max that can be assigned from the yarn's total
     onSave: (updatedAssignments: Map<Int, Int>) -> Unit,
-    onCancel: () -> Unit
+    onBack: () -> Unit
 ) {
     var currentAssignments by remember { mutableStateOf(initialAssignments.toMutableMap()) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -36,7 +36,7 @@ fun ProjectAssignmentsScreen(
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onCancel()
+            onBack()
         }
     }
 
@@ -65,7 +65,7 @@ fun ProjectAssignmentsScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onCancel()
+                        onBack()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }

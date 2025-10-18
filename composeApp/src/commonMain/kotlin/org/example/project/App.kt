@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 import kotlin.NoSuchElementException // Ensure this import is present
@@ -262,33 +263,20 @@ fun App(repo: JsonRepository) {
                             onBack = { screen = Screen.Home },
                             onExport = {
                                 scope.launch {
-                                    val data = withContext(Dispatchers.Default) { repo.load() }
-                                    val jsonString = Json.encodeToString(data)
-                                    val success = fileDownloader.downloadFile(jsonString, "open-yarn-stash.json", "application/json")
-                                    if (success) {
-                                        snackbarHostState.showSnackbar(message = "Export successful")
-                                    } else {
-                                        snackbarHostState.showSnackbar(message = "Export failed")
+                                    val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
+                                    if (backupFileName != null) {
+                                        val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                                        fileDownloader.download(backupFileName, json)
                                     }
                                 }
                             },
                             onImport = { fileContent ->
                                 scope.launch {
-                                    val success = withContext(Dispatchers.Default) {
-                                        try {
-                                            val data = Json.decodeFromString<Database>(fileContent)
-                                            repo.save(data)
-                                            true
-                                        } catch (e: Exception) {
-                                            false
-                                        }
+                                    withContext(Dispatchers.Default) {
+                                        repo.importData(fileContent)
                                     }
-                                    if (success) {
-                                        reloadAllData()
-                                        snackbarHostState.showSnackbar(message = "Import successful")
-                                    } else {
-                                        snackbarHostState.showSnackbar(message = "Import failed")
-                                    }
+                                    reloadAllData()
+                                    snackbarHostState.showSnackbar("Import erfolgreich")
                                 }
                             },
                             onLocaleChange = { locale ->

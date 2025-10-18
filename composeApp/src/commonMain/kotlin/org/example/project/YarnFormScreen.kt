@@ -51,7 +51,7 @@ fun YarnFormScreen(
     initial: Yarn?,
     usagesForYarn: List<Usage>,
     projectNameById: (Int) -> String,
-    onCancel: () -> Unit,
+    onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Yarn) -> Unit,
     onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
@@ -130,7 +130,7 @@ fun YarnFormScreen(
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onCancel()
+            onBack()
         }
     }
 
@@ -154,7 +154,7 @@ fun YarnFormScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onCancel()
+                        onBack()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }

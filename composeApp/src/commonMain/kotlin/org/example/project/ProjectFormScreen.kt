@@ -73,7 +73,7 @@ fun ProjectFormScreen(
     initial: Project,
     usagesForProject: List<Usage>,
     yarnNameById: (Int) -> String,
-    onCancel: () -> Unit,
+    onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project) -> Unit,
     onNavigateToAssignments: () -> Unit
@@ -123,7 +123,7 @@ fun ProjectFormScreen(
         if (hasChanges) {
             showUnsavedDialog = true
         } else {
-            onCancel()
+            onBack()
         }
     }
 
@@ -137,7 +137,7 @@ fun ProjectFormScreen(
             onStay = { showUnsavedDialog = false },
             onDiscard = {
                 showUnsavedDialog = false
-                onCancel()
+                onBack()
             },
             onSave = {
                 saveAction()
