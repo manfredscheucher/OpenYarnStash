@@ -64,7 +64,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.materialIconsExtended)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation("androidx.activity:activity-compose")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
