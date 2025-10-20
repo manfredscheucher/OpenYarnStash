@@ -15,7 +15,7 @@ actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
             input.type = "file"
             input.accept = ".json"
             input.onchange = {
-                val file = input.files?.get(0)
+                val file = input.files?.item(0)
                 if (file != null) {
                     val reader = FileReader()
                     reader.onload = {

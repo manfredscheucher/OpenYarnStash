@@ -68,4 +68,8 @@ actual class WebFileHandler : FileHandler {
             }
         }
     }
+
+    override suspend fun backupFile(): String? {
+        return readFile()
+    }
 }
