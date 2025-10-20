@@ -9,7 +9,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CONTEXT = this
         val repo = JsonRepository(AndroidFileHandler(this))
 
         setContent {
