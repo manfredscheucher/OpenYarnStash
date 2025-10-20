@@ -48,8 +48,8 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.activity.compose)
 
         }
         commonMain.dependencies {
@@ -64,7 +64,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.materialIconsExtended)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
