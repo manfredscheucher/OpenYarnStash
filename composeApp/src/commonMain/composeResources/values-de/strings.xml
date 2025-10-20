@@ -89,9 +89,14 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
-    <string name="info_description">OpenYarnStash ist eine Open-Source-App von Helena und Manfred, mit der du deine Wollvorräte und Strickprojekte verwalten kannst. Sie bietet eine Übersicht, Statistiken und Fortschrittsanzeigen. Die App befindet sich noch in der Entwicklung – Feedback ist sehr willkommen!</string>
+    <string name="info_description">OpenYarnStash ist eine Open-Source-App, mit der du deine Wollvorräte und Strickprojekte verwalten kannst. Sie bietet eine Übersicht, Statistiken und Fortschrittsanzeigen. Die App befindet sich noch in der Entwicklung – Feedback ist sehr willkommen!</string>
     <string name="info_github_button">Auf GitHub öffnen</string>
     <string name="info_feedback_button">Feedback senden</string>
+    <string name="info_copyright_notice">Der Quellcode dieser App wird unter der MIT-Lizenz veröffentlicht.
+© 2025 Manfred Scheucher und Helena Bergold
+
+Nutzung, Änderung und Weiterverbreitung sind gestattet, sofern die ursprünglichen Urheberrechts- und Lizenzhinweise erhalten bleiben.
+Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche Darstellung der Urheberschaft oder die Veröffentlichung modifizierter Versionen ohne Namensnennung ist nicht gestattet.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>

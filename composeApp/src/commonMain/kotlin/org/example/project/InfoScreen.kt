@@ -1,6 +1,5 @@
 package org.example.project
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.info_copyright_notice
 import openyarnstash.composeapp.generated.resources.info_description
 import openyarnstash.composeapp.generated.resources.info_feedback_button
 import openyarnstash.composeapp.generated.resources.info_github_button
@@ -31,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun InfoScreen(onBack: () -> Unit) {
     val uriHandler = LocalUriHandler.current
-    BackHandler {
+    HandleBack {
         onBack()
     }
 
@@ -63,6 +63,8 @@ fun InfoScreen(onBack: () -> Unit) {
             ) {
                 Text(stringResource(Res.string.info_feedback_button))
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(stringResource(Res.string.info_copyright_notice), style = MaterialTheme.typography.bodySmall)
         }
     }
 }

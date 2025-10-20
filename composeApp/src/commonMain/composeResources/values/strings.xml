@@ -89,9 +89,15 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
-    <string name="info_description">OpenYarnStash is an open-source app by Helena and Manfred for managing your yarn supplies and knitting projects. It provides an overview, statistics, and progress indicators. The app is still under development – feedback is very welcome!</string>
+    <string name="info_description">OpenYarnStash is an open-source app for managing your yarn supplies and knitting projects. It provides an overview, statistics, and progress indicators. The app is still under development – feedback is very welcome!</string>
     <string name="info_github_button">Open on GitHub</string>
     <string name="info_feedback_button">Send Feedback</string>
+    <string name="info_copyright_notice">The source code for this app is released under the MIT License.
+© 2025 Manfred Scheucher and Helena Bergold
+
+Use, modification, and redistribution are permitted provided the original copyright and license notices remain intact.
+Removing or replacing the original author’s name, misrepresenting authorship, or publishing modified versions without attribution is not permitted.</string>
+
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
