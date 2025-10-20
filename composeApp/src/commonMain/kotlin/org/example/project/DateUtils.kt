@@ -1,16 +1,12 @@
+
 package org.example.project
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
-fun nowInstant(): Instant = Clock.System.now()
 
-fun nowLocalDateTime(): LocalDateTime =
-    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+@OptIn(ExperimentalTime::class)
+fun nowInstant(): Instant = kotlin.time.Clock.System.now()
 
-fun nowEpochMillis(): Long = Clock.System.now().toEpochMilliseconds()
-
+@OptIn(ExperimentalTime::class)
 fun getCurrentTimestamp(): String = nowInstant().toString()
