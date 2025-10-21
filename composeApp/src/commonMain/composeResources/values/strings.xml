@@ -10,6 +10,7 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Yarn stash</string>
     <string name="yarn_list_empty">No yarns yet. Tap +</string>
+    <string name="yarn_list_summary">Current amount: %1$d g</string>
     <string name="yarn_item_label_modified">Last modified: %1$s</string>
 
     <!-- Project list -->

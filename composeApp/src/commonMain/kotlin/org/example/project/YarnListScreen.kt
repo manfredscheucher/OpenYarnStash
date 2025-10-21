@@ -60,6 +60,14 @@ fun YarnListScreen(
                     Text(stringResource(Res.string.yarn_list_empty))
                 }
             } else {
+                val totalAvailable = yarns.sumOf { yarn ->
+                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
+                    (yarn.amount - used).coerceAtLeast(0)
+                }
+                Text(
+                    text = stringResource(Res.string.yarn_list_summary, totalAvailable),
+                    modifier = Modifier.padding(16.dp)
+                )
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
