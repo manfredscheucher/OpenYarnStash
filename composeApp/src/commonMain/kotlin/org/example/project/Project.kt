@@ -18,7 +18,7 @@ data class Project(
     val notes: String? = null,
     val needleSize: String? = null,
     val size: String? = null,
-    val gauge: String? = null,
+    val gauge: Int? = null,
     val madeFor: String? = null,
     val modified: String? = null
 ) {

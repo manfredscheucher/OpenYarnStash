@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -87,7 +89,7 @@ fun ProjectFormScreen(
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
-    var gauge by remember { mutableStateOf(initial.gauge ?: "") }
+    var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -101,7 +103,7 @@ fun ProjectFormScreen(
                     notes != (initial.notes ?: "") ||
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
-                    gauge != (initial.gauge ?: "")
+                    gauge != (initial.gauge?.toString() ?: "")
         }
     }
 
@@ -117,7 +119,7 @@ fun ProjectFormScreen(
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
-            gauge = gauge.ifBlank { null }
+            gauge = gauge.toIntOrNull()
         )
         onSave(project)
     }
@@ -203,7 +205,13 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.project_label_gauge)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(
+                value = gauge,
+                onValueChange = { gauge = it },
+                label = { Text(stringResource(Res.string.project_label_gauge)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(Modifier.height(8.dp))
             val statusText = when (status) {
                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
@@ -212,8 +220,10 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
-            Spacer(Modifier.height(8.dp))
+            if (modified != null) {
+                Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
+                Spacer(Modifier.height(8.dp))
+            }
             SelectAllOutlinedTextField(
                 value = notes,
                 onValueChange = { notes = it },
