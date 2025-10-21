@@ -34,6 +34,7 @@
     <string name="yarn_form_edit">Edit yarn</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Color (optional)</string>
+    <string name="yarn_label_color_code">Color code (optional)</string>
     <string name="yarn_label_blend">Blend (optional)</string>
     <string name="yarn_label_dye_lot">Dye lot (optional)</string>
     <string name="yarn_label_brand">Brand (optional)</string>

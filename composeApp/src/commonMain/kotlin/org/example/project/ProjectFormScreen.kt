@@ -206,7 +206,7 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(Res.string.yarn_item_label_modified, modified))
+            Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = notes,

@@ -34,6 +34,7 @@
     <string name="yarn_form_edit">Wolle bearbeiten</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Farbe (optional)</string>
+    <string name="yarn_label_color_code">Farbcode (optional)</string>
     <string name="yarn_label_blend">Mischung (optional)</string>
     <string name="yarn_label_dye_lot">Farbpartie (optional)</string>
     <string name="yarn_label_brand">Marke (optional)</string>

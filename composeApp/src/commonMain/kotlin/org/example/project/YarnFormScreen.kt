@@ -59,17 +59,18 @@ fun YarnFormScreen(
 
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var color by remember { mutableStateOf(initial?.color ?: "") }
+    var colorCode by remember { mutableStateOf(initial?.colorCode ?: "") }
     var brand by remember { mutableStateOf(initial?.brand ?: "") }
     var blend by remember { mutableStateOf(initial?.blend ?: "") }
     var dyeLot by remember { mutableStateOf(initial?.dyeLot ?: "") }
 
     var weightPerSkeinText by remember { mutableStateOf(initial?.weightPerSkein?.toString() ?: "") }
     var meteragePerSkeinText by remember { mutableStateOf(initial?.meteragePerSkein?.toString() ?: "") }
-    var amountState by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
+    var amountText by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
     val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
-    var dateAdded by remember { mutableStateOf(initial?.dateAdded ?: "") }
+    var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
@@ -78,39 +79,41 @@ fun YarnFormScreen(
     val hasChanges by remember(
         name,
         color,
+        colorCode,
         brand,
         blend,
         dyeLot,
         weightPerSkeinText,
         meteragePerSkeinText,
-        amountState,
-        dateAdded,
+        amountText,
+        added,
         notes
     ) {
         derivedStateOf {
             if (initial == null) {
-                name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
+                name.isNotEmpty() || color.isNotEmpty() || colorCode.isNotEmpty() || brand.isNotEmpty() ||
                         blend.isNotEmpty() ||
                         dyeLot.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
-                        amountState.isNotEmpty() ||
-                        dateAdded.isNotEmpty() || notes.isNotEmpty()
+                        amountText.isNotEmpty() ||
+                        added.isNotEmpty() || notes.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
+                        colorCode != (initial.colorCode ?: "") ||
                         brand != (initial.brand ?: "") ||
                         blend != (initial.blend ?: "") ||
                         dyeLot != (initial.dyeLot ?: "") ||
                         weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "") ||
                         meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
-                        amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
-                        dateAdded != (initial.dateAdded ?: "") ||
+                        amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
+                        added != (initial.added ?: "") ||
                         notes != (initial.notes ?: "")
             }
         }
     }
 
     val saveAction = {
-        val enteredAmount = amountState.toIntOrNull() ?: 0
+        val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
         val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, modified = getCurrentTimestamp()))
@@ -118,13 +121,14 @@ fun YarnFormScreen(
                 name = name,
                 brand = brand.ifBlank { null },
                 color = color.ifBlank { null },
+                colorCode = colorCode.ifBlank { null },
                 blend = blend.ifBlank { null },
                 dyeLot = dyeLot.ifBlank { null },
                 amount = finalAmountToSave,
                 weightPerSkein = weightPerSkeinText.toIntOrNull(),
                 meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
                 modified = getCurrentTimestamp(),
-                dateAdded = normalizeDateString(dateAdded),
+                added = normalizeDateString(added),
                 notes = notes.ifBlank { null }
             )
         onSave(yarn)
@@ -219,6 +223,8 @@ fun YarnFormScreen(
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = colorCode, onValueChange = { colorCode = it }, label = { Text(stringResource(Res.string.yarn_label_color_code)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = blend, onValueChange = { blend = it }, label = { Text(stringResource(Res.string.yarn_label_blend)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = dyeLot, onValueChange = { dyeLot = it }, label = { Text(stringResource(Res.string.yarn_label_dye_lot)) }, modifier = Modifier.fillMaxWidth())
@@ -232,7 +238,7 @@ fun YarnFormScreen(
                     val gpb = normalized.toIntOrNull()
                     val balls = numberOfBallsText.replace(",", ".").toDoubleOrNull()
                     if (gpb != null && balls != null && gpb > 0 && balls > 0) {
-                        amountState = round(gpb * balls).toInt().toString()
+                        amountText = round(gpb * balls).toInt().toString()
                     }
                 },
                 label = { Text(stringResource(Res.string.yarn_label_weight_per_skein)) },
@@ -258,7 +264,7 @@ fun YarnFormScreen(
                         val balls = normalized.toDoubleOrNull()
                         val gpb = weightPerSkeinText.toIntOrNull()
                         if (gpb != null && balls != null && gpb > 0) { // Allow balls > 0
-                            amountState = round(gpb * balls).toInt().toString()
+                            amountText = round(gpb * balls).toInt().toString()
                         }
                     }
                 },
@@ -270,10 +276,10 @@ fun YarnFormScreen(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SelectAllOutlinedTextField(
-                    value = amountState,
+                    value = amountText,
                     onValueChange = { newValue ->
                         val normalized = normalizeIntInput(newValue)
-                        amountState = normalized
+                        amountText = normalized
                         val amount = normalized.toIntOrNull()
                         val gpb = weightPerSkeinText.toIntOrNull()
                         if (gpb != null && amount != null && gpb > 0) { // Allow amount >= 0
@@ -294,20 +300,20 @@ fun YarnFormScreen(
                 Spacer(Modifier.width(8.dp))
                 Column {
                     IconButton(onClick = {
-                        val newValue = (amountState.toIntOrNull() ?: 0) + 1
-                        amountState = newValue.toString()
+                        val newValue = (amountText.toIntOrNull() ?: 0) + 1
+                        amountText = newValue.toString()
                     }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowUp, "Increment") }
                     IconButton(onClick = {
-                        val decremented = (amountState.toIntOrNull() ?: 0) - 1
-                        amountState = max(decremented, totalUsedAmount).toString().takeIf { it != "0" } ?: ""
+                        val decremented = (amountText.toIntOrNull() ?: 0) - 1
+                        amountText = max(decremented, totalUsedAmount).toString().takeIf { it != "0" } ?: ""
                     }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowDown, "Decrement") }
                 }
             }
             Spacer(Modifier.height(8.dp))
 
             SelectAllOutlinedTextField(
-                value = dateAdded,
-                onValueChange = { dateAdded = it },
+                value = added,
+                onValueChange = { added = it },
                 label = { Text(stringResource(Res.string.yarn_label_modified)) },
                 supportingText = { Text(stringResource(Res.string.date_format_hint_modified)) },
                 modifier = Modifier.fillMaxWidth()

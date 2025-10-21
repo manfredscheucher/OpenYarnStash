@@ -12,8 +12,6 @@ enum class ProjectStatus {
 
 @Serializable
 data class Project(
-    @JsonNames("lastModified")
-    val modified: String,
     val id: Int,
     val name: String,
     val startDate: String? = null,
@@ -22,6 +20,7 @@ data class Project(
     val needleSize: String? = null,
     val size: String? = null,
     val gauge: String? = null,
+    val modified: String? = null
 ) {
     @Transient
     val status: ProjectStatus = when {
