@@ -2,7 +2,6 @@ package org.example.project
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JsonNames
 
 enum class ProjectStatus {
     PLANNING,
@@ -20,6 +19,7 @@ data class Project(
     val needleSize: String? = null,
     val size: String? = null,
     val gauge: String? = null,
+    val madeFor: String? = null,
     val modified: String? = null
 ) {
     @Transient

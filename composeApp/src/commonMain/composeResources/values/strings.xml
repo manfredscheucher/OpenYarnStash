@@ -55,6 +55,7 @@
     <string name="project_form_new">New project</string>
     <string name="project_form_edit">Edit project</string>
     <string name="project_label_name">Name</string>
+    <string name="project_label_for">Made for (optional)</string>
     <string name="project_label_start_date">Start date (optional)</string>
     <string name="project_label_end_date">End date (optional)</string>
     <string name="date_format_hint_project">Date (YYYY, YYYY-MM, YYYY-MM-DD)</string>

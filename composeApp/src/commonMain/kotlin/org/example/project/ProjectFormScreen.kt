@@ -52,6 +52,7 @@ import openyarnstash.composeapp.generated.resources.project_form_edit
 import openyarnstash.composeapp.generated.resources.project_form_new
 import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
 import openyarnstash.composeapp.generated.resources.project_label_end_date
+import openyarnstash.composeapp.generated.resources.project_label_for
 import openyarnstash.composeapp.generated.resources.project_label_gauge
 import openyarnstash.composeapp.generated.resources.project_label_name
 import openyarnstash.composeapp.generated.resources.project_label_needle_size
@@ -80,6 +81,7 @@ fun ProjectFormScreen(
     val isNewProject = initial.id == -1
 
     var name by remember { mutableStateOf(initial.name) }
+    var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
     var startDate by remember { mutableStateOf(initial.startDate ?: "") }
     var endDate by remember { mutableStateOf(initial.endDate ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
@@ -90,9 +92,10 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(initial, name, startDate, endDate, notes, needleSize, size, gauge) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge) {
         derivedStateOf {
             name != initial.name ||
+                    forWho != (initial.madeFor ?: "") ||
                     startDate != (initial.startDate ?: "") ||
                     endDate != (initial.endDate ?: "") ||
                     notes != (initial.notes ?: "") ||
@@ -107,6 +110,7 @@ fun ProjectFormScreen(
         val normalizedEndDate = normalizeDateString(endDate)
         val project = initial.copy(
             name = name,
+            madeFor = forWho.ifBlank { null },
             startDate = normalizedStartDate,
             endDate = normalizedEndDate,
             notes = notes.ifBlank { null },
@@ -176,6 +180,8 @@ fun ProjectFormScreen(
                 .padding(16.dp)
         ) {
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = startDate,
