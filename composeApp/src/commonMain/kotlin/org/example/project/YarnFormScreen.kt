@@ -60,14 +60,15 @@ fun YarnFormScreen(
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var color by remember { mutableStateOf(initial?.color ?: "") }
     var brand by remember { mutableStateOf(initial?.brand ?: "") }
-    var colorLot by remember { mutableStateOf(initial?.colorLot ?: "") }
+    var blend by remember { mutableStateOf(initial?.blend ?: "") }
+    var dyeLot by remember { mutableStateOf(initial?.dyeLot ?: "") }
 
-    var gramsPerBallText by remember { mutableStateOf(initial?.gramsPerBall?.toString() ?: "") }
-    var metersPerBallText by remember { mutableStateOf(initial?.metersPerBall?.toString() ?: "") }
+    var weightPerSkeinText by remember { mutableStateOf(initial?.weightPerSkein?.toString() ?: "") }
+    var meteragePerSkeinText by remember { mutableStateOf(initial?.meteragePerSkein?.toString() ?: "") }
     var amountState by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
-    val lastModifiedState by remember { mutableStateOf(initial?.lastModified ?: getCurrentTimestamp()) }
+    val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var dateAdded by remember { mutableStateOf(initial?.dateAdded ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
@@ -78,9 +79,10 @@ fun YarnFormScreen(
         name,
         color,
         brand,
-        colorLot,
-        gramsPerBallText,
-        metersPerBallText,
+        blend,
+        dyeLot,
+        weightPerSkeinText,
+        meteragePerSkeinText,
         amountState,
         dateAdded,
         notes
@@ -88,16 +90,18 @@ fun YarnFormScreen(
         derivedStateOf {
             if (initial == null) {
                 name.isNotEmpty() || color.isNotEmpty() || brand.isNotEmpty() ||
-                        colorLot.isNotEmpty() || gramsPerBallText.isNotEmpty() || metersPerBallText.isNotEmpty() ||
+                        blend.isNotEmpty() ||
+                        dyeLot.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
                         amountState.isNotEmpty() ||
                         dateAdded.isNotEmpty() || notes.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
                         brand != (initial.brand ?: "") ||
-                        colorLot != (initial.colorLot ?: "") ||
-                        gramsPerBallText != (initial.gramsPerBall?.toString() ?: "") ||
-                        metersPerBallText != (initial.metersPerBall?.toString() ?: "") ||
+                        blend != (initial.blend ?: "") ||
+                        dyeLot != (initial.dyeLot ?: "") ||
+                        weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "") ||
+                        meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
                         amountState != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
                         dateAdded != (initial.dateAdded ?: "") ||
                         notes != (initial.notes ?: "")
@@ -109,16 +113,17 @@ fun YarnFormScreen(
         val enteredAmount = amountState.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
-        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, lastModified = getCurrentTimestamp()))
+        val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, modified = getCurrentTimestamp()))
             .copy(
                 name = name,
                 brand = brand.ifBlank { null },
                 color = color.ifBlank { null },
-                colorLot = colorLot.ifBlank { null },
+                blend = blend.ifBlank { null },
+                dyeLot = dyeLot.ifBlank { null },
                 amount = finalAmountToSave,
-                gramsPerBall = gramsPerBallText.toIntOrNull(),
-                metersPerBall = metersPerBallText.toIntOrNull(),
-                lastModified = getCurrentTimestamp(),
+                weightPerSkein = weightPerSkeinText.toIntOrNull(),
+                meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
+                modified = getCurrentTimestamp(),
                 dateAdded = normalizeDateString(dateAdded),
                 notes = notes.ifBlank { null }
             )
@@ -172,7 +177,7 @@ fun YarnFormScreen(
 
     LaunchedEffect(initial) {
         if (initial != null) {
-            val gpb = initial.gramsPerBall
+            val gpb = initial.weightPerSkein
             val amount = initial.amount
             if (gpb != null && gpb > 0 && amount > 0) {
                 val balls = amount.toDouble() / gpb.toDouble()
@@ -214,29 +219,31 @@ fun YarnFormScreen(
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = colorLot, onValueChange = { colorLot = it }, label = { Text(stringResource(Res.string.yarn_label_color_lot)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = blend, onValueChange = { blend = it }, label = { Text(stringResource(Res.string.yarn_label_blend)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = dyeLot, onValueChange = { dyeLot = it }, label = { Text(stringResource(Res.string.yarn_label_dye_lot)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
 
             SelectAllOutlinedTextField(
-                value = gramsPerBallText,
+                value = weightPerSkeinText,
                 onValueChange = { newValue ->
                     val normalized = normalizeIntInput(newValue)
-                    gramsPerBallText = normalized
+                    weightPerSkeinText = normalized
                     val gpb = normalized.toIntOrNull()
                     val balls = numberOfBallsText.replace(",", ".").toDoubleOrNull()
                     if (gpb != null && balls != null && gpb > 0 && balls > 0) {
                         amountState = round(gpb * balls).toInt().toString()
                     }
                 },
-                label = { Text(stringResource(Res.string.yarn_label_grams_per_ball)) },
+                label = { Text(stringResource(Res.string.yarn_label_weight_per_skein)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
-                value = metersPerBallText,
-                onValueChange = { metersPerBallText = normalizeIntInput(it) },
-                label = { Text(stringResource(Res.string.yarn_label_meters_per_ball)) },
+                value = meteragePerSkeinText,
+                onValueChange = { meteragePerSkeinText = normalizeIntInput(it) },
+                label = { Text(stringResource(Res.string.yarn_label_meterage_per_skein)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -249,7 +256,7 @@ fun YarnFormScreen(
                     if (normalized.isEmpty() || normalized.toDoubleOrNull() != null || (normalized.endsWith(".") && normalized.count { it == '.' } == 1)) {
                         numberOfBallsText = normalized
                         val balls = normalized.toDoubleOrNull()
-                        val gpb = gramsPerBallText.toIntOrNull()
+                        val gpb = weightPerSkeinText.toIntOrNull()
                         if (gpb != null && balls != null && gpb > 0) { // Allow balls > 0
                             amountState = round(gpb * balls).toInt().toString()
                         }
@@ -268,7 +275,7 @@ fun YarnFormScreen(
                         val normalized = normalizeIntInput(newValue)
                         amountState = normalized
                         val amount = normalized.toIntOrNull()
-                        val gpb = gramsPerBallText.toIntOrNull()
+                        val gpb = weightPerSkeinText.toIntOrNull()
                         if (gpb != null && amount != null && gpb > 0) { // Allow amount >= 0
                             val balls = amount.toDouble() / gpb.toDouble()
                             numberOfBallsText = if (balls == balls.toInt().toDouble()) {
@@ -301,12 +308,12 @@ fun YarnFormScreen(
             SelectAllOutlinedTextField(
                 value = dateAdded,
                 onValueChange = { dateAdded = it },
-                label = { Text(stringResource(Res.string.yarn_label_last_modified)) },
-                supportingText = { Text(stringResource(Res.string.date_format_hint_last_modified)) },
+                label = { Text(stringResource(Res.string.yarn_label_modified)) },
+                supportingText = { Text(stringResource(Res.string.date_format_hint_modified)) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(Res.string.yarn_item_label_last_modified, lastModifiedState))
+            Text(stringResource(Res.string.yarn_item_label_modified, modifiedState))
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
 

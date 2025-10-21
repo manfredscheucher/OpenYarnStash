@@ -62,7 +62,7 @@ import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
 import openyarnstash.composeapp.generated.resources.usage_section_title
-import openyarnstash.composeapp.generated.resources.yarn_item_label_last_modified
+import openyarnstash.composeapp.generated.resources.yarn_item_label_modified
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -86,7 +86,7 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
-    val lastModifiedState by remember { mutableStateOf(initial.lastModified) }
+    val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
@@ -110,7 +110,7 @@ fun ProjectFormScreen(
             startDate = normalizedStartDate,
             endDate = normalizedEndDate,
             notes = notes.ifBlank { null },
-            lastModified = getCurrentTimestamp(),
+            modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
             gauge = gauge.ifBlank { null }
@@ -206,7 +206,7 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(Res.string.yarn_item_label_last_modified, lastModifiedState))
+            Text(stringResource(Res.string.yarn_item_label_modified, modified))
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = notes,

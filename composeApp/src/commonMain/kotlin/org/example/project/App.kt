@@ -85,7 +85,7 @@ fun App(repo: JsonRepository) {
 
                     Screen.YarnList -> {
                         YarnListScreen(
-                            yarns = yarns.sortedByDescending { it.lastModified },
+                            yarns = yarns.sortedByDescending { it.modified },
                             usages = usages,
                             onAddClick = {
                                 scope.launch {
@@ -94,7 +94,7 @@ fun App(repo: JsonRepository) {
                                     do {
                                         newId = Random.nextInt(1_000_000, 10_000_000)
                                     } while (existingIds.contains(newId))
-                                    val newYarn = Yarn(id = newId, name = "Yarn#$newId", lastModified = getCurrentTimestamp()) // Default name in English as fallback
+                                    val newYarn = Yarn(id = newId, name = "Yarn#$newId", modified = getCurrentTimestamp()) // Default name in English as fallback
                                     withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
                                     reloadAllData()
                                     screen = Screen.YarnForm(newId)
@@ -159,7 +159,7 @@ fun App(repo: JsonRepository) {
 
                     Screen.ProjectList -> {
                         ProjectListScreen(
-                            projects = projects.sortedByDescending { it.lastModified },
+                            projects = projects.sortedByDescending { it.modified },
                             onAddClick = {
                                 scope.launch {
                                     val existingIds = projects.map { it.id }.toSet()
@@ -167,7 +167,7 @@ fun App(repo: JsonRepository) {
                                     do {
                                         newId = Random.nextInt(1_000_000, 10_000_000)
                                     } while (existingIds.contains(newId))
-                                    val newProject = Project(id = newId, name = "Project#$newId", lastModified = getCurrentTimestamp()) // Default name
+                                    val newProject = Project(id = newId, name = "Project#$newId", modified = getCurrentTimestamp()) // Default name
                                     withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
                                     reloadAllData()
                                     screen = Screen.ProjectForm(newId)

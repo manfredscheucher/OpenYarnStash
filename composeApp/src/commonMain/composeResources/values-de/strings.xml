@@ -10,7 +10,7 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Lager</string>
     <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
-    <string name="yarn_item_label_last_modified">Zuletzt geändert: %1$s</string>
+    <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
@@ -34,14 +34,15 @@
     <string name="yarn_form_edit">Wolle bearbeiten</string>
     <string name="yarn_label_name">Name</string>
     <string name="yarn_label_color">Farbe (optional)</string>
-    <string name="yarn_label_color_lot">Farbpartie (optional)</string>
+    <string name="yarn_label_blend">Mischung (optional)</string>
+    <string name="yarn_label_dye_lot">Farbpartie (optional)</string>
     <string name="yarn_label_brand">Marke (optional)</string>
     <string name="yarn_label_amount">Menge (g)</string>
-    <string name="yarn_label_grams_per_ball">g / Knäuel (optional)</string>
-    <string name="yarn_label_meters_per_ball">m / Knäuel (optional)</string>
+    <string name="yarn_label_weight_per_skein">g / Strähne (optional)</string>
+    <string name="yarn_label_meterage_per_skein">m / Strähne (optional)</string>
     <string name="yarn_label_number_of_balls">Anzahl Knäuel</string>
-    <string name="yarn_label_last_modified">Zuletzt geändert (optional)</string>
-    <string name="date_format_hint_last_modified">Zuletzt geändert (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
+    <string name="yarn_label_modified">Zuletzt geändert (optional)</string>
+    <string name="date_format_hint_modified">Zuletzt geändert (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="yarn_label_notes">Notizen (optional)</string>
     <string name="yarn_form_no_projects_assigned">Bisher keinen Projekten zugeordnet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restwolle auf 0 setzen</string>

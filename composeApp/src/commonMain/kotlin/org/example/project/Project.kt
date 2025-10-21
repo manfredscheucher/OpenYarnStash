@@ -12,7 +12,8 @@ enum class ProjectStatus {
 
 @Serializable
 data class Project(
-    val lastModified: String,
+    @JsonNames("lastModified")
+    val modified: String,
     val id: Int,
     val name: String,
     val startDate: String? = null,

@@ -7,5 +7,5 @@ data class Usage(
     val projectId: Int,
     val yarnId: Int,
     val amount: Int,
-    val dateAdded: String? = null
+    val modified: String? = null
 )

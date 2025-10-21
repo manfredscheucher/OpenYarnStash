@@ -1,5 +1,6 @@
 package org.example.project
 
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -19,8 +20,13 @@ class JsonRepository(private val fileHandler: FileHandler) {
         data = if (content.isNotEmpty()) {
             try {
                 Json.decodeFromString<AppData>(content)
-            } catch (e: Exception) {
+            } catch (e: SerializationException) {
                 // Handle decoding error, maybe log it and return default data
+                println("Error decoding JSON: ${e.message}")
+                AppData()
+            } catch (e: Exception) {
+                // Handle other exceptions
+                println("An unexpected error occurred: ${e.message}")
                 AppData()
             }
         } else {
