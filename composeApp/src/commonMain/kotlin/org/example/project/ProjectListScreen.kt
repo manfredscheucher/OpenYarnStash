@@ -1,16 +1,39 @@
 package org.example.project
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import openyarnstash.composeapp.generated.resources.*
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.common_plus_symbol
+import openyarnstash.composeapp.generated.resources.project_list_empty
+import openyarnstash.composeapp.generated.resources.project_list_title
+import openyarnstash.composeapp.generated.resources.project_status_finished
+import openyarnstash.composeapp.generated.resources.project_status_in_progress
+import openyarnstash.composeapp.generated.resources.project_status_planning
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +47,13 @@ fun ProjectListScreen(
     AppBackHandler {
         onBack()
     }
+
+    val statusOrder = mapOf(
+        ProjectStatus.IN_PROGRESS to 0,
+        ProjectStatus.PLANNING to 1,
+        ProjectStatus.FINISHED to 2
+    )
+    val sortedProjects = projects.sortedWith(compareBy { statusOrder[it.status] })
 
     Scaffold(
         topBar = {
@@ -58,7 +88,7 @@ fun ProjectListScreen(
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(projects) { p ->
+                items(sortedProjects) { p ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = { onOpen(p.id) },
