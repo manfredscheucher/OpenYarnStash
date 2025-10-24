@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
@@ -96,16 +98,25 @@ fun ProjectListScreen(
                         ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
                         ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
                     }
+                    val count = projects.count { it.status == status }
+                    val selected = status in activeStatuses
                     FilterChip(
-                        selected = status in activeStatuses,
+                        selected = selected,
                         onClick = {
-                            activeStatuses = if (status in activeStatuses) {
+                            activeStatuses = if (selected) {
                                 activeStatuses - status
                             } else {
                                 activeStatuses + status
                             }
                         },
-                        label = { Text(statusText) }
+                        label = { Text("$statusText ($count)") },
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            labelColor = MaterialTheme.colorScheme.outline,
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        border = if (selected) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
             }

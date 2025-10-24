@@ -15,7 +15,7 @@
 
     <!-- Project list -->
     <string name="project_list_title">Projects</string>
-    <string name="project_list_empty">No projects yet. Tap +</string>
+    <string name="project_list_empty">No projects. Tap + to add a new one.</string>
     <string name="item_label_name">Name: %1$s</string>
 
     <!-- Common labels/actions -->
