@@ -58,10 +58,6 @@ fun App(repo: JsonRepository) {
         reloadAllData()
     }
 
-    LaunchedEffect(locale) {
-        Locale.setDefault(Locale(locale))
-    }
-
     if (showNotImplementedDialog) {
         AlertDialog(
             onDismissRequest = { showNotImplementedDialog = false },
@@ -265,31 +261,34 @@ fun App(repo: JsonRepository) {
                     }
 
                     Screen.Settings -> {
-                        SettingsScreen(
-                            currentLocale = locale,
-                            onBack = { screen = Screen.Home },
-                            onExport = {
-                                scope.launch {
-                                    val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
-                                    if (backupFileName != null) {
-                                        val json = withContext(Dispatchers.Default) { repo.getRawJson() }
-                                        fileDownloader.download(backupFileName, json)
+                        key(locale) {
+                            SettingsScreen(
+                                currentLocale = locale,
+                                onBack = { screen = Screen.Home },
+                                onExport = {
+                                    scope.launch {
+                                        val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
+                                        if (backupFileName != null) {
+                                            val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                                            fileDownloader.download(backupFileName, json)
+                                        }
                                     }
-                                }
-                            },
-                            onImport = { fileContent ->
-                                scope.launch {
-                                    withContext(Dispatchers.Default) {
-                                        repo.importData(fileContent)
+                                },
+                                onImport = { fileContent ->
+                                    scope.launch {
+                                        withContext(Dispatchers.Default) {
+                                            repo.importData(fileContent)
+                                        }
+                                        reloadAllData()
+                                        snackbarHostState.showSnackbar("Import erfolgreich")
                                     }
-                                    reloadAllData()
-                                    snackbarHostState.showSnackbar("Import erfolgreich")
+                                },
+                                onLocaleChange = { newLocale ->
+                                    Locale.setDefault(Locale(newLocale))
+                                    locale = newLocale
                                 }
-                            },
-                            onLocaleChange = { newLocale ->
-                                locale = newLocale
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
