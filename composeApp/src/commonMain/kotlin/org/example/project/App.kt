@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import java.util.Locale
 import kotlin.NoSuchElementException // Ensure this import is present
 import kotlin.random.Random
 
@@ -35,6 +36,7 @@ sealed class Screen {
 @Composable
 fun App(repo: JsonRepository) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+    var locale by remember { mutableStateOf(Locale.getDefault().language) }
 
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
@@ -54,6 +56,10 @@ fun App(repo: JsonRepository) {
 
     LaunchedEffect(Unit) {
         reloadAllData()
+    }
+
+    LaunchedEffect(locale) {
+        Locale.setDefault(Locale(locale))
     }
 
     if (showNotImplementedDialog) {
@@ -260,6 +266,7 @@ fun App(repo: JsonRepository) {
 
                     Screen.Settings -> {
                         SettingsScreen(
+                            currentLocale = locale,
                             onBack = { screen = Screen.Home },
                             onExport = {
                                 scope.launch {
@@ -279,8 +286,8 @@ fun App(repo: JsonRepository) {
                                     snackbarHostState.showSnackbar("Import erfolgreich")
                                 }
                             },
-                            onLocaleChange = { locale ->
-                                // locale change logic
+                            onLocaleChange = { newLocale ->
+                                locale = newLocale
                             }
                         )
                     }
