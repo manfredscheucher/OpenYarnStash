@@ -8,10 +8,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import kotlin.text.append
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,8 +91,22 @@ fun YarnListScreen(
                             colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                val brandText = yarn.brand?.let { "$it " } ?: ""
-                                Text("$brandText${yarn.name} (${yarn.color ?: "?"})", fontWeight = FontWeight.Bold)
+                                Text(buildAnnotatedString {
+                                    // Append brand with normal weight if it exists and is not blank
+                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)){
+                                            append("$it ")
+                                        }
+                                    }
+                                    // Append yarn name with bold weight
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(yarn.name)
+                                    }
+                                    // Append color with bold weight if it exists and is not blank
+                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                            append(" ($it)")
+                                        }
+                                })
                                 Spacer(Modifier.height(8.dp))
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
