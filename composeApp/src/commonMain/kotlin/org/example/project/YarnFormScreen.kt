@@ -314,8 +314,8 @@ fun YarnFormScreen(
             SelectAllOutlinedTextField(
                 value = added,
                 onValueChange = { added = it },
-                label = { Text(stringResource(Res.string.yarn_label_modified)) },
-                supportingText = { Text(stringResource(Res.string.date_format_hint_modified)) },
+                label = { Text(stringResource(Res.string.yarn_label_added)) },
+                supportingText = { Text(stringResource(Res.string.date_format_hint_added)) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
