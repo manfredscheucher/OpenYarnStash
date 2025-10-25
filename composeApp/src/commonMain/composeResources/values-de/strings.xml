@@ -10,6 +10,8 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Lager</string>
     <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
+    <string name="yarn_list_summary">Aktuelle Menge: %1$d g</string>
+    <string name="yarn_list_summary_meterage">Aktuelle Lauflänge: %1$d m</string>
     <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
 
     <!-- Project list -->
@@ -81,6 +83,7 @@
     <string name="usage_section_title">Zugeordnete Wolle</string>
     <string name="usage_amount_label">Menge (g)</string>
     <string name="usage_available">Verfügbar: %1$d g</string>
+    <string name="usage_available_meterage">Verfügbar: %1$d m</string>
     <string name="usage_used">Verbraucht: %1$d g</string>
     <string name="usage_projects_title">Projekte</string>
 

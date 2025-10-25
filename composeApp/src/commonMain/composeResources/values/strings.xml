@@ -11,6 +11,7 @@
     <string name="yarn_list_title">Yarn stash</string>
     <string name="yarn_list_empty">No yarns yet. Tap +</string>
     <string name="yarn_list_summary">Current amount: %1$d g</string>
+    <string name="yarn_list_summary_meterage">Current meterage: %1$d m</string>
     <string name="yarn_item_label_modified">Last modified: %1$s</string>
 
     <!-- Project list -->
@@ -82,6 +83,7 @@
     <string name="usage_section_title">Assigned yarn</string>
     <string name="usage_amount_label">Amount (g)</string>
     <string name="usage_available">Available: %1$d g</string>
+    <string name="usage_available_meterage">Available: %1$d m</string>
     <string name="usage_used">Used: %1$d g</string>
     <string name="usage_projects_title">Projects</string>
 
