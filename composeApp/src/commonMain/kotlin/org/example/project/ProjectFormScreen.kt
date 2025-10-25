@@ -156,6 +156,7 @@ fun ProjectFormScreen(
             onSave = {
                 saveAction()
                 showUnsavedDialogForBack = false
+                onBack()
             }
         )
     }
@@ -170,6 +171,7 @@ fun ProjectFormScreen(
             },
             onSave = {
                 saveAction()
+                showUnsavedDialogForAssignments = false
                 onNavigateToAssignments()
             }
         )
