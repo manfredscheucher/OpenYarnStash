@@ -41,7 +41,7 @@
     <string name="yarn_label_amount">Menge (g)</string>
     <string name="yarn_label_weight_per_skein">g / Knäuel (optional)</string>
     <string name="yarn_label_meterage_per_skein">m / Knäuel (optional)</string>
-    <string name="yarn_label_number_of_balls">Anzahl Knäuel</string>
+    <string name="yarn_label_number_of_skeins">Anzahl Knäuel</string>
     <string name="yarn_label_modified">Zuletzt geändert (optional)</string>
     <string name="date_format_hint_modified">Zuletzt geändert (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="yarn_label_added">Hinzugefügt (optional)</string>

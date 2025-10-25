@@ -268,7 +268,7 @@ fun YarnFormScreen(
                         }
                     }
                 },
-                label = { Text(stringResource(Res.string.yarn_label_number_of_balls)) },
+                label = { Text(stringResource(Res.string.yarn_label_number_of_skeins)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth()
             )
