@@ -92,6 +92,8 @@
     <string name="statistics_label_year">Jahr</string>
     <string name="statistics_label_month">Monat</string>
     <string name="statistics_total_yarn_weight">Gesamtgewicht des verfügbaren Garns: %1$d g</string>
+    <string name="statistics_yarn_bought_this_year">Gekaufte Wolle in diesem Jahr: %1$d g</string>
+    <string name="statistics_yarn_used_this_year">Verbrauchte Wolle in diesem Jahr: %1$d g</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>

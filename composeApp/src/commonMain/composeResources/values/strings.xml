@@ -93,6 +93,8 @@
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
     <string name="statistics_total_yarn_weight">Total available weight: %1$d g</string>
+    <string name="statistics_yarn_bought_this_year">Yarn bought this year: %1$d g</string>
+    <string name="statistics_yarn_used_this_year">Yarn used this year: %1$d g</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>

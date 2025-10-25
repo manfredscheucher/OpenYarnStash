@@ -257,7 +257,11 @@ fun App(repo: JsonRepository) {
                     }
 
                     Screen.Statistics -> {
-                        StatisticsScreen(yarns = yarns, usages = usages, onBack = { screen = Screen.Home })
+                        StatisticsScreen(
+                            yarns = yarns, 
+                            projects = projects,
+                            usages = usages, 
+                            onBack = { screen = Screen.Home })
                     }
 
                     Screen.Settings -> {
