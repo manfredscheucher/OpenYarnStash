@@ -92,7 +92,7 @@ fun ProjectFormScreen(
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
-    var showUnsavedDialog by remember { mutableStateOf(false) }
+    var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
 
     val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge) {
@@ -127,9 +127,17 @@ fun ProjectFormScreen(
 
     val backAction = {
         if (hasChanges) {
-            showUnsavedDialog = true
+            showUnsavedDialogForBack = true
         } else {
             onBack()
+        }
+    }
+
+    val assignAction = {
+        if (hasChanges) {
+            showUnsavedDialogForAssignments = true
+        } else {
+            onNavigateToAssignments() // TODO fix: navigates back to home screen
         }
     }
 
@@ -137,52 +145,35 @@ fun ProjectFormScreen(
         backAction()
     }
 
-    if (showUnsavedDialog) {
+    if (showUnsavedDialogForBack) {
         UnsavedChangesDialog(
-            onDismiss = { showUnsavedDialog = false },
-            onStay = { showUnsavedDialog = false },
+            onDismiss = { showUnsavedDialogForBack = false },
+            onStay = { showUnsavedDialogForBack = false },
             onDiscard = {
-                showUnsavedDialog = false
+                showUnsavedDialogForBack = false
                 onBack()
             },
             onSave = {
                 saveAction()
-                showUnsavedDialog = false
+                showUnsavedDialogForBack = false
+                onBack()
             }
         )
     }
 
     if (showUnsavedDialogForAssignments) {
-        AlertDialog(
-            onDismissRequest = { showUnsavedDialogForAssignments = false },
-            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
-            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
-            confirmButton = {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = { showUnsavedDialogForAssignments = false }) {
-                        Text(stringResource(Res.string.common_stay))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        showUnsavedDialogForAssignments = false
-                        onNavigateToAssignments()
-                    }) {
-                        Text(stringResource(Res.string.common_no))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        saveAction()
-                        showUnsavedDialogForAssignments = false
-                        onNavigateToAssignments()
-                    }) {
-                        Text(stringResource(Res.string.common_yes))
-                    }
-                }
+        UnsavedChangesDialog(
+            onDismiss = { showUnsavedDialogForAssignments = false },
+            onStay = { showUnsavedDialogForAssignments = false },
+            onDiscard = {
+                showUnsavedDialogForAssignments = false
+                onNavigateToAssignments()
             },
-            dismissButton = null
+            onSave = {
+                saveAction()
+                showUnsavedDialogForAssignments = false
+                onNavigateToAssignments()
+            }
         )
     }
 
@@ -283,13 +274,7 @@ fun ProjectFormScreen(
 
                 Spacer(Modifier.height(16.dp))
                 Button(
-                    onClick = {
-                        if (hasChanges) {
-                            showUnsavedDialogForAssignments = true
-                        } else {
-                            onNavigateToAssignments()
-                        }
-                    },
+                    onClick = assignAction,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(Res.string.project_form_button_assignments))
