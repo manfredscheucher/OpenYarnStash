@@ -31,6 +31,12 @@ fun ProjectAssignmentsScreen(
         derivedStateOf { currentAssignments != initialAssignments }
     }
 
+    val sortedYarns = remember(allYarns, currentAssignments) {
+        allYarns.sortedByDescending { yarn ->
+            (currentAssignments[yarn.id] ?: 0) > 0
+        }
+    }
+
     val backAction = {
         if (hasChanges) {
             showUnsavedDialog = true
@@ -111,7 +117,7 @@ fun ProjectAssignmentsScreen(
                     .navigationBarsPadding(),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(allYarns, key = { it.id }) { yarn ->
+                items(sortedYarns, key = { it.id }) { yarn ->
                     val assignedAmount = currentAssignments[yarn.id]
                     val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 
