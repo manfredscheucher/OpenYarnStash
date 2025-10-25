@@ -1,18 +1,24 @@
 package org.example.project
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +37,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
@@ -48,6 +56,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProjectListScreen(
     projects: List<Project>,
+    projectImages: Map<Int, ByteArray?>,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
     onBack: () -> Unit
@@ -130,21 +139,40 @@ fun ProjectListScreen(
                         .fillMaxSize(),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(sortedProjects) { p ->
+                ) {                    items(sortedProjects) { p ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = { onOpen(p.id) },
                             colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(p.name, fontWeight = FontWeight.Bold)
-                                val statusText = when (p.status) {
-                                    ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
-                                    ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
-                                    ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                val imageBytes = projectImages[p.id]
+                                if (imageBytes != null) {
+                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                    Image(
+                                        bitmap = bitmap,
+                                        contentDescription = "Project image for ${p.name}",
+                                        modifier = Modifier.size(64.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Work,
+                                        contentDescription = "Project icon",
+                                        modifier = Modifier.size(64.dp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
                                 }
-                                Text(statusText)
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column {
+                                    Text(p.name, fontWeight = FontWeight.Bold)
+                                    val statusText = when (p.status) {
+                                        ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                                        ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                                        ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                                    }
+                                    Text(statusText)
+                                }
                             }
                         }
                     }

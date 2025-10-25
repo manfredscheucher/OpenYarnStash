@@ -41,6 +41,7 @@ fun App(repo: JsonRepository) {
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
+    var projectImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
@@ -160,8 +161,12 @@ fun App(repo: JsonRepository) {
                     }
 
                     Screen.ProjectList -> {
+                        LaunchedEffect(projects) {
+                            projectImages = projects.associate { it.id to withContext(Dispatchers.Default) { repo.getProjectImage(it.id) } }
+                        }
                         ProjectListScreen(
                             projects = projects.sortedByDescending { it.modified },
+                            projectImages = projectImages,
                             onAddClick = {
                                 scope.launch {
                                     val existingIds = projects.map { it.id }.toSet()
