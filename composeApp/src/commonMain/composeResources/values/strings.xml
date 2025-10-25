@@ -90,6 +90,7 @@
     <string name="statistics_option_month">Month</string>
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
+    <string name="statistics_total_yarn_weight">Total available weight: %1$d g</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
