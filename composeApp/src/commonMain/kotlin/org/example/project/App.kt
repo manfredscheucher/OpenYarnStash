@@ -188,6 +188,13 @@ fun App(repo: JsonRepository) {
                                 null
                             }
                         }
+                        var projectImage by remember { mutableStateOf<ByteArray?>(null) }
+
+                        LaunchedEffect(s.projectId) {
+                            projectImage = withContext(Dispatchers.Default) {
+                                repo.getProjectImage(s.projectId)
+                            }
+                        }
 
                         if (existingProject == null) {
                             LaunchedEffect(s.projectId) { screen = Screen.ProjectList }
@@ -195,6 +202,7 @@ fun App(repo: JsonRepository) {
                             val usagesForCurrentProject = usages.filter { it.projectId == existingProject.id }
                             ProjectFormScreen(
                                 initial = existingProject,
+                                initialImage = projectImage,
                                 usagesForProject = usagesForCurrentProject,
                                 yarnNameById = { yarnId ->
                                     try {

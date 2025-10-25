@@ -47,4 +47,10 @@ class JsFileHandler : FileHandler {
         val base64 = Base64.encode(bytes.decodeToString())
         localStorage.setItem(path, "data:image/jpeg;base64,$base64")
     }
+
+    override suspend fun readBytes(path: String): ByteArray? {
+        val dataUrl = localStorage.getItem(path) ?: return null
+        val base64 = dataUrl.substringAfter("base64,")
+        return Base64.decode(base64).encodeToByteArray()
+    }
 }

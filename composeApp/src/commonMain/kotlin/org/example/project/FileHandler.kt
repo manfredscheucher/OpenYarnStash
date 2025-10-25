@@ -5,4 +5,5 @@ interface FileHandler {
     suspend fun writeFile(content: String)
     suspend fun backupFile(): String?
     suspend fun writeBytes(path: String, bytes: ByteArray)
+    suspend fun readBytes(path: String): ByteArray?
 }

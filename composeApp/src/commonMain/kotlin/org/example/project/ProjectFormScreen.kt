@@ -75,6 +75,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProjectFormScreen(
     initial: Project,
+    initialImage: ByteArray?,
     usagesForProject: List<Usage>,
     yarnNameById: (Int) -> String,
     onBack: () -> Unit,
@@ -96,13 +97,13 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
-    var image by remember { mutableStateOf<ByteArray?>(null) }
+    var newImage by remember { mutableStateOf<ByteArray?>(null) }
 
     val imagePicker = rememberImagePickerLauncher {
-        image = it
+        newImage = it
     }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, image) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -112,7 +113,7 @@ fun ProjectFormScreen(
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge?.toString() ?: "") ||
-                    image != null
+                    newImage != null
         }
     }
 
@@ -130,7 +131,7 @@ fun ProjectFormScreen(
             size = size.ifBlank { null },
             gauge = gauge.toIntOrNull()
         )
-        onSave(project, image)
+        onSave(project, newImage)
     }
 
     val backAction = {
@@ -218,7 +219,8 @@ fun ProjectFormScreen(
             Button(onClick = { imagePicker.launch() }) {
                 Text("Select Image")
             }
-            image?.let {
+            val displayedImage = newImage ?: initialImage
+            displayedImage?.let {
                 val bitmap: ImageBitmap? = remember(it) { it.toImageBitmap() }
                 if (bitmap != null) {
                     Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
