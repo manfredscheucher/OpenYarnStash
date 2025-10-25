@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -138,7 +139,12 @@ fun YarnListScreen(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(stringResource(Res.string.usage_used, data.usedAmount))
-                                    Text(stringResource(Res.string.usage_available, data.availableAmount))
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text(stringResource(Res.string.usage_available, data.availableAmount))
+                                        data.availableMeterageAmount?.let {
+                                            Text(stringResource(Res.string.usage_available_meterage, it))
+                                        }
+                                    }
                                 }
                             }
                         }
