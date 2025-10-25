@@ -124,12 +124,12 @@ fun YarnListScreen(
                         ) {
 
                             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                val imageBytes = yarnImages[yarn.id]
+                                val imageBytes = yarnImages[data.yarnItem.id]
                                 if (imageBytes != null) {
                                     val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
                                     Image(
                                         bitmap = bitmap,
-                                        contentDescription = "Yarn image for ${yarn.name}",
+                                        contentDescription = "Yarn image for ${data.yarnItem.name}",
                                         modifier = Modifier.size(64.dp),
                                         contentScale = ContentScale.Crop
                                     )
@@ -144,31 +144,46 @@ fun YarnListScreen(
                                 Spacer(modifier = Modifier.width(16.dp))
                                     Column(modifier = Modifier.weight(1f)) {
 
-                                    Text(buildAnnotatedString {
-                                        // Append brand with normal weight if it exists and is not blank
-                                        data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
-                                            withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)){
-                                                append("$it ")
+                                        Text(buildAnnotatedString {
+                                            // Append brand with normal weight if it exists and is not blank
+                                            data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
+                                                withStyle(
+                                                    style = SpanStyle(
+                                                        fontStyle = FontStyle.Italic,
+                                                        fontWeight = FontWeight.SemiBold
+                                                    )
+                                                ) {
+                                                    append("$it ")
+                                                }
                                             }
-                                        }
-                                        // Append yarn name with bold weight
-                                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                            append(data.yarnItem.name)
-                                        }
-                                        // Append color with bold weight if it exists and is not blank
-                                        data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
+                                            // Append yarn name with bold weight
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(data.yarnItem.name)
+                                            }
+                                            // Append color with bold weight if it exists and is not blank
+                                            data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
                                                 append(" ($it)")
                                             }
-                                    })
-                                    Spacer(Modifier.height(8.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(stringResource(Res.string.usage_used, data.usedAmount))
-                                        Text(stringResource(Res.string.usage_available, data.availableAmount))
+                                        })
+                                        Spacer(Modifier.height(8.dp))
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                stringResource(
+                                                    Res.string.usage_used,
+                                                    data.usedAmount
+                                                )
+                                            )
+                                            Text(
+                                                stringResource(
+                                                    Res.string.usage_available,
+                                                    data.availableAmount
+                                                )
+                                            )
+                                        }
                                     }
-                                 }
                             }
                         }
                     }
