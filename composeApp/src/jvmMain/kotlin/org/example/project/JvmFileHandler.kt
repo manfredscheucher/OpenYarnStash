@@ -29,4 +29,10 @@ class JvmFileHandler : FileHandler {
         }
         return null
     }
+
+    override suspend fun writeBytes(path: String, bytes: ByteArray) {
+        val imageFile = File(path)
+        imageFile.parentFile?.mkdirs()
+        imageFile.writeBytes(bytes)
+    }
 }

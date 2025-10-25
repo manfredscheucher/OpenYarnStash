@@ -128,4 +128,8 @@ class JsonRepository(private val fileHandler: FileHandler) {
         }
         save()
     }
+
+    suspend fun saveProjectImage(projectId: Int, image: ByteArray) {
+        fileHandler.writeBytes("img/$projectId.jpg", image)
+    }
 }

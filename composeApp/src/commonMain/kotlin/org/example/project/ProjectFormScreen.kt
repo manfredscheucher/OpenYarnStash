@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
@@ -77,7 +79,7 @@ fun ProjectFormScreen(
     yarnNameById: (Int) -> String,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Project) -> Unit,
+    onSave: (Project, ByteArray?) -> Unit,
     onNavigateToAssignments: () -> Unit
 ) {
     val isNewProject = initial.id == -1
@@ -94,8 +96,13 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
+    var image by remember { mutableStateOf<ByteArray?>(null) }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge) {
+    val imagePicker = rememberImagePickerLauncher {
+        image = it
+    }
+
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, image) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -104,7 +111,8 @@ fun ProjectFormScreen(
                     notes != (initial.notes ?: "") ||
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
-                    gauge != (initial.gauge?.toString() ?: "")
+                    gauge != (initial.gauge?.toString() ?: "") ||
+                    image != null
         }
     }
 
@@ -122,7 +130,7 @@ fun ProjectFormScreen(
             size = size.ifBlank { null },
             gauge = gauge.toIntOrNull()
         )
-        onSave(project)
+        onSave(project, image)
     }
 
     val backAction = {
@@ -207,6 +215,16 @@ fun ProjectFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
+            Button(onClick = { imagePicker.launch() }) {
+                Text("Select Image")
+            }
+            image?.let {
+                val bitmap: ImageBitmap? = remember(it) { it.toImageBitmap() }
+                if (bitmap != null) {
+                    Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                }
+            }
+            Spacer(Modifier.height(16.dp))
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
@@ -349,3 +367,5 @@ private fun DeleteRestrictionDialog(onDismiss: () -> Unit) {
         }
     )
 }
+
+expect fun ByteArray.toImageBitmap(): ImageBitmap

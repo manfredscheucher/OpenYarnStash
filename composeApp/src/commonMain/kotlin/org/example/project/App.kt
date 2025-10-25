@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import java.util.Locale
+import java.util.Locale // TODO
 import kotlin.NoSuchElementException // Ensure this import is present
 import kotlin.random.Random
 
@@ -211,9 +211,12 @@ fun App(repo: JsonRepository) {
                                         screen = Screen.ProjectList
                                     }
                                 },
-                                onSave = { editedProject ->
+                                onSave = { editedProject, image ->
                                     scope.launch {
-                                        withContext(Dispatchers.Default) { repo.addOrUpdateProject(editedProject) }
+                                        withContext(Dispatchers.Default) {
+                                            repo.addOrUpdateProject(editedProject)
+                                            image?.let { repo.saveProjectImage(editedProject.id, it) }
+                                        }
                                         reloadAllData()
                                         screen = Screen.ProjectList
                                     }
