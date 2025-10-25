@@ -22,7 +22,8 @@ actual fun rememberImagePickerLauncher(onImageSelected: (ByteArray) -> Unit): Im
     ) { uri ->
         uri?.let {
             context.contentResolver.openInputStream(it)?.use { inputStream ->
-                onImageSelected(inputStream.readBytes())
+                val resizedImage = resizeImage(inputStream.readBytes(), 400, 400)
+                onImageSelected(resizedImage)
             }
         }
     }

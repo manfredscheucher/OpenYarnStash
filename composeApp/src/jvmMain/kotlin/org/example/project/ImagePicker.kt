@@ -19,7 +19,8 @@ actual class ImagePickerLauncher(
             val image = ImageIO.read(java.io.File(dir, file))
             val baos = ByteArrayOutputStream()
             ImageIO.write(image, "jpg", baos)
-            onImageSelected(baos.toByteArray())
+            val resizedImage = resizeImage(baos.toByteArray(), 400, 400)
+            onImageSelected(resizedImage)
         }
     }
 }
