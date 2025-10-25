@@ -30,4 +30,19 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         }
         return null
     }
+
+    override suspend fun writeBytes(path: String, bytes: ByteArray) {
+        val imageFile = File(context.filesDir, path)
+        imageFile.parentFile?.mkdirs()
+        imageFile.writeBytes(bytes)
+    }
+
+    override suspend fun readBytes(path: String): ByteArray? {
+        val imageFile = File(context.filesDir, path)
+        return if (imageFile.exists()) {
+            imageFile.readBytes()
+        } else {
+            null
+        }
+    }
 }
