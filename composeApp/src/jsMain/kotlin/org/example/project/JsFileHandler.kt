@@ -53,4 +53,8 @@ class JsFileHandler : FileHandler {
         val base64 = dataUrl.substringAfter("base64,")
         return Base64.decode(base64).encodeToByteArray()
     }
+
+    override suspend fun deleteFile(path: String) {
+        localStorage.removeItem(path)
+    }
 }

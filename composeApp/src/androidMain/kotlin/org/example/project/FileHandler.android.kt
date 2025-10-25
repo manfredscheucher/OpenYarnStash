@@ -45,4 +45,11 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
             null
         }
     }
+
+    override suspend fun deleteFile(path: String) {
+        val fileToDelete = File(context.filesDir, path)
+        if (fileToDelete.exists()) {
+            fileToDelete.delete()
+        }
+    }
 }

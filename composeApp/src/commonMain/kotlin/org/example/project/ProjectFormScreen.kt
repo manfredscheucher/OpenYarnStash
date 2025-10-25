@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -65,10 +66,12 @@ import openyarnstash.composeapp.generated.resources.project_label_start_date
 import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
+import openyarnstash.composeapp.generated.resources.projects
 import openyarnstash.composeapp.generated.resources.usage_section_title
 import openyarnstash.composeapp.generated.resources.yarn_item_label_modified
 import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -214,14 +217,28 @@ fun ProjectFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
-            Button(onClick = { imagePicker.launch() }) {
-                Text("Select Image")
-            }
             val displayedImage = newImage ?: initialImage
-            displayedImage?.let {
-                val bitmap: ImageBitmap? = remember(it) { it.toImageBitmap() }
+            if (displayedImage != null) {
+                val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
                 if (bitmap != null) {
                     Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                }
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.projects),
+                    contentDescription = "Project icon",
+                    modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { imagePicker.launch() }) {
+                    Text("Select Image")
+                }
+                if (displayedImage != null) {
+                    Button(onClick = { newImage = createEmptyImageByteArray() }) {
+                        Text("Remove Image")
+                    }
                 }
             }
             Spacer(Modifier.height(16.dp))

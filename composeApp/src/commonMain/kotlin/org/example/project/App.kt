@@ -50,6 +50,7 @@ fun App(repo: JsonRepository) {
     val scope = rememberCoroutineScope()
     val fileDownloader = LocalFileDownloader.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val emptyImageByteArray = remember { createEmptyImageByteArray() }
 
     suspend fun reloadAllData() {
         val data = withContext(Dispatchers.Default) { repo.load() }
@@ -160,7 +161,13 @@ fun App(repo: JsonRepository) {
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
                                             repo.addOrUpdateYarn(editedYarn)
-                                            image?.let { repo.saveYarnImage(editedYarn.id, it) }
+                                            if (image != null) {
+                                                if (image.contentEquals(emptyImageByteArray)) {
+                                                    repo.deleteYarnImage(editedYarn.id)
+                                                } else {
+                                                    repo.saveYarnImage(editedYarn.id, image)
+                                                }
+                                            }
                                         }
                                         reloadAllData()
                                         screen = Screen.YarnList
@@ -250,7 +257,13 @@ fun App(repo: JsonRepository) {
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
                                             repo.addOrUpdateProject(editedProject)
-                                            image?.let { repo.saveProjectImage(editedProject.id, it) }
+                                            if (image != null) {
+                                                if (image.contentEquals(emptyImageByteArray)) {
+                                                    repo.deleteProjectImage(editedProject.id)
+                                                } else {
+                                                    repo.saveProjectImage(editedProject.id, image)
+                                                }
+                                            }
                                         }
                                         reloadAllData()
                                         screen = Screen.ProjectList
@@ -295,11 +308,7 @@ fun App(repo: JsonRepository) {
                     }
 
                     Screen.Statistics -> {
-                        StatisticsScreen(
-                            yarns = yarns, 
-                            projects = projects,
-                            usages = usages, 
-                            onBack = { screen = Screen.Home })
+                        StatisticsScreen(yarns = yarns, usages = usages, onBack = { screen = Screen.Home })
                     }
 
                     Screen.Settings -> {

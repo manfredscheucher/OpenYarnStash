@@ -44,4 +44,11 @@ class JvmFileHandler : FileHandler {
             null
         }
     }
+
+    override suspend fun deleteFile(path: String) {
+        val fileToDelete = File(path)
+        if (fileToDelete.exists()) {
+            fileToDelete.delete()
+        }
+    }
 }
