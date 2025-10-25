@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +49,8 @@ import openyarnstash.composeapp.generated.resources.project_list_title
 import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
+import openyarnstash.composeapp.generated.resources.projects
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -156,11 +157,11 @@ fun ProjectListScreen(
                                         contentScale = ContentScale.Crop
                                     )
                                 } else {
-                                    Icon(
-                                        imageVector = Icons.Default.Work,
+                                    Image(
+                                        painter = painterResource(Res.drawable.projects),
                                         contentDescription = "Project icon",
                                         modifier = Modifier.size(64.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        contentScale = ContentScale.Crop
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
