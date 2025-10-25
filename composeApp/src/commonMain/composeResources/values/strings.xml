@@ -95,6 +95,9 @@
     <string name="statistics_total_yarn_weight">Total available weight: %1$d g</string>
     <string name="statistics_yarn_bought_this_year">Yarn bought this year: %1$d g</string>
     <string name="statistics_yarn_used_this_year">Yarn used this year: %1$d g</string>
+    <string name="statistics_projects_in_progress">Projects in progress: %1$d</string>
+    <string name="statistics_projects_planned">Planned projects: %1$d</string>
+    <string name="statistics_projects_finished_this_year">Finished projects this year: %1$d</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
