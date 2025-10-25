@@ -10,13 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.statistics_projects_finished_this_year
+import openyarnstash.composeapp.generated.resources.statistics_projects_in_progress
+import openyarnstash.composeapp.generated.resources.statistics_projects_planned
 import openyarnstash.composeapp.generated.resources.statistics_title
 import openyarnstash.composeapp.generated.resources.statistics_total_yarn_weight
+import openyarnstash.composeapp.generated.resources.statistics_yarn_bought_this_year
+import openyarnstash.composeapp.generated.resources.statistics_yarn_used_this_year
 import org.jetbrains.compose.resources.stringResource
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsScreen(yarns: List<Yarn>, usages: List<Usage>, onBack: () -> Unit) {
+fun StatisticsScreen(yarns: List<Yarn>, projects: List<Project>, usages: List<Usage>, onBack: () -> Unit) {
     AppBackHandler {
         onBack()
     }
@@ -39,6 +45,30 @@ fun StatisticsScreen(yarns: List<Yarn>, usages: List<Usage>, onBack: () -> Unit)
                 //TODO handle negative ones differently
             }
             Text(stringResource(Res.string.statistics_total_yarn_weight, totalAvailable))
+
+            val currentYear = LocalDate.now().year.toString()
+            val yarnBoughtThisYear = yarns
+                .filter { it.added?.startsWith(currentYear) == true }
+                .sumOf { it.amount }
+
+            Text(stringResource(Res.string.statistics_yarn_bought_this_year, yarnBoughtThisYear))
+
+            val yarnUsedThisYear = projects
+                .filter { it.status == ProjectStatus.FINISHED && it.endDate?.startsWith(currentYear) == true }
+                .sumOf { project ->
+                    usages.filter { it.projectId == project.id }.sumOf { it.amount }
+                }
+
+            Text(stringResource(Res.string.statistics_yarn_used_this_year, yarnUsedThisYear))
+
+            val projectsInProgress = projects.count { it.status == ProjectStatus.IN_PROGRESS }
+            Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgress))
+
+            val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
+            Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
+
+            val projectsFinishedThisYear = projects.count { it.status == ProjectStatus.FINISHED && it.endDate?.startsWith(currentYear) == true }
+            Text(stringResource(Res.string.statistics_projects_finished_this_year, projectsFinishedThisYear))
         }
     }
 }

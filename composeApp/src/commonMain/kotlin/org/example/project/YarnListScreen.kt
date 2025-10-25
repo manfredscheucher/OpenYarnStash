@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -72,13 +73,41 @@ fun YarnListScreen(
                     Text(stringResource(Res.string.yarn_list_empty))
                 }
             } else {
-                val totalAvailable = yarns.sumOf { yarn ->
-                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
-                    (yarn.amount - used).coerceAtLeast(0)
+                val usagesByYarnId = remember(usages) {
+                    usages.groupBy { it.yarnId }
+                        .mapValues { entry -> entry.value.sumOf { it.amount } }
                 }
+
+                val yarnData = remember(yarns, usagesByYarnId) {
+                    yarns.map { yarn ->
+                        val used = usagesByYarnId[yarn.id] ?: 0
+                        val available = (yarn.amount - used).coerceAtLeast(0)
+                        val meterage = yarn.meteragePerSkein
+                        val weight = yarn.weightPerSkein
+                        val availableMeterage = if (meterage != null && weight != null && weight > 0) {
+                            (available * meterage) / weight
+                        } else {
+                            null
+                        }
+                        object {
+                            val yarnItem = yarn
+                            val usedAmount = used
+                            val availableAmount = available
+                            val availableMeterageAmount = availableMeterage
+                        }
+                    }
+                }
+
+                val totalAvailable = yarnData.sumOf { it.availableAmount }
+                val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
+
                 Text(
                     text = stringResource(Res.string.yarn_list_summary, totalAvailable),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                )
+                Text(
+                    text = stringResource(Res.string.yarn_list_summary_meterage, totalMeterage),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 )
                 LazyColumn(
                     modifier = Modifier
@@ -86,16 +115,14 @@ fun YarnListScreen(
                         .weight(1f),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(yarns) { yarn ->
-                        val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
-                        val available = (yarn.amount - used).coerceAtLeast(0)
-
+                ) {                    items(yarnData) { data ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            onClick = { onOpen(yarn.id) },
-                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
+                            onClick = { onOpen(data.yarnItem.id) },
+                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(data.yarnItem.id))
                         ) {
+
                             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                                 val imageBytes = yarnImages[yarn.id]
                                 if (imageBytes != null) {
@@ -115,20 +142,21 @@ fun YarnListScreen(
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
-                                Column(modifier = Modifier.weight(1f)) {
+                                    Column(modifier = Modifier.weight(1f)) {
+
                                     Text(buildAnnotatedString {
                                         // Append brand with normal weight if it exists and is not blank
-                                        yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                        data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
                                             withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)){
                                                 append("$it ")
                                             }
                                         }
                                         // Append yarn name with bold weight
                                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                            append(yarn.name)
+                                            append(data.yarnItem.name)
                                         }
                                         // Append color with bold weight if it exists and is not blank
-                                        yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                        data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
                                                 append(" ($it)")
                                             }
                                     })
@@ -137,10 +165,10 @@ fun YarnListScreen(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Text(stringResource(Res.string.usage_used, used))
-                                        Text(stringResource(Res.string.usage_available, available))
+                                        Text(stringResource(Res.string.usage_used, data.usedAmount))
+                                        Text(stringResource(Res.string.usage_available, data.availableAmount))
                                     }
-                                }
+                                 }
                             }
                         }
                     }
