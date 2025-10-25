@@ -92,7 +92,8 @@ fun ProjectFormScreen(
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
-    var showUnsavedDialog by remember { mutableStateOf(false) }
+    var showUnsavedDialogForBack by remember { mutableStateOf(false) }
+    var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
 
     val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge) {
         derivedStateOf {
@@ -126,9 +127,17 @@ fun ProjectFormScreen(
 
     val backAction = {
         if (hasChanges) {
-            showUnsavedDialog = true
+            showUnsavedDialogForBack = true
         } else {
             onBack()
+        }
+    }
+
+    val assignAction = {
+        if (hasChanges) {
+            showUnsavedDialogForAssignments = true
+        } else {
+            onNavigateToAssignments()
         }
     }
 
@@ -136,17 +145,32 @@ fun ProjectFormScreen(
         backAction()
     }
 
-    if (showUnsavedDialog) {
+    if (showUnsavedDialogForBack) {
         UnsavedChangesDialog(
-            onDismiss = { showUnsavedDialog = false },
-            onStay = { showUnsavedDialog = false },
+            onDismiss = { showUnsavedDialogForBack = false },
+            onStay = { showUnsavedDialogForBack = false },
             onDiscard = {
-                showUnsavedDialog = false
+                showUnsavedDialogForBack = false
                 onBack()
             },
             onSave = {
                 saveAction()
-                showUnsavedDialog = false
+                showUnsavedDialogForBack = false
+            }
+        )
+    }
+
+    if (showUnsavedDialogForAssignments) {
+        UnsavedChangesDialog(
+            onDismiss = { showUnsavedDialogForAssignments = false },
+            onStay = { showUnsavedDialogForAssignments = false },
+            onDiscard = {
+                showUnsavedDialogForAssignments = false
+                onNavigateToAssignments()
+            },
+            onSave = {
+                saveAction()
+                onNavigateToAssignments()
             }
         )
     }
@@ -248,7 +272,7 @@ fun ProjectFormScreen(
 
                 Spacer(Modifier.height(16.dp))
                 Button(
-                    onClick = onNavigateToAssignments,
+                    onClick = assignAction,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(Res.string.project_form_button_assignments))
