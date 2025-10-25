@@ -137,7 +137,7 @@ fun ProjectFormScreen(
         if (hasChanges) {
             showUnsavedDialogForAssignments = true
         } else {
-            onNavigateToAssignments()
+            onNavigateToAssignments() // TODO fix: navigates back to home screen
         }
     }
 
