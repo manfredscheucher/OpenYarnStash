@@ -5,28 +5,33 @@
 
 ## TL;DR
 - OpenYarnStash **does not collect** personal or device-identifying data and runs **no servers**.
-- The app stores only a **plaintext JSON** file on your device with your **yarn**, **projects**, and **assignments (usage)**.
-- You can **inspect, export, and import** that file.
-- Optional: with your **explicit opt-in**, the app can sync that JSON to **your own Google Drive** using Google’s API. We, the maintainers, **never receive** your data.
+- The app stores a **plaintext JSON** file on your device with your **yarn**, **projects**, and **assignments (usage)**.
+- You can also add **optional images** for yarns and projects, which are stored locally on your device.
+- You can **inspect, export, and import** the JSON file. Images are stored in a separate `img` folder.
+- Optional: with your **explicit opt-in**, the app can sync the JSON file to **your own Google Drive**. Images are **not** synced. We, the maintainers, **never receive** your data.
 
 ---
 
 ## 1) What data the app handles
-A single plaintext **JSON** file containing what you enter:
-- **Yarn** (e.g., name, color, brand, amounts, notes, links, dates)
-- **Projects** (e.g., name, notes, links, dates)
-- **Assignments / Usage** (pairs of project ↔ yarn with amounts)
+The app handles two types of data, both stored exclusively on your device:
+1.  A single plaintext **JSON** file (`stash.json`) containing what you enter:
+    - **Yarn** (e.g., name, color, brand, amounts, notes, links, dates)
+    - **Projects** (e.g., name, notes, links, dates)
+    - **Assignments / Usage** (pairs of project ↔ yarn with amounts)
+2.  Optional **Images** you add to your yarns and projects.
 
 No analytics, tracking, advertising IDs, or fingerprinting.
 
 ---
 
 ## 2) Where data is stored
-- **Local (default):** The JSON is stored on your device to restore your data on next launch.
-- **Import/Export:** In **Settings**, you can export/import, verify, and transfer the file.
-- **Optional Google Drive Sync:** If you **explicitly enable** it in **Settings**, the app syncs the same JSON to **your Google Drive** to share across devices or back it up.  
-  - Uses **Google’s official API** and **OAuth**.  
-  - The file lives in **your** Google account; you can revoke access anytime.  
+- **Local (default):** All data is stored on your device.
+    - The **JSON file** (`stash.json`) is stored in the app's data directory.
+    - **Images** are stored in subfolders within an `img` directory (e.g., `img/yarn/` and `img/project/`).
+- **Import/Export:** In **Settings**, you can export/import, verify, and transfer the JSON file. The images are not part of this export and need to be handled manually if you move devices.
+- **Optional Google Drive Sync:** If you **explicitly enable** it in **Settings**, the app syncs only the `stash.json` file to **your Google Drive** to share across devices or back it up. **Images are not included in the sync.**
+  - Uses **Google’s official API** and **OAuth**.
+  - The file lives in **your** Google account; you can revoke access anytime.
   - We, the maintainers, **do not have access** to your Drive or files.
 
 > To use Drive sync, you must have Google Drive set up and agree to Google’s terms and privacy policy.
@@ -74,8 +79,3 @@ Policy updates will be reflected here with a new “Last updated” date.
 
 ## 9) Contact
 Questions or requests? Please open an **issue** in this repository.
-
-
-⸻
-
-If you want, I can also generate a short badge row (e.g., Kotlin, Compose, Platforms) and a tiny BUILDING.md skeleton to match your current setup.

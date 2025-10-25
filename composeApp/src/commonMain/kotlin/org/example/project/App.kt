@@ -42,6 +42,7 @@ fun App(repo: JsonRepository) {
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
     var projectImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
+    var yarnImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
@@ -87,8 +88,12 @@ fun App(repo: JsonRepository) {
                     )
 
                     Screen.YarnList -> {
+                        LaunchedEffect(yarns) {
+                            yarnImages = yarns.associate { it.id to withContext(Dispatchers.Default) { repo.getYarnImage(it.id) } }
+                        }
                         YarnListScreen(
                             yarns = yarns.sortedByDescending { it.modified },
+                            yarnImages = yarnImages,
                             usages = usages,
                             onAddClick = {
                                 scope.launch {
@@ -116,6 +121,13 @@ fun App(repo: JsonRepository) {
                                 null
                             }
                         }
+                        var yarnImage by remember { mutableStateOf<ByteArray?>(null) }
+
+                        LaunchedEffect(s.yarnId) {
+                            yarnImage = withContext(Dispatchers.Default) {
+                                repo.getYarnImage(s.yarnId)
+                            }
+                        }
 
                         if (existingYarn == null) {
                             LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
@@ -123,6 +135,7 @@ fun App(repo: JsonRepository) {
                             val relatedUsages = usages.filter { it.yarnId == existingYarn.id }
                             YarnFormScreen(
                                 initial = existingYarn,
+                                initialImage = yarnImage,
                                 usagesForYarn = relatedUsages,
                                 projectNameById = { pid ->
                                     try {
@@ -139,9 +152,12 @@ fun App(repo: JsonRepository) {
                                         screen = Screen.YarnList
                                     }
                                 },
-                                onSave = { editedYarn ->
+                                onSave = { editedYarn, image ->
                                     scope.launch {
-                                        withContext(Dispatchers.Default) { repo.addOrUpdateYarn(editedYarn) }
+                                        withContext(Dispatchers.Default) {
+                                            repo.addOrUpdateYarn(editedYarn)
+                                            image?.let { repo.saveYarnImage(editedYarn.id, it) }
+                                        }
                                         reloadAllData()
                                         screen = Screen.YarnList
                                     }

@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,7 +8,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -15,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.text.append
 
@@ -22,6 +27,7 @@ import kotlin.text.append
 @Composable
 fun YarnListScreen(
     yarns: List<Yarn>,
+    yarnImages: Map<Int, ByteArray?>,
     usages: List<Usage>,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
@@ -79,8 +85,7 @@ fun YarnListScreen(
                         .weight(1f),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(yarns) { yarn ->
+                ) {                    items(yarns) { yarn ->
                         val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                         val available = (yarn.amount - used).coerceAtLeast(0)
 
@@ -90,30 +95,50 @@ fun YarnListScreen(
                             onClick = { onOpen(yarn.id) },
                             colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                Text(buildAnnotatedString {
-                                    // Append brand with normal weight if it exists and is not blank
-                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)){
-                                            append("$it ")
+                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                val imageBytes = yarnImages[yarn.id]
+                                if (imageBytes != null) {
+                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                    Image(
+                                        bitmap = bitmap,
+                                        contentDescription = "Yarn image for ${yarn.name}",
+                                        modifier = Modifier.size(64.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(Res.drawable.yarns),
+                                        contentDescription = "Yarn icon",
+                                        modifier = Modifier.size(64.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(buildAnnotatedString {
+                                        // Append brand with normal weight if it exists and is not blank
+                                        yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                            withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)){
+                                                append("$it ")
+                                            }
                                         }
-                                    }
-                                    // Append yarn name with bold weight
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(yarn.name)
-                                    }
-                                    // Append color with bold weight if it exists and is not blank
-                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                            append(" ($it)")
+                                        // Append yarn name with bold weight
+                                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                            append(yarn.name)
                                         }
-                                })
-                                Spacer(Modifier.height(8.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(stringResource(Res.string.usage_used, used))
-                                    Text(stringResource(Res.string.usage_available, available))
+                                        // Append color with bold weight if it exists and is not blank
+                                        yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                                append(" ($it)")
+                                            }
+                                    })
+                                    Spacer(Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(stringResource(Res.string.usage_used, used))
+                                        Text(stringResource(Res.string.usage_available, available))
+                                    }
                                 }
                             }
                         }

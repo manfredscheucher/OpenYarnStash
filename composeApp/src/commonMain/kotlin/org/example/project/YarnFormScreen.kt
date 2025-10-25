@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
@@ -48,11 +50,12 @@ fun normalizeDateString(input: String): String? {
 @Composable
 fun YarnFormScreen(
     initial: Yarn?,
+    initialImage: ByteArray?,
     usagesForYarn: List<Usage>,
     projectNameById: (Int) -> String,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Yarn) -> Unit,
+    onSave: (Yarn, ByteArray?) -> Unit,
     onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
 ) {
     val totalUsedAmount = usagesForYarn.sumOf { it.amount }
@@ -72,6 +75,11 @@ fun YarnFormScreen(
     val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
+    var newImage by remember { mutableStateOf<ByteArray?>(null) }
+
+    val imagePicker = rememberImagePickerLauncher {
+        newImage = it
+    }
 
     val isUsedInProjects = usagesForYarn.isNotEmpty()
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -87,7 +95,8 @@ fun YarnFormScreen(
         meteragePerSkeinText,
         amountText,
         added,
-        notes
+        notes,
+        newImage
     ) {
         derivedStateOf {
             if (initial == null) {
@@ -95,7 +104,7 @@ fun YarnFormScreen(
                         blend.isNotEmpty() ||
                         dyeLot.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
                         amountText.isNotEmpty() ||
-                        added.isNotEmpty() || notes.isNotEmpty()
+                        added.isNotEmpty() || notes.isNotEmpty() || newImage != null
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
@@ -107,7 +116,8 @@ fun YarnFormScreen(
                         meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
                         amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
                         added != (initial.added ?: "") ||
-                        notes != (initial.notes ?: "")
+                        notes != (initial.notes ?: "") ||
+                        newImage != null
             }
         }
     }
@@ -131,7 +141,7 @@ fun YarnFormScreen(
                 added = normalizeDateString(added),
                 notes = notes.ifBlank { null }
             )
-        onSave(yarn)
+        onSave(yarn, newImage)
     }
 
     val backAction = {
@@ -217,6 +227,17 @@ fun YarnFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
+            Button(onClick = { imagePicker.launch() }) {
+                Text("Select Image")
+            }
+            val displayedImage = newImage ?: initialImage
+            displayedImage?.let {
+                val bitmap: ImageBitmap? = remember(it) { it.toImageBitmap() }
+                if (bitmap != null) {
+                    Image(bitmap, contentDescription = "Yarn Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                }
+            }
+            Spacer(Modifier.height(16.dp))
             SelectAllOutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.yarn_label_name)) }, modifier = Modifier.fillMaxWidth())
