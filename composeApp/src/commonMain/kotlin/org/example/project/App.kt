@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import java.util.Locale
 import kotlin.NoSuchElementException // Ensure this import is present
 import kotlin.random.Random
 
@@ -35,6 +36,7 @@ sealed class Screen {
 @Composable
 fun App(repo: JsonRepository) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+    var locale by remember { mutableStateOf(Locale.getDefault().language) }
 
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
@@ -255,34 +257,38 @@ fun App(repo: JsonRepository) {
                     }
 
                     Screen.Statistics -> {
-                        StatisticsScreen(onBack = { screen = Screen.Home })
+                        StatisticsScreen(yarns = yarns, usages = usages, onBack = { screen = Screen.Home })
                     }
 
                     Screen.Settings -> {
-                        SettingsScreen(
-                            onBack = { screen = Screen.Home },
-                            onExport = {
-                                scope.launch {
-                                    val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
-                                    if (backupFileName != null) {
-                                        val json = withContext(Dispatchers.Default) { repo.getRawJson() }
-                                        fileDownloader.download(backupFileName, json)
+                        key(locale) {
+                            SettingsScreen(
+                                currentLocale = locale,
+                                onBack = { screen = Screen.Home },
+                                onExport = {
+                                    scope.launch {
+                                        val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
+                                        if (backupFileName != null) {
+                                            val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                                            fileDownloader.download(backupFileName, json)
+                                        }
                                     }
-                                }
-                            },
-                            onImport = { fileContent ->
-                                scope.launch {
-                                    withContext(Dispatchers.Default) {
-                                        repo.importData(fileContent)
+                                },
+                                onImport = { fileContent ->
+                                    scope.launch {
+                                        withContext(Dispatchers.Default) {
+                                            repo.importData(fileContent)
+                                        }
+                                        reloadAllData()
+                                        snackbarHostState.showSnackbar("Import erfolgreich")
                                     }
-                                    reloadAllData()
-                                    snackbarHostState.showSnackbar("Import erfolgreich")
+                                },
+                                onLocaleChange = { newLocale ->
+                                    Locale.setDefault(Locale(newLocale))
+                                    locale = newLocale
                                 }
-                            },
-                            onLocaleChange = { locale ->
-                                // locale change logic
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }

@@ -42,9 +42,11 @@
     <string name="yarn_label_amount">Amount (g)</string>
     <string name="yarn_label_weight_per_skein">g / skein (optional)</string>
     <string name="yarn_label_meterage_per_skein">m / skein (optional)</string>
-    <string name="yarn_label_number_of_balls">Number of balls</string>
+    <string name="yarn_label_number_of_skeins">Number of skeins</string>
     <string name="yarn_label_modified">Modified (optional)</string>
     <string name="date_format_hint_modified">Modified (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_added">Added (optional)</string>
+    <string name="date_format_hint_added">Added (YYYY, YYYY-MM, YYYY-MM-TT)</string>
     <string name="yarn_label_notes">Notes (optional)</string>
     <string name="yarn_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Set remaining wool to 0</string>
@@ -90,6 +92,7 @@
     <string name="statistics_option_month">Month</string>
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
+    <string name="statistics_total_yarn_weight">Total available weight: %1$d g</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>

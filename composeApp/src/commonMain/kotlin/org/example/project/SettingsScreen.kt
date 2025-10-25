@@ -25,6 +25,7 @@ import openyarnstash.composeapp.generated.resources.language_label
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    currentLocale: String,
     onBack: () -> Unit,
     onExport: () -> Unit,
     onImport: (String) -> Unit,
@@ -56,7 +57,7 @@ fun SettingsScreen(
                 onExpandedChange = { languageDropdownExpanded = it }
             ) {
                 OutlinedTextField(
-                    value = "",
+                    value = if (currentLocale == "de") "Deutsch" else "English",
                     onValueChange = {},
                     label = { Text(stringResource(Res.string.language_label)) },
                     readOnly = true,
