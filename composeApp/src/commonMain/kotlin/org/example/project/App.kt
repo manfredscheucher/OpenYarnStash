@@ -93,6 +93,7 @@ fun App(repo: JsonRepository) {
                         LaunchedEffect(yarns) {
                             yarnImages = yarns.associate { it.id to withContext(Dispatchers.Default) { repo.getYarnImage(it.id) } }
                         }
+                        val defaultYarnName = stringResource(Res.string.yarn_new_default_name)
                         YarnListScreen(
                             yarns = yarns.sortedByDescending { it.modified },
                             yarnImages = yarnImages,
@@ -104,7 +105,8 @@ fun App(repo: JsonRepository) {
                                     do {
                                         newId = Random.nextInt(1_000_000, 10_000_000)
                                     } while (existingIds.contains(newId))
-                                    val newYarn = Yarn(id = newId, name = "Yarn#$newId", modified = getCurrentTimestamp()) // Default name in English as fallback
+                                    val yarnName = defaultYarnName.replace("%1\$d",newId.toString())
+                                    val newYarn = Yarn(id = newId, name = yarnName, modified = getCurrentTimestamp()) // Default name in English as fallback
                                     withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
                                     reloadAllData()
                                     screen = Screen.YarnForm(newId)
@@ -182,6 +184,7 @@ fun App(repo: JsonRepository) {
                         LaunchedEffect(projects) {
                             projectImages = projects.associate { it.id to withContext(Dispatchers.Default) { repo.getProjectImage(it.id) } }
                         }
+                        val defaultProjectName = stringResource(Res.string.project_new_default_name)
                         ProjectListScreen(
                             projects = projects.sortedByDescending { it.modified },
                             projectImages = projectImages,
@@ -192,7 +195,8 @@ fun App(repo: JsonRepository) {
                                     do {
                                         newId = Random.nextInt(1_000_000, 10_000_000)
                                     } while (existingIds.contains(newId))
-                                    val newProject = Project(id = newId, name = "Project#$newId", modified = getCurrentTimestamp()) // Default name
+                                    val projectName = defaultProjectName.replace("%1\$d",newId.toString())
+                                    val newProject = Project(id = newId, name = projectName, modified = getCurrentTimestamp()) // Default name
                                     withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
                                     reloadAllData()
                                     screen = Screen.ProjectForm(newId)

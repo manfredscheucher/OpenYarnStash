@@ -51,7 +51,7 @@
     <string name="yarn_label_notes">Notizen (optional)</string>
     <string name="yarn_form_no_projects_assigned">Bisher keinen Projekten zugeordnet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Restwolle auf 0 setzen</string>
-    <string name="yarn_new_default_name">Neue Wolle (%1$d)</string>
+    <string name="yarn_new_default_name">Wolle#%1$d</string>
     <string name="form_unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="form_unsaved_changes_message">Möchten Sie die Änderungen speichern?</string>
 
@@ -71,7 +71,7 @@
     <string name="project_status_planning">Planung</string>
     <string name="project_status_in_progress">In Arbeit</string>
     <string name="project_status_finished">Fertig</string>
-    <string name="project_new_default_name">Neues Projekt (%1$d)</string>
+    <string name="project_new_default_name">Projekt#%1$d</string>
     <string name="project_label_needle_size">Nadelstärke (optional)</string>
     <string name="project_label_size">Größe (optional)</string>
     <string name="project_label_gauge">Maschenprobe (optional)</string>

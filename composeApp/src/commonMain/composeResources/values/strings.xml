@@ -51,7 +51,7 @@
     <string name="yarn_label_notes">Notes (optional)</string>
     <string name="yarn_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="yarn_form_button_set_remaining_to_zero">Set remaining wool to 0</string>
-    <string name="yarn_new_default_name">New Yarn (%1$d)</string>
+    <string name="yarn_new_default_name">Yarn#%1$d</string>
     <string name="form_unsaved_changes_title">Unsaved Changes</string>
     <string name="form_unsaved_changes_message">Do you want to save the changes?</string>
 
@@ -71,7 +71,7 @@
     <string name="project_status_planning">Planning</string>
     <string name="project_status_in_progress">In Progress</string>
     <string name="project_status_finished">Finished</string>
-    <string name="project_new_default_name">New Project (%1$d)</string>
+    <string name="project_new_default_name">Project#%1$d</string>
     <string name="project_label_needle_size">Needle Size (optional)</string>
     <string name="project_label_size">Size (optional)</string>
     <string name="project_label_gauge">Gauge (optional)</string>
