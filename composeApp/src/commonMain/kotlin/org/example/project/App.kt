@@ -37,7 +37,7 @@ sealed class Screen {
 @Composable
 fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsManager: JsonSettingsManager) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
-    var locale by remember { mutableStateOf("en") }
+    var settings by remember { mutableStateOf(Settings()) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
@@ -58,9 +58,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     }
 
     LaunchedEffect(Unit) {
-        val settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
+        settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
         setAppLanguage(settings.language)
-        locale = settings.language
         reloadAllData()
     }
 
@@ -81,7 +80,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { innerPadding ->
-            key(locale) {
+            key(settings.language) {
                 Box(modifier = Modifier.padding(innerPadding)) {
                     when (val s = screen) {
                         Screen.Home -> HomeScreen(
@@ -210,6 +209,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                             ProjectListScreen(
                                 projects = projects.sortedByDescending { it.modified },
                                 projectImages = projectImages,
+                                settings = settings,
                                 onAddClick = {
                                     scope.launch {
                                         val existingIds = projects.map { it.id }.toSet()
@@ -230,7 +230,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     }
                                 },
                                 onOpen = { id -> screen = Screen.ProjectForm(id) },
-                                onBack = { screen = Screen.Home }
+                                onBack = { screen = Screen.Home },
+                                onSettingsChange = { newSettings ->
+                                    scope.launch {
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        settings = newSettings
+                                    }
+                                }
                             )
                         }
 
@@ -350,9 +358,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                         }
 
                         Screen.Settings -> {
-                            key(locale) {
+                            key(settings.language) {
                                 SettingsScreen(
-                                    currentLocale = locale,
+                                    currentLocale = settings.language,
                                     onBack = { screen = Screen.Home },
                                     onExport = {
                                         scope.launch {
@@ -376,11 +384,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     },
                                     onLocaleChange = { newLocale ->
                                         scope.launch {
+                                            val newSettings = settings.copy(language = newLocale)
                                             withContext(Dispatchers.Default) {
-                                                settingsManager.saveSettings(Settings(language = newLocale))
+                                                settingsManager.saveSettings(newSettings)
                                             }
                                             setAppLanguage(newLocale)
-                                            locale = newLocale
+                                            settings = newSettings
                                         }
                                     }
                                 )
