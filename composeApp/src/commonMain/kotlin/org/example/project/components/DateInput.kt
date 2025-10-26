@@ -1,8 +1,10 @@
 package org.example.project.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DropdownMenuItem
@@ -11,8 +13,10 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import java.time.YearMonth
@@ -46,11 +51,20 @@ fun DateInput(
     var selectedMonth by remember { mutableStateOf(initialMonth) }
     var selectedDay by remember { mutableStateOf(initialDay) }
 
-    // Update internal state if the external date changes
-    LaunchedEffect(initialYear, initialMonth, initialDay) {
-        selectedYear = initialYear
-        selectedMonth = initialMonth
-        selectedDay = initialDay
+    LaunchedEffect(date) {
+        if (date == null) {
+            selectedYear = null
+            selectedMonth = null
+            selectedDay = null
+        } else {
+            date.split("-").let {
+                if (it.size == 3) {
+                    selectedYear = it[0].toIntOrNull()
+                    selectedMonth = it[1].toIntOrNull()
+                    selectedDay = it[2].toIntOrNull()
+                }
+            }
+        }
     }
 
     var expandedYear by remember { mutableStateOf(false) }
@@ -74,7 +88,6 @@ fun DateInput(
     }
     val days = (1..daysInMonth).toList()
 
-    // If the selected day is now invalid, reset it.
     if (selectedDay != null && selectedDay!! > daysInMonth) {
         selectedDay = null
     }
@@ -89,113 +102,129 @@ fun DateInput(
                 onDateChange(newDate)
             }
         } else if (date != null) {
-             onDateChange(null)
+            onDateChange(null)
         }
     }
 
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = MaterialTheme.shapes.extraSmall
+            )
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(label, modifier = Modifier.weight(1.5f), maxLines = 1)
+
+        val textFieldColors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+        )
+
+        // Year
+        ExposedDropdownMenuBox(
+            expanded = expandedYear,
+            onExpandedChange = { expandedYear = !expandedYear },
+            modifier = Modifier.weight(1.5f)
         ) {
-            // Year
-            ExposedDropdownMenuBox(
+            TextField(
+                value = selectedYear?.toString() ?: "",
+                onValueChange = {},
+                readOnly = true,
+                placeholder = { Text("Year") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedYear) },
+                modifier = Modifier.menuAnchor(),
+                colors = textFieldColors
+            )
+            ExposedDropdownMenu(
                 expanded = expandedYear,
-                onExpandedChange = { expandedYear = !expandedYear },
-                modifier = Modifier.weight(2f)
+                onDismissRequest = { expandedYear = false }
             ) {
-                OutlinedTextField(
-                    value = selectedYear?.toString() ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    placeholder = { Text("Year") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedYear) },
-                    modifier = Modifier.menuAnchor()
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedYear,
-                    onDismissRequest = { expandedYear = false }
-                ) {
-                    years.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            text = { Text(selectionOption.toString()) },
-                            onClick = {
-                                selectedYear = selectionOption
-                                expandedYear = false
-                            }
-                        )
-                    }
+                years.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption.toString()) },
+                        onClick = {
+                            selectedYear = selectionOption
+                            expandedYear = false
+                        }
+                    )
                 }
             }
+        }
 
-            // Month
-            ExposedDropdownMenuBox(
+        // Month
+        ExposedDropdownMenuBox(
+            expanded = expandedMonth,
+            onExpandedChange = { expandedMonth = !expandedMonth },
+            modifier = Modifier.weight(1.5f)
+        ) {
+            TextField(
+                value = selectedMonth?.toString() ?: "",
+                onValueChange = {},
+                readOnly = true,
+                placeholder = { Text("Month") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
+                modifier = Modifier.menuAnchor(),
+                colors = textFieldColors
+            )
+            ExposedDropdownMenu(
                 expanded = expandedMonth,
-                onExpandedChange = { expandedMonth = !expandedMonth },
-                modifier = Modifier.weight(1.5f)
+                onDismissRequest = { expandedMonth = false }
             ) {
-                OutlinedTextField(
-                    value = selectedMonth?.toString() ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    placeholder = { Text("Month") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
-                    modifier = Modifier.menuAnchor()
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedMonth,
-                    onDismissRequest = { expandedMonth = false }
-                ) {
-                    months.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            text = { Text(selectionOption.toString()) },
-                            onClick = {
-                                selectedMonth = selectionOption
-                                expandedMonth = false
-                            }
-                        )
-                    }
+                months.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption.toString()) },
+                        onClick = {
+                            selectedMonth = selectionOption
+                            expandedMonth = false
+                        }
+                    )
                 }
             }
+        }
 
-            // Day
-            ExposedDropdownMenuBox(
+        // Day
+        ExposedDropdownMenuBox(
+            expanded = expandedDay,
+            onExpandedChange = { expandedDay = !expandedDay },
+            modifier = Modifier.weight(1.5f)
+        ) {
+            TextField(
+                value = selectedDay?.toString() ?: "",
+                onValueChange = {},
+                readOnly = true,
+                placeholder = { Text("Day") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDay) },
+                modifier = Modifier.menuAnchor(),
+                colors = textFieldColors
+            )
+            ExposedDropdownMenu(
                 expanded = expandedDay,
-                onExpandedChange = { expandedDay = !expandedDay },
-                modifier = Modifier.weight(1f)
+                onDismissRequest = { expandedDay = false }
             ) {
-                OutlinedTextField(
-                    value = selectedDay?.toString() ?: "",
-                    onValueChange = {},
-                    readOnly = true,
-                    placeholder = { Text("Day") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDay) },
-                    modifier = Modifier.menuAnchor()
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedDay,
-                    onDismissRequest = { expandedDay = false }
-                ) {
-                    days.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            text = { Text(selectionOption.toString()) },
-                            onClick = {
-                                selectedDay = selectionOption
-                                expandedDay = false
-                            }
-                        )
-                    }
+                days.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption.toString()) },
+                        onClick = {
+                            selectedDay = selectionOption
+                            expandedDay = false
+                        }
+                    )
                 }
             }
-            if (date != null) {
-                IconButton(onClick = {
-                    selectedYear = null
-                    selectedMonth = null
-                    selectedDay = null
-                }) {
-                    Icon(Icons.Default.Clear, contentDescription = "Clear date")
-                }
+        }
+
+        if (date != null) {
+            IconButton(onClick = { onDateChange(null) }) {
+                Icon(Icons.Default.Clear, contentDescription = "Clear date")
             }
         }
     }
