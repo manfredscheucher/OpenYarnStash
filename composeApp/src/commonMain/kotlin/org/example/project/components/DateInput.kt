@@ -1,6 +1,5 @@
 package org.example.project.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +39,11 @@ import openyarnstash.composeapp.generated.resources.date_input_month
 import openyarnstash.composeapp.generated.resources.date_input_year
 import org.example.project.getCurrentTimestamp
 import org.jetbrains.compose.resources.stringResource
+
+@Composable
+private fun DropdownArrowIcon() {
+    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,18 +140,11 @@ fun DateInput(
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
             label = { Text(label) },
-            trailingIcon = {
-                if (date != null) {
-                    IconButton(onClick = { onDateChange(null) }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear date")
-                    }
-                }
-            }
         )
         Row(
             modifier = Modifier
                 //.matchParentSize()
-                .padding(top = 8.dp, end = 52.dp),
+                .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             //horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -171,7 +168,7 @@ fun DateInput(
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text(stringResource(Res.string.date_input_year)) },
-                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
+                    suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
@@ -209,8 +206,7 @@ fun DateInput(
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text(stringResource(Res.string.date_input_month)) },
-                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
-                    //trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
+                    suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
@@ -248,7 +244,7 @@ fun DateInput(
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text(stringResource(Res.string.date_input_day)) },
-                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
+                    suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
