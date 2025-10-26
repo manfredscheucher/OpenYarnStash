@@ -228,7 +228,7 @@ fun YarnFormScreen(
                 .padding(16.dp)
         ) {
             Button(onClick = { imagePicker.launch() }) {
-                Text("Select Image")
+                Text(stringResource(Res.string.common_select_image))
             }
             val displayedImage = newImage ?: initialImage
             displayedImage?.let {

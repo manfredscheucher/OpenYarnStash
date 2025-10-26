@@ -30,6 +30,7 @@
     <string name="common_yes">Ja</string>
     <string name="common_no">Nein</string>
     <string name="common_stay">Bleiben</string>
+    <string name="common_select_image">Bild auswählen</string>
 
     <!-- Yarn form -->
     <string name="yarn_form_new">Neue Wolle</string>
