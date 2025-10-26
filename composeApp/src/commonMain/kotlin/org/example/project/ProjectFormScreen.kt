@@ -46,7 +46,6 @@ import openyarnstash.composeapp.generated.resources.common_ok
 import openyarnstash.composeapp.generated.resources.common_save
 import openyarnstash.composeapp.generated.resources.common_stay
 import openyarnstash.composeapp.generated.resources.common_yes
-import openyarnstash.composeapp.generated.resources.date_format_hint_project
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_message
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
@@ -68,6 +67,7 @@ import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
 import openyarnstash.composeapp.generated.resources.usage_section_title
 import openyarnstash.composeapp.generated.resources.yarn_item_label_modified
+import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -87,8 +87,8 @@ fun ProjectFormScreen(
 
     var name by remember { mutableStateOf(initial.name) }
     var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
-    var startDate by remember { mutableStateOf(initial.startDate ?: "") }
-    var endDate by remember { mutableStateOf(initial.endDate ?: "") }
+    var startDate by remember { mutableStateOf(initial.startDate) }
+    var endDate by remember { mutableStateOf(initial.endDate) }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
@@ -107,8 +107,8 @@ fun ProjectFormScreen(
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
-                    startDate != (initial.startDate ?: "") ||
-                    endDate != (initial.endDate ?: "") ||
+                    startDate != initial.startDate ||
+                    endDate != initial.endDate ||
                     notes != (initial.notes ?: "") ||
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
@@ -118,13 +118,11 @@ fun ProjectFormScreen(
     }
 
     val saveAction = {
-        val normalizedStartDate = normalizeDateString(startDate)
-        val normalizedEndDate = normalizeDateString(endDate)
         val project = initial.copy(
             name = name,
             madeFor = forWho.ifBlank { null },
-            startDate = normalizedStartDate,
-            endDate = normalizedEndDate,
+            startDate = startDate,
+            endDate = endDate,
             notes = notes.ifBlank { null },
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
@@ -193,8 +191,8 @@ fun ProjectFormScreen(
     }
 
     val status = when {
-        endDate.isNotBlank() -> ProjectStatus.FINISHED
-        startDate.isNotBlank() -> ProjectStatus.IN_PROGRESS
+        !endDate.isNullOrBlank() -> ProjectStatus.FINISHED
+        !startDate.isNullOrBlank() -> ProjectStatus.IN_PROGRESS
         else -> ProjectStatus.PLANNING
     }
 
@@ -231,20 +229,16 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(
-                value = startDate,
-                onValueChange = { startDate = it },
-                label = { Text(stringResource(Res.string.project_label_start_date)) },
-                supportingText = { Text(stringResource(Res.string.date_format_hint_project)) },
-                modifier = Modifier.fillMaxWidth()
+            DateInput(
+                label = stringResource(Res.string.project_label_start_date),
+                date = startDate,
+                onDateChange = { startDate = it }
             )
             Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(
-                value = endDate,
-                onValueChange = { endDate = it },
-                label = { Text(stringResource(Res.string.project_label_end_date)) },
-                supportingText = { Text(stringResource(Res.string.date_format_hint_project)) },
-                modifier = Modifier.fillMaxWidth()
+            DateInput(
+                label = stringResource(Res.string.project_label_end_date),
+                date = endDate,
+                onDateChange = { endDate = it }
             )
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.fillMaxWidth())
