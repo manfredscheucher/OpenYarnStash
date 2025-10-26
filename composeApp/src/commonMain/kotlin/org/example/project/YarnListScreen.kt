@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,13 +29,17 @@ fun YarnListScreen(
     yarns: List<Yarn>,
     yarnImages: Map<Int, ByteArray?>,
     usages: List<Usage>,
+    settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSettingsChange: (Settings) -> Unit
 ) {
     AppBackHandler {
         onBack()
     }
+
+    var hideUsed by remember { mutableStateOf(settings.hideUsedYarns) }
 
     Scaffold(
         topBar = {
@@ -98,8 +100,28 @@ fun YarnListScreen(
                     }
                 }
 
-                val totalAvailable = yarnData.sumOf { it.availableAmount }
-                val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
+                val filteredYarnData = if (hideUsed) {
+                    yarnData.filter { it.availableAmount > 0 }
+                } else {
+                    yarnData
+                }
+
+                val totalAvailable = filteredYarnData.sumOf { it.availableAmount }
+                val totalMeterage = filteredYarnData.sumOf { it.availableMeterageAmount ?: 0 }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    FilterChip(
+                        selected = hideUsed,
+                        onClick = {
+                            hideUsed = !hideUsed
+                            onSettingsChange(settings.copy(hideUsedYarns = hideUsed))
+                        },
+                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) }
+                    )
+                }
 
                 Text(
                     text = stringResource(Res.string.yarn_list_summary, totalAvailable),
@@ -115,7 +137,7 @@ fun YarnListScreen(
                         .weight(1f),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(yarnData) { data ->
+                ) {                    items(filteredYarnData) { data ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -142,48 +164,48 @@ fun YarnListScreen(
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
-                                    Column(modifier = Modifier.weight(1f)) {
+                                Column(modifier = Modifier.weight(1f)) {
 
-                                        Text(buildAnnotatedString {
-                                            // Append brand with normal weight if it exists and is not blank
-                                            data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
-                                                withStyle(
-                                                    style = SpanStyle(
-                                                        fontStyle = FontStyle.Italic,
-                                                        fontWeight = FontWeight.SemiBold
-                                                    )
-                                                ) {
-                                                    append("$it ")
-                                                }
-                                            }
-                                            // Append yarn name with bold weight
-                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                                append(data.yarnItem.name)
-                                            }
-                                            // Append color with bold weight if it exists and is not blank
-                                            data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
-                                                append(" ($it)")
-                                            }
-                                        })
-                                        Spacer(Modifier.height(8.dp))
-                                        Row(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Text(
-                                                stringResource(
-                                                    Res.string.usage_used,
-                                                    data.usedAmount
+                                    Text(buildAnnotatedString {
+                                        // Append brand with normal weight if it exists and is not blank
+                                        data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
+                                            withStyle(
+                                                style = SpanStyle(
+                                                    fontStyle = FontStyle.Italic,
+                                                    fontWeight = FontWeight.SemiBold
                                                 )
-                                            )
-                                            Text(
-                                                stringResource(
-                                                    Res.string.usage_available,
-                                                    data.availableAmount
-                                                )
-                                            )
+                                            ) {
+                                                append("$it ")
+                                            }
                                         }
+                                        // Append yarn name with bold weight
+                                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                            append(data.yarnItem.name)
+                                        }
+                                        // Append color with bold weight if it exists and is not blank
+                                        data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
+                                            append(" ($it)")
+                                        }
+                                    })
+                                    Spacer(Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            stringResource(
+                                                Res.string.usage_used,
+                                                data.usedAmount
+                                            )
+                                        )
+                                        Text(
+                                            stringResource(
+                                                Res.string.usage_available,
+                                                data.availableAmount
+                                            )
+                                        )
                                     }
+                                }
                             }
                         }
                     }

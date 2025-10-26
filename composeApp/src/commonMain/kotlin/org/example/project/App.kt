@@ -101,6 +101,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 yarns = yarns.sortedByDescending { it.modified },
                                 yarnImages = yarnImages,
                                 usages = usages,
+                                settings = settings,
                                 onAddClick = {
                                     scope.launch {
                                         val existingIds = yarns.map { it.id }.toSet()
@@ -121,7 +122,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     }
                                 },
                                 onOpen = { id -> screen = Screen.YarnForm(id) },
-                                onBack = { screen = Screen.Home }
+                                onBack = { screen = Screen.Home },
+                                onSettingsChange = { newSettings ->
+                                    scope.launch {
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        settings = newSettings
+                                    }
+                                }
                             )
                         }
 

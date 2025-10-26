@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Settings(
     val language: String = "en",
-    val projectToggles: Map<String, Boolean> = emptyMap()
+    val projectToggles: Map<String, Boolean> = emptyMap(),
+    val hideUsedYarns: Boolean = false
 )
