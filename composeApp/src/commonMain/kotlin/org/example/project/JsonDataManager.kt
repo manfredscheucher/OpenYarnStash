@@ -1,13 +1,12 @@
 package org.example.project
 
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 /**
  * Repository for managing yarns, projects, and their usages from a JSON file.
  */
-class JsonRepository(private val fileHandler: FileHandler) {
+class JsonDataManager(private val fileHandler: FileHandler) {
 
     private var data: AppData = AppData()
 

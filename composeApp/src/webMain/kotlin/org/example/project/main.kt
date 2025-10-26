@@ -7,7 +7,7 @@ import androidx.compose.ui.window.ComposeViewport
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val repo = JsonRepository(JsFileHandler())
+    val repo = JsonDataManager(JsFileHandler())
     ComposeViewport {
         CompositionLocalProvider(
             LocalFileDownloader provides JsFileDownloader()

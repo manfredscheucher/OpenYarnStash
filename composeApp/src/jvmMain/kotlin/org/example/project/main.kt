@@ -12,7 +12,7 @@ fun main() = application {
         CompositionLocalProvider(
             LocalFileDownloader provides JvmFileDownloader()
         ) {
-            App(JsonRepository(JvmFileHandler()))
+            App(JsonDataManager(JvmFileHandler()))
         }
     }
 }
