@@ -125,4 +125,9 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nicht implementiert</string>
     <string name="not_implemented_message">Diese Funktion ist noch nicht implementiert.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Jahr</string>
+    <string name="date_input_month">Monat</string>
+    <string name="date_input_day">Tag</string>
 </resources>

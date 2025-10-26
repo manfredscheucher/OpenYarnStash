@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -35,7 +34,12 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.plus
+import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.date_input_day
+import openyarnstash.composeapp.generated.resources.date_input_month
+import openyarnstash.composeapp.generated.resources.date_input_year
 import org.example.project.getCurrentTimestamp
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,8 +50,11 @@ fun DateInput(
 ) {
     val (initialYear, initialMonth, initialDay) = remember(date) {
         date?.split("-")?.let {
-            if (it.size == 3) {
-                Triple(it[0].toIntOrNull(), it[1].toIntOrNull(), it[2].toIntOrNull())
+            if (it.size >= 1) {
+                val year = it.getOrNull(0)?.toIntOrNull()
+                val month = it.getOrNull(1)?.toIntOrNull()
+                val day = it.getOrNull(2)?.toIntOrNull()
+                Triple(year, month, day)
             } else {
                 Triple(null, null, null)
             }
@@ -65,15 +72,13 @@ fun DateInput(
             selectedDay = null
         } else {
             val parts = date.split("-")
-            if (parts.size == 3) {
-                val year = parts[0].toIntOrNull()
-                val month = parts[1].toIntOrNull()
-                val day = parts[2].toIntOrNull()
-                if (year != selectedYear || month != selectedMonth || day != selectedDay) {
-                    selectedYear = year
-                    selectedMonth = month
-                    selectedDay = day
-                }
+            val year = parts.getOrNull(0)?.toIntOrNull()
+            val month = parts.getOrNull(1)?.toIntOrNull()
+            val day = parts.getOrNull(2)?.toIntOrNull()
+            if (year != selectedYear || month != selectedMonth || day != selectedDay) {
+                selectedYear = year
+                selectedMonth = month
+                selectedDay = day
             }
         }
     }
@@ -111,11 +116,16 @@ fun DateInput(
         val y = selectedYear
         val m = selectedMonth
         val d = selectedDay
-        if (y != null && m != null && d != null) {
-            val newDate = "$y-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}"
-            if (date != newDate) {
-                onDateChange(newDate)
-            }
+
+        val newDate = when {
+            y != null && m != null && d != null -> "$y-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}"
+            y != null && m != null -> "$y-${m.toString().padStart(2, '0')}"
+            y != null -> "$y"
+            else -> null
+        }
+
+        if (date != newDate) {
+            onDateChange(newDate)
         }
     }
 
@@ -160,9 +170,8 @@ fun DateInput(
                     value = selectedYear?.toString() ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text("Year") },
+                    placeholder = { Text(stringResource(Res.string.date_input_year)) },
                     suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
-                    //trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedYear) },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
@@ -170,6 +179,13 @@ fun DateInput(
                     expanded = expandedYear,
                     onDismissRequest = { expandedYear = false }
                 ) {
+                    DropdownMenuItem(
+                        text = { Text("-") },
+                        onClick = {
+                            selectedYear = null
+                            expandedYear = false
+                        }
+                    )
                     years.forEach { selectionOption ->
                         DropdownMenuItem(
                             text = { Text(selectionOption.toString()) },
@@ -192,7 +208,7 @@ fun DateInput(
                     value = selectedMonth?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text("Month") },
+                    placeholder = { Text(stringResource(Res.string.date_input_month)) },
                     suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
                     //trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
                     modifier = Modifier.menuAnchor(),
@@ -202,6 +218,13 @@ fun DateInput(
                     expanded = expandedMonth,
                     onDismissRequest = { expandedMonth = false }
                 ) {
+                    DropdownMenuItem(
+                        text = { Text("-") },
+                        onClick = {
+                            selectedMonth = null
+                            expandedMonth = false
+                        }
+                    )
                     months.forEach { selectionOption ->
                         DropdownMenuItem(
                             text = { Text(selectionOption.toString().padStart(2, '0')) },
@@ -224,7 +247,7 @@ fun DateInput(
                     value = selectedDay?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text("Day") },
+                    placeholder = { Text(stringResource(Res.string.date_input_day)) },
                     suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
@@ -233,6 +256,13 @@ fun DateInput(
                     expanded = expandedDay,
                     onDismissRequest = { expandedDay = false }
                 ) {
+                    DropdownMenuItem(
+                        text = { Text("-") },
+                        onClick = {
+                            selectedDay = null
+                            expandedDay = false
+                        }
+                    )
                     days.forEach { selectionOption ->
                         DropdownMenuItem(
                             text = { Text(selectionOption.toString().padStart(2, '0')) },

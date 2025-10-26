@@ -126,4 +126,9 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>
     <string name="not_implemented_message">This feature is not yet implemented.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Year</string>
+    <string name="date_input_month">Month</string>
+    <string name="date_input_day">Day</string>
 </resources>
