@@ -10,14 +10,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.intl.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-import java.util.Locale // TODO
+//import java.util.Locale // TODO
 import kotlin.NoSuchElementException // Ensure this import is present
 import kotlin.random.Random
 
@@ -36,8 +39,7 @@ sealed class Screen {
 @Composable
 fun App(repo: JsonRepository) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
-    var locale by remember { mutableStateOf(Locale.getDefault().language) }
-
+    var locale by remember { mutableStateOf(getCurrentLanguage()) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
@@ -320,7 +322,7 @@ fun App(repo: JsonRepository) {
                                     }
                                 },
                                 onLocaleChange = { newLocale ->
-                                    Locale.setDefault(Locale(newLocale))
+                                    setAppLanguage(newLocale)
                                     locale = newLocale
                                 }
                             )
