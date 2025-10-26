@@ -2,6 +2,7 @@ package org.example.project.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -105,20 +106,32 @@ fun DateInput(
             onDateChange(null)
         }
     }
-
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline,
+            shape = MaterialTheme.shapes.extraSmall
+        )
+        .padding(horizontal = 12.dp, vertical = 4.dp),
+        //verticalAlignment = Alignment.CenterVertically,
+        //horizontalArrangement = Arrangement.spacedBy(4.dp)
+        )
+    {
+        Text(label)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = MaterialTheme.shapes.extraSmall
-            )
-            .padding(horizontal = 12.dp, vertical = 4.dp),
+            //.border(
+                //width = 1.dp,
+                //color = MaterialTheme.colorScheme.outline,
+                //shape = MaterialTheme.shapes.extraSmall
+            //)
+            .padding(horizontal = 2.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Text(label, modifier = Modifier.weight(1.5f), maxLines = 1)
+
 
         val textFieldColors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
@@ -164,7 +177,7 @@ fun DateInput(
         ExposedDropdownMenuBox(
             expanded = expandedMonth,
             onExpandedChange = { expandedMonth = !expandedMonth },
-            modifier = Modifier.weight(1.5f)
+            modifier = Modifier.weight(1.2f)
         ) {
             TextField(
                 value = selectedMonth?.toString() ?: "",
@@ -195,7 +208,7 @@ fun DateInput(
         ExposedDropdownMenuBox(
             expanded = expandedDay,
             onExpandedChange = { expandedDay = !expandedDay },
-            modifier = Modifier.weight(1.5f)
+            modifier = Modifier.weight(1.2f)
         ) {
             TextField(
                 value = selectedDay?.toString() ?: "",
@@ -227,5 +240,6 @@ fun DateInput(
                 Icon(Icons.Default.Clear, contentDescription = "Clear date")
             }
         }
+    }
     }
 }
