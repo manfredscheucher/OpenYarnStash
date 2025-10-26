@@ -72,7 +72,7 @@ fun ProjectListScreen(
     var activeStatuses by remember {
         mutableStateOf(
             ProjectStatus.values().filter {
-                settings.projectToggles.getOrDefault(it.name, true)
+                settings.projectToggles[it.name] ?: true
             }.toSet()
         )
     }
