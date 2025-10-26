@@ -1,34 +1,33 @@
 package org.example.project
 
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class JsonSettingsManager(private val fileHandler: FileHandler, private val filePath: String) {
 
-    private var settings: SettingsData = SettingsData()
+    private var settings: Settings = Settings()
 
-    suspend fun loadSettings(): SettingsData {
+    suspend fun loadSettings(): Settings {
         val content = fileHandler.readFile(filePath)
         settings = if (content.isNotEmpty()) {
             try {
-                Json.decodeFromString<SettingsData>(content)
+                Json.decodeFromString<Settings>(content)
             } catch (e: SerializationException) {
                 println("Error decoding settings JSON: ${e.message}")
-                SettingsData()
+                Settings()
             } catch (e: Exception) {
                 println("An unexpected error occurred while loading settings: ${e.message}")
-                SettingsData()
+                Settings()
             }
         } else {
-            SettingsData()
+            Settings()
         }
         return settings
     }
 
-    suspend fun saveSettings(settingsData: SettingsData) {
-        this.settings = settingsData
-        val content = Json.encodeToString(settings)
+    suspend fun saveSettings(settings: Settings) {
+        this.settings = settings
+        val content = Json.encodeToString(this@JsonSettingsManager.settings)
         fileHandler.writeFile(filePath, content)
     }
 }

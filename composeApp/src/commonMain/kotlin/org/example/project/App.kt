@@ -341,7 +341,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 onLocaleChange = { newLocale ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(SettingsData(language = newLocale))
+                                            settingsManager.saveSettings(Settings(language = newLocale))
                                         }
                                         setAppLanguage(newLocale)
                                         locale = newLocale
