@@ -90,8 +90,8 @@ fun ProjectFormScreen(
 
     var name by remember { mutableStateOf(initial.name) }
     var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
-    var startDate by remember { mutableStateOf(initial.startDate) }
-    var endDate by remember { mutableStateOf(initial.endDate) }
+    var startDate by remember { mutableStateOf(initial.startDate?:"") }
+    var endDate by remember { mutableStateOf(initial.endDate?:"") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
@@ -249,13 +249,13 @@ fun ProjectFormScreen(
             DateInput(
                 label = stringResource(Res.string.project_label_start_date),
                 date = startDate,
-                onDateChange = { startDate = it }
+                onDateChange = { startDate = it?: "" }
             )
             Spacer(Modifier.height(8.dp))
             DateInput(
                 label = stringResource(Res.string.project_label_end_date),
                 date = endDate,
-                onDateChange = { endDate = it }
+                onDateChange = { endDate = it?: "" }
             )
             Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.fillMaxWidth())

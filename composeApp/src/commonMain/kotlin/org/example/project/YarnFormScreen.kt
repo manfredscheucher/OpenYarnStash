@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
+import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
@@ -331,14 +332,19 @@ fun YarnFormScreen(
                 }
             }
             Spacer(Modifier.height(8.dp))
-
+            DateInput(
+                label = stringResource(Res.string.yarn_label_added),
+                date = added,
+                onDateChange = { added = it ?: "" }
+            )
+            /**
             SelectAllOutlinedTextField(
                 value = added,
                 onValueChange = { added = it },
                 label = { Text(stringResource(Res.string.yarn_label_added)) },
                 supportingText = { Text(stringResource(Res.string.date_format_hint_added)) },
                 modifier = Modifier.fillMaxWidth()
-            )
+            )**/
             Spacer(Modifier.height(8.dp))
             Text(stringResource(Res.string.yarn_item_label_modified, modifiedState))
             Spacer(Modifier.height(8.dp))
