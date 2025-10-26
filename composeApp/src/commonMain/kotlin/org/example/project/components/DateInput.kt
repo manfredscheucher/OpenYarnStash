@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.plus
 import org.example.project.getCurrentTimestamp
-import java.time.YearMonth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +89,9 @@ fun DateInput(
     val daysInMonth = remember(selectedYear, selectedMonth) {
         if (selectedYear != null && selectedMonth != null) {
             try {
-                YearMonth.of(selectedYear!!, selectedMonth!!).lengthOfMonth()
+                val startOfMonth = LocalDate(selectedYear!!, selectedMonth!!, 1)
+                val startOfNextMonth = startOfMonth.plus(1, DateTimeUnit.MONTH)
+                startOfMonth.daysUntil(startOfNextMonth)
             } catch (e: Exception) {
                 31
             }
@@ -128,10 +136,10 @@ fun DateInput(
         )
         Row(
             modifier = Modifier
-                .matchParentSize()
+                //.matchParentSize()
                 .padding(top = 8.dp, end = 52.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            //horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val textFieldColors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -153,7 +161,8 @@ fun DateInput(
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text("Year") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedYear) },
+                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
+                    //trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedYear) },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
@@ -177,14 +186,15 @@ fun DateInput(
             ExposedDropdownMenuBox(
                 expanded = expandedMonth,
                 onExpandedChange = { expandedMonth = !expandedMonth },
-                modifier = Modifier.width(90.dp)
+                modifier = Modifier.width(120.dp)
             ) {
                 TextField(
                     value = selectedMonth?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text("Month") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
+                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
+                    //trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMonth) },
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
@@ -208,14 +218,14 @@ fun DateInput(
             ExposedDropdownMenuBox(
                 expanded = expandedDay,
                 onExpandedChange = { expandedDay = !expandedDay },
-                modifier = Modifier.width(90.dp)
+                modifier = Modifier.width(120.dp)
             ) {
                 TextField(
                     value = selectedDay?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
                     placeholder = { Text("Day") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDay) },
+                    suffix = { Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(24.dp).offset(x = -15.dp))},
                     modifier = Modifier.menuAnchor(),
                     colors = textFieldColors
                 )
