@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
-    private val file = File(context.filesDir, "stash.json")
 
-    override suspend fun readFile(): String {
+    override suspend fun readFile(path: String): String {
+        val file = File(context.filesDir, path)
         return if (file.exists()) {
             file.readText()
         } else {
@@ -16,11 +16,13 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         }
     }
 
-    override suspend fun writeFile(content: String) {
+    override suspend fun writeFile(path: String, content: String) {
+        val file = File(context.filesDir, path)
         file.writeText(content)
     }
 
-    override suspend fun backupFile(): String? {
+    override suspend fun backupFile(path: String): String? {
+        val file = File(context.filesDir, path)
         if (file.exists()) {
             val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
             val backupFileName = "${file.nameWithoutExtension}-$timestamp.${file.extension}"

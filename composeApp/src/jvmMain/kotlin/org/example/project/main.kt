@@ -1,18 +1,23 @@
 package org.example.project
 
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import java.util.Locale
 
 fun main() = application {
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "OpenYarnStash",
-    ) {
-        CompositionLocalProvider(
-            LocalFileDownloader provides JvmFileDownloader()
-        ) {
-            App(JsonDataManager(JvmFileHandler()))
-        }
+    val fileHandler = JvmFileHandler()
+    val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
+    val imageManager = ImageManager(fileHandler)
+    val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
+    Window(onCloseRequest = ::exitApplication) {
+        App(jsonDataManager, imageManager, settingsManager)
     }
+}
+
+fun getCurrentLanguage(): String {
+    return Locale.getDefault().language
+}
+
+fun setAppLanguage(language: String) {
+    Locale.setDefault(Locale(language))
 }

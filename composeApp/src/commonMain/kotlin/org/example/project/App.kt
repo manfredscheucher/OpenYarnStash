@@ -35,9 +35,9 @@ sealed class Screen {
 }
 
 @Composable
-fun App(repo: JsonDataManager) {
+fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsManager: JsonSettingsManager) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
-    var locale by remember { mutableStateOf(getCurrentLanguage()) }
+    var locale by remember { mutableStateOf("en") }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
@@ -51,13 +51,16 @@ fun App(repo: JsonDataManager) {
     val emptyImageByteArray = remember { createEmptyImageByteArray() }
 
     suspend fun reloadAllData() {
-        val data = withContext(Dispatchers.Default) { repo.load() }
+        val data = withContext(Dispatchers.Default) { jsonDataManager.load() }
         yarns = data.yarns
         projects = data.projects
         usages = data.usages
     }
 
     LaunchedEffect(Unit) {
+        val settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
+        setAppLanguage(settings.language)
+        locale = settings.language
         reloadAllData()
     }
 
@@ -90,7 +93,7 @@ fun App(repo: JsonDataManager) {
 
                     Screen.YarnList -> {
                         LaunchedEffect(yarns) {
-                            yarnImages = yarns.associate { it.id to withContext(Dispatchers.Default) { repo.getYarnImage(it.id) } }
+                            yarnImages = yarns.associate { it.id to withContext(Dispatchers.Default) { imageManager.getYarnImage(it.id) } }
                         }
                         val defaultYarnName = stringResource(Res.string.yarn_new_default_name)
                         YarnListScreen(
@@ -106,7 +109,7 @@ fun App(repo: JsonDataManager) {
                                     } while (existingIds.contains(newId))
                                     val yarnName = defaultYarnName.replace("%1\$d",newId.toString())
                                     val newYarn = Yarn(id = newId, name = yarnName, modified = getCurrentTimestamp()) // Default name in English as fallback
-                                    withContext(Dispatchers.Default) { repo.addOrUpdateYarn(newYarn) }
+                                    withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
                                     reloadAllData()
                                     screen = Screen.YarnForm(newId)
                                 }
@@ -119,7 +122,7 @@ fun App(repo: JsonDataManager) {
                     is Screen.YarnForm -> {
                         val existingYarn = remember(s.yarnId, yarns) {
                             try {
-                                repo.getYarnById(s.yarnId)
+                                jsonDataManager.getYarnById(s.yarnId)
                             } catch (e: NoSuchElementException) {
                                 null
                             }
@@ -128,7 +131,7 @@ fun App(repo: JsonDataManager) {
 
                         LaunchedEffect(s.yarnId) {
                             yarnImage = withContext(Dispatchers.Default) {
-                                repo.getYarnImage(s.yarnId)
+                                imageManager.getYarnImage(s.yarnId)
                             }
                         }
 
@@ -150,7 +153,7 @@ fun App(repo: JsonDataManager) {
                                 onBack = { screen = Screen.YarnList },
                                 onDelete = { yarnIdToDelete ->
                                     scope.launch {
-                                        withContext(Dispatchers.Default) { repo.deleteYarn(yarnIdToDelete) }
+                                        withContext(Dispatchers.Default) { jsonDataManager.deleteYarn(yarnIdToDelete) }
                                         reloadAllData()
                                         screen = Screen.YarnList
                                     }
@@ -158,12 +161,12 @@ fun App(repo: JsonDataManager) {
                                 onSave = { editedYarn, image ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
-                                            repo.addOrUpdateYarn(editedYarn)
+                                            jsonDataManager.addOrUpdateYarn(editedYarn)
                                             if (image != null) {
                                                 if (image.contentEquals(emptyImageByteArray)) {
-                                                    repo.deleteYarnImage(editedYarn.id)
+                                                    imageManager.deleteYarnImage(editedYarn.id)
                                                 } else {
-                                                    repo.saveYarnImage(editedYarn.id, image)
+                                                    imageManager.saveYarnImage(editedYarn.id, image)
                                                 }
                                             }
                                         }
@@ -173,9 +176,9 @@ fun App(repo: JsonDataManager) {
                                 },
                                 onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
                                     scope.launch {
-                                        repo.getYarnById(yarnIdToUpdate)?.let { yarnToUpdate ->
+                                        jsonDataManager.getYarnById(yarnIdToUpdate)?.let { yarnToUpdate ->
                                             val updatedYarn = yarnToUpdate.copy(amount = newAmount)
-                                            withContext(Dispatchers.Default) { repo.addOrUpdateYarn(updatedYarn) }
+                                            withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(updatedYarn) }
                                             reloadAllData()
                                             screen = Screen.YarnList
                                         }
@@ -187,7 +190,7 @@ fun App(repo: JsonDataManager) {
 
                     Screen.ProjectList -> {
                         LaunchedEffect(projects) {
-                            projectImages = projects.associate { it.id to withContext(Dispatchers.Default) { repo.getProjectImage(it.id) } }
+                            projectImages = projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
                         }
                         val defaultProjectName = stringResource(Res.string.project_new_default_name)
                         ProjectListScreen(
@@ -202,7 +205,7 @@ fun App(repo: JsonDataManager) {
                                     } while (existingIds.contains(newId))
                                     val projectName = defaultProjectName.replace("%1\$d",newId.toString())
                                     val newProject = Project(id = newId, name = projectName, modified = getCurrentTimestamp()) // Default name
-                                    withContext(Dispatchers.Default) { repo.addOrUpdateProject(newProject) }
+                                    withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(newProject) }
                                     reloadAllData()
                                     screen = Screen.ProjectForm(newId)
                                 }
@@ -215,7 +218,7 @@ fun App(repo: JsonDataManager) {
                     is Screen.ProjectForm -> {
                         val existingProject = remember(s.projectId, projects) {
                             try {
-                                repo.getProjectById(s.projectId)
+                                jsonDataManager.getProjectById(s.projectId)
                             } catch (e: NoSuchElementException) {
                                 null
                             }
@@ -224,7 +227,7 @@ fun App(repo: JsonDataManager) {
 
                         LaunchedEffect(s.projectId) {
                             projectImage = withContext(Dispatchers.Default) {
-                                repo.getProjectImage(s.projectId)
+                                imageManager.getProjectImage(s.projectId)
                             }
                         }
 
@@ -246,7 +249,7 @@ fun App(repo: JsonDataManager) {
                                 onBack = { screen = Screen.ProjectList },
                                 onDelete = { id ->
                                     scope.launch {
-                                        withContext(Dispatchers.Default) { repo.deleteProject(id) }
+                                        withContext(Dispatchers.Default) { jsonDataManager.deleteProject(id) }
                                         reloadAllData()
                                         screen = Screen.ProjectList
                                     }
@@ -254,12 +257,12 @@ fun App(repo: JsonDataManager) {
                                 onSave = { editedProject, image ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
-                                            repo.addOrUpdateProject(editedProject)
+                                            jsonDataManager.addOrUpdateProject(editedProject)
                                             if (image != null) {
                                                 if (image.contentEquals(emptyImageByteArray)) {
-                                                    repo.deleteProjectImage(editedProject.id)
+                                                    imageManager.deleteProjectImage(editedProject.id)
                                                 } else {
-                                                    repo.saveProjectImage(editedProject.id, image)
+                                                    imageManager.saveProjectImage(editedProject.id, image)
                                                 }
                                             }
                                         }
@@ -285,14 +288,14 @@ fun App(repo: JsonDataManager) {
                             initialAssignments = initialAssignmentsForProject,
                             getAvailableAmountForYarn = { yarnId ->
                                 try {
-                                    repo.availableForYarn(yarnId, forProjectId = s.projectId)
+                                    jsonDataManager.availableForYarn(yarnId, forProjectId = s.projectId)
                                 } catch (e: NoSuchElementException) {
                                     0
                                 }
                             },
                             onSave = { updatedAssignments ->
                                 scope.launch {
-                                    withContext(Dispatchers.Default) { repo.setProjectAssignments(s.projectId, updatedAssignments) }
+                                    withContext(Dispatchers.Default) { jsonDataManager.setProjectAssignments(s.projectId, updatedAssignments) }
                                     reloadAllData()
                                     screen = Screen.ProjectForm(s.projectId)
                                 }
@@ -319,9 +322,9 @@ fun App(repo: JsonDataManager) {
                                 onBack = { screen = Screen.Home },
                                 onExport = {
                                     scope.launch {
-                                        val backupFileName = withContext(Dispatchers.Default) { repo.backup() }
+                                        val backupFileName = withContext(Dispatchers.Default) { jsonDataManager.backup() }
                                         if (backupFileName != null) {
-                                            val json = withContext(Dispatchers.Default) { repo.getRawJson() }
+                                            val json = withContext(Dispatchers.Default) { jsonDataManager.getRawJson() }
                                             fileDownloader.download(backupFileName, json)
                                         }
                                     }
@@ -329,15 +332,20 @@ fun App(repo: JsonDataManager) {
                                 onImport = { fileContent ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
-                                            repo.importData(fileContent)
+                                            jsonDataManager.importData(fileContent)
                                         }
                                         reloadAllData()
                                         snackbarHostState.showSnackbar("Import erfolgreich")
                                     }
                                 },
                                 onLocaleChange = { newLocale ->
-                                    setAppLanguage(newLocale)
-                                    locale = newLocale
+                                    scope.launch {
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(SettingsData(language = newLocale))
+                                        }
+                                        setAppLanguage(newLocale)
+                                        locale = newLocale
+                                    }
                                 }
                             )
                         }

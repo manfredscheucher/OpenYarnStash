@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 /**
  * Repository for managing yarns, projects, and their usages from a JSON file.
  */
-class JsonDataManager(private val fileHandler: FileHandler) {
+class JsonDataManager(private val fileHandler: FileHandler, private val filePath: String = "stash.json") {
 
     private var data: AppData = AppData()
 
@@ -15,7 +15,7 @@ class JsonDataManager(private val fileHandler: FileHandler) {
      * it initializes with default empty lists.
      */
     suspend fun load(): AppData {
-        val content = fileHandler.readFile()
+        val content = fileHandler.readFile(filePath)
         data = if (content.isNotEmpty()) {
             try {
                 Json.decodeFromString<AppData>(content)
@@ -39,7 +39,7 @@ class JsonDataManager(private val fileHandler: FileHandler) {
      */
     private suspend fun save() {
         val content = Json.encodeToString(data)
-        fileHandler.writeFile(content)
+        fileHandler.writeFile(filePath, content)
     }
 
     /**
@@ -54,7 +54,7 @@ class JsonDataManager(private val fileHandler: FileHandler) {
      * @return The name of the backup file, or null if backup failed.
      */
     suspend fun backup(): String? {
-        return fileHandler.backupFile()
+        return fileHandler.backupFile(filePath)
     }
 
     /**
@@ -62,9 +62,9 @@ class JsonDataManager(private val fileHandler: FileHandler) {
      */
     suspend fun importData(content: String) {
         // First, backup the existing file.
-        fileHandler.backupFile()
+        fileHandler.backupFile(filePath)
         // Then, write the new content to the main file.
-        fileHandler.writeFile(content)
+        fileHandler.writeFile(filePath, content)
         // Finally, reload the data in the repository.
         load()
     }
@@ -126,29 +126,5 @@ class JsonDataManager(private val fileHandler: FileHandler) {
             }
         }
         save()
-    }
-
-    suspend fun saveProjectImage(projectId: Int, image: ByteArray) {
-        fileHandler.writeBytes("img/project/$projectId.jpg", image)
-    }
-
-    suspend fun getProjectImage(projectId: Int): ByteArray? {
-        return fileHandler.readBytes("img/project/$projectId.jpg")
-    }
-
-    suspend fun deleteProjectImage(projectId: Int) {
-        fileHandler.deleteFile("img/project/$projectId.jpg")
-    }
-
-    suspend fun saveYarnImage(yarnId: Int, image: ByteArray) {
-        fileHandler.writeBytes("img/yarn/$yarnId.jpg", image)
-    }
-
-    suspend fun getYarnImage(yarnId: Int): ByteArray? {
-        return fileHandler.readBytes("img/yarn/$yarnId.jpg")
-    }
-
-    suspend fun deleteYarnImage(yarnId: Int) {
-        fileHandler.deleteFile("img/yarn/$yarnId.jpg")
     }
 }
