@@ -40,7 +40,8 @@ fun YarnListScreen(
         onBack()
     }
 
-    var hideUsed by remember { mutableStateOf(settings.hideUsedYarns) }
+    // The meaning of hideUsedYarns is inverted here: true means "show consumed yarns"
+    var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
 
     Scaffold(
         topBar = {
@@ -107,10 +108,10 @@ fun YarnListScreen(
                     }
                 }
 
-                val filteredYarnData = if (hideUsed) {
-                    yarnData.filter { it.availableAmount > 0 }
+                val filteredYarnData = if (showConsumed) {
+                    yarnData.filter { it.availableAmount <= 0 && it.usedAmount > 0 }
                 } else {
-                    yarnData
+                    yarnData.filter { it.availableAmount > 0 }
                 }
 
                 val totalAvailable = filteredYarnData.sumOf { it.availableAmount }
@@ -121,19 +122,20 @@ fun YarnListScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     FilterChip(
-                        selected = hideUsed,
+                        selected = showConsumed,
                         onClick = {
-                            hideUsed = !hideUsed
-                            onSettingsChange(settings.copy(hideUsedYarns = hideUsed))
+                            val newShowConsumed = !showConsumed
+                            showConsumed = newShowConsumed
+                            onSettingsChange(settings.copy(hideUsedYarns = newShowConsumed))
                         },
-                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
+                        label = { Text("Verbrauchte Wolle") },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             labelColor = MaterialTheme.colorScheme.outline,
                             selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                             selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ),
-                        border = if (hideUsed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
+                        border = if (showConsumed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
 
