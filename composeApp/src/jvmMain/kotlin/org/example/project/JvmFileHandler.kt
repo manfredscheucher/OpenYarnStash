@@ -5,9 +5,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class JvmFileHandler : FileHandler {
-    private val file = File("stash.json")
 
-    override suspend fun readFile(): String {
+    private fun getFile(path: String) = File(path)
+
+    override suspend fun readFile(path: String): String {
+        val file = getFile(path)
         return if (file.exists()) {
             file.readText()
         } else {
@@ -15,29 +17,32 @@ class JvmFileHandler : FileHandler {
         }
     }
 
-    override suspend fun writeFile(content: String) {
+    override suspend fun writeFile(path: String, content: String) {
+        val file = getFile(path)
+        file.parentFile?.mkdirs()
         file.writeText(content)
     }
 
-    override suspend fun backupFile(): String? {
+    override suspend fun backupFile(path: String): String? {
+        val file = getFile(path)
         if (file.exists()) {
             val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
             val backupFileName = "${file.nameWithoutExtension}-$timestamp.${file.extension}"
-            val backupFile = File(backupFileName)
+            val backupFile = File(file.parent, backupFileName)
             file.copyTo(backupFile, overwrite = true)
-            return backupFileName
+            return backupFile.name
         }
         return null
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        val imageFile = File(path)
+        val imageFile = getFile(path)
         imageFile.parentFile?.mkdirs()
         imageFile.writeBytes(bytes)
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
-        val imageFile = File(path)
+        val imageFile = getFile(path)
         return if (imageFile.exists()) {
             imageFile.readBytes()
         } else {
@@ -46,7 +51,7 @@ class JvmFileHandler : FileHandler {
     }
 
     override suspend fun deleteFile(path: String) {
-        val fileToDelete = File(path)
+        val fileToDelete = getFile(path)
         if (fileToDelete.exists()) {
             fileToDelete.delete()
         }
