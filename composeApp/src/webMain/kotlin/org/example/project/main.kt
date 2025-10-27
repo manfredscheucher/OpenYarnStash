@@ -12,6 +12,6 @@ fun main() {
     val fileDownloader = FileDownloader()
 
     ComposeViewport {
-        App(jsonDataManager, imageManager, settingsManager, fileDownloader)
+        App(jsonDataManager, imageManager, settingsManager, fileDownloader, fileHandler)
     }
 }

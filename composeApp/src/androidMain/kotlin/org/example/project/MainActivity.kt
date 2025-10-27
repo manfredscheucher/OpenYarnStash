@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         val fileDownloader = FileDownloader(this)
 
         setContent {
-            App(jsonDataManager, imageManager, settingsManager, fileDownloader)
+            App(jsonDataManager, imageManager, settingsManager, fileDownloader, fileHandler)
         }
     }
 }

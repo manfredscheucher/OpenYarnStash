@@ -10,6 +10,6 @@ fun main() = application {
     val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     val fileDownloader = FileDownloader()
     Window(onCloseRequest = ::exitApplication) {
-        App(jsonDataManager, imageManager, settingsManager, fileDownloader)
+        App(jsonDataManager, imageManager, settingsManager, fileDownloader, fileHandler)
     }
 }
