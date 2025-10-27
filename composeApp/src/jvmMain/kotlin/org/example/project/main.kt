@@ -14,10 +14,3 @@ fun main() = application {
     }
 }
 
-fun getCurrentLanguage(): String {
-    return Locale.getDefault().language
-}
-
-fun setAppLanguage(language: String) {
-    Locale.setDefault(Locale(language))
-}
