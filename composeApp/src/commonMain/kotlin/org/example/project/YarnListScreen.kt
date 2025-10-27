@@ -188,23 +188,18 @@ fun YarnListScreen(
                                         }
                                     })
                                     Spacer(Modifier.height(8.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(
-                                            stringResource(
-                                                Res.string.usage_used,
-                                                data.usedAmount
-                                            )
+                                    Text(
+                                        stringResource(
+                                            Res.string.usage_used,
+                                            data.usedAmount
                                         )
-                                        Text(
-                                            stringResource(
-                                                Res.string.usage_available,
-                                                data.availableAmount
-                                            )
+                                    )
+                                    Text(
+                                        stringResource(
+                                            Res.string.usage_available,
+                                            data.availableAmount
                                         )
-                                    }
+                                    )
                                 }
                             }
                         }
