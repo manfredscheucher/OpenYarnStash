@@ -85,8 +85,10 @@
     <string name="usage_section_title">Assigned yarn</string>
     <string name="usage_amount_label">Amount (g)</string>
     <string name="usage_available">Available: %1$d g</string>
+    <string name="usage_available_with_meterage">Available: %1$d g (%2$d m)</string>
     <string name="usage_available_meterage">Available: %1$d m</string>
     <string name="usage_used">Used: %1$d g</string>
+    <string name="usage_used_with_meterage">Used: %1$d g (%2$d m)</string>
     <string name="usage_projects_title">Projects</string>
 
     <!-- Statistics Screen -->
