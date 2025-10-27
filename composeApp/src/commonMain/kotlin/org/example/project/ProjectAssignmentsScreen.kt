@@ -3,11 +3,13 @@ package org.example.project
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -109,53 +111,59 @@ fun ProjectAssignmentsScreen(
                 Text(stringResource(Res.string.yarn_list_empty)) // Re-using for now, consider a specific string
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .imePadding()
-                    .navigationBarsPadding(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(sortedYarns, key = { it.id }) { yarn ->
-                    val assignedAmount = currentAssignments[yarn.id]
-                    val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
+            Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
+                val state = rememberLazyListState()
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .imePadding()
+                        .navigationBarsPadding(),
+                    state = state,
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(sortedYarns, key = { it.id }) { yarn ->
+                        val assignedAmount = currentAssignments[yarn.id]
+                        val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 
-                    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                        Text("${yarn.name} (${yarn.color ?: "?"}) - Gesamt im Stash: ${yarn.amount}g", style = MaterialTheme.typography.titleMedium)
-                        Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
-                        Spacer(Modifier.height(4.dp))
-                        OutlinedTextField(
-                            value = assignedAmount?.toString() ?: "",
-                            onValueChange = { textValue ->
-                                val numericValue = textValue.toIntOrNull()
-                                val clampedValue = numericValue?.coerceIn(0, maxAmountThisProjectCanTake)
-                                currentAssignments = currentAssignments.toMutableMap().apply {
-                                    if (clampedValue != null) {
-                                        this[yarn.id] = clampedValue
-                                    } else {
-                                        remove(yarn.id)
+                        Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                            Text(
+                                "${yarn.name} (${yarn.color ?: "?"}) - Gesamt im Stash: ${yarn.amount}g",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
+                            Spacer(Modifier.height(4.dp))
+                            OutlinedTextField(
+                                value = assignedAmount?.toString() ?: "",
+                                onValueChange = { textValue ->
+                                    val numericValue = textValue.toIntOrNull()
+                                    val clampedValue = numericValue?.coerceIn(0, maxAmountThisProjectCanTake)
+                                    currentAssignments = currentAssignments.toMutableMap().apply {
+                                        if (clampedValue != null) {
+                                            this[yarn.id] = clampedValue
+                                        } else {
+                                            remove(yarn.id)
+                                        }
                                     }
-                                }
-                            },
-                            label = { Text(stringResource(Res.string.usage_amount_label)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Divider(Modifier.padding(top = 16.dp, bottom = 8.dp))
+                                },
+                                label = { Text(stringResource(Res.string.usage_amount_label)) },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Divider(Modifier.padding(top = 16.dp, bottom = 8.dp))
+                        }
                     }
-                }
 
-                item {
-                    Spacer(Modifier.height(24.dp))
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End // Save button to the right
-                    ) {
-                        TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                        Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                    item {
+                        Spacer(Modifier.height(24.dp))
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End // Save button to the right
+                        ) {
+                            TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
+                            Spacer(Modifier.width(8.dp))
+                            Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                        }
                     }
                 }
             }

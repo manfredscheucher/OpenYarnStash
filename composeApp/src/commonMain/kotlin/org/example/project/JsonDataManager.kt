@@ -18,15 +18,15 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         val content = fileHandler.readFile(filePath)
         data = if (content.isNotEmpty()) {
             try {
-                Json.decodeFromString<AppData>(content)
+                val appData = Json.decodeFromString<AppData>(content)
+                validateData(appData)
+                appData
             } catch (e: SerializationException) {
-                // Handle decoding error, maybe log it and return default data
-                println("Error decoding JSON: ${e.message}")
-                AppData()
+                // Re-throw the exception to be handled by the caller
+                throw e
             } catch (e: Exception) {
                 // Handle other exceptions
-                println("An unexpected error occurred: ${e.message}")
-                AppData()
+                throw e
             }
         } else {
             AppData()
@@ -45,8 +45,8 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     /**
      * Provides the raw JSON content of the current data.
      */
-    fun getRawJson(): String {
-        return Json.encodeToString(data)
+    suspend fun getRawJson(): String {
+        return fileHandler.readFile(filePath)
     }
 
     /**
@@ -57,16 +57,50 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         return fileHandler.backupFile(filePath)
     }
 
+
     /**
-     * Backs up the current data file and overwrites it with new content.
+     * Validates the given JSON content, backs up the current data file, and then overwrites it with the new content.
+     * If the content is invalid, it throws a SerializationException.
      */
     suspend fun importData(content: String) {
-        // First, backup the existing file.
+        // First, validate the new content. This will throw if content is corrupt.
+        val newData = Json.decodeFromString<AppData>(content)
+        validateData(newData)
+
+        // If validation is successful, then backup the existing file.
         fileHandler.backupFile(filePath)
+
         // Then, write the new content to the main file.
         fileHandler.writeFile(filePath, content)
-        // Finally, reload the data in the repository.
-        load()
+
+        // Finally, update the in-memory data.
+        data = newData
+    }
+
+    private fun validateData(appData: AppData) {
+        val yarnIds = appData.yarns.map { it.id }.toSet()
+        val projectIds = appData.projects.map { it.id }.toSet()
+
+        for (yarn in appData.yarns) {
+            if (yarn.name.isBlank()) {
+                throw SerializationException("Yarn with id ${yarn.id} has a blank name.")
+            }
+        }
+
+        for (project in appData.projects) {
+            if (project.name.isBlank()) {
+                throw SerializationException("Project with id ${project.id} has a blank name.")
+            }
+        }
+
+        for (usage in appData.usages) {
+            if (!yarnIds.contains(usage.yarnId)) {
+                throw SerializationException("Usage refers to a non-existent yarn with id ${usage.yarnId}.")
+            }
+            if (!projectIds.contains(usage.projectId)) {
+                throw SerializationException("Usage refers to a non-existent project with id ${usage.projectId}.")
+            }
+        }
     }
 
     // ... (rest of the functions for yarn, project, and usage management)

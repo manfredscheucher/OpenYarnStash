@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -30,6 +30,7 @@ import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.common_filter
 import openyarnstash.composeapp.generated.resources.common_plus_symbol
 import openyarnstash.composeapp.generated.resources.project_list_empty
 import openyarnstash.composeapp.generated.resources.project_list_title
@@ -76,13 +78,22 @@ fun ProjectListScreen(
             }.toSet()
         )
     }
+    var filter by remember { mutableStateOf("") }
 
     val statusOrder = mapOf(
         ProjectStatus.IN_PROGRESS to 0,
         ProjectStatus.PLANNING to 1,
         ProjectStatus.FINISHED to 2
     )
-    val filteredProjects = projects.filter { it.status in activeStatuses }
+    val filteredProjects = projects.filter {
+        val statusOk = it.status in activeStatuses
+        val filterOk = if (filter.isNotBlank()) {
+            it.name.contains(filter, ignoreCase = true)
+        } else {
+            true
+        }
+        statusOk && filterOk
+    }
     val sortedProjects = filteredProjects.sortedWith(compareBy { statusOrder[it.status] })
 
     Scaffold(
@@ -145,49 +156,59 @@ fun ProjectListScreen(
                     )
                 }
             }
+            TextField(
+                value = filter,
+                onValueChange = { filter = it },
+                label = { Text(stringResource(Res.string.common_filter)) },
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
             if (sortedProjects.isEmpty()) {
                 Box(Modifier.fillMaxSize().padding(16.dp)) {
                     Text(stringResource(Res.string.project_list_empty))
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(sortedProjects) { p ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { onOpen(p.id) },
-                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
-                        ) {
-                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                val imageBytes = projectImages[p.id]
-                                if (imageBytes != null) {
-                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
-                                    Image(
-                                        bitmap = bitmap,
-                                        contentDescription = "Project image for ${p.name}",
-                                        modifier = Modifier.size(64.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(Res.drawable.projects),
-                                        contentDescription = "Project icon",
-                                        modifier = Modifier.size(64.dp).alpha(0.5f),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Column {
-                                    Text(p.name, fontWeight = FontWeight.Bold)
-                                    val statusText = when (p.status) {
-                                        ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
-                                        ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
-                                        ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    val state = rememberLazyListState()
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = state,
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {                        items(sortedProjects) { p ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { onOpen(p.id) },
+                                colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
+                            ) {
+                                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    val imageBytes = projectImages[p.id]
+                                    if (imageBytes != null) {
+                                        val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                        Image(
+                                            bitmap = bitmap,
+                                            contentDescription = "Project image for ${p.name}",
+                                            modifier = Modifier.size(64.dp),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(Res.drawable.projects),
+                                            contentDescription = "Project icon",
+                                            modifier = Modifier.size(64.dp).alpha(0.5f),
+                                            contentScale = ContentScale.Crop
+                                        )
                                     }
-                                    Text(statusText)
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Column {
+                                        Text(p.name, fontWeight = FontWeight.Bold)
+                                        val statusText = when (p.status) {
+                                            ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                                            ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                                            ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                                        }
+                                        Text(statusText)
+                                    }
                                 }
                             }
                         }
