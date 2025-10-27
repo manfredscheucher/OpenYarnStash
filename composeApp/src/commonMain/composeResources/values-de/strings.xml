@@ -85,8 +85,10 @@
     <string name="usage_section_title">Zugeordnete Wolle</string>
     <string name="usage_amount_label">Menge (g)</string>
     <string name="usage_available">Verfügbar: %1$d g</string>
+    <string name="usage_available_with_meterage">Verfügbar: %1$d g (%2$d m)</string>
     <string name="usage_available_meterage">Verfügbar: %1$d m</string>
     <string name="usage_used">Verbraucht: %1$d g</string>
+    <string name="usage_used_with_meterage">Verbraucht: %1$d g (%2$d m)</string>
     <string name="usage_projects_title">Projekte</string>
 
     <!-- Statistics Screen -->

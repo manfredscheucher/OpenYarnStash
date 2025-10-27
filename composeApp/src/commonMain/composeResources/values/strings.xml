@@ -85,8 +85,10 @@
     <string name="usage_section_title">Assigned yarn</string>
     <string name="usage_amount_label">Amount (g)</string>
     <string name="usage_available">Available: %1$d g</string>
+    <string name="usage_available_with_meterage">Available: %1$d g (%2$d m)</string>
     <string name="usage_available_meterage">Available: %1$d m</string>
     <string name="usage_used">Used: %1$d g</string>
+    <string name="usage_used_with_meterage">Used: %1$d g (%2$d m)</string>
     <string name="usage_projects_title">Projects</string>
 
     <!-- Statistics Screen -->
@@ -97,8 +99,11 @@
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
     <string name="statistics_total_yarn_weight">Total available weight: %1$d g</string>
+    <string name="statistics_total_yarn_meterage">Total available meterage: %1$d m</string>
     <string name="statistics_yarn_bought_this_year">Yarn bought this year: %1$d g</string>
+    <string name="statistics_yarn_bought_this_year_meterage">Yarn bought this year: %1$d m</string>
     <string name="statistics_yarn_used_this_year">Yarn used this year: %1$d g</string>
+    <string name="statistics_yarn_used_this_year_meterage">Yarn used this year: %1$d m</string>
     <string name="statistics_projects_in_progress">Projects in progress: %1$d</string>
     <string name="statistics_projects_planned">Planned projects: %1$d</string>
     <string name="statistics_projects_finished_this_year">Finished projects this year: %1$d</string>

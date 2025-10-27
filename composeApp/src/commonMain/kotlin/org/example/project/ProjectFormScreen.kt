@@ -36,7 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -80,7 +85,7 @@ fun ProjectFormScreen(
     initial: Project,
     initialImage: ByteArray?,
     usagesForProject: List<Usage>,
-    yarnNameById: (Int) -> String,
+    yarnById: (Int) -> Yarn?,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, ByteArray?) -> Unit,
@@ -299,7 +304,25 @@ fun ProjectFormScreen(
                     Text(stringResource(Res.string.project_form_no_yarn_assigned))
                 } else {
                     usagesForProject.forEach { usage ->
-                        Text("- ${yarnNameById(usage.yarnId)}: ${usage.amount} g")
+                        val yarn = yarnById(usage.yarnId)
+                        if (yarn != null) {
+                            Text(buildAnnotatedString {
+                                yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                        append("$it ")
+                                    }
+                                }
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(yarn.name)
+                                }
+                                yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                    append(" ($it)")
+                                }
+                                append(": ${usage.amount} g")
+                            })
+                        } else {
+                            Text("- ${usage.yarnId}: ${usage.amount} g")
+                        }
                     }
                 }
 

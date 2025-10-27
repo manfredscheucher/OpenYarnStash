@@ -91,11 +91,17 @@ fun YarnListScreen(
                         } else {
                             null
                         }
+                        val usedMeterage = if (meterage != null && weight != null && weight > 0) {
+                            (used * meterage) / weight
+                        } else {
+                            null
+                        }
                         object {
                             val yarnItem = yarn
                             val usedAmount = used
                             val availableAmount = available
                             val availableMeterageAmount = availableMeterage
+                            val usedMeterageAmount = usedMeterage
                         }
                     }
                 }
@@ -188,10 +194,14 @@ fun YarnListScreen(
                                         }
                                     })
                                     Spacer(Modifier.height(8.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
+                                    if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
+                                        Text(
+                                            stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
+                                        )
+                                        Text(
+                                            stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                        )
+                                    } else {
                                         Text(
                                             stringResource(
                                                 Res.string.usage_used,
