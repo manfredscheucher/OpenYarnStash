@@ -3,8 +3,8 @@ package org.example.project
 import java.io.File
 import javax.swing.JFileChooser
 
-class JvmFileDownloader : FileDownloader {
-    override fun download(fileName: String, data: String) {
+actual class FileDownloader {
+    actual fun download(fileName: String, data: String) {
         val chooser = JFileChooser()
         chooser.dialogTitle = "Save JSON File"
         chooser.selectedFile = File(fileName)
