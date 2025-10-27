@@ -5,8 +5,8 @@ import android.content.Intent
 import androidx.core.content.FileProvider
 import java.io.File
 
-class AndroidFileDownloader(private val context: Context) : FileDownloader {
-    override fun download(fileName: String, data: String) {
+actual class FileDownloader(private val context: Context) {
+    actual fun download(fileName: String, data: String) {
         val file = File(context.cacheDir, fileName)
         file.writeText(data)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)

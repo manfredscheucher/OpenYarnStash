@@ -7,8 +7,10 @@ import java.util.Date
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
 
+    private fun getFile(path: String) = File(context.filesDir, path)
+
     override suspend fun readFile(path: String): String {
-        val file = File(context.filesDir, path)
+        val file = getFile(path)
         return if (file.exists()) {
             file.readText()
         } else {
@@ -17,30 +19,35 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun writeFile(path: String, content: String) {
-        val file = File(context.filesDir, path)
+        val file = getFile(path)
+        file.parentFile?.mkdirs()
         file.writeText(content)
     }
 
     override suspend fun backupFile(path: String): String? {
-        val file = File(context.filesDir, path)
+        val file = getFile(path)
         if (file.exists()) {
-            val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
-            val backupFileName = "${file.nameWithoutExtension}-$timestamp.${file.extension}"
-            val backupFile = File(context.filesDir, backupFileName)
+            val backupFileName = createTimestampedFileName(file.nameWithoutExtension, file.extension)
+            val backupFile = File(file.parent, backupFileName)
             file.copyTo(backupFile, overwrite = true)
-            return backupFileName
+            return backupFile.name
         }
         return null
     }
 
+    override fun createTimestampedFileName(baseName: String, extension: String): String {
+        val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())
+        return "$baseName-$timestamp.$extension"
+    }
+
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        val imageFile = File(context.filesDir, path)
+        val imageFile = getFile(path)
         imageFile.parentFile?.mkdirs()
         imageFile.writeBytes(bytes)
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
-        val imageFile = File(context.filesDir, path)
+        val imageFile = getFile(path)
         return if (imageFile.exists()) {
             imageFile.readBytes()
         } else {
@@ -49,7 +56,7 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun deleteFile(path: String) {
-        val fileToDelete = File(context.filesDir, path)
+        val fileToDelete = getFile(path)
         if (fileToDelete.exists()) {
             fileToDelete.delete()
         }

@@ -4,15 +4,7 @@ import kotlinx.browser.localStorage
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.khronos.webgl.Uint8Array
-import org.khronos.webgl.get
-import org.w3c.dom.url.URL
-import org.w3c.files.Blob
-import org.w3c.files.BlobPropertyBag
 
-@JsModule("is-base64")
-@JsNonModule
-external fun isBase64(str: String): Boolean
 
 @JsModule("js-base64")
 @JsNonModule
@@ -22,25 +14,40 @@ external object Base64 {
 }
 
 class JsFileHandler : FileHandler {
-    private val key = "stash.json"
 
-    override suspend fun readFile(): String {
-        return localStorage.getItem(key) ?: ""
+    override suspend fun readFile(path: String): String {
+        return localStorage.getItem(path) ?: ""
     }
 
-    override suspend fun writeFile(content: String) {
-        localStorage.setItem(key, content)
+    override suspend fun writeFile(path: String, content: String) {
+        localStorage.setItem(path, content)
     }
 
-    override suspend fun backupFile(): String? {
-        val content = localStorage.getItem(key)
+    override suspend fun backupFile(path: String): String? {
+        val content = localStorage.getItem(path)
         if (content != null) {
-            val timestamp = getCurrentTimestamp()
-            val backupKey = "${key.substringBeforeLast('.')}-$timestamp.${key.substringAfterLast('.')}"
+            val backupKey = createTimestampedFileName(path.substringBeforeLast('.'), path.substringAfterLast('.'))
             localStorage.setItem(backupKey, content)
             return backupKey
         }
         return null
+    }
+
+    override fun createTimestampedFileName(baseName: String, extension: String): String {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+        val local = now.toLocalDateTime(zone)
+        // YYYYMMDD-HHMMSS
+        val timestamp = buildString {
+            append(local.year.toString().padStart(4, '0'))
+            append(local.monthNumber.toString().padStart(2, '0'))
+            append(local.dayOfMonth.toString().padStart(2, '0'))
+            append('-')
+            append(local.hour.toString().padStart(2, '0'))
+            append(local.minute.toString().padStart(2, '0'))
+            append(local.second.toString().padStart(2, '0'))
+        }
+        return "$baseName-$timestamp.$extension"
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {

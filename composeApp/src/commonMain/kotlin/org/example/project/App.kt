@@ -35,7 +35,7 @@ sealed class Screen {
 }
 
 @Composable
-fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsManager: JsonSettingsManager) {
+fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsManager: JsonSettingsManager, fileDownloader: FileDownloader, fileHandler: FileHandler) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
     var settings by remember { mutableStateOf(Settings()) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
@@ -46,7 +46,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     var showNotImplementedDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
-    val fileDownloader = LocalFileDownloader.current
     val snackbarHostState = remember { SnackbarHostState() }
     val emptyImageByteArray = remember { createEmptyImageByteArray() }
 
@@ -367,13 +366,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     onBack = { screen = Screen.Home },
                                     onExport = {
                                         scope.launch {
-                                            val backupFileName =
-                                                withContext(Dispatchers.Default) { jsonDataManager.backup() }
-                                            if (backupFileName != null) {
-                                                val json =
-                                                    withContext(Dispatchers.Default) { jsonDataManager.getRawJson() }
-                                                fileDownloader.download(backupFileName, json)
-                                            }
+                                            withContext(Dispatchers.Default) { jsonDataManager.backup() } // Best-effort backup
+                                            val json = withContext(Dispatchers.Default) { jsonDataManager.getRawJson() }
+                                            val exportFileName = fileHandler.createTimestampedFileName("open-yarn-stash", "json")
+                                            fileDownloader.download(exportFileName, json)
                                         }
                                     },
                                     onImport = { fileContent ->
