@@ -63,6 +63,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     suspend fun importData(content: String) {
         // First, validate the new content. This will throw if content is corrupt.
         val newData = Json.decodeFromString<AppData>(content)
+        validateData(newData)
 
         // If validation is successful, then backup the existing file.
         fileHandler.backupFile(filePath)
@@ -72,6 +73,32 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
 
         // Finally, update the in-memory data.
         data = newData
+    }
+
+    private fun validateData(appData: AppData) {
+        val yarnIds = appData.yarns.map { it.id }.toSet()
+        val projectIds = appData.projects.map { it.id }.toSet()
+
+        for (yarn in appData.yarns) {
+            if (yarn.name.isBlank()) {
+                throw SerializationException("Yarn with id ${yarn.id} has a blank name.")
+            }
+        }
+
+        for (project in appData.projects) {
+            if (project.name.isBlank()) {
+                throw SerializationException("Project with id ${project.id} has a blank name.")
+            }
+        }
+
+        for (usage in appData.usages) {
+            if (!yarnIds.contains(usage.yarnId)) {
+                throw SerializationException("Usage refers to a non-existent yarn with id ${usage.yarnId}.")
+            }
+            if (!projectIds.contains(usage.projectId)) {
+                throw SerializationException("Usage refers to a non-existent project with id ${usage.projectId}.")
+            }
+        }
     }
 
     // ... (rest of the functions for yarn, project, and usage management)
