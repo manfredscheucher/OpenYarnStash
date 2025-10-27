@@ -109,7 +109,7 @@ fun YarnListScreen(
                 }
 
                 val filteredYarnData = if (showConsumed) {
-                    yarnData.filter { it.availableAmount <= 0 && it.usedAmount > 0 }
+                    yarnData
                 } else {
                     yarnData.filter { it.availableAmount > 0 }
                 }
