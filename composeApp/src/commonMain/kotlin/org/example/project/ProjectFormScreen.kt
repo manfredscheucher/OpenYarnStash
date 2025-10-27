@@ -17,6 +17,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
@@ -66,6 +69,7 @@ import openyarnstash.composeapp.generated.resources.project_label_gauge
 import openyarnstash.composeapp.generated.resources.project_label_name
 import openyarnstash.composeapp.generated.resources.project_label_needle_size
 import openyarnstash.composeapp.generated.resources.project_label_notes
+import openyarnstash.composeapp.generated.resources.project_label_row_count
 import openyarnstash.composeapp.generated.resources.project_label_size
 import openyarnstash.composeapp.generated.resources.project_label_start_date
 import openyarnstash.composeapp.generated.resources.project_status_finished
@@ -101,6 +105,7 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
+    var rowCount by remember { mutableStateOf(initial.rowCount) }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
@@ -111,7 +116,7 @@ fun ProjectFormScreen(
         newImage = it
     }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCount) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -121,7 +126,8 @@ fun ProjectFormScreen(
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge?.toString() ?: "") ||
-                    newImage != null
+                    newImage != null ||
+                    rowCount != initial.rowCount
         }
     }
 
@@ -135,7 +141,8 @@ fun ProjectFormScreen(
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
-            gauge = gauge.toIntOrNull()
+            gauge = gauge.toIntOrNull(),
+            rowCount = rowCount
         )
         onSave(project, newImage)
     }
@@ -275,6 +282,18 @@ fun ProjectFormScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(Res.string.project_label_row_count), style = MaterialTheme.typography.bodyLarge)
+                Spacer(Modifier.width(16.dp))
+                IconButton(onClick = { rowCount-- }) {
+                    Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                }
+                Text(text = rowCount.toString(), style = MaterialTheme.typography.bodyLarge)
+                IconButton(onClick = { rowCount++ }) {
+                    Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                }
+            }
             Spacer(Modifier.height(8.dp))
             val statusText = when (status) {
                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
