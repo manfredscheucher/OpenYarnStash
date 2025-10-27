@@ -20,7 +20,8 @@ data class Project(
     val size: String? = null,
     val gauge: Int? = null,
     val madeFor: String? = null,
-    val modified: String? = null
+    val modified: String? = null,
+    val rowCount: Int = 0
 ) {
     @Transient
     val status: ProjectStatus = when {

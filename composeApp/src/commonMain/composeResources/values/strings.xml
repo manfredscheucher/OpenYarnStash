@@ -10,10 +10,9 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Yarn stash</string>
     <string name="yarn_list_empty">No yarns yet. Tap +</string>
-    <string name="yarn_list_summary">Current amount: %1$d g</string>
-    <string name="yarn_list_summary_meterage">Current meterage: %1$d m</string>
+    <string name="yarn_list_summary">Current amount: %1$d g (%2$d m)</string>
     <string name="yarn_item_label_modified">Last modified: %1$s</string>
-    <string name="yarn_list_hide_used">Hide used yarns</string>
+    <string name="yarn_list_hide_used">Used yarns</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projects</string>
@@ -78,6 +77,7 @@
     <string name="project_label_needle_size">Needle Size</string>
     <string name="project_label_size">Size</string>
     <string name="project_label_gauge">Gauge</string>
+    <string name="project_label_row_count">Row count</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

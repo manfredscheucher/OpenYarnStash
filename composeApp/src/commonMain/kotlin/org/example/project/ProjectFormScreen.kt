@@ -1,13 +1,10 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,11 +13,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -71,6 +69,7 @@ import openyarnstash.composeapp.generated.resources.project_label_gauge
 import openyarnstash.composeapp.generated.resources.project_label_name
 import openyarnstash.composeapp.generated.resources.project_label_needle_size
 import openyarnstash.composeapp.generated.resources.project_label_notes
+import openyarnstash.composeapp.generated.resources.project_label_row_count
 import openyarnstash.composeapp.generated.resources.project_label_size
 import openyarnstash.composeapp.generated.resources.project_label_start_date
 import openyarnstash.composeapp.generated.resources.project_status_finished
@@ -106,6 +105,7 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
+    var rowCount by remember { mutableStateOf(initial.rowCount) }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
@@ -116,7 +116,7 @@ fun ProjectFormScreen(
         newImage = it
     }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCount) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -126,7 +126,8 @@ fun ProjectFormScreen(
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge?.toString() ?: "") ||
-                    newImage != null
+                    newImage != null ||
+                    rowCount != initial.rowCount
         }
     }
 
@@ -140,7 +141,8 @@ fun ProjectFormScreen(
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
-            gauge = gauge.toIntOrNull()
+            gauge = gauge.toIntOrNull(),
+            rowCount = rowCount
         )
         onSave(project, newImage)
     }
@@ -218,155 +220,161 @@ fun ProjectFormScreen(
             )
         }
     ) { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-            val scrollState = rememberScrollState()
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .imePadding()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-            ) {
-                val displayedImage = newImage ?: initialImage
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .navigationBarsPadding()
+                .padding(16.dp)
+        ) {
+            val displayedImage = newImage ?: initialImage
+            if (displayedImage != null) {
+                val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
+                if (bitmap != null) {
+                    Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                }
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.projects),
+                    contentDescription = "Project icon",
+                    modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { imagePicker.launch() }) {
+                    Text("Select Image")
+                }
                 if (displayedImage != null) {
-                    val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
-                    if (bitmap != null) {
-                        Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
-                    }
-                } else {
-                    Image(
-                        painter = painterResource(Res.drawable.projects),
-                        contentDescription = "Project icon",
-                        modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
-                    )
-                }
-                Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { imagePicker.launch() }) {
-                        Text("Select Image")
-                    }
-                    if (displayedImage != null) {
-                        Button(onClick = { newImage = createEmptyImageByteArray() }) {
-                            Text("Remove Image")
-                        }
-                    }
-                }
-                Spacer(Modifier.height(16.dp))
-                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(8.dp))
-                DateInput(
-                    label = stringResource(Res.string.project_label_start_date),
-                    date = startDate,
-                    onDateChange = { startDate = it?: "" }
-                )
-                Spacer(Modifier.height(8.dp))
-                DateInput(
-                    label = stringResource(Res.string.project_label_end_date),
-                    date = endDate,
-                    onDateChange = { endDate = it?: "" }
-                )
-                Spacer(Modifier.height(8.dp))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.weight(1f))
-                    SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.weight(1f))
-                }
-                Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(
-                    value = gauge,
-                    onValueChange = { gauge = it },
-                    label = { Text(stringResource(Res.string.project_label_gauge)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(8.dp))
-                val statusText = when (status) {
-                    ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
-                    ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
-                    ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
-                }
-                Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
-                Spacer(Modifier.height(8.dp))
-                if (modified != null) {
-                    Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
-                    Spacer(Modifier.height(8.dp))
-                }
-                SelectAllOutlinedTextField(
-                    value = notes,
-                    onValueChange = { notes = it },
-                    label = { Text(stringResource(Res.string.project_label_notes)) },
-                    singleLine = false,
-                    minLines = 3,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                if (!isNewProject) {
-                    Spacer(Modifier.height(16.dp))
-                    Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
-                    Spacer(Modifier.height(8.dp))
-
-                    if (usagesForProject.isEmpty()) {
-                        Text(stringResource(Res.string.project_form_no_yarn_assigned))
-                    } else {
-                        usagesForProject.forEach { usage ->
-                            val yarn = yarnById(usage.yarnId)
-                            if (yarn != null) {
-                                Text(buildAnnotatedString {
-                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
-                                            append("$it ")
-                                        }
-                                    }
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(yarn.name)
-                                    }
-                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                        append(" ($it)")
-                                    }
-                                    append(": ${usage.amount} g")
-                                })
-                            } else {
-                                Text("- ${usage.yarnId}: ${usage.amount} g")
-                            }
-                        }
-                    }
-
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = assignAction,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(Res.string.project_form_button_assignments))
-                    }
-                }
-
-                Spacer(Modifier.height(24.dp))
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                    Row {
-                        if (!isNewProject) {
-                            TextButton(onClick = {
-                                if (usagesForProject.isNotEmpty()) {
-                                    showDeleteRestrictionDialog = true
-                                } else {
-                                    onDelete(initial.id)
-                                }
-                            }) { Text(stringResource(Res.string.common_delete)) }
-                            Spacer(Modifier.width(8.dp))
-                        }
-                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                    Button(onClick = { newImage = createEmptyImageByteArray() }) {
+                        Text("Remove Image")
                     }
                 }
             }
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(scrollState)
+            Spacer(Modifier.height(16.dp))
+            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            DateInput(
+                label = stringResource(Res.string.project_label_start_date),
+                date = startDate,
+                onDateChange = { startDate = it?: "" }
             )
+            Spacer(Modifier.height(8.dp))
+            DateInput(
+                label = stringResource(Res.string.project_label_end_date),
+                date = endDate,
+                onDateChange = { endDate = it?: "" }
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.weight(1f))
+                SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.weight(1f))
+            }
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(
+                value = gauge,
+                onValueChange = { gauge = it },
+                label = { Text(stringResource(Res.string.project_label_gauge)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(Res.string.project_label_row_count), style = MaterialTheme.typography.bodyLarge)
+                Spacer(Modifier.width(16.dp))
+                IconButton(onClick = { rowCount-- }) {
+                    Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                }
+                Text(text = rowCount.toString(), style = MaterialTheme.typography.bodyLarge)
+                IconButton(onClick = { rowCount++ }) {
+                    Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            val statusText = when (status) {
+                ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+            }
+            Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(8.dp))
+            if (modified != null) {
+                Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
+                Spacer(Modifier.height(8.dp))
+            }
+            SelectAllOutlinedTextField(
+                value = notes,
+                onValueChange = { notes = it },
+                label = { Text(stringResource(Res.string.project_label_notes)) },
+                singleLine = false,
+                minLines = 3,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (!isNewProject) {
+                Spacer(Modifier.height(16.dp))
+                Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+
+                if (usagesForProject.isEmpty()) {
+                    Text(stringResource(Res.string.project_form_no_yarn_assigned))
+                } else {
+                    usagesForProject.forEach { usage ->
+                        val yarn = yarnById(usage.yarnId)
+                        if (yarn != null) {
+                            Text(buildAnnotatedString {
+                                yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                        append("$it ")
+                                    }
+                                }
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(yarn.name)
+                                }
+                                yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                    append(" ($it)")
+                                }
+                                append(": ${usage.amount} g")
+                            })
+                        } else {
+                            Text("- ${usage.yarnId}: ${usage.amount} g")
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = assignAction,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(Res.string.project_form_button_assignments))
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
+                Row {
+                    if (!isNewProject) {
+                        TextButton(onClick = {
+                            if (usagesForProject.isNotEmpty()) {
+                                showDeleteRestrictionDialog = true
+                            } else {
+                                onDelete(initial.id)
+                            }
+                        }) { Text(stringResource(Res.string.common_delete)) }
+                        Spacer(Modifier.width(8.dp))
+                    }
+                    Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                }
+            }
         }
     }
 }

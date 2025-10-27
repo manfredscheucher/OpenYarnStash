@@ -10,10 +10,9 @@
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Lager</string>
     <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
-    <string name="yarn_list_summary">Aktuelle Menge: %1$d g</string>
-    <string name="yarn_list_summary_meterage">Aktuelle Lauflänge: %1$d m</string>
+    <string name="yarn_list_summary">Aktuelle Menge: %1$d g (%2$d m)</string>
     <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
-    <string name="yarn_list_hide_used">Verbrauchte Wolle ausblenden</string>
+    <string name="yarn_list_hide_used">Verbrauchte Wolle</string>
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
@@ -77,6 +76,7 @@
     <string name="project_label_needle_size">Nadelstärke</string>
     <string name="project_label_size">Größe</string>
     <string name="project_label_gauge">Maschenprobe</string>
+    <string name="project_label_row_count">Reihen</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Woll-Zuweisungen für %1$s</string>
