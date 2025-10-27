@@ -194,7 +194,7 @@ fun YarnListScreen(
                                         }
                                     })
                                     Spacer(Modifier.height(8.dp))
-                                    if ((data.availableMeterageAmount ?: 0) > 0) {
+                                    if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
                                         Text(
                                             stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
                                         )
