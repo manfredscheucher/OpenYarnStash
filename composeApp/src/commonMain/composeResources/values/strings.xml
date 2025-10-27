@@ -32,6 +32,7 @@
     <string name="common_no">No</string>
     <string name="common_stay">Stay</string>
     <string name="common_select_image">Select Image</string>
+    <string name="common_filter">Filter</string>
 
     <!-- Yarn form -->
     <string name="yarn_form_new">New yarn</string>

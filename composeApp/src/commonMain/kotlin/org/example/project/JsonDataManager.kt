@@ -18,7 +18,9 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         val content = fileHandler.readFile(filePath)
         data = if (content.isNotEmpty()) {
             try {
-                Json.decodeFromString<AppData>(content)
+                val appData = Json.decodeFromString<AppData>(content)
+                validateData(appData)
+                appData
             } catch (e: SerializationException) {
                 // Re-throw the exception to be handled by the caller
                 throw e

@@ -45,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
+import openyarnstash.composeapp.generated.resources.common_filter
 import openyarnstash.composeapp.generated.resources.common_plus_symbol
 import openyarnstash.composeapp.generated.resources.project_list_empty
 import openyarnstash.composeapp.generated.resources.project_list_title
@@ -158,6 +159,7 @@ fun ProjectListScreen(
             TextField(
                 value = filter,
                 onValueChange = { filter = it },
+                label = { Text(stringResource(Res.string.common_filter)) },
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
             if (sortedProjects.isEmpty()) {

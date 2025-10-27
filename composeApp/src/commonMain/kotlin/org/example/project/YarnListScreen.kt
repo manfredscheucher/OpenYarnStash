@@ -152,6 +152,7 @@ fun YarnListScreen(
                 TextField(
                     value = filter,
                     onValueChange = { filter = it },
+                    label = { Text(stringResource(Res.string.common_filter)) },
                     modifier = Modifier.fillMaxWidth().padding(16.dp)
                 )
 
