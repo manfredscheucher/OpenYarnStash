@@ -114,8 +114,8 @@ fun YarnListScreen(
                     yarnData.filter { it.availableAmount > 0 }
                 }
 
-                val totalAvailable = filteredYarnData.sumOf { it.availableAmount }
-                val totalMeterage = filteredYarnData.sumOf { it.availableMeterageAmount ?: 0 }
+                val totalAvailable = yarnData.sumOf { it.availableAmount }
+                val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),

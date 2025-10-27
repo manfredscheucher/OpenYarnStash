@@ -82,7 +82,6 @@ fun YarnFormScreen(
         newImage = it
     }
 
-    val isUsedInProjects = usagesForYarn.isNotEmpty()
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
     val hasChanges by remember(
@@ -393,7 +392,7 @@ fun YarnFormScreen(
                 TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (initial != null) {
-                        if (isUsedInProjects) {
+                        if (usagesForYarn.isNotEmpty()) {
                             TextButton(onClick = { onSetRemainingToZero(initial.id, totalUsedAmount) }) { Text(stringResource(Res.string.yarn_form_button_set_remaining_to_zero)) }
                         } else {
                             TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
