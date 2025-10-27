@@ -44,16 +44,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     var projectImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var yarnImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
+    var errorDialogMessage by remember { mutableStateOf<String?>(null) }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val emptyImageByteArray = remember { createEmptyImageByteArray() }
 
     suspend fun reloadAllData() {
-        val data = withContext(Dispatchers.Default) { jsonDataManager.load() }
-        yarns = data.yarns
-        projects = data.projects
-        usages = data.usages
+        try {
+            val data = withContext(Dispatchers.Default) { jsonDataManager.load() }
+            yarns = data.yarns
+            projects = data.projects
+            usages = data.usages
+        } catch (e: Exception) {
+            errorDialogMessage = "Failed to load data: ${e.message}"
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -69,6 +74,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
             text = { Text(stringResource(Res.string.not_implemented_message)) },
             confirmButton = {
                 TextButton(onClick = { showNotImplementedDialog = false }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
+    }
+
+    if (errorDialogMessage != null) {
+        AlertDialog(
+            onDismissRequest = { errorDialogMessage = null },
+            title = { Text("Error") },
+            text = { Text(errorDialogMessage!!) },
+            confirmButton = {
+                TextButton(onClick = { errorDialogMessage = null }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }
@@ -374,11 +392,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     },
                                     onImport = { fileContent ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) {
-                                                jsonDataManager.importData(fileContent)
+                                            try {
+                                                withContext(Dispatchers.Default) {
+                                                    jsonDataManager.importData(fileContent)
+                                                }
+                                                reloadAllData()
+                                                snackbarHostState.showSnackbar("Import erfolgreich")
+                                            } catch (e: Exception) {
+                                                errorDialogMessage = "Failed to import data: ${e.message}"
                                             }
-                                            reloadAllData()
-                                            snackbarHostState.showSnackbar("Import erfolgreich")
                                         }
                                     },
                                     onLocaleChange = { newLocale ->

@@ -20,13 +20,11 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             try {
                 Json.decodeFromString<AppData>(content)
             } catch (e: SerializationException) {
-                // Handle decoding error, maybe log it and return default data
-                println("Error decoding JSON: ${e.message}")
-                AppData()
+                // Re-throw the exception to be handled by the caller
+                throw e
             } catch (e: Exception) {
                 // Handle other exceptions
-                println("An unexpected error occurred: ${e.message}")
-                AppData()
+                throw e
             }
         } else {
             AppData()
@@ -57,16 +55,23 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         return fileHandler.backupFile(filePath)
     }
 
+
     /**
-     * Backs up the current data file and overwrites it with new content.
+     * Validates the given JSON content, backs up the current data file, and then overwrites it with the new content.
+     * If the content is invalid, it throws a SerializationException.
      */
     suspend fun importData(content: String) {
-        // First, backup the existing file.
+        // First, validate the new content. This will throw if content is corrupt.
+        val newData = Json.decodeFromString<AppData>(content)
+
+        // If validation is successful, then backup the existing file.
         fileHandler.backupFile(filePath)
+
         // Then, write the new content to the main file.
         fileHandler.writeFile(filePath, content)
-        // Finally, reload the data in the repository.
-        load()
+
+        // Finally, update the in-memory data.
+        data = newData
     }
 
     // ... (rest of the functions for yarn, project, and usage management)
