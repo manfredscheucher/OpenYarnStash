@@ -43,8 +43,8 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     /**
      * Provides the raw JSON content of the current data.
      */
-    fun getRawJson(): String {
-        return Json.encodeToString(data)
+    suspend fun getRawJson(): String {
+        return fileHandler.readFile(filePath)
     }
 
     /**
