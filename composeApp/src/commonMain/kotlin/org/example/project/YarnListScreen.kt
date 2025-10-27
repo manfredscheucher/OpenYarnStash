@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -125,7 +126,14 @@ fun YarnListScreen(
                             hideUsed = !hideUsed
                             onSettingsChange(settings.copy(hideUsedYarns = hideUsed))
                         },
-                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) }
+                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            labelColor = MaterialTheme.colorScheme.outline,
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        border = if (hideUsed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
 

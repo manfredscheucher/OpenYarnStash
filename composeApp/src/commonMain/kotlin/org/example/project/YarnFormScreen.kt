@@ -288,7 +288,7 @@ fun YarnFormScreen(
             }
             Spacer(Modifier.height(8.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 SelectAllOutlinedTextField(
                     value = numberOfBallsText,
                     onValueChange = { newValue ->
@@ -330,6 +330,17 @@ fun YarnFormScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
+                    Spacer(Modifier.width(8.dp))
+                    Column {
+                        IconButton(onClick = {
+                            val newValue = (amountText.toIntOrNull() ?: 0) + 1
+                            amountText = newValue.toString()
+                        }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowUp, "Increment") }
+                        IconButton(onClick = {
+                            val decremented = (amountText.toIntOrNull() ?: 0) - 1
+                            amountText = max(decremented, totalUsedAmount).toString().takeIf { it != "0" } ?: ""
+                        }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowDown, "Decrement") }
+                    }
                 }
             }
             Spacer(Modifier.height(8.dp))
@@ -360,7 +371,16 @@ fun YarnFormScreen(
                     Text(stringResource(Res.string.yarn_form_no_projects_assigned))
                 } else {
                     usagesForYarn.forEach { usage ->
-                        Text("- ${projectNameById(usage.projectId)}: ${usage.amount} g")
+                        var usageText = "- ${projectNameById(usage.projectId)}: ${usage.amount} g"
+                        initial.weightPerSkein?.let { weightPerSkein ->
+                            initial.meteragePerSkein?.let { meteragePerSkein ->
+                                if (weightPerSkein > 0) {
+                                    val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
+                                    usageText += " ($usedMeterage m)"
+                                }
+                            }
+                        }
+                        Text(usageText)
                     }
                 }
             }
