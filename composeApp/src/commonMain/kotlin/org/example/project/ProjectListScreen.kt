@@ -30,6 +30,7 @@ import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -76,13 +77,22 @@ fun ProjectListScreen(
             }.toSet()
         )
     }
+    var filter by remember { mutableStateOf("") }
 
     val statusOrder = mapOf(
         ProjectStatus.IN_PROGRESS to 0,
         ProjectStatus.PLANNING to 1,
         ProjectStatus.FINISHED to 2
     )
-    val filteredProjects = projects.filter { it.status in activeStatuses }
+    val filteredProjects = projects.filter {
+        val statusOk = it.status in activeStatuses
+        val filterOk = if (filter.isNotBlank()) {
+            it.name.contains(filter, ignoreCase = true)
+        } else {
+            true
+        }
+        statusOk && filterOk
+    }
     val sortedProjects = filteredProjects.sortedWith(compareBy { statusOrder[it.status] })
 
     Scaffold(
@@ -145,6 +155,11 @@ fun ProjectListScreen(
                     )
                 }
             }
+            TextField(
+                value = filter,
+                onValueChange = { filter = it },
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
+            )
             if (sortedProjects.isEmpty()) {
                 Box(Modifier.fillMaxSize().padding(16.dp)) {
                     Text(stringResource(Res.string.project_list_empty))

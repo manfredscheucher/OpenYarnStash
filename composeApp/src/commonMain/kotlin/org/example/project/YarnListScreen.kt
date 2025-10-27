@@ -42,6 +42,7 @@ fun YarnListScreen(
 
     // The meaning of hideUsedYarns is inverted here: true means "show consumed yarns"
     var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
+    var filter by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -108,10 +109,20 @@ fun YarnListScreen(
                     }
                 }
 
-                val filteredYarnData = if (showConsumed) {
-                    yarnData.filter { it.availableAmount <= 0 && it.usedAmount > 0 }
-                } else {
-                    yarnData.filter { it.availableAmount > 0 }
+                val filteredYarnData = yarnData.filter { data ->
+                    val consumedOk = if (showConsumed) {
+                        data.availableAmount <= 0 && data.usedAmount > 0
+                    } else {
+                        data.availableAmount > 0
+                    }
+                    val filterOk = if (filter.isNotBlank()) {
+                        data.yarnItem.name.contains(filter, ignoreCase = true) ||
+                                data.yarnItem.brand?.contains(filter, ignoreCase = true) == true ||
+                                data.yarnItem.color?.contains(filter, ignoreCase = true) == true
+                    } else {
+                        true
+                    }
+                    consumedOk && filterOk
                 }
 
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
@@ -138,6 +149,11 @@ fun YarnListScreen(
                         border = if (showConsumed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
+                TextField(
+                    value = filter,
+                    onValueChange = { filter = it },
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                )
 
                 Text(
                     text = stringResource(Res.string.yarn_list_summary, totalAvailable),
