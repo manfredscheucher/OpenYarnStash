@@ -276,13 +276,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     initial = existingProject,
                                     initialImage = projectImage,
                                     usagesForProject = usagesForCurrentProject,
-                                    yarnNameById = { yarnId ->
-                                        try {
-                                            yarns.firstOrNull { it.id == yarnId }?.name ?: "?"
-                                        } catch (e: NoSuchElementException) {
-                                            "?"
-                                        }
-                                    },
+                                    yarnById = { yarnId -> yarns.firstOrNull { it.id == yarnId } },
                                     onBack = { screen = Screen.ProjectList },
                                     onDelete = { id ->
                                         scope.launch {
