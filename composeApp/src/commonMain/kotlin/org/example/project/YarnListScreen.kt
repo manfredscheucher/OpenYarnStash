@@ -2,9 +2,12 @@ package org.example.project
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -164,88 +167,97 @@ fun YarnListScreen(
                     text = stringResource(Res.string.yarn_list_summary_meterage, totalMeterage),
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 )
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(filteredYarnData) { data ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            onClick = { onOpen(data.yarnItem.id) },
-                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(data.yarnItem.id))
-                        ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    val state = rememberLazyListState()
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = state,
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {                        items(filteredYarnData) { data ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                onClick = { onOpen(data.yarnItem.id) },
+                                colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(data.yarnItem.id))
+                            ) {
 
-                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                val imageBytes = yarnImages[data.yarnItem.id]
-                                if (imageBytes != null) {
-                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
-                                    Image(
-                                        bitmap = bitmap,
-                                        contentDescription = "Yarn image for ${data.yarnItem.name}",
-                                        modifier = Modifier.size(64.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(Res.drawable.yarns),
-                                        contentDescription = "Yarn icon",
-                                        modifier = Modifier.size(64.dp).alpha(0.5f),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-
-                                    Text(buildAnnotatedString {
-                                        // Append brand with normal weight if it exists and is not blank
-                                        data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
-                                            withStyle(
-                                                style = SpanStyle(
-                                                    fontStyle = FontStyle.Italic,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                            ) {
-                                                append("$it ")
-                                            }
-                                        }
-                                        // Append yarn name with bold weight
-                                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                            append(data.yarnItem.name)
-                                        }
-                                        // Append color with bold weight if it exists and is not blank
-                                        data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
-                                            append(" ($it)")
-                                        }
-                                    })
-                                    Spacer(Modifier.height(8.dp))
-                                    if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
-                                        Text(
-                                            stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
-                                        )
-                                        Text(
-                                            stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    val imageBytes = yarnImages[data.yarnItem.id]
+                                    if (imageBytes != null) {
+                                        val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                        Image(
+                                            bitmap = bitmap,
+                                            contentDescription = "Yarn image for ${data.yarnItem.name}",
+                                            modifier = Modifier.size(64.dp),
+                                            contentScale = ContentScale.Crop
                                         )
                                     } else {
-                                        Text(
-                                            stringResource(
-                                                Res.string.usage_used,
-                                                data.usedAmount
-                                            )
+                                        Image(
+                                            painter = painterResource(Res.drawable.yarns),
+                                            contentDescription = "Yarn icon",
+                                            modifier = Modifier.size(64.dp).alpha(0.5f),
+                                            contentScale = ContentScale.Crop
                                         )
-                                        Text(
-                                            stringResource(
-                                                Res.string.usage_available,
-                                                data.availableAmount
+                                    }
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+
+                                        Text(buildAnnotatedString {
+                                            // Append brand with normal weight if it exists and is not blank
+                                            data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
+                                                withStyle(
+                                                    style = SpanStyle(
+                                                        fontStyle = FontStyle.Italic,
+                                                        fontWeight = FontWeight.SemiBold
+                                                    )
+                                                ) {
+                                                    append("$it ")
+                                                }
+                                            }
+                                            // Append yarn name with bold weight
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(data.yarnItem.name)
+                                            }
+                                            // Append color with bold weight if it exists and is not blank
+                                            data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
+                                                append(" ($it)")
+                                            }
+                                        })
+                                        Spacer(Modifier.height(8.dp))
+                                        if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
+                                            Text(
+                                                stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
                                             )
-                                        )
+                                            Text(
+                                                stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                            )
+                                        } else {
+                                            Text(
+                                                stringResource(
+                                                    Res.string.usage_used,
+                                                    data.usedAmount
+                                                )
+                                            )
+                                            Text(
+                                                stringResource(
+                                                    Res.string.usage_available,
+                                                    data.availableAmount
+                                                )
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    VerticalScrollbar(
+                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(
+                            scrollState = state
+                        )
+                    )
                 }
             }
         }

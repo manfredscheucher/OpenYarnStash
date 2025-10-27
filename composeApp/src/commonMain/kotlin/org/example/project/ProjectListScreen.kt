@@ -2,12 +2,14 @@ package org.example.project
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -167,48 +171,58 @@ fun ProjectListScreen(
                     Text(stringResource(Res.string.project_list_empty))
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(sortedProjects) { p ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { onOpen(p.id) },
-                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
-                        ) {
-                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                val imageBytes = projectImages[p.id]
-                                if (imageBytes != null) {
-                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
-                                    Image(
-                                        bitmap = bitmap,
-                                        contentDescription = "Project image for ${p.name}",
-                                        modifier = Modifier.size(64.dp),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(Res.drawable.projects),
-                                        contentDescription = "Project icon",
-                                        modifier = Modifier.size(64.dp).alpha(0.5f),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Column {
-                                    Text(p.name, fontWeight = FontWeight.Bold)
-                                    val statusText = when (p.status) {
-                                        ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
-                                        ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
-                                        ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    val state = rememberLazyListState()
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = state,
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {                        items(sortedProjects) { p ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { onOpen(p.id) },
+                                colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
+                            ) {
+                                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    val imageBytes = projectImages[p.id]
+                                    if (imageBytes != null) {
+                                        val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                        Image(
+                                            bitmap = bitmap,
+                                            contentDescription = "Project image for ${p.name}",
+                                            modifier = Modifier.size(64.dp),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(Res.drawable.projects),
+                                            contentDescription = "Project icon",
+                                            modifier = Modifier.size(64.dp).alpha(0.5f),
+                                            contentScale = ContentScale.Crop
+                                        )
                                     }
-                                    Text(statusText)
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Column {
+                                        Text(p.name, fontWeight = FontWeight.Bold)
+                                        val statusText = when (p.status) {
+                                            ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                                            ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                                            ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
+                                        }
+                                        Text(statusText)
+                                    }
                                 }
                             }
                         }
                     }
+                    VerticalScrollbar(
+                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                        adapter = rememberScrollbarAdapter(
+                            scrollState = state
+                        )
+                    )
                 }
             }
         }

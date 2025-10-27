@@ -57,7 +57,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
             projects = data.projects
             usages = data.usages
         } catch (e: Exception) {
-            errorDialogMessage = "Failed to load data: ${e.message}"
+            errorDialogMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
         }
     }
 
@@ -397,9 +397,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                                     jsonDataManager.importData(fileContent)
                                                 }
                                                 reloadAllData()
-                                                snackbarHostState.showSnackbar("Import erfolgreich")
+                                                snackbarHostState.showSnackbar("Import successful")
                                             } catch (e: Exception) {
-                                                errorDialogMessage = "Failed to import data: ${e.message}"
+                                                errorDialogMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
                                             }
                                         }
                                     },

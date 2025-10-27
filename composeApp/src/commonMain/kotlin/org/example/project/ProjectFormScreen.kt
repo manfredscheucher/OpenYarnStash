@@ -1,10 +1,13 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -33,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
@@ -213,149 +218,155 @@ fun ProjectFormScreen(
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .imePadding()
-                .navigationBarsPadding()
-                .padding(16.dp)
-        ) {
-            val displayedImage = newImage ?: initialImage
-            if (displayedImage != null) {
-                val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
-                if (bitmap != null) {
-                    Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
-                }
-            } else {
-                Image(
-                    painter = painterResource(Res.drawable.projects),
-                    contentDescription = "Project icon",
-                    modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
-                )
-            }
-            Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { imagePicker.launch() }) {
-                    Text("Select Image")
-                }
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .imePadding()
+                    .navigationBarsPadding()
+                    .padding(16.dp)
+            ) {
+                val displayedImage = newImage ?: initialImage
                 if (displayedImage != null) {
-                    Button(onClick = { newImage = createEmptyImageByteArray() }) {
-                        Text("Remove Image")
+                    val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
+                    if (bitmap != null) {
+                        Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
                     }
-                }
-            }
-            Spacer(Modifier.height(16.dp))
-            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
-            Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
-            Spacer(Modifier.height(8.dp))
-            DateInput(
-                label = stringResource(Res.string.project_label_start_date),
-                date = startDate,
-                onDateChange = { startDate = it?: "" }
-            )
-            Spacer(Modifier.height(8.dp))
-            DateInput(
-                label = stringResource(Res.string.project_label_end_date),
-                date = endDate,
-                onDateChange = { endDate = it?: "" }
-            )
-            Spacer(Modifier.height(8.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.weight(1f))
-                SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.weight(1f))
-            }
-            Spacer(Modifier.height(8.dp))
-            SelectAllOutlinedTextField(
-                value = gauge,
-                onValueChange = { gauge = it },
-                label = { Text(stringResource(Res.string.project_label_gauge)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(8.dp))
-            val statusText = when (status) {
-                ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
-                ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
-                ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
-            }
-            Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
-            Spacer(Modifier.height(8.dp))
-            if (modified != null) {
-                Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
-                Spacer(Modifier.height(8.dp))
-            }
-            SelectAllOutlinedTextField(
-                value = notes,
-                onValueChange = { notes = it },
-                label = { Text(stringResource(Res.string.project_label_notes)) },
-                singleLine = false,
-                minLines = 3,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            if (!isNewProject) {
-                Spacer(Modifier.height(16.dp))
-                Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-
-                if (usagesForProject.isEmpty()) {
-                    Text(stringResource(Res.string.project_form_no_yarn_assigned))
                 } else {
-                    usagesForProject.forEach { usage ->
-                        val yarn = yarnById(usage.yarnId)
-                        if (yarn != null) {
-                            Text(buildAnnotatedString {
-                                yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
-                                        append("$it ")
-                                    }
-                                }
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(yarn.name)
-                                }
-                                yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                    append(" ($it)")
-                                }
-                                append(": ${usage.amount} g")
-                            })
-                        } else {
-                            Text("- ${usage.yarnId}: ${usage.amount} g")
+                    Image(
+                        painter = painterResource(Res.drawable.projects),
+                        contentDescription = "Project icon",
+                        modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { imagePicker.launch() }) {
+                        Text("Select Image")
+                    }
+                    if (displayedImage != null) {
+                        Button(onClick = { newImage = createEmptyImageByteArray() }) {
+                            Text("Remove Image")
                         }
                     }
                 }
-
                 Spacer(Modifier.height(16.dp))
-                Button(
-                    onClick = assignAction,
+                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                DateInput(
+                    label = stringResource(Res.string.project_label_start_date),
+                    date = startDate,
+                    onDateChange = { startDate = it?: "" }
+                )
+                Spacer(Modifier.height(8.dp))
+                DateInput(
+                    label = stringResource(Res.string.project_label_end_date),
+                    date = endDate,
+                    onDateChange = { endDate = it?: "" }
+                )
+                Spacer(Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SelectAllOutlinedTextField(value = needleSize, onValueChange = { needleSize = it }, label = { Text(stringResource(Res.string.project_label_needle_size)) }, modifier = Modifier.weight(1f))
+                    SelectAllOutlinedTextField(value = size, onValueChange = { size = it }, label = { Text(stringResource(Res.string.project_label_size)) }, modifier = Modifier.weight(1f))
+                }
+                Spacer(Modifier.height(8.dp))
+                SelectAllOutlinedTextField(
+                    value = gauge,
+                    onValueChange = { gauge = it },
+                    label = { Text(stringResource(Res.string.project_label_gauge)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(Res.string.project_form_button_assignments))
+                )
+                Spacer(Modifier.height(8.dp))
+                val statusText = when (status) {
+                    ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
+                    ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)
+                    ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
                 }
-            }
+                Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
+                Spacer(Modifier.height(8.dp))
+                if (modified != null) {
+                    Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
+                    Spacer(Modifier.height(8.dp))
+                }
+                SelectAllOutlinedTextField(
+                    value = notes,
+                    onValueChange = { notes = it },
+                    label = { Text(stringResource(Res.string.project_label_notes)) },
+                    singleLine = false,
+                    minLines = 3,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(Modifier.height(24.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                Row {
-                    if (!isNewProject) {
-                        TextButton(onClick = {
-                            if (usagesForProject.isNotEmpty()) {
-                                showDeleteRestrictionDialog = true
+                if (!isNewProject) {
+                    Spacer(Modifier.height(16.dp))
+                    Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
+                    Spacer(Modifier.height(8.dp))
+
+                    if (usagesForProject.isEmpty()) {
+                        Text(stringResource(Res.string.project_form_no_yarn_assigned))
+                    } else {
+                        usagesForProject.forEach { usage ->
+                            val yarn = yarnById(usage.yarnId)
+                            if (yarn != null) {
+                                Text(buildAnnotatedString {
+                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                            append("$it ")
+                                        }
+                                    }
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(yarn.name)
+                                    }
+                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                        append(" ($it)")
+                                    }
+                                    append(": ${usage.amount} g")
+                                })
                             } else {
-                                onDelete(initial.id)
+                                Text("- ${usage.yarnId}: ${usage.amount} g")
                             }
-                        }) { Text(stringResource(Res.string.common_delete)) }
-                        Spacer(Modifier.width(8.dp))
+                        }
                     }
-                    Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+
+                    Spacer(Modifier.height(16.dp))
+                    Button(
+                        onClick = assignAction,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(Res.string.project_form_button_assignments))
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
+                    Row {
+                        if (!isNewProject) {
+                            TextButton(onClick = {
+                                if (usagesForProject.isNotEmpty()) {
+                                    showDeleteRestrictionDialog = true
+                                } else {
+                                    onDelete(initial.id)
+                                }
+                            }) { Text(stringResource(Res.string.common_delete)) }
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                    }
                 }
             }
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(scrollState)
+            )
         }
     }
 }
