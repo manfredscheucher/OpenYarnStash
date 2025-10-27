@@ -128,7 +128,7 @@ fun YarnListScreen(
                             showConsumed = newShowConsumed
                             onSettingsChange(settings.copy(hideUsedYarns = newShowConsumed))
                         },
-                        label = { Text("Verbrauchte Wolle") },
+                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
                         colors = FilterChipDefaults.filterChipColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             labelColor = MaterialTheme.colorScheme.outline,
@@ -140,12 +140,8 @@ fun YarnListScreen(
                 }
 
                 Text(
-                    text = stringResource(Res.string.yarn_list_summary, totalAvailable),
+                    text = stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage),
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                )
-                Text(
-                    text = stringResource(Res.string.yarn_list_summary_meterage, totalMeterage),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 )
                 LazyColumn(
                     modifier = Modifier
