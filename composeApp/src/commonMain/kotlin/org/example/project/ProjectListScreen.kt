@@ -59,15 +59,23 @@ import org.jetbrains.compose.resources.stringResource
 fun ProjectListScreen(
     projects: List<Project>,
     projectImages: Map<Int, ByteArray?>,
+    settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onSettingsChange: (Settings) -> Unit
 ) {
     AppBackHandler {
         onBack()
     }
 
-    var activeStatuses by remember { mutableStateOf(setOf(ProjectStatus.IN_PROGRESS, ProjectStatus.PLANNING, ProjectStatus.FINISHED)) }
+    var activeStatuses by remember {
+        mutableStateOf(
+            ProjectStatus.values().filter {
+                settings.projectToggles[it.name] ?: true
+            }.toSet()
+        )
+    }
 
     val statusOrder = mapOf(
         ProjectStatus.IN_PROGRESS to 0,
@@ -114,11 +122,17 @@ fun ProjectListScreen(
                     FilterChip(
                         selected = selected,
                         onClick = {
-                            activeStatuses = if (selected) {
+                            val newActiveStatuses = if (selected) {
                                 activeStatuses - status
                             } else {
                                 activeStatuses + status
                             }
+                            activeStatuses = newActiveStatuses
+
+                            val newProjectToggles = ProjectStatus.values().associate {
+                                it.name to (it in newActiveStatuses)
+                            }
+                            onSettingsChange(settings.copy(projectToggles = newProjectToggles))
                         },
                         label = { Text("$statusText ($count)") },
                         colors = FilterChipDefaults.filterChipColors(

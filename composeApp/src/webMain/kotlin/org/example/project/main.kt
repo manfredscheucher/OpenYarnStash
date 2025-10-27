@@ -7,12 +7,15 @@ import androidx.compose.ui.window.ComposeViewport
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val repo = JsonRepository(JsFileHandler())
+    val fileHandler = JsFileHandler()
+    val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
+    val imageManager = ImageManager(fileHandler)
+    val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     ComposeViewport {
         CompositionLocalProvider(
             LocalFileDownloader provides JsFileDownloader()
         ) {
-            App(repo)
+            App(jsonDataManager, imageManager, settingsManager)
         }
     }
 }

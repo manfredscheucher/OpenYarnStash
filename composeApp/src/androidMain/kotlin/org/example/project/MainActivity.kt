@@ -9,13 +9,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repo = JsonRepository(AndroidFileHandler(this))
+        val fileHandler = AndroidFileHandler(this)
+        val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
+        val imageManager = ImageManager(fileHandler)
+        val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
 
         setContent {
             CompositionLocalProvider(
                 LocalFileDownloader provides AndroidFileDownloader(this)
             ) {
-                App(repo)
+                App(jsonDataManager, imageManager, settingsManager)
             }
         }
     }
