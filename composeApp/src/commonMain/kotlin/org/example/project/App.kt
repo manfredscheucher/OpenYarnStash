@@ -381,6 +381,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                             key(settings.language) {
                                 SettingsScreen(
                                     currentLocale = settings.language,
+                                    jsonDataManager = jsonDataManager,
+                                    snackbarHostState = snackbarHostState,
                                     onBack = { screen = Screen.Home },
                                     onExport = {
                                         scope.launch {

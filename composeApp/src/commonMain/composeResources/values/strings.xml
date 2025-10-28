@@ -129,6 +129,17 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="import_dialog_title">Warning</string>
     <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
     <string name="language_label">Language</string>
+    <string name="settings_google_drive_title">Google Drive Sync</string>
+    <string name="settings_google_drive_login">Sign in to Google Drive</string>
+    <string name="settings_google_drive_logout">Sign out</string>
+    <string name="settings_google_drive_upload">Save to Google Drive</string>
+    <string name="settings_google_drive_download">Load from Google Drive</string>
+    <string name="settings_google_drive_upload_success">Successfully saved to Google Drive.</string>
+    <string name="settings_google_drive_upload_failed">Failed to save to Google Drive.</string>
+    <string name="settings_google_drive_download_success">Successfully loaded from Google Drive.</string>
+    <string name="settings_google_drive_download_failed">Failed to load from Google Drive.</string>
+    <string name="settings_google_drive_download_confirm_title">Confirm Load from Google Drive</string>
+    <string name="settings_google_drive_download_confirm_message">This will overwrite your local data with the data from Google Drive. Are you sure?</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>

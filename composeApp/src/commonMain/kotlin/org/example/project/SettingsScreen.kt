@@ -2,6 +2,7 @@ package org.example.project
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,38 +14,39 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.common_cancel
-import openyarnstash.composeapp.generated.resources.common_yes
-import openyarnstash.composeapp.generated.resources.export_json
-import openyarnstash.composeapp.generated.resources.import_dialog_message
-import openyarnstash.composeapp.generated.resources.import_dialog_title
-import openyarnstash.composeapp.generated.resources.import_json
-import openyarnstash.composeapp.generated.resources.language_label
-import openyarnstash.composeapp.generated.resources.settings_title
+import kotlinx.coroutines.launch
+import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     currentLocale: String,
+    jsonDataManager: JsonDataManager,
+    snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onExport: () -> Unit,
     onImport: (String) -> Unit,
@@ -52,7 +54,23 @@ fun SettingsScreen(
 ) {
     var showFilePicker by remember { mutableStateOf(false) }
     var showImportConfirmDialog by remember { mutableStateOf(false) }
+    var showGoogleDriveDownloadConfirmDialog by remember { mutableStateOf(false) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
+    var showSignIn by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
+    val googleDriveManager = rememberGoogleDriveManager()
+
+    val uploadSuccessMessage = stringResource(Res.string.settings_google_drive_upload_success)
+    val uploadFailedMessage = stringResource(Res.string.settings_google_drive_upload_failed)
+    val downloadFailedMessage = stringResource(Res.string.settings_google_drive_download_failed)
+
+    if (showSignIn) {
+        googleDriveManager.signIn { success ->
+            showSignIn = false
+            // You might want to show a snackbar message here based on success
+        }
+    }
 
     AppBackHandler {
         onBack()
@@ -77,6 +95,7 @@ fun SettingsScreen(
                     .padding(16.dp)
                     .verticalScroll(scrollState)
             ) {
+                // Language Settings
                 ExposedDropdownMenuBox(
                     expanded = languageDropdownExpanded,
                     onExpandedChange = { languageDropdownExpanded = it }
@@ -87,9 +106,7 @@ fun SettingsScreen(
                         label = { Text(stringResource(Res.string.language_label)) },
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = languageDropdownExpanded) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor()
+                        modifier = Modifier.fillMaxWidth().menuAnchor()
                     )
                     ExposedDropdownMenu(
                         expanded = languageDropdownExpanded,
@@ -97,52 +114,125 @@ fun SettingsScreen(
                     ) {
                         DropdownMenuItem(
                             text = { Text("Deutsch") },
-                            onClick = {
-                                onLocaleChange("de")
-                                languageDropdownExpanded = false
-                            }
+                            onClick = { onLocaleChange("de"); languageDropdownExpanded = false }
                         )
                         DropdownMenuItem(
                             text = { Text("English") },
-                            onClick = {
-                                onLocaleChange("en")
-                                languageDropdownExpanded = false
-                            }
+                            onClick = { onLocaleChange("en"); languageDropdownExpanded = false }
                         )
                     }
                 }
 
+                Spacer(modifier = Modifier.height(24.dp))
+                Divider()
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Local JSON Export/Import
                 Button(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.export_json))
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Button(onClick = { showImportConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.import_json))
                 }
 
+                Spacer(modifier = Modifier.height(24.dp))
+                Divider()
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Google Drive Sync
+                Text(stringResource(Res.string.settings_google_drive_title), style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (googleDriveManager.isSignedIn) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    val content = jsonDataManager.getRawJson()
+                                    if (content.isNotEmpty()) {
+                                        googleDriveManager.uploadFile("stash.json", content) { success ->
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    if (success) uploadSuccessMessage
+                                                    else uploadFailedMessage
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        snackbarHostState.showSnackbar("Local data is empty, nothing to upload.")
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(Res.string.settings_google_drive_upload))
+                        }
+                        Spacer(Modifier.weight(0.1f))
+                        Button(
+                            onClick = { showGoogleDriveDownloadConfirmDialog = true },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(Res.string.settings_google_drive_download))
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedButton(onClick = { googleDriveManager.signOut() }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(Res.string.settings_google_drive_logout))
+                    }
+                } else {
+                    Button(onClick = { showSignIn = true }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(Res.string.settings_google_drive_login))
+                    }
+                }
+
+
+                // Dialogs
                 if (showImportConfirmDialog) {
                     AlertDialog(
                         onDismissRequest = { showImportConfirmDialog = false },
                         title = { Text(stringResource(Res.string.import_dialog_title)) },
                         text = { Text(stringResource(Res.string.import_dialog_message)) },
                         confirmButton = {
+                            Button(onClick = { showImportConfirmDialog = false; showFilePicker = true }) {
+                                Text(stringResource(Res.string.common_yes))
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = { showImportConfirmDialog = false }) {
+                                Text(stringResource(Res.string.common_cancel))
+                            }
+                        }
+                    )
+                }
+
+                if (showGoogleDriveDownloadConfirmDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showGoogleDriveDownloadConfirmDialog = false },
+                        title = { Text(stringResource(Res.string.settings_google_drive_download_confirm_title)) },
+                        text = { Text(stringResource(Res.string.settings_google_drive_download_confirm_message)) },
+                        confirmButton = {
                             Button(
                                 onClick = {
-                                    showImportConfirmDialog = false
-                                    showFilePicker = true
+                                    showGoogleDriveDownloadConfirmDialog = false
+                                    scope.launch {
+                                        googleDriveManager.downloadFile("stash.json") { content ->
+                                            if (content != null) {
+                                                onImport(content)
+                                            } else {
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(downloadFailedMessage)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             ) {
                                 Text(stringResource(Res.string.common_yes))
                             }
                         },
                         dismissButton = {
-                            Button(
-                                onClick = { showImportConfirmDialog = false }
-                            ) {
+                            Button(onClick = { showGoogleDriveDownloadConfirmDialog = false }) {
                                 Text(stringResource(Res.string.common_cancel))
                             }
                         }
