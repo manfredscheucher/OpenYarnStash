@@ -10,6 +10,12 @@ enum class ProjectStatus {
 }
 
 @Serializable
+data class RowCounter(
+    val name: String,
+    val value: Int
+)
+
+@Serializable
 data class Project(
     val id: Int,
     val name: String,
@@ -21,7 +27,7 @@ data class Project(
     val gauge: Int? = null,
     val madeFor: String? = null,
     val modified: String? = null,
-    val rowCount: Int = 0
+    val rowCounters: List<RowCounter> = emptyList()
 ) {
     @Transient
     val status: ProjectStatus = when {

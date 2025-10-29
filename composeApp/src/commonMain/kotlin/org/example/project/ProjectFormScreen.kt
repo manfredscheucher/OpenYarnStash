@@ -110,18 +110,19 @@ fun ProjectFormScreen(
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
-    var rowCount by remember { mutableStateOf(initial.rowCount) }
+    var rowCounters by remember { mutableStateOf(initial.rowCounters) }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
     var newImage by remember { mutableStateOf<ByteArray?>(null) }
+    var showAddCounterDialog by remember { mutableStateOf(false) }
 
     val imagePicker = rememberImagePickerLauncher {
         newImage = it
     }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCount) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCounters) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -132,7 +133,7 @@ fun ProjectFormScreen(
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge?.toString() ?: "") ||
                     newImage != null ||
-                    rowCount != initial.rowCount
+                    rowCounters != initial.rowCounters
         }
     }
 
@@ -147,7 +148,7 @@ fun ProjectFormScreen(
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
             gauge = gauge.toIntOrNull(),
-            rowCount = rowCount
+            rowCounters = rowCounters
         )
         onSave(project, newImage)
     }
@@ -164,7 +165,7 @@ fun ProjectFormScreen(
         if (hasChanges) {
             showUnsavedDialogForAssignments = true
         } else {
-            onNavigateToAssignments() // TODO fix: navigates back to home screen
+            onNavigateToAssignments()
         }
     }
 
@@ -207,6 +208,16 @@ fun ProjectFormScreen(
     if (showDeleteRestrictionDialog) {
         DeleteRestrictionDialog(
             onDismiss = { showDeleteRestrictionDialog = false }
+        )
+    }
+
+    if (showAddCounterDialog) {
+        AddCounterDialog(
+            onDismiss = { showAddCounterDialog = false },
+            onAdd = {
+                rowCounters = rowCounters + RowCounter(it, 0)
+                showAddCounterDialog = false
+            }
         )
     }
 
@@ -288,30 +299,38 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    value = " ", // This space keeps the label floated
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true,
-                    label = { Text(stringResource(Res.string.project_label_row_count)) },
-                )
+            Text(stringResource(Res.string.project_label_row_count), style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(8.dp))
+            rowCounters.forEachIndexed { index, counter ->
                 Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 10.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
-                )
-            {
-                Text("RowCounter1", style = MaterialTheme.typography.bodyLarge)
-                Spacer(Modifier.fillMaxWidth(0.5f))
-                IconButton(onClick = { rowCount-- }) {
-                    Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                ) {
+                    Text(counter.name, style = MaterialTheme.typography.bodyLarge)
+                    Spacer(Modifier.weight(1f))
+                    IconButton(onClick = {
+                        rowCounters = rowCounters.toMutableList().also {
+                            it[index] = it[index].copy(value = it[index].value - 1)
+                        }
+                    }) {
+                        Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                    }
+                    Text(text = counter.value.toString(), style = MaterialTheme.typography.bodyLarge)
+                    IconButton(onClick = {
+                        rowCounters = rowCounters.toMutableList().also {
+                            it[index] = it[index].copy(value = it[index].value + 1)
+                        }
+                    }) {
+                        Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                    }
                 }
-                Text(text = rowCount.toString(), style = MaterialTheme.typography.bodyLarge)
-                IconButton(onClick = { rowCount++ }) {
-                    Icon(Icons.Default.Add, contentDescription = "Increase row count")
-                }
-            }}
+            }
+
+            Spacer(Modifier.height(8.dp))
+            Button(onClick = { showAddCounterDialog = true }) {
+                Text("Add Counter")
+            }
+
             Spacer(Modifier.height(8.dp))
             val statusText = when (status) {
                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
@@ -395,6 +414,36 @@ fun ProjectFormScreen(
             }
         }
     }
+}
+
+@Composable
+private fun AddCounterDialog(
+    onDismiss: () -> Unit,
+    onAdd: (String) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add new counter") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Counter name") },
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            Button(onClick = { onAdd(name) }) {
+                Text(stringResource(Res.string.common_ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(Res.string.common_cancel))
+            }
+        }
+    )
 }
 
 @Composable
