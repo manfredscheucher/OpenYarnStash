@@ -104,13 +104,20 @@
     <string name="statistics_label_year">Jahr</string>
     <string name="statistics_label_month">Monat</string>
     <string name="statistics_total_yarn_available">Garn insgesamt verfügbar: %1$d g (%2$d m)</string>
-    <string name="statistics_yarn_bought">Gekaufte Wolle: %1$d g (%2$d m)</string>
-    <string name="statistics_yarn_used">Verbrauchte Wolle: %1$d g (%2$d m)</string>
-    <string name="statistics_projects_in_progress">Projekte in Arbeit: %1$d</string>
+    <string name="statistics_yarn_bought_title">Gekaufte Wolle: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title">Verbrauchte Wolle: %1$d g (%2$d m)</string>
+    <string name="statistics_projects_in_progress_title">Projekte in Arbeit: %1$d</string>
     <string name="statistics_projects_planned">Projekte in Planung: %1$d</string>
-    <string name="statistics_projects_finished">Fertige Projekte: %1$d</string>
-    <string name="statistics_per_year">nach Jahr</string>
-    <string name="statistics_per_month">nach Monat</string>
+    <string name="statistics_projects_finished_title">Fertige Projekte: %1$d</string>
+    <string name="statistics_overall">Gesamt</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Garn: Gekauft vs. Verbraucht (Jahre)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Garn: Gekauft vs. Verbraucht (Monate)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Projekte: Fertig vs. In Arbeit (Jahre)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Projekte: Fertig vs. In Arbeit (Monate)</string>
+    <string name="statistics_series_yarn_bought">Garn gekauft</string>
+    <string name="statistics_series_yarn_used">Garn verbraucht</string>
+    <string name="statistics_series_projects_finished">Projekte fertig</string>
+    <string name="statistics_series_projects_in_progress">Projekte in Arbeit</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
@@ -140,4 +147,18 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="date_input_year">Jahr</string>
     <string name="date_input_month">Monat</string>
     <string name="date_input_day">Tag</string>
+    
+    <!-- Months -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">März</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Dezember</string>
 </resources>

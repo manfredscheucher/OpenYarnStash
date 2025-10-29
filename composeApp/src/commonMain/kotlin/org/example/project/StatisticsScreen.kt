@@ -37,85 +37,59 @@ fun StatisticsScreen(
     yarns: List<Yarn>,
     projects: List<Project>,
     usages: List<Usage>,
-    settings: Settings,
-    onBack: () -> Unit,
-    onSettingsChange: (Settings) -> Unit
+    onBack: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // ---- Jahre aus den Daten ermitteln (KMP-sicher) ----
+    val overallOption = stringResource(Res.string.statistics_overall)
+
     val yearsFromYarns = remember(yarns) {
-        yarns.mapNotNull { it.added?.let { s -> if (s.length >= 4) s.substring(0, 4).toIntOrNull() else null } }
+        yarns.mapNotNull { it.added?.take(4)?.toIntOrNull() }
     }
     val yearsFromProjects = remember(projects) {
         projects.flatMap { p ->
             listOfNotNull(
-                p.startDate?.let { s -> if (s.length >= 4) s.substring(0, 4).toIntOrNull() else null },
-                p.endDate?.let { s -> if (s.length >= 4) s.substring(0, 4).toIntOrNull() else null }
+                p.startDate?.take(4)?.toIntOrNull(),
+                p.endDate?.take(4)?.toIntOrNull()
             )
         }
     }
     val allYearsDetected = remember(yearsFromYarns, yearsFromProjects) {
         (yearsFromYarns + yearsFromProjects).distinct().sorted()
     }
-    val hasAtLeastTwoYears = allYearsDetected.size >= 2
-    val minYear = allYearsDetected.firstOrNull()
-    val maxYear = allYearsDetected.lastOrNull()
-
-    // Dropdown-Optionen: "Gesamt" (nur wenn >=2 Jahre), dann pro Jahr (absteigend)
     val yearOptionsDesc = remember(allYearsDetected) { allYearsDetected.asReversed().map { it.toString() } }
-    val dropdownOptions = remember(hasAtLeastTwoYears, yearOptionsDesc) {
+
+    val dropdownOptions = remember(yearOptionsDesc) {
         buildList {
-            if (hasAtLeastTwoYears) add("Gesamt")
+            add(overallOption)
             addAll(yearOptionsDesc)
         }
     }
 
-    // Altes Setting ("year"/"month") -> neues Schema
-    var selectedFilter by remember(settings.statisticTimespan, hasAtLeastTwoYears, maxYear) {
-        mutableStateOf(
-            when (settings.statisticTimespan) {
-                "year" -> if (hasAtLeastTwoYears) "Gesamt" else (maxYear?.toString() ?: "Gesamt")
-                "month" -> (maxYear?.toString() ?: if (hasAtLeastTwoYears) "Gesamt" else "")
-                else -> if (hasAtLeastTwoYears) "Gesamt" else (maxYear?.toString() ?: "")
-            }
-        )
-    }
-    if (selectedFilter !in dropdownOptions && dropdownOptions.isNotEmpty()) {
-        selectedFilter = if (hasAtLeastTwoYears) "Gesamt" else dropdownOptions.first()
-    }
+    var selectedFilter by remember { mutableStateOf(overallOption) }
 
-    // Kategorien (AUßERHALB der LazyColumn berechnet) + Lücken auffüllen
-    val isOverall = selectedFilter == "Gesamt"
-    val categories: List<String> = remember(isOverall, minYear, maxYear, selectedFilter) {
+    val isOverall = selectedFilter == overallOption
+
+    val categories: List<String> = remember(isOverall, allYearsDetected, selectedFilter) {
         if (isOverall) {
+            val minYear = allYearsDetected.firstOrNull()
+            val maxYear = allYearsDetected.lastOrNull()
             if (minYear != null && maxYear != null) {
-                (minYear..maxYear).map { it.toString() } // Jahre "YYYY"
+                (minYear..maxYear).map { it.toString() } // Years "YYYY"
             } else emptyList()
         } else {
             val year = selectedFilter.toIntOrNull()
             if (year != null) {
                 (1..12).map { m ->
-                    val y = year.toString().padStart(4, '0')
-                    val mm = m.toString().padStart(2, '0')
-                    "$y-$mm" // Monate "YYYY-MM"
+                    "$year-${m.toString().padStart(2, '0')}" // Months "YYYY-MM"
                 }
             } else emptyList()
         }
     }
 
-    // Gruppier-Keys (KMP-sicher)
-    fun yearKey(date: String?): String? =
-        date?.let { if (it.length >= 4) it.substring(0, 4) else null }
+    fun yearKey(date: String?): String? = date?.take(4)
+    fun monthKey(date: String?): String? = date?.take(7)
 
-    fun monthKey(date: String?): String? = when {
-        date == null -> null
-        date.length >= 7 -> date.substring(0, 7) // YYYY-MM
-        date.length >= 4 -> date.substring(0, 4) + "-01"
-        else -> null
-    }
-
-    // Voraggregationen
     val yarnsByYear = remember(yarns) { yarns.groupBy { yearKey(it.added) } }
     val yarnsByMonth = remember(yarns) { yarns.groupBy { monthKey(it.added) } }
 
@@ -123,10 +97,9 @@ fun StatisticsScreen(
     val finishedByYear = remember(finishedProjects) { finishedProjects.groupBy { yearKey(it.endDate) } }
     val finishedByMonth = remember(finishedProjects) { finishedProjects.groupBy { monthKey(it.endDate) } }
 
-    // Helper: Projekt ist in Kategorie aktiv?
-    fun projectActiveInCategory(project: Project, category: String, overall: Boolean): Boolean {
-        val start = if (overall) yearKey(project.startDate) else monthKey(project.startDate)
-        val end = if (overall) yearKey(project.endDate) else monthKey(project.endDate)
+    fun projectActiveInCategory(project: Project, category: String): Boolean {
+        val start = if (isOverall) yearKey(project.startDate) else monthKey(project.startDate)
+        val end = if (isOverall) yearKey(project.endDate) else monthKey(project.endDate)
         val started = start != null && start <= category
         val notFinishedYet = when (project.status) {
             ProjectStatus.IN_PROGRESS -> true
@@ -136,10 +109,9 @@ fun StatisticsScreen(
         return started && notFinishedYet
     }
 
-    // In-Progress pro Kategorie vorberechnen
     val inProgressCountByCat: Map<String, Int> = remember(projects, categories, isOverall) {
         categories.associateWith { cat ->
-            projects.count { p -> projectActiveInCategory(p, cat, isOverall) }
+            projects.count { p -> projectActiveInCategory(p, cat) }
         }
     }
 
@@ -173,7 +145,6 @@ fun StatisticsScreen(
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
 
-            // --- Summary & Filter ---
             item {
                 val totalAvailableWeight = yarns.sumOf { yarn ->
                     val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
@@ -199,7 +170,6 @@ fun StatisticsScreen(
 
                 Divider(Modifier.padding(vertical = 16.dp))
 
-                // --- Dropdown ---
                 ExposedDropdownMenuBox(
                     expanded = expanded,
                     onExpandedChange = { expanded = !expanded },
@@ -221,24 +191,20 @@ fun StatisticsScreen(
                                 text = { Text(option) },
                                 onClick = {
                                     selectedFilter = option
-                                    // Settings: "Gesamt" => "year", sonst "month"
-                                    val mapped = if (option == "Gesamt") "year" else "month"
-                                    onSettingsChange(settings.copy(statisticTimespan = mapped))
                                     expanded = false
                                 }
                             )
                         }
                     }
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(24.dp))
             }
 
-            // --- Chart 1: Yarn Bought / Yarn Used ---
             item {
                 ChartBlock(
-                    title = if (isOverall) "Garn: Gekauft vs. Verbraucht (Jahre)" else "Garn: Gekauft vs. Verbraucht (Monate)",
+                    title = stringResource(if (isOverall) Res.string.statistics_yarn_bought_vs_used_yearly else Res.string.statistics_yarn_bought_vs_used_monthly),
                     categories = categories,
-                    seriesLabels = listOf("Yarn Bought", "Yarn Used"),
+                    seriesLabels = listOf(stringResource(Res.string.statistics_series_yarn_bought), stringResource(Res.string.statistics_series_yarn_used)),
                     seriesColors = listOf(Color(0xFF1E88E5), Color(0xFFFFA000)),
                     valuesForCategory = { cat ->
                         if (isOverall) {
@@ -255,58 +221,50 @@ fun StatisticsScreen(
                             listOf(bought, used)
                         }
                     },
-                    labelFormatter = { cat -> formatCategoryLabel7(cat, isOverall, settings.language) }
+                    labelFormatter = { cat -> formatCategoryLabel(cat, isOverall) }
                 )
                 Spacer(Modifier.height(24.dp))
             }
 
-            // --- Chart 2: Finished vs. In Progress ---
             item {
                 ChartBlock(
-                    title = if (isOverall) "Projekte: Fertig vs. In Arbeit (Jahre)" else "Projekte: Fertig vs. In Arbeit (Monate)",
+                    title = stringResource(if (isOverall) Res.string.statistics_projects_finished_vs_in_progress_yearly else Res.string.statistics_projects_finished_vs_in_progress_monthly),
                     categories = categories,
-                    seriesLabels = listOf("Finished", "In Progress"),
+                    seriesLabels = listOf(stringResource(Res.string.statistics_series_projects_finished), stringResource(Res.string.statistics_series_projects_in_progress)),
                     seriesColors = listOf(Color(0xFF43A047), Color(0xFF8E24AA)),
                     valuesForCategory = { cat ->
-                        val finishedCount = if (isOverall) {
-                            (finishedByYear[cat]?.size ?: 0).toFloat()
-                        } else {
-                            (finishedByMonth[cat]?.size ?: 0).toFloat()
-                        }
-                        val inProgressCount = (inProgressCountByCat[cat] ?: 0).toFloat()
+                        val finishedCount = (if (isOverall) finishedByYear[cat]?.size else finishedByMonth[cat]?.size)?.toFloat() ?: 0f
+                        val inProgressCount = inProgressCountByCat[cat]?.toFloat() ?: 0f
                         listOf(finishedCount, inProgressCount)
                     },
-                    labelFormatter = { cat -> formatCategoryLabel7(cat, isOverall, settings.language) }
+                    labelFormatter = { cat -> formatCategoryLabel(cat, isOverall) }
                 )
                 Spacer(Modifier.height(24.dp))
             }
 
-            // --- Details (optional) ---
             items(categories) { cat ->
-                val header = if (isOverall) {
-                    cat
-                } else {
+                val header = if (isOverall) cat else {
                     val year = cat.take(4)
                     val month = cat.drop(5).take(2).toIntOrNull()
-                    val monthName = if (month != null) getMonthName(month, settings.language) else cat
+                    val monthName = month?.let { getMonthName(it) } ?: cat
                     "$monthName $year"
                 }
                 Text(header, style = MaterialTheme.typography.headlineMedium)
 
-                val yarnBoughtList = if (isOverall) (yarnsByYear[cat] ?: emptyList()) else (yarnsByMonth[cat] ?: emptyList())
-                val yarnBoughtAmount = yarnBoughtList.sumOf { it.amount }
-                val yarnBoughtMeterage = yarnBoughtList.sumOf { yarn ->
+                val yarnBoughtList = if (isOverall) yarnsByYear[cat] else yarnsByMonth[cat]
+                val yarnBoughtAmount = yarnBoughtList?.sumOf { it.amount } ?: 0
+                val yarnBoughtMeterage = yarnBoughtList?.sumOf { yarn ->
                     val meterage = yarn.meteragePerSkein
                     val weight = yarn.weightPerSkein
                     if (meterage != null && weight != null && weight > 0) (yarn.amount * meterage) / weight else 0
-                }
-                Text(stringResource(Res.string.statistics_yarn_bought, yarnBoughtAmount, yarnBoughtMeterage))
+                } ?: 0
+                Text(stringResource(Res.string.statistics_yarn_bought_title, yarnBoughtAmount, yarnBoughtMeterage))
 
-                val finishedList = if (isOverall) (finishedByYear[cat] ?: emptyList()) else (finishedByMonth[cat] ?: emptyList())
-                val yarnUsedAmount = finishedList.sumOf { proj ->
+                val finishedList = if (isOverall) finishedByYear[cat] else finishedByMonth[cat]
+                val yarnUsedAmount = finishedList?.sumOf { proj ->
                     usages.filter { it.projectId == proj.id }.sumOf { it.amount }
-                }
-                val yarnUsedMeterage = finishedList.sumOf { proj ->
+                } ?: 0
+                val yarnUsedMeterage = finishedList?.sumOf { proj ->
                     usages.filter { it.projectId == proj.id }.sumOf { usage ->
                         val yarn = yarns.find { it.id == usage.yarnId }
                         if (yarn != null) {
@@ -315,14 +273,14 @@ fun StatisticsScreen(
                             if (meterage != null && weight != null && weight > 0) (usage.amount * meterage) / weight else 0
                         } else 0
                     }
-                }
-                Text(stringResource(Res.string.statistics_yarn_used, yarnUsedAmount, yarnUsedMeterage))
+                } ?: 0
+                Text(stringResource(Res.string.statistics_yarn_used_title, yarnUsedAmount, yarnUsedMeterage))
 
-                val finishedCount = finishedList.size
-                Text(stringResource(Res.string.statistics_projects_finished, finishedCount))
+                val finishedCount = finishedList?.size ?: 0
+                Text(stringResource(Res.string.statistics_projects_finished_title, finishedCount))
 
                 val inProgressCount = inProgressCountByCat[cat] ?: 0
-                Text(stringResource(Res.string.statistics_projects_in_progress, inProgressCount))
+                Text(stringResource(Res.string.statistics_projects_in_progress_title, inProgressCount))
 
                 Divider(Modifier.padding(vertical = 16.dp))
             }
@@ -330,7 +288,6 @@ fun StatisticsScreen(
     }
 }
 
-/** Wiederverwendbarer Chart-Block für 2-Serien-Grouped-Barplots. */
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 private fun ChartBlock(
@@ -339,74 +296,64 @@ private fun ChartBlock(
     seriesLabels: List<String>,
     seriesColors: List<Color>,
     valuesForCategory: (String) -> List<Float>,
-    labelFormatter: (String) -> String
+    labelFormatter: @Composable (String) -> String
 ) {
     if (categories.isEmpty()) return
 
     val barData: List<DefaultVerticalBarPlotGroupedPointEntry<String, Float>> =
-        categories.map { cat ->
+        categories.mapNotNull { cat ->
             val values = valuesForCategory(cat)
-            val yPositions = values.map { v -> DefaultVerticalBarPosition(0f, v) }
-            DefaultVerticalBarPlotGroupedPointEntry(x = cat, y = yPositions)
+            if (values.all { it == 0f }) null
+            else {
+                val yPositions = values.map { v -> DefaultVerticalBarPosition(0f, v) }
+                DefaultVerticalBarPlotGroupedPointEntry(x = cat, y = yPositions)
+            }
         }
 
-    val seriesCount = barData.maxOf { it.y.size }
-    require(seriesCount == seriesLabels.size && seriesCount == seriesColors.size) {
-        "seriesLabels/colors must match data series count"
-    }
+    if (barData.isEmpty()) return
+
+    val seriesCount = barData.firstOrNull()?.y?.size ?: 0
+    if (seriesCount == 0) return
+
+    require(seriesLabels.size == seriesCount && seriesColors.size == seriesCount) { "Series labels/colors must match data series count" }
 
     val yMax = barData.flatMap { it.y.map { pos -> pos.yMax } }.maxOrNull()?.coerceAtLeast(1f) ?: 1f
 
     Column {
-        Text(title, style = MaterialTheme.typography.titleMedium)
+        Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 56.dp))
         Spacer(Modifier.height(8.dp))
 
         KoalaPlotTheme {
-            // Legende
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 FlowLegend(
                     itemCount = seriesCount,
-                    symbol = { i: Int ->
-                        Box(Modifier.size(10.dp).background(seriesColors[i]))
-                    },
-                    label = { i: Int ->
-                        Text(seriesLabels[i])
-                    }
+                    symbol = { i -> Box(Modifier.size(10.dp).background(seriesColors[i])) },
+                    label = { i -> Text(seriesLabels[i]) }
                 )
             }
 
-            val xCats = barData.map { it.x }
-            val xModel = CategoryAxisModel(xCats)
-            val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
-
-            val barRenderer: @Composable BarScope.(groupIndex: Int, series: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
-                { _, series, _ -> DefaultVerticalBar(color = seriesColors[series]) }
+            val xModel = CategoryAxisModel(barData.map { it.x })
+            val yModel = rememberFloatLinearAxisModel(range = 0f..yMax, minorTickCount = 0)
 
             XYGraph(
-                modifier = Modifier
-                    .height(380.dp) // extra Höhe für vertikale Labels + mehr Spacing
-                    .fillMaxWidth(),
+                modifier = Modifier.height(300.dp).fillMaxWidth(),
                 xAxisModel = xModel,
                 yAxisModel = yModel,
-                xAxisLabels = { cat: String ->
-                    val txt = labelFormatter(cat).take(7)  // max 7 Zeichen
+                xAxisLabels = { cat ->
                     Text(
-                        text = txt,
+                        text = labelFormatter(cat),
                         modifier = Modifier.rotate(-90f),
                         maxLines = 1,
-                        softWrap = false,
-                        overflow = TextOverflow.Clip
+                        overflow = TextOverflow.Visible
                     )
                 },
-                yAxisLabels = { y: Float ->
-                    Text(y.toInt().toString())
-                },
-                xAxisTitle = {}, // Composable-Overload erzwingen
+                xAxisTitle = {},
+                yAxisLabels = { y -> Text(y.toInt().toString()) },
                 yAxisTitle = {}
             ) {
                 GroupedVerticalBarPlot(
                     data = barData,
-                    bar = barRenderer,
+                    bar = { _, series, _ -> DefaultVerticalBar(color = seriesColors[series]) },
                     animationSpec = tween(durationMillis = 500)
                 )
             }
@@ -414,39 +361,56 @@ private fun ChartBlock(
     }
 }
 
-/** Kompakte Label-Formatierung (max 7 Zeichen) entsprechend Modus. */
-private fun formatCategoryLabel7(category: String, overall: Boolean, language: String): String {
-    return if (overall) {
-        // "YYYY"
+@Composable
+private fun formatCategoryLabel(category: String, isOverall: Boolean): String {
+    return if (isOverall) {
         category
     } else {
-        // "YYYY-MM" -> "Jan 24" / "Jän 24"
-        if (category.length >= 7 && category.getOrNull(4) == '-') {
-            val year2 = category.substring(2, 4) // zwei Stellen
+        if (category.length >= 7) {
+            val year = category.substring(2, 4)
             val month = category.substring(5, 7).toIntOrNull()
-            val mon = month?.let { getMonthShort(it, language) } ?: category
-            "$mon $year2" // 6–7 Zeichen
+            val monthShort = month?.let { getMonthShort(it) } ?: ""
+            "$monthShort $year"
         } else category
     }
 }
 
-private fun getMonthShort(month: Int, language: String): String {
-    val de = listOf("Jän", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez")
-    val en = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-    val list = if (language == "de") de else en
-    return if (month in 1..12) list[month - 1] else ""
+@Composable
+private fun getMonthShort(month: Int): String {
+    val resId = when (month) {
+        1 -> Res.string.month_january
+        2 -> Res.string.month_february
+        3 -> Res.string.month_march
+        4 -> Res.string.month_april
+        5 -> Res.string.month_may
+        6 -> Res.string.month_june
+        7 -> Res.string.month_july
+        8 -> Res.string.month_august
+        9 -> Res.string.month_september
+        10 -> Res.string.month_october
+        11 -> Res.string.month_november
+        12 -> Res.string.month_december
+        else -> null
+    }
+    return resId?.let { stringResource(it).take(3) } ?: ""
 }
 
-private fun getMonthName(month: Int, language: String): String {
-    val monthNames = when (language) {
-        "de" -> listOf(
-            "Januar", "Februar", "März", "April", "Mai", "Juni",
-            "Juli", "August", "September", "Oktober", "November", "Dezember"
-        )
-        else -> listOf(
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        )
+@Composable
+private fun getMonthName(month: Int): String {
+    val resId = when (month) {
+        1 -> Res.string.month_january
+        2 -> Res.string.month_february
+        3 -> Res.string.month_march
+        4 -> Res.string.month_april
+        5 -> Res.string.month_may
+        6 -> Res.string.month_june
+        7 -> Res.string.month_july
+        8 -> Res.string.month_august
+        9 -> Res.string.month_september
+        10 -> Res.string.month_october
+        11 -> Res.string.month_november
+        12 -> Res.string.month_december
+        else -> null
     }
-    return if (month in 1..12) monthNames[month - 1] else ""
+    return resId?.let { stringResource(it) } ?: ""
 }

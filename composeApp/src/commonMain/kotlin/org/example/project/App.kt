@@ -375,16 +375,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 yarns = yarns,
                                 projects = projects,
                                 usages = usages,
-                                settings = settings,
-                                onBack = { screen = Screen.Home },
-                                onSettingsChange = { newSettings ->
-                                    scope.launch {
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                }
+                                onBack = { screen = Screen.Home }
                             )
                         }
 
