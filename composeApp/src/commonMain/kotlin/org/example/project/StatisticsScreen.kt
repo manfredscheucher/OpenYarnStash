@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.rotate
 import io.github.koalaplot.core.bar.BarScope
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotGroupedPointEntry
@@ -80,6 +81,7 @@ fun StatisticsScreen(
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
 
+            // --- Summary & Filter ---
             item {
                 val totalAvailableWeight = yarns.sumOf { yarn ->
                     val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
@@ -92,9 +94,7 @@ fun StatisticsScreen(
                     val weight = yarn.weightPerSkein
                     if (meterage != null && weight != null && weight > 0) {
                         (available * meterage) / weight
-                    } else {
-                        0
-                    }
+                    } else 0
                 }
                 Text(
                     stringResource(
@@ -212,7 +212,6 @@ fun StatisticsScreen(
                         if (labelsBase.size >= seriesCount) labelsBase.take(seriesCount)
                         else List(seriesCount) { i -> labelsBase.getOrElse(i) { "Series ${i + 1}" } }
 
-                    // Y-Max
                     val yMax = barChartData
                         .flatMap { entry -> entry.y.map { it.yMax } }
                         .maxOrNull()
@@ -243,16 +242,21 @@ fun StatisticsScreen(
 
                             XYGraph(
                                 modifier = Modifier
-                                    .height(300.dp)
+                                    .height(340.dp)
                                     .fillMaxWidth(),
                                 xAxisModel = xModel,
                                 yAxisModel = yModel,
                                 xAxisLabels = { category: String ->
-                                    formatCategoryLabel(category, selectedTimespan, settings.language)
+                                    Text(
+                                        text = formatCategoryLabel(category, selectedTimespan, settings.language),
+                                        modifier = Modifier.rotate(90f)
+                                    )
                                 },
-                                yAxisLabels = { yValue: Float -> yValue.toInt().toString() },
-                                xAxisTitle = null,
-                                yAxisTitle = null
+                                yAxisLabels = { yValue: Float ->
+                                    Text(yValue.toInt().toString())
+                                },
+                                xAxisTitle = {},
+                                yAxisTitle = {}
                             ) {
                                 GroupedVerticalBarPlot(
                                     data = barChartData,
@@ -269,9 +273,9 @@ fun StatisticsScreen(
                 val displayText = if (selectedTimespan == "year") {
                     group
                 } else {
-                    val year = group.substring(0, 4)
-                    val month = group.substring(5, 7).toInt()
-                    val monthName = getMonthName(month, settings.language)
+                    val year = group.take(4)
+                    val month = group.drop(5).take(2).toIntOrNull()
+                    val monthName = if (month != null) getMonthName(month, settings.language) else group
                     "$monthName $year"
                 }
                 Text(displayText, style = MaterialTheme.typography.headlineMedium)
@@ -283,9 +287,7 @@ fun StatisticsScreen(
                     val weight = yarn.weightPerSkein
                     if (meterage != null && weight != null && weight > 0) {
                         (yarn.amount * meterage) / weight
-                    } else {
-                        0
-                    }
+                    } else 0
                 }
                 Text(
                     stringResource(
@@ -309,12 +311,8 @@ fun StatisticsScreen(
                             val weight = yarn.weightPerSkein
                             if (meterage != null && weight != null && weight > 0) {
                                 (usage.amount * meterage) / weight
-                            } else {
-                                0
-                            }
-                        } else {
-                            0
-                        }
+                            } else 0
+                        } else 0
                     }
                 }
                 Text(
@@ -338,9 +336,7 @@ fun StatisticsScreen(
                         } else if (project.status == ProjectStatus.FINISHED) {
                             val finishedGroup = groupingKey(project.endDate)
                             finishedGroup != null && finishedGroup > group
-                        } else {
-                            false
-                        }
+                        } else false
                     }
                 }
                 Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgressThisGroup))
@@ -353,7 +349,6 @@ fun StatisticsScreen(
 
 private fun formatCategoryLabel(category: String, selectedTimespan: String, language: String): String {
     if (selectedTimespan == "year") return category
-    // Erwartet "YYYY-MM"; andernfalls sicherer Fallback
     if (category.length >= 7 && category.getOrNull(4) == '-') {
         val year = category.substring(0, 4)
         val month = category.substring(5, 7).toIntOrNull()
