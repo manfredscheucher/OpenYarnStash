@@ -168,7 +168,8 @@ fun StatisticsScreen(
                 projects.filter { it.status == ProjectStatus.FINISHED }.groupBy { groupingKey(it.endDate) }
 
             val groups = (yarnBoughtByGroup.keys + finishedProjectsByGroup.keys)
-                .filterNotNull().toSet().sortedDescending()
+                .filterNotNull()
+                .toSet().sorted()
 
             item {
                 val labelsBase = listOf("Yarn Bought", "Yarn Used")
