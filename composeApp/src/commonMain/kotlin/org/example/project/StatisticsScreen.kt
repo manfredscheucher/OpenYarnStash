@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -48,82 +50,90 @@ fun StatisticsScreen(yarns: List<Yarn>, projects: List<Project>, usages: List<Us
             )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
-            val totalAvailable = yarns.sumOf { yarn ->
-                val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
-                (yarn.amount - used).coerceAtLeast(0)
-            }
-            Text(stringResource(Res.string.statistics_total_yarn_weight, totalAvailable))
-
-            val totalAvailableMeterage = yarns.sumOf { yarn ->
-                val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
-                val available = (yarn.amount - used).coerceAtLeast(0)
-                val meterage = yarn.meteragePerSkein
-                val weight = yarn.weightPerSkein
-                if (meterage != null && weight != null && weight > 0) {
-                    (available * meterage) / weight
-                } else {
-                    0
+        LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+            item {
+                val totalAvailable = yarns.sumOf { yarn ->
+                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
+                    (yarn.amount - used).coerceAtLeast(0)
                 }
-            }
-            Text(stringResource(Res.string.statistics_total_yarn_meterage, totalAvailableMeterage))
+                Text(stringResource(Res.string.statistics_total_yarn_weight, totalAvailable))
 
-
-            val currentYear = LocalDate.now().year.toString()
-            val yarnBoughtThisYear = yarns
-                .filter { it.added?.startsWith(currentYear) == true }
-
-            Text(stringResource(Res.string.statistics_yarn_bought_this_year, yarnBoughtThisYear.sumOf { it.amount }))
-
-            val yarnBoughtThisYearMeterage = yarnBoughtThisYear.sumOf { yarn ->
-                val meterage = yarn.meteragePerSkein
-                val weight = yarn.weightPerSkein
-                if (meterage != null && weight != null && weight > 0) {
-                    (yarn.amount * meterage) / weight
-                } else {
-                    0
-                }
-            }
-            Text(stringResource(Res.string.statistics_yarn_bought_this_year_meterage, yarnBoughtThisYearMeterage))
-
-
-            val finishedProjectsThisYear = projects
-                .filter { it.status == ProjectStatus.FINISHED && it.endDate?.startsWith(currentYear) == true }
-
-            val yarnUsedThisYear = finishedProjectsThisYear
-                .sumOf { project ->
-                    usages.filter { it.projectId == project.id }.sumOf { it.amount }
-                }
-
-            Text(stringResource(Res.string.statistics_yarn_used_this_year, yarnUsedThisYear))
-
-            val yarnUsedThisYearMeterage = finishedProjectsThisYear.sumOf { project ->
-                usages.filter { it.projectId == project.id }.sumOf { usage ->
-                    val yarn = yarns.find { it.id == usage.yarnId }
-                    if (yarn != null) {
-                        val meterage = yarn.meteragePerSkein
-                        val weight = yarn.weightPerSkein
-                        if (meterage != null && weight != null && weight > 0) {
-                            (usage.amount * meterage) / weight
-                        } else {
-                            0
-                        }
+                val totalAvailableMeterage = yarns.sumOf { yarn ->
+                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
+                    val available = (yarn.amount - used).coerceAtLeast(0)
+                    val meterage = yarn.meteragePerSkein
+                    val weight = yarn.weightPerSkein
+                    if (meterage != null && weight != null && weight > 0) {
+                        (available * meterage) / weight
                     } else {
                         0
                     }
                 }
+                Text(stringResource(Res.string.statistics_total_yarn_meterage, totalAvailableMeterage))
+
+                val projectsInProgress = projects.count { it.status == ProjectStatus.IN_PROGRESS }
+                Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgress))
+
+                val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
+                Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
+
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
-            Text(stringResource(Res.string.statistics_yarn_used_this_year_meterage, yarnUsedThisYearMeterage))
 
 
-            val projectsInProgress = projects.count { it.status == ProjectStatus.IN_PROGRESS }
-            Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgress))
+            val yarnBoughtByYear = yarns.groupBy { it.added?.substring(0, 4) }
+            val finishedProjectsByYear = projects.filter { it.status == ProjectStatus.FINISHED }.groupBy { it.endDate?.substring(0, 4) }
 
-            val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
-            Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
+            val years = (yarnBoughtByYear.keys + finishedProjectsByYear.keys).filterNotNull().toSet().sortedDescending()
 
-            val projectsFinishedThisYearCount = finishedProjectsThisYear.size
-            Text(stringResource(Res.string.statistics_projects_finished_this_year, projectsFinishedThisYearCount))
+            items(years) { year ->
+                Text(year, style = MaterialTheme.typography.headlineMedium)
+                val yarnBoughtThisYear = yarnBoughtByYear[year] ?: emptyList()
+                Text(stringResource(Res.string.statistics_yarn_bought_this_year, yarnBoughtThisYear.sumOf { it.amount }))
+
+                val yarnBoughtThisYearMeterage = yarnBoughtThisYear.sumOf { yarn ->
+                    val meterage = yarn.meteragePerSkein
+                    val weight = yarn.weightPerSkein
+                    if (meterage != null && weight != null && weight > 0) {
+                        (yarn.amount * meterage) / weight
+                    } else {
+                        0
+                    }
+                }
+                Text(stringResource(Res.string.statistics_yarn_bought_this_year_meterage, yarnBoughtThisYearMeterage))
+
+
+                val finishedProjectsThisYear = finishedProjectsByYear[year] ?: emptyList()
+
+                val yarnUsedThisYear = finishedProjectsThisYear
+                    .sumOf { project ->
+                        usages.filter { it.projectId == project.id }.sumOf { it.amount }
+                    }
+
+                Text(stringResource(Res.string.statistics_yarn_used_this_year, yarnUsedThisYear))
+
+                val yarnUsedThisYearMeterage = finishedProjectsThisYear.sumOf { project ->
+                    usages.filter { it.projectId == project.id }.sumOf { usage ->
+                        val yarn = yarns.find { it.id == usage.yarnId }
+                        if (yarn != null) {
+                            val meterage = yarn.meteragePerSkein
+                            val weight = yarn.weightPerSkein
+                            if (meterage != null && weight != null && weight > 0) {
+                                (usage.amount * meterage) / weight
+                            } else {
+                                0
+                            }
+                        } else {
+                            0
+                        }
+                    }
+                }
+                Text(stringResource(Res.string.statistics_yarn_used_this_year_meterage, yarnUsedThisYearMeterage))
+
+                val projectsFinishedThisYearCount = finishedProjectsThisYear.size
+                Text(stringResource(Res.string.statistics_projects_finished_this_year, projectsFinishedThisYearCount))
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+            }
         }
     }
 }
