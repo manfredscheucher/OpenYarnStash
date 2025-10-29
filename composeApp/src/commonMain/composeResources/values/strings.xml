@@ -77,7 +77,7 @@
     <string name="project_label_needle_size">Needle Size</string>
     <string name="project_label_size">Size</string>
     <string name="project_label_gauge">Gauge</string>
-    <string name="project_label_row_count">Row count</string>
+    <string name="project_label_row_count">Row counter</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

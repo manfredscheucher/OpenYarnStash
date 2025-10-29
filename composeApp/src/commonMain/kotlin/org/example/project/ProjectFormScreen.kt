@@ -1,7 +1,9 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -283,9 +288,22 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(Res.string.project_label_row_count), style = MaterialTheme.typography.bodyLarge)
-                Spacer(Modifier.width(16.dp))
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = " ", // This space keeps the label floated
+                    onValueChange = {},
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
+                    label = { Text(stringResource(Res.string.project_label_row_count)) },
+                )
+                Row(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                )
+            {
+                Text("RowCounter1", style = MaterialTheme.typography.bodyLarge)
+                Spacer(Modifier.fillMaxWidth(0.5f))
                 IconButton(onClick = { rowCount-- }) {
                     Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
                 }
@@ -293,7 +311,7 @@ fun ProjectFormScreen(
                 IconButton(onClick = { rowCount++ }) {
                     Icon(Icons.Default.Add, contentDescription = "Increase row count")
                 }
-            }
+            }}
             Spacer(Modifier.height(8.dp))
             val statusText = when (status) {
                 ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
