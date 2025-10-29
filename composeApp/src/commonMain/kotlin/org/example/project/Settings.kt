@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Settings(
     val language: String = "en",
     val projectToggles: Map<String, Boolean> = emptyMap(),
-    val hideUsedYarns: Boolean = false
+    val hideUsedYarns: Boolean = false,
+    val statisticTimespan: String = "year"
 )
