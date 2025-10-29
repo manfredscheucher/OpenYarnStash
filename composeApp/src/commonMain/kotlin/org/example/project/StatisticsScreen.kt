@@ -174,8 +174,8 @@ fun StatisticsScreen(
                 val labelsBase = listOf("Yarn Bought", "Yarn Used")
                 val basePalette = listOf(
                     Color(0xFF1E88E5), // Blau
-                    Color(0xFF43A047), // Grün
                     Color(0xFFFFA000), // Amber
+                    Color(0xFF43A047), // Grün
                     Color(0xFF8E24AA)  // Violett
                 )
 
@@ -233,10 +233,9 @@ fun StatisticsScreen(
                         val xModel = CategoryAxisModel<String>(xCats)
                         val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
 
-                        val barRenderer: @Composable BarScope.(series: Int, groupIndex: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
-                            { series, _, _ ->
-                                val c = legendColors[series % legendColors.size]
-                                DefaultVerticalBar(color = c)
+                        val barRenderer: @Composable BarScope.(groupIndex: Int, series: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
+                            { _, series, _ ->
+                                DefaultVerticalBar(color = legendColors[series])
                             }
 
                         XYGraph(
