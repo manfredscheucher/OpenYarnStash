@@ -41,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -303,12 +302,12 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            val rowHeight = 56
+            val rowHeight = 50
             Box(modifier = Modifier.fillMaxWidth()) {
                 val totalHeight = if (rowCounters.isNotEmpty()) {
-                    (rowCounters.size * rowHeight).dp
+                    (rowCounters.size  * rowHeight).dp + 60.dp
                 } else {
-                    rowHeight.dp
+                    64.dp
                 }
                 OutlinedTextField(
                     value = " ",
@@ -322,16 +321,16 @@ fun ProjectFormScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                        .padding(start = 16.dp, top = 8.dp)
                 ) {
                     rowCounters.forEachIndexed { index, counter ->
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth().padding(end=20.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(counter.name, style = MaterialTheme.typography.bodyLarge)
-                            Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(0.6f))
                             IconButton(onClick = {
                                 rowCounters = rowCounters.toMutableList().also {
                                     it[index] = it[index].copy(value = it[index].value - 1)
@@ -349,9 +348,12 @@ fun ProjectFormScreen(
                             }
                         }
                     }
-                    Spacer(Modifier.height(8.dp))
-                    Button(onClick = { showAddCounterDialog = true }) {
-                        Text(stringResource(Res.string.project_form_add_counter))
+                    Spacer(Modifier.height(4.dp))
+                    Row(modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                        horizontalArrangement = Arrangement.End){
+                        Button(onClick = { showAddCounterDialog = true }) {
+                            Text(stringResource(Res.string.project_form_add_counter))
+                    }
                     }
                 }
             }
