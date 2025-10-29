@@ -63,12 +63,10 @@ fun StatisticsScreen(
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
             item {
-                val totalAvailable = yarns.sumOf { yarn ->
+                val totalAvailableWeight = yarns.sumOf { yarn ->
                     val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                     (yarn.amount - used).coerceAtLeast(0)
                 }
-                Text(stringResource(Res.string.statistics_total_yarn_weight, totalAvailable))
-
                 val totalAvailableMeterage = yarns.sumOf { yarn ->
                     val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                     val available = (yarn.amount - used).coerceAtLeast(0)
@@ -80,7 +78,7 @@ fun StatisticsScreen(
                         0
                     }
                 }
-                Text(stringResource(Res.string.statistics_total_yarn_meterage, totalAvailableMeterage))
+                Text(stringResource(Res.string.statistics_total_yarn_available, totalAvailableWeight, totalAvailableMeterage))
 
                 val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
                 Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
@@ -148,8 +146,7 @@ fun StatisticsScreen(
                 Text(displayText, style = MaterialTheme.typography.headlineMedium)
 
                 val yarnBoughtThisGroup = yarnBoughtByGroup[group] ?: emptyList()
-                Text(stringResource(Res.string.statistics_yarn_bought_this_year, yarnBoughtThisGroup.sumOf { it.amount }))
-
+                val yarnBoughtThisGroupAmount = yarnBoughtThisGroup.sumOf { it.amount }
                 val yarnBoughtThisGroupMeterage = yarnBoughtThisGroup.sumOf { yarn ->
                     val meterage = yarn.meteragePerSkein
                     val weight = yarn.weightPerSkein
@@ -159,18 +156,15 @@ fun StatisticsScreen(
                         0
                     }
                 }
-                Text(stringResource(Res.string.statistics_yarn_bought_this_year_meterage, yarnBoughtThisGroupMeterage))
+                Text(stringResource(Res.string.statistics_yarn_bought, yarnBoughtThisGroupAmount, yarnBoughtThisGroupMeterage))
 
 
                 val finishedProjectsThisGroup = finishedProjectsByGroup[group] ?: emptyList()
 
-                val yarnUsedThisGroup = finishedProjectsThisGroup
+                val yarnUsedThisGroupAmount = finishedProjectsThisGroup
                     .sumOf { project ->
                         usages.filter { it.projectId == project.id }.sumOf { it.amount }
                     }
-
-                Text(stringResource(Res.string.statistics_yarn_used_this_year, yarnUsedThisGroup))
-
                 val yarnUsedThisGroupMeterage = finishedProjectsThisGroup.sumOf { project ->
                     usages.filter { it.projectId == project.id }.sumOf { usage ->
                         val yarn = yarns.find { it.id == usage.yarnId }
@@ -187,10 +181,10 @@ fun StatisticsScreen(
                         }
                     }
                 }
-                Text(stringResource(Res.string.statistics_yarn_used_this_year_meterage, yarnUsedThisGroupMeterage))
+                Text(stringResource(Res.string.statistics_yarn_used, yarnUsedThisGroupAmount, yarnUsedThisGroupMeterage))
 
                 val projectsFinishedThisGroupCount = finishedProjectsThisGroup.size
-                Text(stringResource(Res.string.statistics_projects_finished_this_year, projectsFinishedThisGroupCount))
+                Text(stringResource(Res.string.statistics_projects_finished, projectsFinishedThisGroupCount))
 
 
                 val projectsInProgressThisGroup = projects.count { project ->

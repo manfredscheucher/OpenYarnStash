@@ -98,12 +98,12 @@
     <string name="statistics_option_month">Monat</string>
     <string name="statistics_label_year">Jahr</string>
     <string name="statistics_label_month">Monat</string>
-    <string name="statistics_total_yarn_weight">Gesamtgewicht des verfügbaren Garns: %1$d g</string>
-    <string name="statistics_yarn_bought_this_year">Gekaufte Wolle in diesem Jahr: %1$d g</string>
-    <string name="statistics_yarn_used_this_year">Verbrauchte Wolle in diesem Jahr: %1$d g</string>
+    <string name="statistics_total_yarn_available">Garn insgesamt verfügbar: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought">Gekaufte Wolle: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used">Verbrauchte Wolle: %1$d g (%2$d m)</string>
     <string name="statistics_projects_in_progress">Projekte in Arbeit: %1$d</string>
-    <string name="statistics_projects_planned">Geplante Projekte: %1$d</string>
-    <string name="statistics_projects_finished_this_year">Fertige Projekte in diesem Jahr: %1$d</string>
+    <string name="statistics_projects_planned">Projekte in Planung: %1$d</string>
+    <string name="statistics_projects_finished">Fertige Projekte: %1$d</string>
     <string name="statistics_per_year">nach Jahr</string>
     <string name="statistics_per_month">nach Monat</string>
 
