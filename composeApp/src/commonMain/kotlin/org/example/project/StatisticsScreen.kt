@@ -381,10 +381,9 @@ private fun formatCategoryLabel(category: String, isOverall: Boolean): String {
         category
     } else {
         if (category.length >= 7) {
-            val year = category.substring(2, 4)
+            //val year = category.substring(2, 4)
             val month = category.substring(5, 7).toIntOrNull()
-            val monthShort = month?.let { getMonthShort(it) } ?: ""
-            "$monthShort $year"
+            month?.let { getMonthShort(it) } ?: ""
         } else category
     }
 }
