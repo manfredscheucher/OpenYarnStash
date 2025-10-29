@@ -169,7 +169,8 @@ fun StatisticsScreen(
 
             val groups = (yarnBoughtByGroup.keys + finishedProjectsByGroup.keys)
                 .filterNotNull()
-                .toSet().sorted()
+                .toSet()
+                .sorted()
 
             item {
                 val labelsBase = listOf("Yarn Bought", "Yarn Used")
@@ -230,40 +231,35 @@ fun StatisticsScreen(
                             )
                         }
 
-                        val xCats: List<String> = barChartData.map { it.x }
-                        val xModel = CategoryAxisModel<String>(xCats)
-                        val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
+                        key(selectedTimespan) {
+                            val xCats: List<String> = barChartData.map { it.x }
+                            val xModel = CategoryAxisModel<String>(xCats)
+                            val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
 
-                        val barRenderer: @Composable BarScope.(groupIndex: Int, series: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
-                            { _, series, _ ->
-                                DefaultVerticalBar(color = legendColors[series])
-                            }
-
-                        XYGraph(
-                            modifier = Modifier
-                                .height(300.dp)
-                                .fillMaxWidth(),
-                            xAxisModel = xModel,
-                            yAxisModel = yModel,
-                            xAxisLabels = { category: String ->
-                                if (selectedTimespan == "year") {
-                                    category
-                                } else {
-                                    val year = category.substring(0, 4)
-                                    val month = category.substring(5, 7).toInt()
-                                    val monthName = getMonthName(month, settings.language)
-                                    "$monthName ${year.takeLast(2)}"
+                            val barRenderer: @Composable BarScope.(groupIndex: Int, series: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
+                                { _, series, _ ->
+                                    DefaultVerticalBar(color = legendColors[series])
                                 }
-                            },
-                            yAxisLabels = { yValue: Float -> yValue.toInt().toString() },
-                            xAxisTitle = null,
-                            yAxisTitle = null
-                        ) {
-                            GroupedVerticalBarPlot(
-                                data = barChartData,
-                                bar = barRenderer,
-                                animationSpec = tween(durationMillis = 500)
-                            )
+
+                            XYGraph(
+                                modifier = Modifier
+                                    .height(300.dp)
+                                    .fillMaxWidth(),
+                                xAxisModel = xModel,
+                                yAxisModel = yModel,
+                                xAxisLabels = { category: String ->
+                                    formatCategoryLabel(category, selectedTimespan, settings.language)
+                                },
+                                yAxisLabels = { yValue: Float -> yValue.toInt().toString() },
+                                xAxisTitle = null,
+                                yAxisTitle = null
+                            ) {
+                                GroupedVerticalBarPlot(
+                                    data = barChartData,
+                                    bar = barRenderer,
+                                    animationSpec = tween(durationMillis = 500)
+                                )
+                            }
                         }
                     }
                 }
@@ -353,6 +349,19 @@ fun StatisticsScreen(
             }
         }
     }
+}
+
+private fun formatCategoryLabel(category: String, selectedTimespan: String, language: String): String {
+    if (selectedTimespan == "year") return category
+    // Erwartet "YYYY-MM"; andernfalls sicherer Fallback
+    if (category.length >= 7 && category.getOrNull(4) == '-') {
+        val year = category.substring(0, 4)
+        val month = category.substring(5, 7).toIntOrNull()
+        if (month != null && month in 1..12) {
+            return "${getMonthName(month, language)} ${year.takeLast(2)}"
+        }
+    }
+    return category
 }
 
 private fun getMonthName(month: Int, language: String): String {
