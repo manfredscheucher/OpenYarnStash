@@ -71,9 +71,6 @@ fun StatisticsScreen(yarns: List<Yarn>, projects: List<Project>, usages: List<Us
                 }
                 Text(stringResource(Res.string.statistics_total_yarn_meterage, totalAvailableMeterage))
 
-                val projectsInProgress = projects.count { it.status == ProjectStatus.IN_PROGRESS }
-                Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgress))
-
                 val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
                 Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
 
@@ -132,6 +129,26 @@ fun StatisticsScreen(yarns: List<Yarn>, projects: List<Project>, usages: List<Us
 
                 val projectsFinishedThisYearCount = finishedProjectsThisYear.size
                 Text(stringResource(Res.string.statistics_projects_finished_this_year, projectsFinishedThisYearCount))
+
+                val yearInt = year.toIntOrNull() ?: 0
+                val projectsInProgressThisYear = projects.count { project ->
+                    val started = project.startDate?.substring(0, 4)?.toIntOrNull() ?: 0
+                    if (started == 0 || started > yearInt) {
+                        false
+                    } else {
+                        if (project.status == ProjectStatus.IN_PROGRESS) {
+                            true
+                        } else if (project.status == ProjectStatus.FINISHED) {
+                            val finished = project.endDate?.substring(0, 4)?.toIntOrNull()
+                            finished != null && finished > yearInt
+                        } else {
+                            false
+                        }
+                    }
+                }
+                Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgressThisYear))
+
+
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
         }
