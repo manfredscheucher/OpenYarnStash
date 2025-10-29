@@ -1,10 +1,13 @@
 package org.example.project
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,12 +19,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
+import io.github.koalaplot.core.bar.BarScope
+import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultVerticalBarPlotGroupedPointEntry
+import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
+import io.github.koalaplot.core.bar.GroupedVerticalBarPlot
+import io.github.koalaplot.core.legend.FlowLegend
+import io.github.koalaplot.core.legend.LegendLocation
+import io.github.koalaplot.core.style.KoalaPlotTheme
+import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
+import io.github.koalaplot.core.xygraph.CategoryAxisModel
+import io.github.koalaplot.core.xygraph.XYGraph
+import io.github.koalaplot.core.xygraph.rememberFloatLinearAxisModel
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalKoalaPlotApi::class)
 @Composable
 fun StatisticsScreen(
     yarns: List<Yarn>,
@@ -133,6 +150,91 @@ fun StatisticsScreen(
             val finishedProjectsByGroup = projects.filter { it.status == ProjectStatus.FINISHED }.groupBy { groupingKey(it.endDate) }
 
             val groups = (yarnBoughtByGroup.keys + finishedProjectsByGroup.keys).filterNotNull().toSet().sortedDescending()
+
+            item {
+                val yarnBoughtString = "Yarn Bought" // TODO: extract to string resource
+                val yarnUsedString = "Yarn Used" // TODO: extract to string resource
+                val legendLabels = listOf(yarnBoughtString, yarnUsedString)
+                val legendColors = listOf(Color.Blue, Color.Green)
+
+                val barChartData = groups.map { group ->
+                    val yarnBought = yarnBoughtByGroup[group]?.sumOf { it.amount }?.toFloat() ?: 0f
+                    val yarnUsed  = finishedProjectsByGroup[group]?.sumOf { project ->
+                        usages.filter { it.projectId == project.id }.sumOf { it.amount }
+                    }?.toFloat() ?: 0f
+
+                    DefaultVerticalBarPlotGroupedPointEntry(
+                        x = group,
+                        y = listOf(
+                            DefaultVerticalBarPosition(0f, yarnBought),
+                            DefaultVerticalBarPosition(0f, yarnUsed)
+                        )
+                    )
+                }
+
+                if (barChartData.isNotEmpty()) {
+                    val yMax = barChartData
+                        .flatMap { entry -> entry.y.map { it.yMax } }
+                        .maxOrNull()
+                        ?.coerceAtLeast(1f) ?: 1f
+
+                    KoalaPlotTheme {
+
+                        // Legend über dem Diagramm, zentriert
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            FlowLegend(
+                                itemCount = legendLabels.size,
+                                symbol = { i: Int ->
+                                    Box(Modifier.size(10.dp).background(legendColors[i]))
+                                },
+                                label = { i: Int ->
+                                    Text(legendLabels[i])
+                                }
+                            )
+                        }
+// Legend über dem Diagramm (wie bei dir schon vorhanden)
+// ...
+
+                        val xCats: List<String> = barChartData.map { it.x }
+                        val xModel = CategoryAxisModel<String>(xCats)
+                        val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
+
+// 1) Bar-Renderer: zeichnet EINEN Balken, gibt Unit zurück
+                        val barRenderer: @Composable BarScope.(series: Int, groupIndex: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
+                            { series, _, _ ->
+                                // Entweder Color ODER Brush verwenden (nicht beides)
+                                DefaultVerticalBar(color = legendColors[series])
+                                // Alternative:
+                                // DefaultVerticalBar(brush = SolidColor(legendColors[series]))
+                            }
+
+// 2) XYGraph mit STRING-Label-Overload (xAxisTitle/yAxisTitle = null erzwingt diese Variante)
+                        XYGraph(
+                            modifier = Modifier.height(300.dp).fillMaxWidth(),
+                            xAxisModel = xModel,
+                            yAxisModel = yModel,
+                            xAxisLabels = { category: String ->
+                                if (selectedTimespan == "year") category else {
+                                    val year = category.substring(0, 4)
+                                    val month = category.substring(5, 7).toInt()
+                                    val monthName = getMonthName(month, settings.language)
+                                    "$monthName ${year.takeLast(2)}"
+                                }
+                            },
+                            yAxisLabels = { yValue: Float -> yValue.toInt().toString() },
+                            xAxisTitle = null,
+                            yAxisTitle = null
+                        ) {
+                            GroupedVerticalBarPlot(
+                                data = barChartData,
+                                bar = barRenderer,
+                                animationSpec = tween(durationMillis = 500) // optional
+                            )
+                        }
+
+                    }
+                }
+            }
 
             items(groups) { group ->
                 val displayText = if (selectedTimespan == "year") {
