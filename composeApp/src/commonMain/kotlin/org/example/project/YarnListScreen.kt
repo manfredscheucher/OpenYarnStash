@@ -42,6 +42,7 @@ fun YarnListScreen(
 
     // The meaning of hideUsedYarns is inverted here: true means "show consumed yarns"
     var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
+    var filter by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -119,10 +120,16 @@ fun YarnListScreen(
                     }
                 }
 
-                val filteredYarnData = if (showConsumed) {
-                    yarnData
-                } else {
-                    yarnData.filter { it.availableAmount > 0 }
+                val filteredYarnData = yarnData.filter {
+                    val consumedOk = if (showConsumed) true else it.availableAmount > 0
+                    val filterOk = if (filter.isNotBlank()) {
+                        it.yarnItem.name.contains(filter, ignoreCase = true) ||
+                        it.yarnItem.brand?.contains(filter, ignoreCase = true) == true ||
+                        it.yarnItem.color?.contains(filter, ignoreCase = true) == true
+                    } else {
+                        true
+                    }
+                    consumedOk && filterOk
                 }
 
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
@@ -149,6 +156,12 @@ fun YarnListScreen(
                         border = if (showConsumed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
+                TextField(
+                    value = filter,
+                    onValueChange = { filter = it },
+                    label = { Text(stringResource(Res.string.common_filter)) },
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                )
 
                 Text(
                     text = stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage),
@@ -174,7 +187,7 @@ fun YarnListScreen(
                                     val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
                                     Image(
                                         bitmap = bitmap,
-                                        contentDescription = "Yarn image for ${data.yarnItem.name}",
+                                        contentDescription = "Yarn image for ${'$'}{data.yarnItem.name}",
                                         modifier = Modifier.size(64.dp),
                                         contentScale = ContentScale.Crop
                                     )
