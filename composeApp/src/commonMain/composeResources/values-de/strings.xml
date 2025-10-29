@@ -104,6 +104,8 @@
     <string name="statistics_projects_in_progress">Projekte in Arbeit: %1$d</string>
     <string name="statistics_projects_planned">Geplante Projekte: %1$d</string>
     <string name="statistics_projects_finished_this_year">Fertige Projekte in diesem Jahr: %1$d</string>
+    <string name="statistics_per_year">nach Jahr</string>
+    <string name="statistics_per_month">nach Monat</string>
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
