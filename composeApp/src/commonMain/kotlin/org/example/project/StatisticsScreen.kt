@@ -20,7 +20,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import io.github.koalaplot.core.bar.BarScope
 import io.github.koalaplot.core.bar.DefaultVerticalBar
@@ -28,7 +27,6 @@ import io.github.koalaplot.core.bar.DefaultVerticalBarPlotGroupedPointEntry
 import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.GroupedVerticalBarPlot
 import io.github.koalaplot.core.legend.FlowLegend
-import io.github.koalaplot.core.legend.LegendLocation
 import io.github.koalaplot.core.style.KoalaPlotTheme
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
@@ -52,9 +50,8 @@ fun StatisticsScreen(
     val timespanOptions = listOf("year", "month")
     var selectedTimespan by remember { mutableStateOf(settings.statisticTimespan) }
 
-    AppBackHandler {
-        onBack()
-    }
+    AppBackHandler { onBack() }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +68,10 @@ fun StatisticsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
                     }
                 },
                 modifier = Modifier.padding(top = 2.dp)
@@ -79,6 +79,7 @@ fun StatisticsScreen(
         }
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+
             item {
                 val totalAvailableWeight = yarns.sumOf { yarn ->
                     val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
@@ -95,12 +96,18 @@ fun StatisticsScreen(
                         0
                     }
                 }
-                Text(stringResource(Res.string.statistics_total_yarn_available, totalAvailableWeight, totalAvailableMeterage))
+                Text(
+                    stringResource(
+                        Res.string.statistics_total_yarn_available,
+                        totalAvailableWeight,
+                        totalAvailableMeterage
+                    )
+                )
 
                 val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
                 Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
 
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                Divider(Modifier.padding(vertical = 16.dp))
 
                 ExposedDropdownMenuBox(
                     expanded = expanded,
@@ -108,10 +115,13 @@ fun StatisticsScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextField(
-                        value = if (selectedTimespan == "year") stringResource(Res.string.statistics_per_year) else stringResource(Res.string.statistics_per_month),
+                        value = if (selectedTimespan == "year")
+                            stringResource(Res.string.statistics_per_year)
+                        else
+                            stringResource(Res.string.statistics_per_month),
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                         modifier = Modifier.menuAnchor().fillMaxWidth()
                     )
                     ExposedDropdownMenu(
@@ -120,7 +130,14 @@ fun StatisticsScreen(
                     ) {
                         timespanOptions.forEach { timespan ->
                             DropdownMenuItem(
-                                text = { Text(if (timespan == "year") stringResource(Res.string.statistics_per_year) else stringResource(Res.string.statistics_per_month)) },
+                                text = {
+                                    Text(
+                                        if (timespan == "year")
+                                            stringResource(Res.string.statistics_per_year)
+                                        else
+                                            stringResource(Res.string.statistics_per_month)
+                                    )
+                                },
                                 onClick = {
                                     selectedTimespan = timespan
                                     onSettingsChange(settings.copy(statisticTimespan = timespan))
@@ -130,7 +147,7 @@ fun StatisticsScreen(
                         }
                     }
                 }
-                Spacer(Modifier.padding(vertical = 8.dp))
+                Spacer(Modifier.height(8.dp))
             }
 
             val groupingKey: (String?) -> String? = if (selectedTimespan == "year") {
@@ -139,7 +156,7 @@ fun StatisticsScreen(
                 { date ->
                     when {
                         date == null -> null
-                        date.length >= 7 -> date.substring(0, 7)
+                        date.length >= 7 -> date.substring(0, 7) // YYYY-MM
                         date.length >= 4 -> "${date.substring(0, 4)}-01"
                         else -> null
                     }
@@ -147,19 +164,24 @@ fun StatisticsScreen(
             }
 
             val yarnBoughtByGroup = yarns.groupBy { groupingKey(it.added) }
-            val finishedProjectsByGroup = projects.filter { it.status == ProjectStatus.FINISHED }.groupBy { groupingKey(it.endDate) }
+            val finishedProjectsByGroup =
+                projects.filter { it.status == ProjectStatus.FINISHED }.groupBy { groupingKey(it.endDate) }
 
-            val groups = (yarnBoughtByGroup.keys + finishedProjectsByGroup.keys).filterNotNull().toSet().sortedDescending()
+            val groups = (yarnBoughtByGroup.keys + finishedProjectsByGroup.keys)
+                .filterNotNull().toSet().sortedDescending()
 
             item {
-                val yarnBoughtString = "Yarn Bought" // TODO: extract to string resource
-                val yarnUsedString = "Yarn Used" // TODO: extract to string resource
-                val legendLabels = listOf(yarnBoughtString, yarnUsedString)
-                val legendColors = listOf(Color.Blue, Color.Green)
+                val labelsBase = listOf("Yarn Bought", "Yarn Used")
+                val basePalette = listOf(
+                    Color(0xFF1E88E5), // Blau
+                    Color(0xFF43A047), // Grün
+                    Color(0xFFFFA000), // Amber
+                    Color(0xFF8E24AA)  // Violett
+                )
 
-                val barChartData = groups.map { group ->
+                val barChartData: List<DefaultVerticalBarPlotGroupedPointEntry<String, Float>> = groups.map { group ->
                     val yarnBought = yarnBoughtByGroup[group]?.sumOf { it.amount }?.toFloat() ?: 0f
-                    val yarnUsed  = finishedProjectsByGroup[group]?.sumOf { project ->
+                    val yarnUsed = finishedProjectsByGroup[group]?.sumOf { project ->
                         usages.filter { it.projectId == project.id }.sumOf { it.amount }
                     }?.toFloat() ?: 0f
 
@@ -173,17 +195,31 @@ fun StatisticsScreen(
                 }
 
                 if (barChartData.isNotEmpty()) {
+                    val seriesCount = barChartData.maxOf { it.y.size }
+                    require(seriesCount > 0) { "No series to plot" }
+                    check(barChartData.all { it.y.size == seriesCount }) {
+                        val bad = barChartData.first { it.y.size != seriesCount }
+                        "Inconsistent series size. Group=${bad.x} has ${bad.y.size}, expected $seriesCount"
+                    }
+
+                    val legendColors: List<Color> =
+                        if (basePalette.size >= seriesCount) basePalette.take(seriesCount)
+                        else List(seriesCount) { i -> basePalette[i % basePalette.size] }
+
+                    val legendLabels: List<String> =
+                        if (labelsBase.size >= seriesCount) labelsBase.take(seriesCount)
+                        else List(seriesCount) { i -> labelsBase.getOrElse(i) { "Series ${i + 1}" } }
+
+                    // Y-Max
                     val yMax = barChartData
                         .flatMap { entry -> entry.y.map { it.yMax } }
                         .maxOrNull()
                         ?.coerceAtLeast(1f) ?: 1f
 
                     KoalaPlotTheme {
-
-                        // Legend über dem Diagramm, zentriert
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                             FlowLegend(
-                                itemCount = legendLabels.size,
+                                itemCount = seriesCount,
                                 symbol = { i: Int ->
                                     Box(Modifier.size(10.dp).background(legendColors[i]))
                                 },
@@ -192,29 +228,27 @@ fun StatisticsScreen(
                                 }
                             )
                         }
-// Legend über dem Diagramm (wie bei dir schon vorhanden)
-// ...
 
                         val xCats: List<String> = barChartData.map { it.x }
                         val xModel = CategoryAxisModel<String>(xCats)
                         val yModel = rememberFloatLinearAxisModel(range = 0f..yMax)
 
-// 1) Bar-Renderer: zeichnet EINEN Balken, gibt Unit zurück
                         val barRenderer: @Composable BarScope.(series: Int, groupIndex: Int, entry: DefaultVerticalBarPlotGroupedPointEntry<String, Float>) -> Unit =
                             { series, _, _ ->
-                                // Entweder Color ODER Brush verwenden (nicht beides)
-                                DefaultVerticalBar(color = legendColors[series])
-                                // Alternative:
-                                // DefaultVerticalBar(brush = SolidColor(legendColors[series]))
+                                val c = legendColors[series % legendColors.size]
+                                DefaultVerticalBar(color = c)
                             }
 
-// 2) XYGraph mit STRING-Label-Overload (xAxisTitle/yAxisTitle = null erzwingt diese Variante)
                         XYGraph(
-                            modifier = Modifier.height(300.dp).fillMaxWidth(),
+                            modifier = Modifier
+                                .height(300.dp)
+                                .fillMaxWidth(),
                             xAxisModel = xModel,
                             yAxisModel = yModel,
                             xAxisLabels = { category: String ->
-                                if (selectedTimespan == "year") category else {
+                                if (selectedTimespan == "year") {
+                                    category
+                                } else {
                                     val year = category.substring(0, 4)
                                     val month = category.substring(5, 7).toInt()
                                     val monthName = getMonthName(month, settings.language)
@@ -228,10 +262,9 @@ fun StatisticsScreen(
                             GroupedVerticalBarPlot(
                                 data = barChartData,
                                 bar = barRenderer,
-                                animationSpec = tween(durationMillis = 500) // optional
+                                animationSpec = tween(durationMillis = 500)
                             )
                         }
-
                     }
                 }
             }
@@ -258,8 +291,13 @@ fun StatisticsScreen(
                         0
                     }
                 }
-                Text(stringResource(Res.string.statistics_yarn_bought, yarnBoughtThisGroupAmount, yarnBoughtThisGroupMeterage))
-
+                Text(
+                    stringResource(
+                        Res.string.statistics_yarn_bought,
+                        yarnBoughtThisGroupAmount,
+                        yarnBoughtThisGroupMeterage
+                    )
+                )
 
                 val finishedProjectsThisGroup = finishedProjectsByGroup[group] ?: emptyList()
 
@@ -283,11 +321,16 @@ fun StatisticsScreen(
                         }
                     }
                 }
-                Text(stringResource(Res.string.statistics_yarn_used, yarnUsedThisGroupAmount, yarnUsedThisGroupMeterage))
+                Text(
+                    stringResource(
+                        Res.string.statistics_yarn_used,
+                        yarnUsedThisGroupAmount,
+                        yarnUsedThisGroupMeterage
+                    )
+                )
 
                 val projectsFinishedThisGroupCount = finishedProjectsThisGroup.size
                 Text(stringResource(Res.string.statistics_projects_finished, projectsFinishedThisGroupCount))
-
 
                 val projectsInProgressThisGroup = projects.count { project ->
                     val startGroup = groupingKey(project.startDate)
@@ -306,8 +349,7 @@ fun StatisticsScreen(
                 }
                 Text(stringResource(Res.string.statistics_projects_in_progress, projectsInProgressThisGroup))
 
-
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                Divider(Modifier.padding(vertical = 16.dp))
             }
         }
     }
@@ -315,8 +357,14 @@ fun StatisticsScreen(
 
 private fun getMonthName(month: Int, language: String): String {
     val monthNames = when (language) {
-        "de" -> listOf("Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember")
-        else -> listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        "de" -> listOf(
+            "Januar", "Februar", "März", "April", "Mai", "Juni",
+            "Juli", "August", "September", "Oktober", "November", "Dezember"
+        )
+        else -> listOf(
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        )
     }
     return if (month in 1..12) monthNames[month - 1] else ""
 }
