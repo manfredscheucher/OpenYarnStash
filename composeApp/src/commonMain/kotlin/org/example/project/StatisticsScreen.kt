@@ -300,6 +300,9 @@ private fun ChartBlock(
 ) {
     if (categories.isEmpty()) return
 
+    val xAxisLabelAreaHeight = 40.dp
+    val xAxisLabelTextWidth  = 140.dp
+
     val barData: List<DefaultVerticalBarPlotGroupedPointEntry<String, Float>> =
         categories.mapNotNull { cat ->
             val values = valuesForCategory(cat)
@@ -312,10 +315,10 @@ private fun ChartBlock(
 
     if (barData.isEmpty()) return
 
-    val seriesCount = barData.firstOrNull()?.y?.size ?: 0
-    if (seriesCount == 0) return
-
-    require(seriesLabels.size == seriesCount && seriesColors.size == seriesCount) { "Series labels/colors must match data series count" }
+    val seriesCount = barData.first().y.size
+    require(seriesLabels.size == seriesCount && seriesColors.size == seriesCount) {
+        "Series labels/colors must match data series count"
+    }
 
     val yMax = barData.flatMap { it.y.map { pos -> pos.yMax } }.maxOrNull()?.coerceAtLeast(1f) ?: 1f
 
@@ -336,16 +339,27 @@ private fun ChartBlock(
             val yModel = rememberFloatLinearAxisModel(range = 0f..yMax, minorTickCount = 0)
 
             XYGraph(
-                modifier = Modifier.height(300.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .height(320.dp + xAxisLabelAreaHeight) // Plot ~320dp + reservierte Labelhöhe
+                    .fillMaxWidth(),
                 xAxisModel = xModel,
                 yAxisModel = yModel,
                 xAxisLabels = { cat ->
-                    Text(
-                        text = labelFormatter(cat),
-                        modifier = Modifier.rotate(-90f),
-                        maxLines = 1,
-                        overflow = TextOverflow.Visible
-                    )
+                    val txt = labelFormatter(cat)
+                    Box(
+                        modifier = Modifier
+                            .height(xAxisLabelAreaHeight)
+                            .width(xAxisLabelTextWidth),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Text(
+                            text = txt,
+                            modifier = Modifier.rotate(-90f),
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Clip
+                        )
+                    }
                 },
                 xAxisTitle = {},
                 yAxisLabels = { y -> Text(y.toInt().toString()) },

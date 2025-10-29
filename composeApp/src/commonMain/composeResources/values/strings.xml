@@ -109,7 +109,7 @@
     <string name="statistics_yarn_used_title">Yarn used: %1$d g (%2$d m)</string>
     <string name="statistics_projects_in_progress_title">Projects in progress: %1$d</string>
     <string name="statistics_projects_planned">Projects in planning: %1$d</string>
-    <string name="statistics_projects_finished_title">Finished projects: %1$d</string>
+    <string name="statistics_projects_finished_title">Projects finished: %1$d</string>
     <string name="statistics_overall">Overall</string>
     <string name="statistics_yarn_bought_vs_used_yearly">Yarn: Bought vs. Used (Yearly)</string>
     <string name="statistics_yarn_bought_vs_used_monthly">Yarn: Bought vs. Used (Monthly)</string>
