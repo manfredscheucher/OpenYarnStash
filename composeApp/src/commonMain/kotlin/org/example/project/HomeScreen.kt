@@ -59,7 +59,7 @@ fun HomeScreen(
                     Spacer(Modifier.width(12.dp))
                     Text(stringResource(Res.string.home_title))
                 } },
-                    modifier = Modifier.padding(top = 2.dp)
+                modifier = Modifier.padding(top = 2.dp)
             )
         }
     ) { padding ->
