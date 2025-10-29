@@ -54,12 +54,13 @@ fun HomeScreen(
                     Image(
                         painter = painterResource(Res.drawable.logo),
                         contentDescription = "OpenYarnStash Logo",
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(45.dp)
                     )
                     Spacer(Modifier.width(12.dp))
                     Text(stringResource(Res.string.home_title))
-                }
-            })
+                } },
+                    modifier = Modifier.padding(top = 2.dp)
+            )
         }
     ) { padding ->
         Column(Modifier.padding(padding).padding(16.dp)) {

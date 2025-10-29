@@ -46,7 +46,17 @@ fun YarnListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(Res.string.yarn_list_title)) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(Res.drawable.yarns),
+                            contentDescription = null,
+                            modifier = Modifier.size(32.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.yarn_list_title))
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -54,7 +64,8 @@ fun YarnListScreen(
                             contentDescription = stringResource(Res.string.common_back)
                         )
                     }
-                }
+                },
+                modifier = Modifier.padding(top = 2.dp)
             )
         },
         floatingActionButton = {
