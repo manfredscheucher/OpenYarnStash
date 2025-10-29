@@ -1,7 +1,6 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +41,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -64,10 +62,15 @@ import openyarnstash.composeapp.generated.resources.delete_project_restricted_me
 import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
 import openyarnstash.composeapp.generated.resources.form_unsaved_changes_title
+import openyarnstash.composeapp.generated.resources.project_form_add_counter
+import openyarnstash.composeapp.generated.resources.project_form_add_counter_dialog_label
+import openyarnstash.composeapp.generated.resources.project_form_add_counter_dialog_title
 import openyarnstash.composeapp.generated.resources.project_form_button_assignments
 import openyarnstash.composeapp.generated.resources.project_form_edit
 import openyarnstash.composeapp.generated.resources.project_form_new
 import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
+import openyarnstash.composeapp.generated.resources.project_form_remove_image
+import openyarnstash.composeapp.generated.resources.project_form_select_image
 import openyarnstash.composeapp.generated.resources.project_label_end_date
 import openyarnstash.composeapp.generated.resources.project_label_for
 import openyarnstash.composeapp.generated.resources.project_label_gauge
@@ -104,8 +107,8 @@ fun ProjectFormScreen(
 
     var name by remember { mutableStateOf(initial.name) }
     var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
-    var startDate by remember { mutableStateOf(initial.startDate?:"") }
-    var endDate by remember { mutableStateOf(initial.endDate?:"") }
+    var startDate by remember { mutableStateOf(initial.startDate?: "") }
+    var endDate by remember { mutableStateOf(initial.endDate?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
@@ -261,11 +264,11 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { imagePicker.launch() }) {
-                    Text("Select Image")
+                    Text(stringResource(Res.string.project_form_select_image))
                 }
                 if (displayedImage != null) {
                     Button(onClick = { newImage = createEmptyImageByteArray() }) {
-                        Text("Remove Image")
+                        Text(stringResource(Res.string.project_form_remove_image))
                     }
                 }
             }
@@ -299,36 +302,60 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            Text(stringResource(Res.string.project_label_row_count), style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            rowCounters.forEachIndexed { index, counter ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+            val rowHeight = 50
+            Box(modifier = Modifier.fillMaxWidth()) {
+                val totalHeight = if (rowCounters.isNotEmpty()) {
+                    (rowCounters.size  * rowHeight).dp + 60.dp
+                } else {
+                    64.dp
+                }
+                OutlinedTextField(
+                    value = " ",
+                    onValueChange = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(totalHeight),
+                    readOnly = true,
+                    label = { Text(stringResource(Res.string.project_label_row_count)) }
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 8.dp)
                 ) {
-                    Text(counter.name, style = MaterialTheme.typography.bodyLarge)
-                    Spacer(Modifier.weight(1f))
-                    IconButton(onClick = {
-                        rowCounters = rowCounters.toMutableList().also {
-                            it[index] = it[index].copy(value = it[index].value - 1)
+                    rowCounters.forEachIndexed { index, counter ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth().padding(end=20.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(counter.name, style = MaterialTheme.typography.bodyLarge)
+                            Spacer(Modifier.weight(0.6f))
+                            IconButton(onClick = {
+                                rowCounters = rowCounters.toMutableList().also {
+                                    it[index] = it[index].copy(value = it[index].value - 1)
+                                }
+                            }) {
+                                Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                            }
+                            Text(text = counter.value.toString(), style = MaterialTheme.typography.bodyLarge)
+                            IconButton(onClick = {
+                                rowCounters = rowCounters.toMutableList().also {
+                                    it[index] = it[index].copy(value = it[index].value + 1)
+                                }
+                            }) {
+                                Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                            }
                         }
-                    }) {
-                        Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
                     }
-                    Text(text = counter.value.toString(), style = MaterialTheme.typography.bodyLarge)
-                    IconButton(onClick = {
-                        rowCounters = rowCounters.toMutableList().also {
-                            it[index] = it[index].copy(value = it[index].value + 1)
-                        }
-                    }) {
-                        Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                    Spacer(Modifier.height(4.dp))
+                    Row(modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                        horizontalArrangement = Arrangement.End){
+                        Button(onClick = { showAddCounterDialog = true }) {
+                            Text(stringResource(Res.string.project_form_add_counter))
+                    }
                     }
                 }
-            }
-
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = { showAddCounterDialog = true }) {
-                Text("Add Counter")
             }
 
             Spacer(Modifier.height(8.dp))
@@ -340,7 +367,7 @@ fun ProjectFormScreen(
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
             if (modified != null) {
-                Text(stringResource(Res.string.yarn_item_label_modified, modified?:""))
+                Text(stringResource(Res.string.yarn_item_label_modified, modified?: ""))
                 Spacer(Modifier.height(8.dp))
             }
             SelectAllOutlinedTextField(
@@ -424,12 +451,12 @@ private fun AddCounterDialog(
     var name by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add new counter") },
+        title = { Text(stringResource(Res.string.project_form_add_counter_dialog_title)) },
         text = {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Counter name") },
+                label = { Text(stringResource(Res.string.project_form_add_counter_dialog_label)) },
                 singleLine = true
             )
         },
