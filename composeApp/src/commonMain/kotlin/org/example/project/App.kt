@@ -1,10 +1,12 @@
 package org.example.project
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -95,7 +97,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
     MaterialTheme {
         Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) }
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
             key(settings.language) {
                 Box(modifier = Modifier.padding(innerPadding)) {
