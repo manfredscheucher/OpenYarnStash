@@ -73,6 +73,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation("org.apache.pdfbox:pdfbox:2.0.31")
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)
