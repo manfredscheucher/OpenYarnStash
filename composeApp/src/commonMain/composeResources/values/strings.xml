@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">OpenYarnStash</string>
 
@@ -5,6 +6,7 @@
     <string name="home_title">OpenYarnStash</string>
     <string name="home_button_yarns">Yarns</string>
     <string name="home_button_projects">Projects</string>
+    <string name="home_button_patterns">Patterns</string>
     <string name="home_button_statistics">Statistics</string>
 
     <!-- Yarn list -->
@@ -19,6 +21,10 @@
     <string name="project_list_title">Projects</string>
     <string name="project_list_empty">No projects. Tap + to add a new one.</string>
     <string name="item_label_name">Name: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Patterns</string>
+    <string name="pattern_list_empty">No patterns yet. Tap + to add a new one.</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Back</string>
@@ -63,6 +69,7 @@
     <string name="project_form_new">New project</string>
     <string name="project_form_edit">Edit project</string>
     <string name="project_label_name">Name</string>
+    <string name="project_label_pattern">Pattern</string>
     <string name="project_label_for">Made for</string>
     <string name="project_label_start_date">Start date</string>
     <string name="project_label_end_date">End date</string>
@@ -85,6 +92,12 @@
     <string name="project_form_remove_image">Remove Image</string>
     <string name="project_form_add_counter_dialog_title">Add new counter</string>
     <string name="project_form_add_counter_dialog_label">Counter name</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">New pattern</string>
+    <string name="pattern_form_edit">Edit pattern</string>
+    <string name="pattern_label_name">Name</string>
+    <string name="pattern_label_creator">Creator</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

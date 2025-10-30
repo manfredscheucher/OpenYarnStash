@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.home_button_patterns
 import openyarnstash.composeapp.generated.resources.home_button_projects
 import openyarnstash.composeapp.generated.resources.home_button_statistics
 import openyarnstash.composeapp.generated.resources.home_button_yarns
@@ -30,6 +31,7 @@ import openyarnstash.composeapp.generated.resources.home_title
 import openyarnstash.composeapp.generated.resources.info
 import openyarnstash.composeapp.generated.resources.info_screen_title
 import openyarnstash.composeapp.generated.resources.logo
+import openyarnstash.composeapp.generated.resources.patterns
 import openyarnstash.composeapp.generated.resources.projects
 import openyarnstash.composeapp.generated.resources.settings
 import openyarnstash.composeapp.generated.resources.settings_title
@@ -43,6 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 fun HomeScreen(
     onOpenYarns: () -> Unit,
     onOpenProjects: () -> Unit,
+    onOpenPatterns: () -> Unit,
     onOpenInfo: () -> Unit,
     onOpenStatistics: () -> Unit,
     onOpenSettings: () -> Unit
@@ -58,7 +61,8 @@ fun HomeScreen(
                     )
                     Spacer(Modifier.width(12.dp))
                     Text(stringResource(Res.string.home_title))
-                } },
+                }
+            },
                 modifier = Modifier.padding(top = 2.dp)
             )
         }
@@ -70,13 +74,13 @@ fun HomeScreen(
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                HomeButton(onClick = onOpenPatterns, icon = Res.drawable.patterns, text = stringResource(Res.string.home_button_patterns))
                 HomeButton(onClick = onOpenStatistics, icon = Res.drawable.statistics, text = stringResource(Res.string.home_button_statistics))
-                HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title))
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title))
                 HomeButton(onClick = onOpenInfo, icon = Res.drawable.info, text = stringResource(Res.string.info_screen_title))
-                Spacer(Modifier.size(140.dp)) // Add a spacer to align the button
             }
         }
     }

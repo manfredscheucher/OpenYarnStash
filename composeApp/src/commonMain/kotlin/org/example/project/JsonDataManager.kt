@@ -2,6 +2,7 @@ package org.example.project
 
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
 
 /**
  * Repository for managing yarns, projects, and their usages from a JSON file.
@@ -80,6 +81,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     private fun validateData(appData: AppData) {
         val yarnIds = appData.yarns.map { it.id }.toSet()
         val projectIds = appData.projects.map { it.id }.toSet()
+        val patternIds = appData.patterns.map { it.id }.toSet()
 
         for (yarn in appData.yarns) {
             if (yarn.name.isBlank()) {
@@ -90,6 +92,15 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         for (project in appData.projects) {
             if (project.name.isBlank()) {
                 throw SerializationException("Project with id ${project.id} has a blank name.")
+            }
+            if (project.patternId != null && !patternIds.contains(project.patternId)) {
+                throw SerializationException("Project with id ${project.id} refers to a non-existent pattern with id ${project.patternId}.")
+            }
+        }
+
+        for (pattern in appData.patterns) {
+            if (pattern.name.isBlank()) {
+                throw SerializationException("Pattern with id ${pattern.id} has a blank name.")
             }
         }
 
@@ -105,6 +116,20 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
 
     // ... (rest of the functions for yarn, project, and usage management)
     fun getYarnById(id: Int): Yarn? = data.yarns.firstOrNull { it.id == id }
+
+    fun createNewYarn(defaultName: String): Yarn {
+        val existingIds = data.yarns.map { it.id }.toSet()
+        var newId: Int
+        do {
+            newId = Random.nextInt(1_000_000, 10_000_000)
+        } while (existingIds.contains(newId))
+        val yarnName = defaultName.replace("%1\$d", newId.toString())
+        return Yarn(
+            id = newId,
+            name = yarnName,
+            modified = getCurrentTimestamp()
+        )
+    }
 
     suspend fun addOrUpdateYarn(yarn: Yarn) {
         val index = data.yarns.indexOfFirst { it.id == yarn.id }
@@ -124,6 +149,20 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
 
     fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id }
 
+    fun createNewProject(defaultName: String): Project {
+        val existingIds = data.projects.map { it.id }.toSet()
+        var newId: Int
+        do {
+            newId = Random.nextInt(1_000_000, 10_000_000)
+        } while (existingIds.contains(newId))
+        val projectName = defaultName.replace("%1\$d", newId.toString())
+        return Project(
+            id = newId,
+            name = projectName,
+            modified = getCurrentTimestamp()
+        )
+    }
+
     suspend fun addOrUpdateProject(project: Project) {
         val index = data.projects.indexOfFirst { it.id == project.id }
         if (index != -1) {
@@ -137,6 +176,40 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     suspend fun deleteProject(id: Int) {
         data.projects.removeAll { it.id == id }
         data.usages.removeAll { it.projectId == id }
+        save()
+    }
+
+    fun getPatternById(id: Int): Pattern? = data.patterns.firstOrNull { it.id == id }
+
+    fun createNewPattern(): Pattern {
+        val existingIds = data.patterns.map { it.id }.toSet()
+        var newId: Int
+        do {
+            newId = Random.nextInt(1_000_000, 10_000_000)
+        } while (existingIds.contains(newId))
+        return Pattern(
+            id = newId,
+            name = "Pattern#$newId"
+        )
+    }
+
+    suspend fun addOrUpdatePattern(pattern: Pattern) {
+        val index = data.patterns.indexOfFirst { it.id == pattern.id }
+        if (index != -1) {
+            data.patterns[index] = pattern
+        } else {
+            data.patterns.add(pattern)
+        }
+        save()
+    }
+
+    suspend fun deletePattern(id: Int) {
+        data.patterns.removeAll { it.id == id }
+        data.projects.forEach { project ->
+            if (project.patternId == id) {
+                addOrUpdateProject(project.copy(patternId = null))
+            }
+        }
         save()
     }
 

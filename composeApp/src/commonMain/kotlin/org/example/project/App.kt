@@ -35,6 +35,8 @@ sealed class Screen {
     data object Info : Screen()
     data object Statistics : Screen()
     data object Settings : Screen()
+    data object PatternList : Screen()
+    data class PatternForm(val patternId: Int) : Screen()
 }
 
 @Composable
@@ -44,6 +46,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
+    var patterns by remember { mutableStateOf(emptyList<Pattern>()) }
     var projectImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var yarnImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
@@ -59,6 +62,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
             yarns = data.yarns
             projects = data.projects
             usages = data.usages
+            patterns = data.patterns
         } catch (e: Exception) {
             errorDialogMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
         }
@@ -111,6 +115,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                         Screen.Home -> HomeScreen(
                             onOpenYarns = { screen = Screen.YarnList },
                             onOpenProjects = { screen = Screen.ProjectList },
+                            onOpenPatterns = { screen = Screen.PatternList },
                             onOpenInfo = { screen = Screen.Info },
                             onOpenStatistics = { screen = Screen.Statistics },
                             onOpenSettings = { screen = Screen.Settings }
@@ -129,21 +134,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 settings = settings,
                                 onAddClick = {
                                     scope.launch {
-                                        val existingIds = yarns.map { it.id }.toSet()
-                                        var newId: Int
-                                        do {
-                                            newId = Random.nextInt(1_000_000, 10_000_000)
-                                        } while (existingIds.contains(newId))
-                                        val yarnName =
-                                            defaultYarnName.replace("%1\$d", newId.toString())
-                                        val newYarn = Yarn(
-                                            id = newId,
-                                            name = yarnName,
-                                            modified = getCurrentTimestamp()
-                                        ) // Default name in English as fallback
+                                        val newYarn = jsonDataManager.createNewYarn(defaultYarnName)
                                         withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
                                         reloadAllData()
-                                        screen = Screen.YarnForm(newId)
+                                        screen = Screen.YarnForm(newYarn.id)
                                     }
                                 },
                                 onOpen = { id -> screen = Screen.YarnForm(id) },
@@ -247,21 +241,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 settings = settings,
                                 onAddClick = {
                                     scope.launch {
-                                        val existingIds = projects.map { it.id }.toSet()
-                                        var newId: Int
-                                        do {
-                                            newId = Random.nextInt(1_000_000, 10_000_000)
-                                        } while (existingIds.contains(newId))
-                                        val projectName =
-                                            defaultProjectName.replace("%1\$d", newId.toString())
-                                        val newProject = Project(
-                                            id = newId,
-                                            name = projectName,
-                                            modified = getCurrentTimestamp()
-                                        ) // Default name
+                                        val newProject = jsonDataManager.createNewProject(defaultProjectName)
                                         withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(newProject) }
                                         reloadAllData()
-                                        screen = Screen.ProjectForm(newId)
+                                        screen = Screen.ProjectForm(newProject.id)
                                     }
                                 },
                                 onOpen = { id -> screen = Screen.ProjectForm(id) },
@@ -303,6 +286,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     initialImage = projectImage,
                                     usagesForProject = usagesForCurrentProject,
                                     yarnById = { yarnId -> yarns.firstOrNull { it.id == yarnId } },
+                                    patterns = patterns,
                                     onBack = { screen = Screen.ProjectList },
                                     onDelete = { id ->
                                         scope.launch {
@@ -373,6 +357,58 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 },
                                 onBack = { screen = Screen.ProjectForm(s.projectId) }
                             )
+                        }
+
+                        Screen.PatternList -> {
+                            PatternListScreen(
+                                patterns = patterns,
+                                onAddClick = {
+                                    scope.launch {
+                                        val newPattern = jsonDataManager.createNewPattern()
+                                        withContext(Dispatchers.Default) { jsonDataManager.addOrUpdatePattern(newPattern) }
+                                        reloadAllData()
+                                        screen = Screen.PatternForm(newPattern.id)
+                                    }
+                                },
+                                onOpen = { id -> screen = Screen.PatternForm(id) },
+                                onBack = { screen = Screen.Home }
+                            )
+                        }
+
+                        is Screen.PatternForm -> {
+                            val existingPattern = remember(s.patternId, patterns) {
+                                try {
+                                    jsonDataManager.getPatternById(s.patternId)
+                                } catch (e: NoSuchElementException) {
+                                    null
+                                }
+                            }
+                            if (existingPattern == null) {
+                                LaunchedEffect(s.patternId) { screen = Screen.PatternList }
+                            } else {
+                                PatternFormScreen(
+                                    initial = existingPattern,
+                                    onBack = { screen = Screen.PatternList },
+                                    onDelete = { patternIdToDelete ->
+                                        scope.launch {
+                                            projects.filter { it.patternId == patternIdToDelete }.forEach { projectToUpdate ->
+                                                val updatedProject = projectToUpdate.copy(patternId = null)
+                                                withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(updatedProject) }
+                                            }
+                                            withContext(Dispatchers.Default) { jsonDataManager.deletePattern(patternIdToDelete) }
+                                            reloadAllData()
+                                            screen = Screen.PatternList
+                                        }
+                                    },
+                                    onSave = { editedPattern ->
+                                        scope.launch {
+                                            withContext(Dispatchers.Default) { jsonDataManager.addOrUpdatePattern(editedPattern) }
+                                            reloadAllData()
+                                            screen = Screen.PatternList
+                                        }
+                                    }
+                                )
+                            }
                         }
 
                         Screen.Info -> {

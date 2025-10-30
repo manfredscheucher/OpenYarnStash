@@ -20,9 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -77,6 +80,7 @@ import openyarnstash.composeapp.generated.resources.project_label_gauge
 import openyarnstash.composeapp.generated.resources.project_label_name
 import openyarnstash.composeapp.generated.resources.project_label_needle_size
 import openyarnstash.composeapp.generated.resources.project_label_notes
+import openyarnstash.composeapp.generated.resources.project_label_pattern
 import openyarnstash.composeapp.generated.resources.project_label_row_count
 import openyarnstash.composeapp.generated.resources.project_label_size
 import openyarnstash.composeapp.generated.resources.project_label_start_date
@@ -98,6 +102,7 @@ fun ProjectFormScreen(
     initialImage: ByteArray?,
     usagesForProject: List<Usage>,
     yarnById: (Int) -> Yarn?,
+    patterns: List<Pattern>,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, ByteArray?) -> Unit,
@@ -107,25 +112,27 @@ fun ProjectFormScreen(
 
     var name by remember { mutableStateOf(initial.name) }
     var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
-    var startDate by remember { mutableStateOf(initial.startDate?: "") }
-    var endDate by remember { mutableStateOf(initial.endDate?: "") }
+    var startDate by remember { mutableStateOf(initial.startDate ?: "") }
+    var endDate by remember { mutableStateOf(initial.endDate ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
     var rowCounters by remember { mutableStateOf(initial.rowCounters) }
+    var patternId by remember { mutableStateOf(initial.patternId) }
     val modified by remember { mutableStateOf(initial.modified) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
     var newImage by remember { mutableStateOf<ByteArray?>(null) }
     var showAddCounterDialog by remember { mutableStateOf(false) }
+    var patternDropdownExpanded by remember { mutableStateOf(false) }
 
     val imagePicker = rememberImagePickerLauncher {
         newImage = it
     }
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCounters) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCounters, patternId) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -136,7 +143,8 @@ fun ProjectFormScreen(
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge?.toString() ?: "") ||
                     newImage != null ||
-                    rowCounters != initial.rowCounters
+                    rowCounters != initial.rowCounters ||
+                    patternId != initial.patternId
         }
     }
 
@@ -151,7 +159,8 @@ fun ProjectFormScreen(
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
             gauge = gauge.toIntOrNull(),
-            rowCounters = rowCounters
+            rowCounters = rowCounters,
+            patternId = patternId
         )
         onSave(project, newImage)
     }
@@ -275,18 +284,55 @@ fun ProjectFormScreen(
             Spacer(Modifier.height(16.dp))
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
+            Box {
+                val selectedPattern = patterns.firstOrNull { it.id == patternId }
+                OutlinedTextField(
+                    value = selectedPattern?.name ?: "",
+                    onValueChange = {},
+                    label = { Text(stringResource(Res.string.project_label_pattern)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(onClick = { patternDropdownExpanded = true }) {
+                            Icon(Icons.Filled.ArrowDropDown, "Select Pattern")
+                        }
+                    }
+                )
+                DropdownMenu(
+                    expanded = patternDropdownExpanded,
+                    onDismissRequest = { patternDropdownExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("No Pattern") },
+                        onClick = {
+                            patternId = null
+                            patternDropdownExpanded = false
+                        }
+                    )
+                    patterns.forEach { pattern ->
+                        DropdownMenuItem(
+                            text = { Text(pattern.name) },
+                            onClick = {
+                                patternId = pattern.id
+                                patternDropdownExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(value = forWho, onValueChange = { forWho = it }, label = { Text(stringResource(Res.string.project_label_for)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             DateInput(
                 label = stringResource(Res.string.project_label_start_date),
                 date = startDate,
-                onDateChange = { startDate = it?: "" }
+                onDateChange = { startDate = it ?: "" }
             )
             Spacer(Modifier.height(8.dp))
             DateInput(
                 label = stringResource(Res.string.project_label_end_date),
                 date = endDate,
-                onDateChange = { endDate = it?: "" }
+                onDateChange = { endDate = it ?: "" }
             )
             Spacer(Modifier.height(8.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -305,7 +351,7 @@ fun ProjectFormScreen(
             val rowHeight = 50
             Box(modifier = Modifier.fillMaxWidth()) {
                 val totalHeight = if (rowCounters.isNotEmpty()) {
-                    (rowCounters.size  * rowHeight).dp + 60.dp
+                    (rowCounters.size * rowHeight).dp + 60.dp
                 } else {
                     64.dp
                 }
@@ -326,7 +372,7 @@ fun ProjectFormScreen(
                     rowCounters.forEachIndexed { index, counter ->
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth().padding(end=20.dp),
+                                .fillMaxWidth().padding(end = 20.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(counter.name, style = MaterialTheme.typography.bodyLarge)
@@ -349,11 +395,13 @@ fun ProjectFormScreen(
                         }
                     }
                     Spacer(Modifier.height(4.dp))
-                    Row(modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
-                        horizontalArrangement = Arrangement.End){
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         Button(onClick = { showAddCounterDialog = true }) {
                             Text(stringResource(Res.string.project_form_add_counter))
-                    }
+                        }
                     }
                 }
             }
@@ -367,7 +415,7 @@ fun ProjectFormScreen(
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
             if (modified != null) {
-                Text(stringResource(Res.string.yarn_item_label_modified, modified?: ""))
+                Text(stringResource(Res.string.yarn_item_label_modified, modified ?: ""))
                 Spacer(Modifier.height(8.dp))
             }
             SelectAllOutlinedTextField(

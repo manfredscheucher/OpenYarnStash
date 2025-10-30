@@ -5,6 +5,7 @@
     <string name="home_title">OpenYarnStash</string>
     <string name="home_button_yarns">Wolle</string>
     <string name="home_button_projects">Projekte</string>
+    <string name="home_button_patterns">Anleitungen</string>
     <string name="home_button_statistics">Statistik</string>
 
     <!-- Yarn list -->
@@ -19,6 +20,10 @@
     <string name="project_list_title">Projekte</string>
     <string name="project_list_empty">Keine Projekte. Klicke + um ein neues hinzuzufügen.</string>
     <string name="item_label_name">Name: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Anleitungen</string>
+    <string name="pattern_list_empty">Keine Anleitungen. Klicke + um eine neue hinzuzufügen.</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Zurück</string>
@@ -62,6 +67,7 @@
     <string name="project_form_new">Neues Projekt</string>
     <string name="project_form_edit">Projekt bearbeiten</string>
     <string name="project_label_name">Name</string>
+    <string name="project_label_pattern">Anleitung</string>
     <string name="project_label_for">Gemacht für</string>
     <string name="project_label_start_date">Startdatum</string>
     <string name="project_label_end_date">Enddatum</string>
@@ -84,6 +90,12 @@
     <string name="project_form_remove_image">Bild entfernen</string>
     <string name="project_form_add_counter_dialog_title">Neuen Zähler hinzufügen</string>
     <string name="project_form_add_counter_dialog_label">Zählername</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Neue Anleitung</string>
+    <string name="pattern_form_edit">Anleitung bearbeiten</string>
+    <string name="pattern_label_name">Name</string>
+    <string name="pattern_label_creator">Ersteller</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Woll-Zuweisungen für %1$s</string>
