@@ -74,6 +74,7 @@ import openyarnstash.composeapp.generated.resources.project_form_new
 import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
 import openyarnstash.composeapp.generated.resources.project_form_remove_image
 import openyarnstash.composeapp.generated.resources.project_form_select_image
+import openyarnstash.composeapp.generated.resources.project_form_view_pattern
 import openyarnstash.composeapp.generated.resources.project_label_end_date
 import openyarnstash.composeapp.generated.resources.project_label_for
 import openyarnstash.composeapp.generated.resources.project_label_gauge
@@ -118,7 +119,7 @@ fun ProjectFormScreen(
     var notes by remember { mutableStateOf(initial.notes ?: "") }
     var needleSize by remember { mutableStateOf(initial.needleSize ?: "") }
     var size by remember { mutableStateOf(initial.size ?: "") }
-    var gauge by remember { mutableStateOf(initial.gauge?.toString() ?: "") }
+    var gauge by remember { mutableStateOf(initial.gauge ?: "") }
     var rowCounters by remember { mutableStateOf(initial.rowCounters) }
     var patternId by remember { mutableStateOf(initial.patternId) }
     val modified by remember { mutableStateOf(initial.modified) }
@@ -142,7 +143,7 @@ fun ProjectFormScreen(
                     notes != (initial.notes ?: "") ||
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
-                    gauge != (initial.gauge?.toString() ?: "") ||
+                    gauge != (initial.gauge ?: "") ||
                     newImage != null ||
                     rowCounters != initial.rowCounters ||
                     patternId != initial.patternId
@@ -159,7 +160,7 @@ fun ProjectFormScreen(
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
             size = size.ifBlank { null },
-            gauge = gauge.toIntOrNull(),
+            gauge = gauge.ifBlank { null },
             rowCounters = rowCounters,
             patternId = patternId
         )
@@ -324,7 +325,7 @@ fun ProjectFormScreen(
             if (patternId != null) {
                 Spacer(Modifier.height(8.dp))
                 Button(onClick = { onNavigateToPattern(patternId!!) }) {
-                    Text("View Pattern")
+                    Text(stringResource(Res.string.project_form_view_pattern))
                 }
             }
             Spacer(Modifier.height(8.dp))
@@ -351,7 +352,6 @@ fun ProjectFormScreen(
                 value = gauge,
                 onValueChange = { gauge = it },
                 label = { Text(stringResource(Res.string.project_label_gauge)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))

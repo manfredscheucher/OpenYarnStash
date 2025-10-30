@@ -49,6 +49,7 @@
     <string name="yarn_label_blend">Blend</string>
     <string name="yarn_label_dye_lot">Dye lot</string>
     <string name="yarn_label_brand">Brand</string>
+    <string name="yarn_label_storage_place">Storage Place</string>
     <string name="yarn_label_amount">Amount (g)</string>
     <string name="yarn_label_weight_per_skein">g / skein</string>
     <string name="yarn_label_meterage_per_skein">m / skein</string>
@@ -76,6 +77,7 @@
     <string name="date_format_hint_project">Date (YYYY, YYYY-MM, YYYY-MM-DD)</string>
     <string name="project_label_notes">Notes</string>
     <string name="project_form_button_assignments">Assign yarn</string>
+    <string name="project_form_view_pattern">View Pattern</string>
     <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
     <string name="delete_project_restricted_title">Deletion Not Possible</string>
     <string name="delete_project_restricted_message">Deletion is only possible if no yarn is assigned. Return assigned yarn to the stash to proceed with deletion.</string>
@@ -98,6 +100,9 @@
     <string name="pattern_form_edit">Edit pattern</string>
     <string name="pattern_label_name">Name</string>
     <string name="pattern_label_creator">Creator</string>
+    <string name="pattern_label_gauge">Gauge</string>
+    <string name="pattern_form_select_pdf">Select PDF</string>
+    <string name="pattern_form_view_pdf">View PDF</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Yarn Assignments for %1$s</string>

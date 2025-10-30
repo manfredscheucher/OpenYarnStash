@@ -18,4 +18,5 @@ data class Yarn(
     val meteragePerSkein: Int? = null,
     val added: String? = null,
     val modified: String? = null,
-    )
+    val storagePlace: String? = null
+)

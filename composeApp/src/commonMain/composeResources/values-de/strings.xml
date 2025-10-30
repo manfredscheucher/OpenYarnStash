@@ -47,6 +47,7 @@
     <string name="yarn_label_blend">Zusammensetzung</string>
     <string name="yarn_label_dye_lot">Farbpartie</string>
     <string name="yarn_label_brand">Marke</string>
+    <string name="yarn_label_storage_place">Lagerplatz</string>
     <string name="yarn_label_amount">Menge (g)</string>
     <string name="yarn_label_weight_per_skein">g / Knäuel</string>
     <string name="yarn_label_meterage_per_skein">m / Knäuel</string>
@@ -74,6 +75,7 @@
     <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="project_label_notes">Notizen</string>
     <string name="project_form_button_assignments">Wolle zuordnen</string>
+    <string name="project_form_view_pattern">Anleitung ansehen</string>
     <string name="project_form_no_yarn_assigned">Diesem Projekt ist noch keine Wolle zugeordnet.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
     <string name="delete_project_restricted_message">Löschen ist nur möglich, wenn keine Wolle zugeordnet ist. Um mit dem Löschen fortzufahren, geben Sie die zugewiesene Wolle in den Vorrat zurück.</string>
@@ -96,6 +98,9 @@
     <string name="pattern_form_edit">Anleitung bearbeiten</string>
     <string name="pattern_label_name">Name</string>
     <string name="pattern_label_creator">Ersteller</string>
+    <string name="pattern_label_gauge">Maschenprobe</string>
+    <string name="pattern_form_select_pdf">PDF auswählen</string>
+    <string name="pattern_form_view_pdf">PDF ansehen</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Woll-Zuweisungen für %1$s</string>

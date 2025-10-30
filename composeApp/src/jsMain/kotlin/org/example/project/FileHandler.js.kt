@@ -1,75 +1,68 @@
 package org.example.project
 
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import kotlinx.browser.localStorage
+import kotlinx.coroutines.await
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.w3c.files.File
 
-/**
- * JS (Browser): IndexedDB-basiert, Fallback auf localStorage.
- */
-actual class WebFileHandler : FileHandler {
-    private val dbName = "openstash-db"
-    private val storeName = "kv"
-    private val key = "openstash.json"
+@JsModule("js-base64")
+@JsNonModule
+external object Base64 {
+    fun encode(data: String): String
+    fun decode(data: String): String
+}
 
-    private val win: dynamic get() = js("window")
+actual class JsFileHandler : FileHandler {
 
-    private suspend fun openDb(): dynamic = suspendCancellableCoroutine { cont ->
-        val idb = win.indexedDB
-        if (idb == null || js("typeof idb === 'undefined'") as Boolean) {
-            cont.resumeWithException(IllegalStateException("IndexedDB not supported"))
-            return@suspendCancellableCoroutine
-        }
-        val req = idb.open(dbName, 1)
-        req.onupgradeneeded = { ev: dynamic ->
-            val db = ev.target.result
-            if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName)
-            }
-        }
-        req.onsuccess = { cont.resume(req.result) }
-        req.onerror = {
-            val msg = (req.error?.message as? String) ?: "Failed to open IndexedDB"
-            cont.resumeWithException(IllegalStateException(msg))
-        }
+    override suspend fun readFile(path: String): String {
+        return localStorage.getItem(path) ?: ""
     }
 
-    override suspend fun readFile(): String {
-        val db = try { openDb() } catch (_: Throwable) {
-            return (win.localStorage?.getItem(key) as String?) ?: ""
-        }
-        return suspendCancellableCoroutine { cont ->
-            val tx = db.transaction(storeName, "readonly")
-            val store = tx.objectStore(storeName)
-            val getReq = store.get(key)
-            getReq.onsuccess = {
-                cont.resume(getReq.result as? String ?: "")
-            }
-            getReq.onerror = {
-                val msg = (getReq.error?.message as? String) ?: "IndexedDB get error"
-                cont.resumeWithException(IllegalStateException(msg))
-            }
-        }
+    override suspend fun writeFile(path: String, content: String) {
+        localStorage.setItem(path, content)
     }
 
-    override suspend fun writeFile(content: String) {
-        val db = try { openDb() } catch (_: Throwable) {
-            win.localStorage?.setItem(key, content)
-            return
+    override suspend fun backupFile(path: String): String? {
+        val content = localStorage.getItem(path)
+        if (content != null) {
+            val backupKey = createTimestampedFileName(path.substringBeforeLast('.'), path.substringAfterLast('.'))
+            localStorage.setItem(backupKey, content)
+            return backupKey
         }
-        suspendCancellableCoroutine<Unit> { cont ->
-            val tx = db.transaction(storeName, "readwrite")
-            val store = tx.objectStore(storeName)
-            val putReq = store.put(content, key)
-            putReq.onsuccess = { cont.resume(Unit) }
-            putReq.onerror = {
-                val msg = (putReq.error?.message as? String) ?: "IndexedDB put error"
-                cont.resumeWithException(IllegalStateException(msg))
-            }
-        }
+        return null
     }
 
-    override suspend fun backupFile(): String? {
-        return readFile()
+    override fun createTimestampedFileName(baseName: String, extension: String): String {
+        val now = Clock.System.now()
+        val zone = TimeZone.currentSystemDefault()
+        val local = now.toLocalDateTime(zone)
+        // YYYYMMDD-HHMMSS
+        val timestamp = buildString {
+            append(local.year.toString().padStart(4, '0'))
+            append(local.monthNumber.toString().padStart(2, '0'))
+            append(local.dayOfMonth.toString().padStart(2, '0'))
+            append('-')
+            append(local.hour.toString().padStart(2, '0'))
+            append(local.minute.toString().padStart(2, '0'))
+            append(local.second.toString().padStart(2, '0'))
+        }
+        return "$baseName-$timestamp.$extension"
+    }
+
+    override suspend fun writeBytes(path: String, bytes: ByteArray) {
+        val base64 = Base64.encode(bytes.decodeToString())
+        localStorage.setItem(path, "data:image/jpeg;base64,$base64")
+    }
+
+    override suspend fun readBytes(path: String): ByteArray? {
+        val dataUrl = localStorage.getItem(path) ?: return null
+        val base64 = dataUrl.substringAfter("base64,")
+        return Base64.decode(base64).encodeToByteArray()
+    }
+
+    override suspend fun deleteFile(path: String) {
+        localStorage.removeItem(path)
     }
 }

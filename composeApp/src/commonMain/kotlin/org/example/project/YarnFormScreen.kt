@@ -68,6 +68,7 @@ fun YarnFormScreen(
     var brand by remember { mutableStateOf(initial?.brand ?: "") }
     var blend by remember { mutableStateOf(initial?.blend ?: "") }
     var dyeLot by remember { mutableStateOf(initial?.dyeLot ?: "") }
+    var storagePlace by remember { mutableStateOf(initial?.storagePlace ?: "") }
 
     var weightPerSkeinText by remember { mutableStateOf(initial?.weightPerSkein?.toString() ?: "") }
     var meteragePerSkeinText by remember { mutableStateOf(initial?.meteragePerSkein?.toString() ?: "") }
@@ -92,6 +93,7 @@ fun YarnFormScreen(
         brand,
         blend,
         dyeLot,
+        storagePlace,
         weightPerSkeinText,
         meteragePerSkeinText,
         amountText,
@@ -103,7 +105,7 @@ fun YarnFormScreen(
             if (initial == null) {
                 name.isNotEmpty() || color.isNotEmpty() || colorCode.isNotEmpty() || brand.isNotEmpty() ||
                         blend.isNotEmpty() ||
-                        dyeLot.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
+                        dyeLot.isNotEmpty() || storagePlace.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
                         amountText.isNotEmpty() ||
                         added.isNotEmpty() || notes.isNotEmpty() || newImage != null
             } else {
@@ -113,6 +115,7 @@ fun YarnFormScreen(
                         brand != (initial.brand ?: "") ||
                         blend != (initial.blend ?: "") ||
                         dyeLot != (initial.dyeLot ?: "") ||
+                        storagePlace != (initial.storagePlace ?: "") ||
                         weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "") ||
                         meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
                         amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
@@ -135,6 +138,7 @@ fun YarnFormScreen(
                 colorCode = colorCode.ifBlank { null },
                 blend = blend.ifBlank { null },
                 dyeLot = dyeLot.ifBlank { null },
+                storagePlace = storagePlace.ifBlank { null },
                 amount = finalAmountToSave,
                 weightPerSkein = weightPerSkeinText.toIntOrNull(),
                 meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
@@ -262,6 +266,8 @@ fun YarnFormScreen(
                 }
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = blend, onValueChange = { blend = it }, label = { Text(stringResource(Res.string.yarn_label_blend)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                SelectAllOutlinedTextField(value = storagePlace, onValueChange = { storagePlace = it }, label = { Text(stringResource(Res.string.yarn_label_storage_place)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     SelectAllOutlinedTextField(
