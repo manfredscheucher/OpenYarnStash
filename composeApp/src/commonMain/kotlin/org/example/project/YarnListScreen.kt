@@ -114,8 +114,8 @@ fun YarnListScreen(
                             val yarnItem = yarn
                             val usedAmount = used
                             val availableAmount = available
-                            val availableMeterageAmount = availableMeterage?.let { convertLength(it, settings.lengthUnit).toInt() }
-                            val usedMeterageAmount = usedMeterage?.let { convertLength(it, settings.lengthUnit).toInt() }
+                            val availableMeterageAmount = availableMeterage
+                            val usedMeterageAmount = usedMeterage
                         }
                     }
                 }

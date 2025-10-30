@@ -70,7 +70,7 @@ fun YarnFormScreen(
     var dyeLot by remember { mutableStateOf(initial?.dyeLot ?: "") }
 
     var weightPerSkeinText by remember { mutableStateOf(initial?.weightPerSkein?.toString() ?: "") }
-    var meteragePerSkeinText by remember { mutableStateOf(initial?.meteragePerSkein?.let { convertLength(it, settings.lengthUnit).toString() } ?: "") }
+    var meteragePerSkeinText by remember { mutableStateOf(initial?.meteragePerSkein?.toString() ?: "") }
     var amountText by remember(initial) { mutableStateOf(initial?.amount?.toString()?.takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
@@ -114,7 +114,7 @@ fun YarnFormScreen(
                         blend != (initial.blend ?: "") ||
                         dyeLot != (initial.dyeLot ?: "") ||
                         weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "") ||
-                        meteragePerSkeinText != (initial.meteragePerSkein?.let { convertLength(it, settings.lengthUnit).toString() } ?: "") ||
+                        meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
                         amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
                         added != (initial.added ?: "") ||
                         notes != (initial.notes ?: "") ||
@@ -127,8 +127,6 @@ fun YarnFormScreen(
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
-        val meterage = meteragePerSkeinText.toDoubleOrNull()?.let { metersFrom(it, settings.lengthUnit) }
-
         val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, modified = getCurrentTimestamp()))
             .copy(
                 name = name,
@@ -139,7 +137,7 @@ fun YarnFormScreen(
                 dyeLot = dyeLot.ifBlank { null },
                 amount = finalAmountToSave,
                 weightPerSkein = weightPerSkeinText.toIntOrNull(),
-                meteragePerSkein = meterage,
+                meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
                 modified = getCurrentTimestamp(),
                 added = normalizeDateString(added),
                 notes = notes.ifBlank { null }
@@ -366,14 +364,12 @@ fun YarnFormScreen(
                         Text(stringResource(Res.string.yarn_form_no_projects_assigned))
                     } else {
                         usagesForYarn.forEach { usage ->
-                            val usageAmountInUnit = convertLength(usage.amount, settings.lengthUnit).toInt()
                             var usageText = "- ${projectNameById(usage.projectId)}: ${usage.amount} g"
                             initial.weightPerSkein?.let { weightPerSkein ->
                                 initial.meteragePerSkein?.let { meteragePerSkein ->
                                     if (weightPerSkein > 0) {
-                                        val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein)
-                                        val usedLengthInUnit = convertLength(usedMeterage.toInt(), settings.lengthUnit)
-                                        usageText += " (${usedLengthInUnit.toInt()} ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
+                                        val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
+                                        usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
                                     }
                                 }
                             }

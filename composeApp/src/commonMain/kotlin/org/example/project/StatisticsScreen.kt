@@ -166,7 +166,7 @@ fun StatisticsScreen(
                     ) else stringResource(
                         Res.string.statistics_total_yarn_available_yards,
                         totalAvailableWeight,
-                        convertLength(totalAvailableMeterage, LengthUnit.YARD).toInt()
+                        totalAvailableMeterage
                     )
                 )
 
@@ -272,7 +272,7 @@ fun StatisticsScreen(
                     ) else stringResource(
                         Res.string.statistics_yarn_bought_title_yards,
                         yarnBoughtAmount,
-                        convertLength(yarnBoughtMeterage, LengthUnit.YARD).toInt()
+                        yarnBoughtMeterage
                     )
                 )
 
@@ -299,7 +299,7 @@ fun StatisticsScreen(
                     ) else stringResource(
                         Res.string.statistics_yarn_used_title_yards,
                         yarnUsedAmount,
-                        convertLength(yarnUsedMeterage, LengthUnit.YARD).toInt()
+                        yarnUsedMeterage
                     )
                 )
 
