@@ -94,6 +94,7 @@
     <string name="project_form_remove_image">Remove Image</string>
     <string name="project_form_add_counter_dialog_title">Add new counter</string>
     <string name="project_form_add_counter_dialog_label">Counter name</string>
+    <string name="export_as_pdf">Export as PDF</string>
 
     <!-- Pattern form -->
     <string name="pattern_form_new">New pattern</string>
