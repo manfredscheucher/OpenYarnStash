@@ -2,6 +2,7 @@ package org.example.project
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -101,7 +102,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
             key(settings.language) {
-                Box(modifier = Modifier.padding(innerPadding)) {
+                Box(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding)
+                ) {
                     when (val s = screen) {
                         Screen.Home -> HomeScreen(
                             onOpenYarns = { screen = Screen.YarnList },
