@@ -127,7 +127,7 @@ fun ProjectFormScreen(
             val projectData = PdfProject(
                 id = initial.id.toString(),
                 title = name,
-                imageBytes = newImage ?: initialImage
+                imageBytes = newImage ?: initialImage ?: byteArrayOf()
             )
             val paramsData = PdfParams(
                 gauge = gauge.ifBlank { null },
@@ -281,7 +281,7 @@ fun ProjectFormScreen(
                 .padding(16.dp)
         ) {
             val displayedImage = newImage ?: initialImage
-            if (displayedImage != null) {
+            if (displayedImage != null && displayedImage.isNotEmpty()) {
                 val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
                 if (bitmap != null) {
                     Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
@@ -298,8 +298,8 @@ fun ProjectFormScreen(
                 Button(onClick = { imagePicker.launch() }) {
                     Text(stringResource(Res.string.project_form_select_image))
                 }
-                if (displayedImage != null) {
-                    Button(onClick = { newImage = createEmptyImageByteArray() }) {
+                if (displayedImage != null && displayedImage.isNotEmpty()) {
+                    Button(onClick = { newImage = byteArrayOf() }) {
                         Text(stringResource(Res.string.project_form_remove_image))
                     }
                 }
