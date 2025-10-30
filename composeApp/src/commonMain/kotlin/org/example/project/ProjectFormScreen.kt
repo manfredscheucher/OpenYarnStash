@@ -106,7 +106,8 @@ fun ProjectFormScreen(
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, ByteArray?) -> Unit,
-    onNavigateToAssignments: () -> Unit
+    onNavigateToAssignments: () -> Unit,
+    onNavigateToPattern: (Int) -> Unit
 ) {
     val isNewProject = initial.id == -1
 
@@ -318,6 +319,12 @@ fun ProjectFormScreen(
                             }
                         )
                     }
+                }
+            }
+            if (patternId != null) {
+                Spacer(Modifier.height(8.dp))
+                Button(onClick = { onNavigateToPattern(patternId!!) }) {
+                    Text("View Pattern")
                 }
             }
             Spacer(Modifier.height(8.dp))

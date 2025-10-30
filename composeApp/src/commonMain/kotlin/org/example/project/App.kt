@@ -319,6 +319,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             existingProject.id,
                                             existingProject.name
                                         )
+                                    },
+                                    onNavigateToPattern = { patternId ->
+                                        screen = Screen.PatternForm(patternId)
                                     }
                                 )
                             }
