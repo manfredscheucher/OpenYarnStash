@@ -52,14 +52,17 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun SettingsScreen(
     currentLocale: String,
+    currentLengthUnit: LengthUnit,
     onBack: () -> Unit,
     onExport: () -> Unit,
     onImport: (String) -> Unit,
-    onLocaleChange: (String) -> Unit
+    onLocaleChange: (String) -> Unit,
+    onLengthUnitChange: (LengthUnit) -> Unit
 ) {
     var showFilePicker by remember { mutableStateOf(false) }
     var showImportConfirmDialog by remember { mutableStateOf(false) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
+    var lengthUnitDropdownExpanded by remember { mutableStateOf(false) }
 
     AppBackHandler {
         onBack()
@@ -129,6 +132,44 @@ fun SettingsScreen(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ExposedDropdownMenuBox(
+                    expanded = lengthUnitDropdownExpanded,
+                    onExpandedChange = { lengthUnitDropdownExpanded = it }
+                ) {
+                    OutlinedTextField(
+                        value = if (currentLengthUnit == LengthUnit.METER) "Meters" else "Yards", // TODO: Localize
+                        onValueChange = {},
+                        label = { Text("Length Unit") }, // TODO: Localize
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = lengthUnitDropdownExpanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = lengthUnitDropdownExpanded,
+                        onDismissRequest = { lengthUnitDropdownExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Meters") }, // TODO: Localize
+                            onClick = {
+                                onLengthUnitChange(LengthUnit.METER)
+                                lengthUnitDropdownExpanded = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Yards") }, // TODO: Localize
+                            onClick = {
+                                onLengthUnitChange(LengthUnit.YARD)
+                                lengthUnitDropdownExpanded = false
+                            }
+                        )
+                    }
+                }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 

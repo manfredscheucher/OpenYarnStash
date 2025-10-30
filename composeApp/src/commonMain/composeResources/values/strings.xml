@@ -11,6 +11,7 @@
     <string name="yarn_list_title">Yarn stash</string>
     <string name="yarn_list_empty">No yarns yet. Tap +</string>
     <string name="yarn_list_summary">Current amount: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Current amount: %1$d g (%2$d yd)</string>
     <string name="yarn_item_label_modified">Last modified: %1$s</string>
     <string name="yarn_list_hide_used">Used yarns</string>
 
@@ -45,6 +46,7 @@
     <string name="yarn_label_amount">Amount (g)</string>
     <string name="yarn_label_weight_per_skein">g / skein</string>
     <string name="yarn_label_meterage_per_skein">m / skein</string>
+    <string name="yarn_label_yardage_per_skein">yd / skein</string>
     <string name="yarn_label_number_of_skeins">Number of skeins</string>
     <string name="yarn_label_modified">Modified</string>
     <string name="date_format_hint_modified">Modified (YYYY, YYYY-MM, YYYY-MM-DD)</string>
@@ -92,9 +94,12 @@
     <string name="usage_amount_label">Amount (g)</string>
     <string name="usage_available">Available: %1$d g</string>
     <string name="usage_available_with_meterage">Available: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Available: %1$d g (%2$d yd)</string>
     <string name="usage_available_meterage">Available: %1$d m</string>
+    <string name="usage_available_yardage">Available: %1$d yd</string>
     <string name="usage_used">Used: %1$d g</string>
     <string name="usage_used_with_meterage">Used: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Used: %1$d g (%2$d yd)</string>
     <string name="usage_projects_title">Projects</string>
 
     <!-- Statistics Screen -->
@@ -105,8 +110,11 @@
     <string name="statistics_label_year">Year</string>
     <string name="statistics_label_month">Month</string>
     <string name="statistics_total_yarn_available">Total yarn available: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Total yarn available: %1$d g (%2$d yd)</string>
     <string name="statistics_yarn_bought_title">Yarn bought: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Yarn bought: %1$d g (%2$d yd)</string>
     <string name="statistics_yarn_used_title">Yarn used: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Yarn used: %1$d g (%2$d yd)</string>
     <string name="statistics_projects_in_progress_title">Projects in progress: %1$d</string>
     <string name="statistics_projects_planned">Projects in planning: %1$d</string>
     <string name="statistics_projects_finished_title">Projects finished: %1$d</string>
@@ -140,6 +148,9 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="import_dialog_title">Warning</string>
     <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
     <string name="language_label">Language</string>
+    <string name="length_unit_label">Length Unit</string>
+    <string name="length_unit_meters">Meters</string>
+    <string name="length_unit_yards">Yards</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>

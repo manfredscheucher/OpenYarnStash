@@ -101,7 +101,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
-            key(settings.language) {
+            key(settings.language, settings.lengthUnit) {
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -190,6 +190,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             "?"
                                         }
                                     },
+                                    settings = settings,
                                     onBack = { screen = Screen.YarnList },
                                     onDelete = { yarnIdToDelete ->
                                         scope.launch {
@@ -383,14 +384,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 yarns = yarns,
                                 projects = projects,
                                 usages = usages,
-                                onBack = { screen = Screen.Home }
+                                onBack = { screen = Screen.Home },
+                                settings = settings
                             )
                         }
 
                         Screen.Settings -> {
-                            key(settings.language) {
+                            key(settings.language, settings.lengthUnit) {
                                 SettingsScreen(
                                     currentLocale = settings.language,
+                                    currentLengthUnit = settings.lengthUnit,
                                     onBack = { screen = Screen.Home },
                                     onExport = {
                                         scope.launch {
@@ -420,6 +423,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                                 settingsManager.saveSettings(newSettings)
                                             }
                                             setAppLanguage(newLocale)
+                                            settings = newSettings
+                                        }
+                                    },
+                                    onLengthUnitChange = { newLengthUnit ->
+                                        scope.launch {
+                                            val newSettings = settings.copy(lengthUnit = newLengthUnit)
+                                            withContext(Dispatchers.Default) {
+                                                settingsManager.saveSettings(newSettings)
+                                            }
                                             settings = newSettings
                                         }
                                     }

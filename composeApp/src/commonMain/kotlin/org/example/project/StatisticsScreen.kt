@@ -37,6 +37,7 @@ fun StatisticsScreen(
     yarns: List<Yarn>,
     projects: List<Project>,
     usages: List<Usage>,
+    settings: Settings,
     onBack: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -158,10 +159,14 @@ fun StatisticsScreen(
                     if (meterage != null && weight != null && weight > 0) (available * meterage) / weight else 0
                 }
                 Text(
-                    stringResource(
+                    text = if (settings.lengthUnit == LengthUnit.METER) stringResource(
                         Res.string.statistics_total_yarn_available,
                         totalAvailableWeight,
                         totalAvailableMeterage
+                    ) else stringResource(
+                        Res.string.statistics_total_yarn_available_yards,
+                        totalAvailableWeight,
+                        convertLength(totalAvailableMeterage, LengthUnit.YARD).toInt()
                     )
                 )
 
@@ -258,7 +263,18 @@ fun StatisticsScreen(
                     val weight = yarn.weightPerSkein
                     if (meterage != null && weight != null && weight > 0) (yarn.amount * meterage) / weight else 0
                 } ?: 0
-                Text(stringResource(Res.string.statistics_yarn_bought_title, yarnBoughtAmount, yarnBoughtMeterage))
+
+                Text(
+                    text = if (settings.lengthUnit == LengthUnit.METER) stringResource(
+                        Res.string.statistics_yarn_bought_title,
+                        yarnBoughtAmount,
+                        yarnBoughtMeterage
+                    ) else stringResource(
+                        Res.string.statistics_yarn_bought_title_yards,
+                        yarnBoughtAmount,
+                        convertLength(yarnBoughtMeterage, LengthUnit.YARD).toInt()
+                    )
+                )
 
                 val finishedList = if (isOverall) finishedByYear[cat] else finishedByMonth[cat]
                 val yarnUsedAmount = finishedList?.sumOf { proj ->
@@ -274,7 +290,18 @@ fun StatisticsScreen(
                         } else 0
                     }
                 } ?: 0
-                Text(stringResource(Res.string.statistics_yarn_used_title, yarnUsedAmount, yarnUsedMeterage))
+
+                Text(
+                    text = if (settings.lengthUnit == LengthUnit.METER) stringResource(
+                        Res.string.statistics_yarn_used_title,
+                        yarnUsedAmount,
+                        yarnUsedMeterage
+                    ) else stringResource(
+                        Res.string.statistics_yarn_used_title_yards,
+                        yarnUsedAmount,
+                        convertLength(yarnUsedMeterage, LengthUnit.YARD).toInt()
+                    )
+                )
 
                 val finishedCount = finishedList?.size ?: 0
                 Text(stringResource(Res.string.statistics_projects_finished_title, finishedCount))

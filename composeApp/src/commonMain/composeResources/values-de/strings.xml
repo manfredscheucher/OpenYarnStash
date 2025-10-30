@@ -11,6 +11,7 @@
     <string name="yarn_list_title">Woll-Lager</string>
     <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
     <string name="yarn_list_summary">Aktuelle Menge: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Aktuelle Menge: %1$d g (%2$d yd)</string>
     <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
     <string name="yarn_list_hide_used">Verbrauchte Wolle</string>
 
@@ -44,6 +45,7 @@
     <string name="yarn_label_amount">Menge (g)</string>
     <string name="yarn_label_weight_per_skein">g / Knäuel</string>
     <string name="yarn_label_meterage_per_skein">m / Knäuel</string>
+    <string name="yarn_label_yardage_per_skein">yd / Knäuel</string>
     <string name="yarn_label_number_of_skeins">Anzahl Knäuel</string>
     <string name="yarn_label_modified">Zuletzt geändert</string>
     <string name="date_format_hint_modified">Zuletzt geändert (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
@@ -91,9 +93,12 @@
     <string name="usage_amount_label">Menge (g)</string>
     <string name="usage_available">Verfügbar: %1$d g</string>
     <string name="usage_available_with_meterage">Verfügbar: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Verfügbar: %1$d g (%2$d yd)</string>
     <string name="usage_available_meterage">Verfügbar: %1$d m</string>
+    <string name="usage_available_yardage">Verfügbar: %1$d yd</string>
     <string name="usage_used">Verbraucht: %1$d g</string>
     <string name="usage_used_with_meterage">Verbraucht: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Verbraucht: %1$d g (%2$d yd)</string>
     <string name="usage_projects_title">Projekte</string>
 
     <!-- Statistics Screen -->
@@ -104,8 +109,11 @@
     <string name="statistics_label_year">Jahr</string>
     <string name="statistics_label_month">Monat</string>
     <string name="statistics_total_yarn_available">Garn insgesamt verfügbar: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Garn insgesamt verfügbar: %1$d g (%2$d yd)</string>
     <string name="statistics_yarn_bought_title">Gekaufte Wolle: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Gekaufte Wolle: %1$d g (%2$d yd)</string>
     <string name="statistics_yarn_used_title">Verbrauchte Wolle: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Verbrauchte Wolle: %1$d g (%2$d yd)</string>
     <string name="statistics_projects_in_progress_title">Projekte in Arbeit: %1$d</string>
     <string name="statistics_projects_planned">Projekte in Planung: %1$d</string>
     <string name="statistics_projects_finished_title">Projecte fertiggestellt: %1$d</string>
@@ -138,6 +146,9 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="import_dialog_title">Warnung</string>
     <string name="import_dialog_message">Die aktuelle Konfiguration wird durch den Import überschrieben. Sind Sie sicher, dass Sie fortfahren möchten?</string>
     <string name="language_label">Sprache</string>
+    <string name="length_unit_label">Längeneinheit</string>
+    <string name="length_unit_meters">Meter</string>
+    <string name="length_unit_yards">Yards</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nicht implementiert</string>

@@ -94,7 +94,7 @@ fun YarnListScreen(
                         .mapValues { entry -> entry.value.sumOf { it.amount } }
                 }
 
-                val yarnData = remember(yarns, usagesByYarnId) {
+                val yarnData = remember(yarns, usagesByYarnId, settings.lengthUnit) {
                     yarns.map { yarn ->
                         val used = usagesByYarnId[yarn.id] ?: 0
                         val available = (yarn.amount - used).coerceAtLeast(0)
@@ -114,8 +114,8 @@ fun YarnListScreen(
                             val yarnItem = yarn
                             val usedAmount = used
                             val availableAmount = available
-                            val availableMeterageAmount = availableMeterage
-                            val usedMeterageAmount = usedMeterage
+                            val availableMeterageAmount = availableMeterage?.let { convertLength(it, settings.lengthUnit).toInt() }
+                            val usedMeterageAmount = usedMeterage?.let { convertLength(it, settings.lengthUnit).toInt() }
                         }
                     }
                 }
@@ -164,7 +164,10 @@ fun YarnListScreen(
                 )
 
                 Text(
-                    text = stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage),
+                    text = if (settings.lengthUnit == LengthUnit.METER)
+                        stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage)
+                    else
+                        stringResource(Res.string.yarn_list_summary_yards, totalAvailable, totalMeterage),
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
                 LazyColumn(
@@ -226,10 +229,16 @@ fun YarnListScreen(
                                     Spacer(Modifier.height(8.dp))
                                     if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
                                         Text(
-                                            stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
+                                            if (settings.lengthUnit == LengthUnit.METER)
+                                                stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
+                                            else
+                                                stringResource(Res.string.usage_used_with_yardage, data.usedAmount, data.usedMeterageAmount ?: 0)
                                         )
                                         Text(
-                                            stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                            if (settings.lengthUnit == LengthUnit.METER)
+                                                stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                            else
+                                                stringResource(Res.string.usage_available_with_yardage, data.availableAmount, data.availableMeterageAmount ?: 0)
                                         )
                                     } else {
                                         Text(
