@@ -3,7 +3,6 @@ package org.example.project
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
+import org.example.project.ui.widgets.LazyColumnWithScrollbar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.text.append
@@ -170,7 +170,7 @@ fun YarnListScreen(
                         stringResource(Res.string.yarn_list_summary_yards, totalAvailable, totalMeterage),
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
-                LazyColumn(
+                LazyColumnWithScrollbar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),

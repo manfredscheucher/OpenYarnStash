@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -48,6 +46,7 @@ import openyarnstash.composeapp.generated.resources.pattern_form_new
 import openyarnstash.composeapp.generated.resources.pattern_label_creator
 import openyarnstash.composeapp.generated.resources.pattern_label_name
 import org.example.project.components.SelectAllOutlinedTextField
+import org.example.project.ui.widgets.ColumnWithScrollbar
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,32 +137,29 @@ fun PatternFormScreen(
             )
         },
     ) { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-            val scrollState = rememberScrollState()
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .imePadding()
-                    .navigationBarsPadding()
-                    .padding(16.dp)
+        ColumnWithScrollbar(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .imePadding()
+                .navigationBarsPadding()
+                .padding(16.dp)
+        ) {
+            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(8.dp))
+            SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(24.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(24.dp))
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                    Row {
-                        if (initial != null) {
-                            TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
-                            Spacer(Modifier.width(8.dp))
-                        }
-                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
+                Row {
+                    if (initial != null) {
+                        TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
+                        Spacer(Modifier.width(8.dp))
                     }
+                    Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
         }
