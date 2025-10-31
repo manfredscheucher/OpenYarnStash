@@ -241,6 +241,7 @@ fun ProjectFormScreen(
 
     if (showAddCounterDialog) {
         AddCounterDialog(
+            initialName = stringResource(Res.string.row_counter_new_default_name, rowCounters.size + 1),
             onDismiss = { showAddCounterDialog = false },
             onAdd = {
                 rowCounters = rowCounters + RowCounter(it, 0)
@@ -521,10 +522,11 @@ fun ProjectFormScreen(
 
 @Composable
 private fun AddCounterDialog(
+    initialName: String,
     onDismiss: () -> Unit,
     onAdd: (String) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(initialName) }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(Res.string.project_form_add_counter_dialog_title)) },
@@ -537,7 +539,10 @@ private fun AddCounterDialog(
             )
         },
         confirmButton = {
-            Button(onClick = { onAdd(name) }) {
+            Button(onClick = {
+                val finalName = name.ifBlank { initialName }
+                onAdd(finalName)
+            }) {
                 Text(stringResource(Res.string.common_ok))
             }
         },

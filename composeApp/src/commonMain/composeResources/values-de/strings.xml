@@ -83,6 +83,7 @@
     <string name="project_status_in_progress">In Arbeit</string>
     <string name="project_status_finished">Fertig</string>
     <string name="project_new_default_name">Projekt#%1$d</string>
+    <string name="row_counter_new_default_name">Reihenzähler #%1$d</string>
     <string name="project_label_needle_size">Nadelstärke</string>
     <string name="project_label_size">Größe</string>
     <string name="project_label_gauge">Maschenprobe</string>

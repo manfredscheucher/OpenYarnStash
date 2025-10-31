@@ -85,6 +85,7 @@
     <string name="project_status_in_progress">In Progress</string>
     <string name="project_status_finished">Finished</string>
     <string name="project_new_default_name">Project#%1$d</string>
+    <string name="row_counter_new_default_name">Row Counter #%1$d</string>
     <string name="project_label_needle_size">Needle Size</string>
     <string name="project_label_size">Size</string>
     <string name="project_label_gauge">Gauge</string>
