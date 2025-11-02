@@ -72,6 +72,7 @@ fun ProjectFormScreen(
     usagesForProject: List<Usage>,
     yarnById: (Int) -> Yarn?,
     patterns: List<Pattern>,
+    yarnImages: Map<Int, ByteArray?>,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, ByteArray?) -> Unit,
@@ -110,8 +111,8 @@ fun ProjectFormScreen(
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
-                    startDate != initial.startDate ||
-                    endDate != initial.endDate ||
+                    startDate != (initial.startDate ?: "") ||
+                    endDate != (initial.endDate ?: "") ||
                     notes != (initial.notes ?: "") ||
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
@@ -168,8 +169,8 @@ fun ProjectFormScreen(
         val project = initial.copy(
             name = name,
             madeFor = forWho.ifBlank { null },
-            startDate = startDate,
-            endDate = endDate,
+            startDate = startDate.ifBlank { null },
+            endDate = endDate.ifBlank { null },
             notes = notes.ifBlank { null },
             modified = getCurrentTimestamp(),
             needleSize = needleSize.ifBlank { null },
@@ -386,7 +387,7 @@ fun ProjectFormScreen(
                 }
                 OutlinedTextField(
                     value = " ",
-                    onValueChange = {},
+                    onValueChange = { },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(totalHeight),

@@ -233,6 +233,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 projectImages =
                                     projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
                             }
+                            LaunchedEffect(yarns) {
+                                yarnImages =
+                                    yarns.associate { it.id to withContext(Dispatchers.Default) { imageManager.getYarnImage(it.id) } }
+                            }
                             val defaultProjectName =
                                 stringResource(Res.string.project_new_default_name)
                             ProjectListScreen(
@@ -241,8 +245,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 settings = settings,
                                 onAddClick = {
                                     scope.launch {
-                                        val newProject = jsonDataManager.createNewProject(defaultProjectName)
-                                        withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(newProject) }
+                                        val newProject =
+                                            jsonDataManager.createNewProject(defaultProjectName)
+                                        withContext(Dispatchers.Default) {
+                                            jsonDataManager.addOrUpdateProject(
+                                                newProject
+                                            )
+                                        }
                                         reloadAllData()
                                         screen = Screen.ProjectForm(newProject.id)
                                     }
@@ -256,7 +265,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                         }
                                         settings = newSettings
                                     }
-                                }
+                                },
+                                yarns = yarns,
+                                usages = usages,
+                                yarnImages = yarnImages
                             )
                         }
 
@@ -322,7 +334,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     },
                                     onNavigateToPattern = { patternId ->
                                         screen = Screen.PatternForm(patternId)
-                                    }
+                                    },
+                                    yarnImages = yarnImages
                                 )
                             }
                         }
