@@ -52,9 +52,9 @@ import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
 import openyarnstash.composeapp.generated.resources.projects
-import org.example.project.ui.widgets.LazyColumnWithScrollbar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.example.project.ui.widgets.LazyColumnWithScrollbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -3,7 +3,6 @@ package org.example.project.ui.widgets
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -41,7 +40,6 @@ fun LazyColumnWithScrollbar(
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     userScrollEnabled: Boolean = true,
     scrollbarWidth: Dp = 6.dp,
     content: LazyListScope.() -> Unit
@@ -51,7 +49,6 @@ fun LazyColumnWithScrollbar(
             modifier = Modifier.fillMaxSize(),
             state = state,
             contentPadding = contentPadding,
-            verticalArrangement = verticalArrangement,
             userScrollEnabled = userScrollEnabled,
             content = content
         )
