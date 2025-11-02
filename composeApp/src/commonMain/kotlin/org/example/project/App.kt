@@ -149,8 +149,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                         }
                                         settings = newSettings
                                     }
-                                },
-                                onPdfExport = { showNotImplementedDialog = true }
+                                }
                             )
                         }
 
@@ -234,11 +233,18 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 projectImages =
                                     projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
                             }
+                            LaunchedEffect(yarns) {
+                                yarnImages =
+                                    yarns.associate { it.id to withContext(Dispatchers.Default) { imageManager.getYarnImage(it.id) } }
+                            }
                             val defaultProjectName =
                                 stringResource(Res.string.project_new_default_name)
                             ProjectListScreen(
                                 projects = projects.sortedByDescending { it.modified },
                                 projectImages = projectImages,
+                                yarnImages = yarnImages,
+                                usages = usages,
+                                yarns = yarns,
                                 settings = settings,
                                 onAddClick = {
                                     scope.launch {
@@ -291,7 +297,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     onBack = { screen = Screen.ProjectList },
                                     onDelete = { id ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) { jsonDataManager.deleteProject(id) }
+                                            withContext(Dispatchers.Default) {
+                                                jsonDataManager.deleteProject(
+                                                    id
+                                                )
+                                            }
                                             reloadAllData()
                                             screen = Screen.ProjectList
                                         }
@@ -302,7 +312,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                                 jsonDataManager.addOrUpdateProject(editedProject)
                                                 if (image != null) {
                                                     if (image.contentEquals(emptyImageByteArray)) {
-                                                        imageManager.deleteProjectImage(editedProject.id)
+                                                        imageManager.deleteProjectImage(
+                                                            editedProject.id
+                                                        )
                                                     } else {
                                                         imageManager.saveProjectImage(
                                                             editedProject.id,
@@ -323,7 +335,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     },
                                     onNavigateToPattern = { patternId ->
                                         screen = Screen.PatternForm(patternId)
-                                    }
+                                    },
+                                    yarnImages = yarnImages
                                 )
                             }
                         }
