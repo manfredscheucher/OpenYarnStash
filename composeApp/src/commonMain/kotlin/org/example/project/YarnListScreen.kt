@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,8 +62,7 @@ fun YarnListScreen(
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
     onBack: () -> Unit,
-    onSettingsChange: (Settings) -> Unit,
-    onPdfExport: () -> Unit
+    onSettingsChange: (Settings) -> Unit
 ) {
     AppBackHandler {
         onBack()
@@ -107,17 +105,7 @@ fun YarnListScreen(
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.Center,
-        bottomBar = {
-            Box(Modifier.fillMaxWidth().padding(16.dp)) {
-                Button(
-                    onClick = { onPdfExport() },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("PDF Export")
-                }
-            }
-        }
+        floatingActionButtonPosition = FabPosition.Center
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             if (yarns.isEmpty()) {

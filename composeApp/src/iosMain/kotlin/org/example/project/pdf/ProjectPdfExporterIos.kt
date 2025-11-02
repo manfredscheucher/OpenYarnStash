@@ -5,17 +5,13 @@ import platform.CoreGraphics.*
 import platform.Foundation.*
 import platform.UIKit.*
 
-class ProjectPdfExporterIos(
-    private val defaultIconBytes: ByteArray? = null
-) : ProjectPdfExporter {
+class ProjectPdfExporterIos : ProjectPdfExporter {
     override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray = memScoped {
         val data = NSMutableData()
         val pageRect = CGRectMake(0.0, 0.0, 595.0, 842.0)
         UIGraphicsBeginPDFContextToData(data, pageRect, null)
         UIGraphicsBeginPDFPage()
         val ctx = UIGraphicsGetCurrentContext()!!
-
-        fun chooseBytes(primary: ByteArray?): ByteArray? = primary ?: defaultIconBytes
 
         fun drawText(text: String, x: Double, y: Double, font: UIFont, color: UIColor = UIColor.blackColor) : Double {
             val attrs = mapOf<Any?, Any?>(NSFontAttributeName to font, NSForegroundColorAttributeName to color)
@@ -37,7 +33,7 @@ class ProjectPdfExporterIos(
 
         var y = 36.0
         y = drawText(project.title, 36.0, y, UIFont.boldSystemFontOfSize(20.0)) + 12.0
-        chooseBytes(project.imageBytes)?.let { bytes ->
+        project.imageBytes?.let { bytes ->
             val img = UIImage(data = bytes.toNSData())
             img?.let { im ->
                 val ratio = kotlin.math.min(240.0 / im.size.width, 180.0 / im.size.height)
@@ -60,7 +56,7 @@ class ProjectPdfExporterIos(
         drawDivider(y); y += 10.0
 
         yarns.forEach { usage ->
-            chooseBytes(usage.yarn.imageBytes)?.let { ib -> drawImage(ib, CGRectMake(36.0, y, 72.0, 72.0)) }
+            usage.yarn.imageBytes?.let { ib -> drawImage(ib, CGRectMake(36.0, y, 72.0, 72.0)) }
             val startX = 36.0 + 72.0 + 12.0
             var localY = y
             listOfNotNull(usage.yarn.brand, usage.yarn.name).joinToString(" · ").takeIf { it.isNotBlank() }?.let { localY = drawText(it, startX, localY, UIFont.systemFontOfSize(10.0)) }
