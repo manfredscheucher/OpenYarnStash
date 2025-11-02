@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -55,7 +57,6 @@ import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
 import org.example.project.pdf.getProjectPdfExporter
 import org.example.project.pdf.rememberPdfSaver
-import org.example.project.ui.widgets.ColumnWithScrollbar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.example.project.pdf.Project as PdfProject
@@ -271,10 +272,11 @@ fun ProjectFormScreen(
             )
         }
     ) { padding ->
-        ColumnWithScrollbar(
+        Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .imePadding()
                 .navigationBarsPadding()
                 .padding(16.dp)

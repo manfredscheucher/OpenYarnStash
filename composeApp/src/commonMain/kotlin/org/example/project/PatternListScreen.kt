@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,7 +38,6 @@ import openyarnstash.composeapp.generated.resources.common_plus_symbol
 import openyarnstash.composeapp.generated.resources.pattern_list_empty
 import openyarnstash.composeapp.generated.resources.pattern_list_title
 import openyarnstash.composeapp.generated.resources.patterns
-import org.example.project.ui.widgets.LazyColumnWithScrollbar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -98,7 +98,7 @@ fun PatternListScreen(
                     Text(stringResource(Res.string.pattern_list_empty))
                 }
             } else {
-                LazyColumnWithScrollbar(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
