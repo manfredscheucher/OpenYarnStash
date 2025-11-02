@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,7 +52,6 @@ import openyarnstash.composeapp.generated.resources.project_status_finished
 import openyarnstash.composeapp.generated.resources.project_status_in_progress
 import openyarnstash.composeapp.generated.resources.project_status_planning
 import openyarnstash.composeapp.generated.resources.projects
-import openyarnstash.composeapp.generated.resources.yarns
 import org.example.project.ui.widgets.LazyColumnWithScrollbar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -63,9 +61,6 @@ import org.jetbrains.compose.resources.stringResource
 fun ProjectListScreen(
     projects: List<Project>,
     projectImages: Map<Int, ByteArray?>,
-    yarns: List<Yarn>,
-    usages: List<Usage>,
-    yarnImages: Map<Int, ByteArray?>,
     settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
@@ -215,7 +210,7 @@ fun ProjectListScreen(
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(16.dp))
-                                Column(modifier = Modifier.weight(1f)) {
+                                Column {
                                     Text(p.name, fontWeight = FontWeight.Bold)
                                     val statusText = when (p.status) {
                                         ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
@@ -223,35 +218,6 @@ fun ProjectListScreen(
                                         ProjectStatus.FINISHED -> stringResource(Res.string.project_status_finished)
                                     }
                                     Text(statusText)
-                                    Spacer(Modifier.height(8.dp))
-
-                                    val yarnsForProject = remember(p.id, usages, yarns) {
-                                        usages.filter { it.projectId == p.id }
-                                            .mapNotNull { usage -> yarns.find { it.id == usage.yarnId } }
-                                    }
-
-                                    if (yarnsForProject.isNotEmpty()) {
-                                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                            yarnsForProject.take(5).forEach { yarn ->
-                                                val yarnImageBytes = yarnImages[yarn.id]
-                                                if (yarnImageBytes != null) {
-                                                    val bitmap = remember(yarnImageBytes) { yarnImageBytes.toImageBitmap() }
-                                                    Image(
-                                                        bitmap = bitmap,
-                                                        contentDescription = "Yarn image for ${yarn.name}",
-                                                        modifier = Modifier.size(32.dp),
-                                                        contentScale = ContentScale.Crop
-                                                    )
-                                                } else {
-                                                    Image(
-                                                        painter = painterResource(Res.drawable.yarns),
-                                                        contentDescription = "Yarn icon",
-                                                        modifier = Modifier.size(32.dp).alpha(0.5f)
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }

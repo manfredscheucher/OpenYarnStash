@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -49,46 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.common_back
-import openyarnstash.composeapp.generated.resources.common_cancel
-import openyarnstash.composeapp.generated.resources.common_delete
-import openyarnstash.composeapp.generated.resources.common_ok
-import openyarnstash.composeapp.generated.resources.common_save
-import openyarnstash.composeapp.generated.resources.common_stay
-import openyarnstash.composeapp.generated.resources.common_yes
-import openyarnstash.composeapp.generated.resources.common_no
-import openyarnstash.composeapp.generated.resources.delete_project_restricted_message
-import openyarnstash.composeapp.generated.resources.delete_project_restricted_title
-import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
-import openyarnstash.composeapp.generated.resources.form_unsaved_changes_title
-import openyarnstash.composeapp.generated.resources.project_form_add_counter
-import openyarnstash.composeapp.generated.resources.project_form_add_counter_dialog_label
-import openyarnstash.composeapp.generated.resources.project_form_add_counter_dialog_title
-import openyarnstash.composeapp.generated.resources.project_form_button_assignments
-import openyarnstash.composeapp.generated.resources.project_form_edit
-import openyarnstash.composeapp.generated.resources.project_form_new
-import openyarnstash.composeapp.generated.resources.project_form_no_yarn_assigned
-import openyarnstash.composeapp.generated.resources.project_form_remove_image
-import openyarnstash.composeapp.generated.resources.project_form_select_image
-import openyarnstash.composeapp.generated.resources.project_form_view_pattern
-import openyarnstash.composeapp.generated.resources.project_label_for
-import openyarnstash.composeapp.generated.resources.project_label_gauge
-import openyarnstash.composeapp.generated.resources.project_label_name
-import openyarnstash.composeapp.generated.resources.project_label_needle_size
-import openyarnstash.composeapp.generated.resources.project_label_notes
-import openyarnstash.composeapp.generated.resources.project_label_pattern
-import openyarnstash.composeapp.generated.resources.project_label_row_count
-import openyarnstash.composeapp.generated.resources.project_label_size
-import openyarnstash.composeapp.generated.resources.project_label_start_date
-import openyarnstash.composeapp.generated.resources.project_label_end_date
-import openyarnstash.composeapp.generated.resources.project_status_finished
-import openyarnstash.composeapp.generated.resources.project_status_in_progress
-import openyarnstash.composeapp.generated.resources.project_status_planning
-import openyarnstash.composeapp.generated.resources.projects
-import openyarnstash.composeapp.generated.resources.row_counter_new_default_name
-import openyarnstash.composeapp.generated.resources.usage_section_title
-import openyarnstash.composeapp.generated.resources.yarn_item_label_modified
+import openyarnstash.composeapp.generated.resources.*
 import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
 import org.example.project.pdf.getProjectPdfExporter
@@ -109,12 +71,11 @@ fun ProjectFormScreen(
     usagesForProject: List<Usage>,
     yarnById: (Int) -> Yarn?,
     patterns: List<Pattern>,
-    yarnImages: Map<Int, ByteArray?>,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, ByteArray?) -> Unit,
     onNavigateToAssignments: () -> Unit,
-onNavigateToPattern: (Int) -> Unit,
+    onNavigateToPattern: (Int) -> Unit
 ) {
     val isNewProject = initial.id == -1
 
@@ -141,7 +102,7 @@ onNavigateToPattern: (Int) -> Unit,
     }
     
     val scope = rememberCoroutineScope()
-    val pdfExporter = remember(Unit) { getProjectPdfExporter() }
+    val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
     val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCounters, patternId) {
@@ -165,7 +126,7 @@ onNavigateToPattern: (Int) -> Unit,
             val projectData = PdfProject(
                 id = initial.id.toString(),
                 title = name,
-                imageBytes = newImage ?: initialImage
+                imageBytes = newImage ?: initialImage ?: byteArrayOf()
             )
             val paramsData = PdfParams(
                 gauge = gauge.ifBlank { null },
@@ -189,7 +150,7 @@ onNavigateToPattern: (Int) -> Unit,
                             lot = yarn.dyeLot,
                             material = yarn.blend,
                             weightClass = null, // Not available
-                            imageBytes = yarnImages[yarn.id]
+                            imageBytes = null // Not available
                         ),
                         gramsUsed = usage.amount.toDouble(),
                         metersUsed = metersUsed
@@ -299,20 +260,15 @@ onNavigateToPattern: (Int) -> Unit,
             val titleRes = if (isNewProject) Res.string.project_form_new else Res.string.project_form_edit
             TopAppBar(
                 title = { Text(stringResource(titleRes)) },
-                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
-            )
-        },
-        bottomBar = {
-            if (!isNewProject) {
-                Box(Modifier.fillMaxWidth().padding(16.dp)) {
-                    Button(
-                        onClick = exportPdf,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("PDF Export")
+                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } },
+                actions = {
+                    if (!isNewProject) {
+                        IconButton(onClick = exportPdf) {
+                            Icon(Icons.Default.PictureAsPdf, contentDescription = stringResource(Res.string.export_as_pdf))
+                        }
                     }
                 }
-            }
+            )
         }
     ) { padding ->
         ColumnWithScrollbar(
@@ -354,7 +310,7 @@ onNavigateToPattern: (Int) -> Unit,
                 val selectedPattern = patterns.firstOrNull { it.id == patternId }
                 OutlinedTextField(
                     value = selectedPattern?.name ?: "",
-                    onValueChange = { },
+                    onValueChange = {},
                     label = { Text(stringResource(Res.string.project_label_pattern)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
@@ -558,8 +514,6 @@ onNavigateToPattern: (Int) -> Unit,
                     Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
-            // Add spacer at the bottom to ensure content is above the bottom bar
-            Spacer(Modifier.height(64.dp))
         }
     }
 }
