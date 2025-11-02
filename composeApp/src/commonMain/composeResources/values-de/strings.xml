@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">OpenYarnStash</string>
 
@@ -75,6 +76,7 @@
     <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-TT)</string>
     <string name="project_label_notes">Notizen</string>
     <string name="project_form_button_assignments">Wolle zuordnen</string>
+    <string name="project_form_button_export_pdf">PDF Export</string>
     <string name="project_form_view_pattern">Anleitung ansehen</string>
     <string name="project_form_no_yarn_assigned">Diesem Projekt ist noch keine Wolle zugeordnet.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
@@ -93,6 +95,7 @@
     <string name="project_form_remove_image">Bild entfernen</string>
     <string name="project_form_add_counter_dialog_title">Neuen Zähler hinzufügen</string>
     <string name="project_form_add_counter_dialog_label">Zählername</string>
+    <string name="export_as_pdf">Als PDF exportieren</string>
 
     <!-- Pattern form -->
     <string name="pattern_form_new">Neue Anleitung</string>

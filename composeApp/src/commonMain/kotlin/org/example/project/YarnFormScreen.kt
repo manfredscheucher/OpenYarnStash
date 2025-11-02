@@ -329,42 +329,28 @@ fun YarnFormScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.weight(1f)
                     )
-
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                        SelectAllOutlinedTextField(
-                            value = amountText,
-                            onValueChange = { newValue ->
-                                val normalized = normalizeIntInput(newValue)
-                                amountText = normalized
-                                val amount = normalized.toIntOrNull()
-                                val gpb = weightPerSkeinText.toIntOrNull()
-                                if (gpb != null && amount != null && gpb > 0) { // Allow amount >= 0
-                                    val balls = amount.toDouble() / gpb.toDouble()
-                                    numberOfBallsText = if (balls == balls.toInt().toDouble()) {
-                                        balls.toInt().toString()
-                                    } else {
-                                        (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
-                                    }
-                                } else if (amount == 0) {
-                                    numberOfBallsText = "0"
+                    SelectAllOutlinedTextField(
+                        value = amountText,
+                        onValueChange = { newValue ->
+                            val normalized = normalizeIntInput(newValue)
+                            amountText = normalized
+                            val amount = normalized.toIntOrNull()
+                            val gpb = weightPerSkeinText.toIntOrNull()
+                            if (gpb != null && amount != null && gpb > 0) { // Allow amount >= 0
+                                val balls = amount.toDouble() / gpb.toDouble()
+                                numberOfBallsText = if (balls == balls.toInt().toDouble()) {
+                                    balls.toInt().toString()
+                                } else {
+                                    (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
                                 }
-                            },
-                            label = { Text(stringResource(Res.string.yarn_label_amount)) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            modifier = Modifier.weight(1f)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Column {
-                            IconButton(onClick = {
-                                val newValue = (amountText.toIntOrNull() ?: 0) + 1
-                                amountText = newValue.toString()
-                            }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowUp, "Increment") }
-                            IconButton(onClick = {
-                                val decremented = (amountText.toIntOrNull() ?: 0) - 1
-                                amountText = max(decremented, totalUsedAmount).toString().takeIf { it != "0" } ?: ""
-                            }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.KeyboardArrowDown, "Decrement") }
-                        }
-                    }
+                            } else if (amount == 0) {
+                                numberOfBallsText = "0"
+                            }
+                        },
+                        label = { Text(stringResource(Res.string.yarn_label_amount)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
                 DateInput(

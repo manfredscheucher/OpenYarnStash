@@ -77,6 +77,7 @@
     <string name="date_format_hint_project">Date (YYYY, YYYY-MM, YYYY-MM-DD)</string>
     <string name="project_label_notes">Notes</string>
     <string name="project_form_button_assignments">Assign yarn</string>
+    <string name="project_form_button_export_pdf">PDF Export</string>
     <string name="project_form_view_pattern">View Pattern</string>
     <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
     <string name="delete_project_restricted_title">Deletion Not Possible</string>

@@ -263,14 +263,7 @@ fun ProjectFormScreen(
             val titleRes = if (isNewProject) Res.string.project_form_new else Res.string.project_form_edit
             TopAppBar(
                 title = { Text(stringResource(titleRes)) },
-                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } },
-                actions = {
-                    if (!isNewProject) {
-                        IconButton(onClick = exportPdf) {
-                            Icon(Icons.Default.PictureAsPdf, contentDescription = stringResource(Res.string.export_as_pdf))
-                        }
-                    }
-                }
+                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
             )
         }
     ) { padding ->
@@ -530,6 +523,8 @@ fun ProjectFormScreen(
                 TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (!isNewProject) {
+                        TextButton(onClick = exportPdf) { Text(stringResource(Res.string.project_form_button_export_pdf)) }
+                        Spacer(Modifier.width(8.dp))
                         TextButton(onClick = {
                             if (usagesForProject.isNotEmpty()) {
                                 showDeleteRestrictionDialog = true
