@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -152,7 +153,7 @@ fun ProjectFormScreen(
                             lot = yarn.dyeLot,
                             material = yarn.blend,
                             weightClass = null, // Not available
-                            imageBytes = null // Not available
+                            imageBytes = yarnImages[yarn.id]
                         ),
                         gramsUsed = usage.amount.toDouble(),
                         metersUsed = metersUsed
@@ -468,20 +469,44 @@ fun ProjectFormScreen(
                     usagesForProject.forEach { usage ->
                         val yarn = yarnById(usage.yarnId)
                         if (yarn != null) {
-                            Text(buildAnnotatedString {
-                                yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
-                                        append("$it ")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            ) {
+                                val imageBytes = yarnImages[yarn.id]
+                                val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                if (bitmap != null) {
+                                    Image(
+                                        bitmap = bitmap,
+                                        contentDescription = "Yarn image",
+                                        modifier = Modifier.size(40.dp)
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(Res.drawable.yarns),
+                                        contentDescription = "Default yarn image",
+                                        modifier = Modifier.size(40.dp).alpha(0.5f)
+                                    )
+                                }
+
+                                Spacer(Modifier.width(8.dp))
+
+                                Text(buildAnnotatedString {
+                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                            append("$it ")
+                                        }
                                     }
-                                }
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(yarn.name)
-                                }
-                                yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                    append(" ($it)")
-                                }
-                                append(": ${usage.amount} g")
-                            })
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(yarn.name)
+                                    }
+                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                        append(" ($it)")
+                                    }
+                                    append(": ${usage.amount} g")
+                                })
+                            }
                         } else {
                             Text("- ${usage.yarnId}: ${usage.amount} g")
                         }
