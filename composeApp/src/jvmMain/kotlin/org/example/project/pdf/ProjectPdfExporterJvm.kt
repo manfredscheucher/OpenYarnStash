@@ -6,9 +6,15 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
 
-class ProjectPdfExporterJvm : ProjectPdfExporter {
+class ProjectPdfExporterJvm(
+    private val defaultIconBytes: ByteArray? = null
+) : ProjectPdfExporter {
     override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray {
         val baos = ByteArrayOutputStream()
         PDDocument().use { d ->
@@ -16,6 +22,22 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
             d.addPage(page)
             PDPageContentStream(d, page).use { cs ->
                 var y = PDRectangle.A4.height - 36f
+
+                fun chooseBytes(primary: ByteArray?): ByteArray? = primary ?: defaultIconBytes
+
+                fun createImage(document: PDDocument, bytes: ByteArray): PDImageXObject {
+                    // Format über Header erkennen
+                    return if (bytes.size > 3 && bytes[0] == 0xFF.toByte() && bytes[1] == 0xD8.toByte()) {
+                        // JPEG
+                        JPEGFactory.createFromByteArray(document, bytes)
+                    } else if (bytes.size > 8 && bytes[0] == 0x89.toByte() && bytes[1] == 0x50.toByte() /* 'P' */) {
+                        // PNG
+                        LosslessFactory.createFromImage(document, ImageIO.read(ByteArrayInputStream(bytes)))
+                    } else {
+                        // Fallback – lässt mehrere Formate zu
+                        PDImageXObject.createFromByteArray(document, bytes, "img")
+                    }
+                }
 
                 fun text(t: String, size: Float, bold: Boolean = false) {
                     cs.beginText()
@@ -28,13 +50,10 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                 text(project.title, 18f, true)
 
-                project.imageBytes?.let {
-                    val pdImg = JPEGFactory.createFromByteArray(d, it)
-                    val w = 240f
-                    val ratio = w / pdImg.width
-                    val h = pdImg.height * ratio
-                    cs.drawImage(pdImg, 36f, y - h, w, h)
-                    y -= h + 12f
+                chooseBytes(project.imageBytes)?.let { pdImg ->
+                    val img = createImage(d, pdImg)
+                    val w = 240f; val ratio = w / img.width; val h = img.height * ratio
+                    cs.drawImage(img, 36f, y - h, w, h); y -= h + 12f
                 }
 
                 text("Parameter", 12f, true)
@@ -66,9 +85,9 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                 yarns.forEach { usage ->
                     val rowStartY = y
-                    usage.yarn.imageBytes?.let { ib ->
-                        val pdImg = JPEGFactory.createFromByteArray(d, ib)
-                        cs.drawImage(pdImg, 36f, rowStartY - 72f, 72f, 72f)
+                    chooseBytes(usage.yarn.imageBytes)?.let { ib ->
+                        val img = createImage(d, ib)
+                        cs.drawImage(img, 36f, rowStartY - 72f, 72f, 72f)
                     }
 
                     var textY = rowStartY

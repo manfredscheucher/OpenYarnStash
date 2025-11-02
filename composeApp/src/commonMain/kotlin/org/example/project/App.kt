@@ -149,7 +149,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                         }
                                         settings = newSettings
                                     }
-                                }
+                                },
+                                onPdfExport = { showNotImplementedDialog = true }
                             )
                         }
 

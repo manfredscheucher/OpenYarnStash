@@ -11,16 +11,21 @@ private external class jsPDF {
     fun output(type: String = definedExternally): dynamic
 }
 
-class ProjectPdfExporterJs : ProjectPdfExporter {
+class ProjectPdfExporterJs(
+    private val defaultIconBytes: ByteArray? = null
+) : ProjectPdfExporter {
     override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray {
         val pdf = js("new jspdf.jsPDF()") as jsPDF
         var y = 20
+
+        fun chooseBytes(primary: ByteArray?): ByteArray? = primary ?: defaultIconBytes
+        fun toDataUrlPng(bytes: ByteArray) = "data:image/png;base64," + bytes.encodeBase64()
+
         pdf.text(project.title, 20, y); y += 12
-        project.imageBytes?.let { bytes ->
-            val dataUrl = "data:image/png;base64,${bytes.encodeBase64()}"
-            pdf.addImage(dataUrl, "PNG", 20, y, 120, 90)
-            y += 100
+        chooseBytes(project.imageBytes)?.let { bytes ->
+            pdf.addImage(toDataUrlPng(bytes), "PNG", 20, y, 120, 90); y += 100
         }
+
         pdf.text("Parameter", 20, y); y += 10
         fun param(label: String, value: String?) {
             if (!value.isNullOrBlank()) {
@@ -36,8 +41,8 @@ class ProjectPdfExporterJs : ProjectPdfExporter {
         pdf.text("Verwendete Wolle", 20, y); y += 10
         yarns.forEach { usage ->
             val rowY = y
-            usage.yarn.imageBytes?.let { b ->
-                pdf.addImage("data:image/png;base64,${b.encodeBase64()}", "PNG", 20, y, 36, 36)
+            chooseBytes(usage.yarn.imageBytes)?.let { b ->
+                pdf.addImage(toDataUrlPng(b), "PNG", 20, y, 36, 36)
             }
             val x = 20 + 36 + 8
             var textY = rowY + 5 // Adjust for vertical alignment
