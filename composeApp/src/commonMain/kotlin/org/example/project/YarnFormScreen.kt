@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -19,7 +18,6 @@ import openyarnstash.composeapp.generated.resources.*
 import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
 import org.example.project.ui.widgets.ColumnWithScrollbar
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
 import kotlin.math.round
@@ -231,28 +229,14 @@ fun YarnFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
+            Button(onClick = { imagePicker.launch() }) {
+                Text(stringResource(Res.string.common_select_image))
+            }
             val displayedImage = newImage ?: initialImage
-            if (displayedImage != null && displayedImage.isNotEmpty()) {
-                val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
+            displayedImage?.let {
+                val bitmap: ImageBitmap? = remember(it) { it.toImageBitmap() }
                 if (bitmap != null) {
                     Image(bitmap, contentDescription = "Yarn Image", modifier = Modifier.fillMaxWidth().height(200.dp))
-                }
-            } else {
-                Image(
-                    painter = painterResource(Res.drawable.yarns),
-                    contentDescription = "Yarn icon",
-                    modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
-                )
-            }
-            Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { imagePicker.launch() }) {
-                    Text(stringResource(Res.string.project_form_select_image))
-                }
-                if (displayedImage != null && displayedImage.isNotEmpty()) {
-                    Button(onClick = { newImage = byteArrayOf() }) {
-                        Text(stringResource(Res.string.project_form_remove_image))
-                    }
                 }
             }
             Spacer(Modifier.height(16.dp))
