@@ -131,7 +131,7 @@ fun YarnListScreen(
                         true
                     }
                     consumedOk && filterOk
-                }
+                }.sortedByDescending { it.yarnItem.modified }
 
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
                 val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
@@ -177,13 +177,11 @@ fun YarnListScreen(
                     },
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {                    items(filteredYarnData) { data ->
                         Card(
@@ -199,7 +197,7 @@ fun YarnListScreen(
                                     val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
                                     Image(
                                         bitmap = bitmap,
-                                        contentDescription = "Yarn image for ${'$'}{data.yarnItem.name}",
+                                        contentDescription = "Yarn image for ${data.yarnItem.name}",
                                         modifier = Modifier.size(64.dp),
                                         contentScale = ContentScale.Crop
                                     )
