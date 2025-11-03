@@ -55,7 +55,8 @@ fun YarnFormScreen(
     initial: Yarn?,
     initialImage: ByteArray?,
     usagesForYarn: List<Usage>,
-    projectNameById: (Int) -> String,
+    projectById: (Int) -> Project?,
+    projectImages: Map<Int, ByteArray?>,
     settings: Settings,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
@@ -283,8 +284,6 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = blend, onValueChange = { blend = it }, label = { Text(stringResource(Res.string.yarn_label_blend)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = storagePlace, onValueChange = { storagePlace = it }, label = { Text(stringResource(Res.string.yarn_label_storage_place)) }, modifier = Modifier.fillMaxWidth())
-                Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     SelectAllOutlinedTextField(
                         value = weightPerSkeinText,
@@ -359,9 +358,11 @@ fun YarnFormScreen(
                     onDateChange = { added = it ?: "" }
                 )
                 Spacer(Modifier.height(8.dp))
-                Text(stringResource(Res.string.yarn_item_label_modified, modifiedState))
+                SelectAllOutlinedTextField(value = storagePlace, onValueChange = { storagePlace = it }, label = { Text(stringResource(Res.string.yarn_label_storage_place)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                Text(stringResource(Res.string.yarn_item_label_modified, modifiedState))
 
                 if (initial != null) {
                     Spacer(Modifier.height(16.dp))
@@ -372,16 +373,43 @@ fun YarnFormScreen(
                         Text(stringResource(Res.string.yarn_form_no_projects_assigned))
                     } else {
                         usagesForYarn.forEach { usage ->
-                            var usageText = "- ${projectNameById(usage.projectId)}: ${usage.amount} g"
-                            initial.weightPerSkein?.let { weightPerSkein ->
-                                initial.meteragePerSkein?.let { meteragePerSkein ->
-                                    if (weightPerSkein > 0) {
-                                        val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
-                                        usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
+                            val project = projectById(usage.projectId)
+                            if (project != null) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(vertical = 4.dp)
+                                ) {
+                                    val imageBytes = projectImages[project.id]
+                                    val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                    if (bitmap != null) {
+                                        Image(
+                                            bitmap = bitmap,
+                                            contentDescription = "Project image",
+                                            modifier = Modifier.size(40.dp)
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(Res.drawable.projects),
+                                            contentDescription = "Default project image",
+                                            modifier = Modifier.size(40.dp).alpha(0.5f)
+                                        )
                                     }
+
+                                    Spacer(Modifier.width(8.dp))
+
+                                    var usageText = "${project.name}: ${usage.amount} g"
+                                    initial.weightPerSkein?.let { weightPerSkein ->
+                                        initial.meteragePerSkein?.let { meteragePerSkein ->
+                                            if (weightPerSkein > 0) {
+                                                val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
+                                                usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
+                                            }
+                                        }
+                                    }
+                                    Text(usageText)
                                 }
                             }
-                            Text(usageText)
                         }
                     }
                 }

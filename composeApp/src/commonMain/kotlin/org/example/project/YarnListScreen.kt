@@ -135,6 +135,14 @@ fun YarnListScreen(
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
                 val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
 
+                Text(
+                    text = if (settings.lengthUnit == LengthUnit.METER)
+                        stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage)
+                    else
+                        stringResource(Res.string.yarn_list_summary_yards, totalAvailable, totalMeterage),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -159,17 +167,10 @@ fun YarnListScreen(
                 TextField(
                     value = filter,
                     onValueChange = { filter = it },
-                    label = { Text(stringResource(Res.string.common_filter)) },
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    label = { Text(stringResource(Res.string.yarn_list_filter)) },
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
                 )
 
-                Text(
-                    text = if (settings.lengthUnit == LengthUnit.METER)
-                        stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage)
-                    else
-                        stringResource(Res.string.yarn_list_summary_yards, totalAvailable, totalMeterage),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                )
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()

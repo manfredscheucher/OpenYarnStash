@@ -169,6 +169,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 }
                             }
 
+                            LaunchedEffect(projects) {
+                                projectImages =
+                                    projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
+                            }
+
                             if (existingYarn == null) {
                                 LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
                             } else {
@@ -177,13 +182,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     initial = existingYarn,
                                     initialImage = yarnImage,
                                     usagesForYarn = relatedUsages,
-                                    projectNameById = { pid ->
-                                        try {
-                                            projects.firstOrNull { it.id == pid }?.name ?: "?"
-                                        } catch (e: NoSuchElementException) {
-                                            "?"
-                                        }
-                                    },
+                                    projectById = { pid -> projects.firstOrNull { it.id == pid } },
+                                    projectImages = projectImages,
                                     settings = settings,
                                     onBack = { screen = Screen.YarnList },
                                     onDelete = { yarnIdToDelete ->

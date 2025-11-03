@@ -45,16 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.common_back
-import openyarnstash.composeapp.generated.resources.common_filter
-import openyarnstash.composeapp.generated.resources.common_plus_symbol
-import openyarnstash.composeapp.generated.resources.project_list_empty
-import openyarnstash.composeapp.generated.resources.project_list_title
-import openyarnstash.composeapp.generated.resources.project_status_finished
-import openyarnstash.composeapp.generated.resources.project_status_in_progress
-import openyarnstash.composeapp.generated.resources.project_status_planning
-import openyarnstash.composeapp.generated.resources.projects
-import openyarnstash.composeapp.generated.resources.yarns
+import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -175,7 +166,7 @@ fun ProjectListScreen(
             TextField(
                 value = filter,
                 onValueChange = { filter = it },
-                label = { Text(stringResource(Res.string.common_filter)) },
+                label = { Text(stringResource(Res.string.project_list_filter)) },
                 modifier = Modifier.fillMaxWidth().padding(16.dp)
             )
             if (sortedProjects.isEmpty()) {
