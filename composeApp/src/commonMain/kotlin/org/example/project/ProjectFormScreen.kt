@@ -418,7 +418,6 @@ fun ProjectFormScreen(
                             }
                         }
                     }
-                    Spacer(Modifier.height(4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
                         horizontalArrangement = Arrangement.End
@@ -453,65 +452,88 @@ fun ProjectFormScreen(
 
             if (!isNewProject) {
                 Spacer(Modifier.height(16.dp))
-                Text(stringResource(Res.string.usage_section_title), style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-
-                if (usagesForProject.isEmpty()) {
-                    Text(stringResource(Res.string.project_form_no_yarn_assigned))
-                } else {
-                    usagesForProject.forEach { usage ->
-                        val yarn = yarnById(usage.yarnId)
-                        if (yarn != null) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            ) {
-                                val imageBytes = yarnImages[yarn.id]
-                                val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
-
-                                if (bitmap != null) {
-                                    Image(
-                                        bitmap = bitmap,
-                                        contentDescription = "Yarn image",
-                                        modifier = Modifier.size(40.dp)
-                                    )
-                                } else {
-                                    Image(
-                                        painter = painterResource(Res.drawable.yarns),
-                                        contentDescription = "Default yarn image",
-                                        modifier = Modifier.size(40.dp).alpha(0.5f)
-                                    )
-                                }
-
-                                Spacer(Modifier.width(8.dp))
-
-                                Text(buildAnnotatedString {
-                                    yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                        withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
-                                            append("$it ")
-                                        }
-                                    }
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(yarn.name)
-                                    }
-                                    yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                        append(" ($it)")
-                                    }
-                                    append(": ${usage.amount} g")
-                                })
-                            }
+                val yarnHeight = 50
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    val totalHeight = if (usagesForProject.isNotEmpty()) {
+                        (usagesForProject.size * yarnHeight).dp + 75.dp
+                    } else {
+                        64.dp
+                    }
+                    OutlinedTextField(
+                        value = " ",
+                        onValueChange = { },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(totalHeight),
+                        readOnly = true,
+                        label = { Text(stringResource(Res.string.usage_section_title)) }
+                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, top = 16.dp)
+                    ) {
+                        if (usagesForProject.isEmpty()) {
+                            Text(stringResource(Res.string.project_form_no_yarn_assigned))
                         } else {
-                            Text("- ${usage.yarnId}: ${usage.amount} g")
+                            usagesForProject.forEach { usage ->
+                                val yarn = yarnById(usage.yarnId)
+                                if (yarn != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+                                    ) {
+                                        val imageBytes = yarnImages[yarn.id]
+                                        val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                        if (bitmap != null) {
+                                            Image(
+                                                bitmap = bitmap,
+                                                contentDescription = "Yarn image",
+                                                modifier = Modifier.size(40.dp)
+                                            )
+                                        } else {
+                                            Image(
+                                                painter = painterResource(Res.drawable.yarns),
+                                                contentDescription = "Default yarn image",
+                                                modifier = Modifier.size(40.dp).alpha(0.5f)
+                                            )
+                                        }
+
+                                        Spacer(Modifier.width(8.dp))
+
+                                        Text(buildAnnotatedString {
+                                            yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                                withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                                    append("$it ")
+                                                }
+                                            }
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(yarn.name)
+                                            }
+                                            yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                                append(" ($it)")
+                                            }
+                                            append(": ${usage.amount} g")
+                                        })
+                                    }
+                                } else {
+                                    Text("- ${usage.yarnId}: ${usage.amount} g")
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Button(
+                                onClick = assignAction
+                            ) {
+                                Text(stringResource(Res.string.project_form_button_assignments))
+                            }
                         }
                     }
-                }
-
-                Spacer(Modifier.height(16.dp))
-                Button(
-                    onClick = assignAction,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(Res.string.project_form_button_assignments))
                 }
             }
 
