@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -20,6 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.*
+import org.example.project.DarkColorScheme
+import org.example.project.LightColorScheme
 import org.jetbrains.compose.resources.stringResource
 //import java.util.Locale // TODO
 import kotlin.NoSuchElementException // Ensure this import is present
@@ -100,7 +103,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
         )
     }
 
-    MaterialTheme {
+    MaterialTheme(
+        colorScheme = if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme
+    ) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
