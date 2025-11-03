@@ -160,7 +160,6 @@ fun ProjectListScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = filter,
                 onValueChange = { filter = it },
