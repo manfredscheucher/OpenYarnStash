@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -77,11 +78,6 @@ fun ProjectListScreen(
     }
     var filter by remember { mutableStateOf("") }
 
-    val statusOrder = mapOf(
-        ProjectStatus.IN_PROGRESS to 0,
-        ProjectStatus.PLANNING to 1,
-        ProjectStatus.FINISHED to 2
-    )
     val filteredProjects = projects.filter {
         val statusOk = it.status in activeStatuses
         val filterOk = if (filter.isNotBlank()) {
@@ -91,7 +87,7 @@ fun ProjectListScreen(
         }
         statusOk && filterOk
     }
-    val sortedProjects = filteredProjects.sortedWith(compareBy { statusOrder[it.status] })
+    val sortedProjects = filteredProjects.sortedByDescending { it.modified }
 
     Scaffold(
         topBar = {
@@ -175,6 +171,7 @@ fun ProjectListScreen(
                         contentDescription = stringResource(Res.string.project_list_filter)
                     )
                 },
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             )
             if (sortedProjects.isEmpty()) {
@@ -202,7 +199,7 @@ fun ProjectListScreen(
                                         val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
                                         Image(
                                             bitmap = bitmap,
-                                            contentDescription = "Project image for ${p.name}",
+                                            contentDescription = "Project image for ${'$'}{p.name}",
                                             modifier = Modifier.size(64.dp),
                                             contentScale = ContentScale.Crop
                                         )
@@ -243,7 +240,7 @@ fun ProjectListScreen(
                                                         val bitmap = remember(yarnImageBytes) { yarnImageBytes.toImageBitmap() }
                                                         Image(
                                                             bitmap = bitmap,
-                                                            contentDescription = "Yarn image for ${yarn.name}",
+                                                            contentDescription = "Yarn image for ${'$'}{yarn.name}",
                                                             modifier = Modifier.size(32.dp),
                                                             contentScale = ContentScale.Crop
                                                         )

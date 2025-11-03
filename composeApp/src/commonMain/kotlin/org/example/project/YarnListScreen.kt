@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -141,7 +142,7 @@ fun YarnListScreen(
                         stringResource(Res.string.yarn_list_summary, totalAvailable, totalMeterage)
                     else
                         stringResource(Res.string.yarn_list_summary_yards, totalAvailable, totalMeterage),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
@@ -175,6 +176,7 @@ fun YarnListScreen(
                             contentDescription = stringResource(Res.string.yarn_list_filter)
                         )
                     },
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 )
                 LazyColumn(
