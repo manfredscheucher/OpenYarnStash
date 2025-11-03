@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -164,13 +165,20 @@ fun YarnListScreen(
                         border = if (showConsumed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
                     )
                 }
-                TextField(
+                OutlinedTextField(
                     value = filter,
                     onValueChange = { filter = it },
                     label = { Text(stringResource(Res.string.yarn_list_filter)) },
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = stringResource(Res.string.yarn_list_filter)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
