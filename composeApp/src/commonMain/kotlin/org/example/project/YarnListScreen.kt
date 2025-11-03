@@ -42,7 +42,6 @@ fun YarnListScreen(
         onBack()
     }
 
-    // The meaning of hideUsedYarns is inverted here: true means "show consumed yarns"
     var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
     var filter by remember { mutableStateOf("") }
 
@@ -158,12 +157,10 @@ fun YarnListScreen(
                         },
                         label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            labelColor = MaterialTheme.colorScheme.outline,
-                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
                         ),
-                        border = if (showConsumed) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )
                 }
                 OutlinedTextField(

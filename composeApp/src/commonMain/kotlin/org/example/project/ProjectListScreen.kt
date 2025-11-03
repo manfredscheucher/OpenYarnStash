@@ -151,12 +151,10 @@ fun ProjectListScreen(
                         },
                         label = { Text("$statusText ($count)") },
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            labelColor = MaterialTheme.colorScheme.outline,
-                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
                         ),
-                        border = if (selected) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )
                 }
             }
