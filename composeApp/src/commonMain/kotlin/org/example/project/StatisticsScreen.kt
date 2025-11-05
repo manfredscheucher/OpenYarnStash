@@ -210,7 +210,7 @@ fun StatisticsScreen(
                     title = stringResource(if (isOverall) Res.string.statistics_yarn_bought_vs_used_yearly else Res.string.statistics_yarn_bought_vs_used_monthly),
                     categories = categories,
                     seriesLabels = listOf(stringResource(Res.string.statistics_series_yarn_bought), stringResource(Res.string.statistics_series_yarn_used)),
-                    seriesColors = listOf(Color(0xFF1E88E5), Color(0xFFFFA000)),
+                    seriesColors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary),
                     valuesForCategory = { cat ->
                         if (isOverall) {
                             val bought = (yarnsByYear[cat]?.sumOf { it.amount } ?: 0).toFloat()
@@ -236,7 +236,7 @@ fun StatisticsScreen(
                     title = stringResource(if (isOverall) Res.string.statistics_projects_finished_vs_in_progress_yearly else Res.string.statistics_projects_finished_vs_in_progress_monthly),
                     categories = categories,
                     seriesLabels = listOf(stringResource(Res.string.statistics_series_projects_finished), stringResource(Res.string.statistics_series_projects_in_progress)),
-                    seriesColors = listOf(Color(0xFF43A047), Color(0xFF8E24AA)),
+                    seriesColors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary),
                     valuesForCategory = { cat ->
                         val finishedCount = (if (isOverall) finishedByYear[cat]?.size else finishedByMonth[cat]?.size)?.toFloat() ?: 0f
                         val inProgressCount = inProgressCountByCat[cat]?.toFloat() ?: 0f
