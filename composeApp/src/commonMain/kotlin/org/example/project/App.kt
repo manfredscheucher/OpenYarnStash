@@ -21,8 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.*
-import org.example.project.DarkColorScheme
-import org.example.project.LightColorScheme
 import org.jetbrains.compose.resources.stringResource
 //import java.util.Locale // TODO
 import kotlin.NoSuchElementException // Ensure this import is present
@@ -104,7 +102,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     }
 
     MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme
+        colorScheme = LightColorScheme
     ) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
