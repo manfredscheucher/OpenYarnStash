@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.github.koalaplot.core.bar.BarScope
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotGroupedPointEntry
 import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
@@ -98,24 +97,6 @@ fun StatisticsScreen(
     val finishedByYear = remember(finishedProjects) { finishedProjects.groupBy { yearKey(it.endDate) } }
     val finishedByMonth = remember(finishedProjects) { finishedProjects.groupBy { monthKey(it.endDate) } }
 
-    fun projectActiveInCategory(project: Project, category: String): Boolean {
-        val start = if (isOverall) yearKey(project.startDate) else monthKey(project.startDate)
-        val end = if (isOverall) yearKey(project.endDate) else monthKey(project.endDate)
-        val started = start != null && start <= category
-        val notFinishedYet = when (project.status) {
-            ProjectStatus.IN_PROGRESS -> true
-            ProjectStatus.FINISHED -> end != null && end > category
-            else -> false
-        }
-        return started && notFinishedYet
-    }
-
-    val inProgressCountByCat: Map<String, Int> = remember(projects, categories, isOverall) {
-        categories.associateWith { cat ->
-            projects.count { p -> projectActiveInCategory(p, cat) }
-        }
-    }
-
     AppBackHandler { onBack() }
 
     Scaffold(
@@ -173,6 +154,9 @@ fun StatisticsScreen(
                 val projectsPlanned = projects.count { it.status == ProjectStatus.PLANNING }
                 Text(stringResource(Res.string.statistics_projects_planned, projectsPlanned))
 
+                val projectsInProgress = projects.count { it.status == ProjectStatus.IN_PROGRESS }
+                Text(stringResource(Res.string.statistics_projects_in_progress_title, projectsInProgress))
+
                 Divider(Modifier.padding(vertical = 16.dp))
 
                 ExposedDropdownMenuBox(
@@ -210,7 +194,7 @@ fun StatisticsScreen(
                     title = stringResource(if (isOverall) Res.string.statistics_yarn_bought_vs_used_yearly else Res.string.statistics_yarn_bought_vs_used_monthly),
                     categories = categories,
                     seriesLabels = listOf(stringResource(Res.string.statistics_series_yarn_bought), stringResource(Res.string.statistics_series_yarn_used)),
-                    seriesColors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary),
+                    seriesColors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary),
                     valuesForCategory = { cat ->
                         if (isOverall) {
                             val bought = (yarnsByYear[cat]?.sumOf { it.amount } ?: 0).toFloat()
@@ -233,14 +217,13 @@ fun StatisticsScreen(
 
             item {
                 ChartBlock(
-                    title = stringResource(if (isOverall) Res.string.statistics_projects_finished_vs_in_progress_yearly else Res.string.statistics_projects_finished_vs_in_progress_monthly),
+                    title = stringResource(Res.string.statistics_series_projects_finished),
                     categories = categories,
-                    seriesLabels = listOf(stringResource(Res.string.statistics_series_projects_finished), stringResource(Res.string.statistics_series_projects_in_progress)),
-                    seriesColors = listOf(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.tertiaryContainer),
+                    seriesLabels = listOf(stringResource(Res.string.statistics_series_projects_finished)),
+                    seriesColors = listOf(MaterialTheme.colorScheme.tertiary),
                     valuesForCategory = { cat ->
                         val finishedCount = (if (isOverall) finishedByYear[cat]?.size else finishedByMonth[cat]?.size)?.toFloat() ?: 0f
-                        val inProgressCount = inProgressCountByCat[cat]?.toFloat() ?: 0f
-                        listOf(finishedCount, inProgressCount)
+                        listOf(finishedCount)
                     },
                     labelFormatter = { cat -> formatCategoryLabel(cat, isOverall) }
                 )
@@ -306,9 +289,6 @@ fun StatisticsScreen(
                 val finishedCount = finishedList?.size ?: 0
                 Text(stringResource(Res.string.statistics_projects_finished_title, finishedCount))
 
-                val inProgressCount = inProgressCountByCat[cat] ?: 0
-                Text(stringResource(Res.string.statistics_projects_in_progress_title, inProgressCount))
-
                 Divider(Modifier.padding(vertical = 16.dp))
             }
         }
@@ -331,18 +311,15 @@ private fun ChartBlock(
     val xAxisLabelTextWidth  = 140.dp
 
     val barData: List<DefaultVerticalBarPlotGroupedPointEntry<String, Float>> =
-        categories.mapNotNull { cat ->
+        categories.map { cat ->
             val values = valuesForCategory(cat)
-            if (values.all { it == 0f }) null
-            else {
-                val yPositions = values.map { v -> DefaultVerticalBarPosition(0f, v) }
-                DefaultVerticalBarPlotGroupedPointEntry(x = cat, y = yPositions)
-            }
+            val yPositions = values.map { v -> DefaultVerticalBarPosition(0f, v) }
+            DefaultVerticalBarPlotGroupedPointEntry(x = cat, y = yPositions)
         }
 
-    if (barData.isEmpty()) return
-
-    val seriesCount = barData.first().y.size
+    val seriesCount = if (barData.isNotEmpty()) barData.first().y.size else 0
+    if (seriesCount == 0) return
+    
     require(seriesLabels.size == seriesCount && seriesColors.size == seriesCount) {
         "Series labels/colors must match data series count"
     }
@@ -354,12 +331,14 @@ private fun ChartBlock(
         Spacer(Modifier.height(8.dp))
 
         KoalaPlotTheme {
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                FlowLegend(
-                    itemCount = seriesCount,
-                    symbol = { i -> Box(Modifier.size(10.dp).background(seriesColors[i])) },
-                    label = { i -> Text(seriesLabels[i]) }
-                )
+            if (seriesCount > 1) {
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    FlowLegend(
+                        itemCount = seriesCount,
+                        symbol = { i -> Box(Modifier.size(10.dp).background(seriesColors[i])) },
+                        label = { i -> Text(seriesLabels[i]) }
+                    )
+                }
             }
 
             val xModel = CategoryAxisModel(barData.map { it.x })

@@ -85,7 +85,7 @@
     <string name="project_form_no_yarn_assigned">Diesem Projekt ist noch keine Wolle zugeordnet.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
     <string name="delete_project_restricted_message">Löschen ist nur möglich, wenn keine Wolle zugeordnet ist. Um mit dem Löschen fortzufahren, geben Sie die zugewiesene Wolle in den Vorrat zurück.</string>
-    <string name="project_status_planning">Planung</string>
+    <string name="project_status_planning">In Planung</string>
     <string name="project_status_in_progress">In Arbeit</string>
     <string name="project_status_finished">Fertig</string>
     <string name="project_new_default_name">Projekt#%1$d</string>
@@ -145,11 +145,11 @@
     <string name="statistics_overall">Gesamt</string>
     <string name="statistics_yarn_bought_vs_used_yearly">Garn: Gekauft vs. Verbraucht (Jahre)</string>
     <string name="statistics_yarn_bought_vs_used_monthly">Garn: Gekauft vs. Verbraucht (Monate)</string>
-    <string name="statistics_projects_finished_vs_in_progress_yearly">Projekte: Fertig vs. In Arbeit (Jahre)</string>
-    <string name="statistics_projects_finished_vs_in_progress_monthly">Projekte: Fertig vs. In Arbeit (Monate)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Fertige Projekte (Jahre)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Fertige Projekte (Monate)</string>
     <string name="statistics_series_yarn_bought">Garn gekauft</string>
     <string name="statistics_series_yarn_used">Garn verbraucht</string>
-    <string name="statistics_series_projects_finished">Projekte fertig</string>
+    <string name="statistics_series_projects_finished">Fertige Projekte</string>
     <string name="statistics_series_projects_in_progress">Projekte in Arbeit</string>
 
     <!-- Info Screen -->
