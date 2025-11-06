@@ -81,15 +81,20 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     override suspend fun zipFiles(): ByteArray {
         val baos = ByteArrayOutputStream()
         ZipOutputStream(baos).use { zos ->
-            filesDir.listFiles()?.forEach { file ->
+            filesDir.walkTopDown().filter { it.absolutePath != filesDir.absolutePath && it.name != "profileInstalled" }.forEach { file ->
+                val entryName = file.relativeTo(filesDir).path.replace(File.separatorChar, '/')
+                val zipEntry = if (file.isDirectory) {
+                    ZipEntry(entryName + "/")
+                } else {
+                    ZipEntry(entryName)
+                }
+                zos.putNextEntry(zipEntry)
                 if (file.isFile) {
-                    val entry = ZipEntry(file.name)
-                    zos.putNextEntry(entry)
                     FileInputStream(file).use { fis ->
                         fis.copyTo(zos)
                     }
-                    zos.closeEntry()
                 }
+                zos.closeEntry()
             }
         }
         return baos.toByteArray()
