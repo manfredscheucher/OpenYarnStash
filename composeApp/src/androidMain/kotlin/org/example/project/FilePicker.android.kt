@@ -11,19 +11,40 @@ import androidx.compose.ui.platform.LocalContext
 actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri ->
             uri?.let {
-                context.contentResolver.openInputStream(it)?.use { inputStream ->
-                    onFileSelected(inputStream.reader().readText())
+                context.contentResolver.openInputStream(it)?.use { stream ->
+                    onFileSelected(stream.bufferedReader().readText())
                 }
             } ?: onFileSelected(null)
         }
     )
 
-    if (show) {
-        LaunchedEffect(Unit) {
-            launcher.launch("application/json")
+    LaunchedEffect(show) {
+        if (show) {
+            launcher.launch(arrayOf("application/json"))
+        }
+    }
+}
+
+@Composable
+actual fun FilePickerForZip(show: Boolean, onFileSelected: (ByteArray?) -> Unit) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri ->
+            uri?.let {
+                context.contentResolver.openInputStream(it)?.use { stream ->
+                    onFileSelected(stream.readBytes())
+                }
+            } ?: onFileSelected(null)
+        }
+    )
+
+    LaunchedEffect(show) {
+        if (show) {
+            launcher.launch(arrayOf("application/zip"))
         }
     }
 }

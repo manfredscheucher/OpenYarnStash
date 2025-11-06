@@ -1,18 +1,34 @@
 package org.example.project
 
 import androidx.compose.runtime.Composable
-import java.awt.FileDialog
-import java.awt.Frame
+import java.io.File
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 @Composable
 actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
     if (show) {
-        val dialog = FileDialog(null as Frame?, "Select File", FileDialog.LOAD)
-        dialog.isVisible = true
-        val file = dialog.file
-        val dir = dialog.directory
-        if (file != null && dir != null) {
-            onFileSelected(java.io.File(dir, file).readText())
+        val fileChooser = JFileChooser()
+        fileChooser.fileFilter = FileNameExtensionFilter("JSON Files", "json")
+        val result = fileChooser.showOpenDialog(null)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            val selectedFile = fileChooser.selectedFile
+            onFileSelected(selectedFile.readText())
+        } else {
+            onFileSelected(null)
+        }
+    }
+}
+
+@Composable
+actual fun FilePickerForZip(show: Boolean, onFileSelected: (ByteArray?) -> Unit) {
+    if (show) {
+        val fileChooser = JFileChooser()
+        fileChooser.fileFilter = FileNameExtensionFilter("ZIP Archives", "zip")
+        val result = fileChooser.showOpenDialog(null)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            val selectedFile: File = fileChooser.selectedFile
+            onFileSelected(selectedFile.readBytes())
         } else {
             onFileSelected(null)
         }

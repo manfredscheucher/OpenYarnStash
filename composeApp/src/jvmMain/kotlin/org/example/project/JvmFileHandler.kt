@@ -1,16 +1,19 @@
 package org.example.project
 
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class JvmFileHandler : FileHandler {
 
-    private val baseDir: File
+    private var baseDir: File
 
     init {
         val home = System.getProperty("user.home")
@@ -90,5 +93,36 @@ class JvmFileHandler : FileHandler {
             }
         }
         return baos.toByteArray()
+    }
+
+    override suspend fun renameFilesDirectory(newName: String) {
+        val newDir = File(baseDir.parentFile, newName)
+        if (baseDir.renameTo(newDir)) {
+            baseDir = newDir
+        }
+    }
+
+    override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
+        if (baseDir.exists()) {
+            baseDir.deleteRecursively()
+        }
+        baseDir.mkdirs()
+
+        ZipInputStream(ByteArrayInputStream(zipBytes)).use { zis ->
+            var ze: ZipEntry?
+            while (zis.nextEntry.also { ze = it } != null) {
+                val entry = ze ?: continue
+                val entryFile = File(baseDir, entry.name)
+                if (entry.isDirectory) {
+                    entryFile.mkdirs()
+                } else {
+                    entryFile.parentFile?.mkdirs()
+                    FileOutputStream(entryFile).use { fos ->
+                        zis.copyTo(fos)
+                    }
+                }
+                zis.closeEntry()
+            }
+        }
     }
 }
