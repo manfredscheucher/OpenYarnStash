@@ -15,4 +15,15 @@ actual class FileDownloader {
             }
         }
     }
+
+    actual fun download(fileName: String, data: ByteArray) {
+        SwingUtilities.invokeLater {
+            val chooser = JFileChooser()
+            chooser.dialogTitle = "Save ZIP File"
+            chooser.selectedFile = File(fileName)
+            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                chooser.selectedFile.writeBytes(data)
+            }
+        }
+    }
 }

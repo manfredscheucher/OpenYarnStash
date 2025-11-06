@@ -1,9 +1,13 @@
 package org.example.project
 
 import android.content.Context
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
 
@@ -60,5 +64,22 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         if (fileToDelete.exists()) {
             fileToDelete.delete()
         }
+    }
+
+    override suspend fun zipFiles(): ByteArray {
+        val baos = ByteArrayOutputStream()
+        ZipOutputStream(baos).use { zos ->
+            context.filesDir.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    val entry = ZipEntry(file.name)
+                    zos.putNextEntry(entry)
+                    FileInputStream(file).use { fis ->
+                        fis.copyTo(zos)
+                    }
+                    zos.closeEntry()
+                }
+            }
+        }
+        return baos.toByteArray()
     }
 }

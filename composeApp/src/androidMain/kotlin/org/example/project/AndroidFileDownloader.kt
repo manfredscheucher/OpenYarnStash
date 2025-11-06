@@ -17,4 +17,16 @@ actual class FileDownloader(private val context: Context) {
         }
         context.startActivity(Intent.createChooser(intent, "Export JSON"))
     }
+
+    actual fun download(fileName: String, data: ByteArray) {
+        val file = File(context.cacheDir, fileName)
+        file.writeBytes(data)
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/zip"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(Intent.createChooser(intent, "Export ZIP"))
+    }
 }

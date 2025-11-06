@@ -65,4 +65,8 @@ actual class JsFileHandler : FileHandler {
     override suspend fun deleteFile(path: String) {
         localStorage.removeItem(path)
     }
+
+    override suspend fun zipFiles(): ByteArray {
+        throw NotImplementedError("ZIP export is not supported for JS target.")
+    }
 }

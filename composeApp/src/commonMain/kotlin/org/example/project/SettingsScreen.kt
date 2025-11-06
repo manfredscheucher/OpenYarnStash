@@ -39,6 +39,7 @@ import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_yes
 import openyarnstash.composeapp.generated.resources.export_json
+import openyarnstash.composeapp.generated.resources.export_zip
 import openyarnstash.composeapp.generated.resources.import_dialog_message
 import openyarnstash.composeapp.generated.resources.import_dialog_title
 import openyarnstash.composeapp.generated.resources.import_json
@@ -55,6 +56,7 @@ fun SettingsScreen(
     currentLengthUnit: LengthUnit,
     onBack: () -> Unit,
     onExport: () -> Unit,
+    onExportZip: () -> Unit,
     onImport: (String) -> Unit,
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit
@@ -175,6 +177,12 @@ fun SettingsScreen(
 
                 Button(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.export_json))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(onClick = onExportZip, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(Res.string.export_zip))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

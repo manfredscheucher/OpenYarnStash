@@ -167,6 +167,7 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
     <string name="export_json">Export JSON</string>
+    <string name="export_zip">Export ZIP</string>
     <string name="import_json">Import JSON</string>
     <string name="import_button_text">Import</string>
     <string name="import_dialog_title">Warning</string>

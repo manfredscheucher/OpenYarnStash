@@ -458,6 +458,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             fileDownloader.download(exportFileName, json)
                                         }
                                     },
+                                    onExportZip = {
+                                         scope.launch {
+                                            val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
+                                            fileDownloader.download(exportFileName, fileHandler.zipFiles())
+                                        }
+                                    },
                                     onImport = { fileContent ->
                                         scope.launch {
                                             try {

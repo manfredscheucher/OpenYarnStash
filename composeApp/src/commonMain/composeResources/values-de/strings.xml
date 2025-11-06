@@ -166,6 +166,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>
     <string name="export_json">JSON exportieren</string>
+    <string name="export_zip">ZIP exportieren</string>
     <string name="import_json">JSON importieren</string>
     <string name="import_button_text">Importieren</string>
     <string name="import_dialog_title">Warnung</string>

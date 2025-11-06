@@ -5,4 +5,5 @@ package org.example.project
  */
 expect class FileDownloader {
     fun download(fileName: String, data: String)
+    fun download(fileName: String, data: ByteArray)
 }

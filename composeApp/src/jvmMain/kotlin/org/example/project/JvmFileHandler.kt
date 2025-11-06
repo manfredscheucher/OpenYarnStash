@@ -1,8 +1,12 @@
 package org.example.project
 
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 class JvmFileHandler : FileHandler {
 
@@ -69,5 +73,22 @@ class JvmFileHandler : FileHandler {
         if (fileToDelete.exists()) {
             fileToDelete.delete()
         }
+    }
+
+    override suspend fun zipFiles(): ByteArray {
+        val baos = ByteArrayOutputStream()
+        ZipOutputStream(baos).use { zos ->
+            baseDir.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    val entry = ZipEntry(file.name)
+                    zos.putNextEntry(entry)
+                    FileInputStream(file).use { fis ->
+                        fis.copyTo(zos)
+                    }
+                    zos.closeEntry()
+                }
+            }
+        }
+        return baos.toByteArray()
     }
 }
