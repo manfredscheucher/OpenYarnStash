@@ -14,7 +14,16 @@ import java.util.zip.ZipOutputStream
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
 
-    private fun getFile(path: String) = File(context.filesDir, path)
+    private val filesDir: File
+
+    init {
+        filesDir = File(context.filesDir, "files")
+        if (!filesDir.exists()) {
+            filesDir.mkdirs()
+        }
+    }
+
+    private fun getFile(path: String) = File(filesDir, path)
 
     override suspend fun readFile(path: String): String {
         val file = getFile(path)
@@ -72,7 +81,7 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     override suspend fun zipFiles(): ByteArray {
         val baos = ByteArrayOutputStream()
         ZipOutputStream(baos).use { zos ->
-            context.filesDir.listFiles()?.forEach { file ->
+            filesDir.listFiles()?.forEach { file ->
                 if (file.isFile) {
                     val entry = ZipEntry(file.name)
                     zos.putNextEntry(entry)
@@ -93,7 +102,7 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
-        val targetDir = context.filesDir
+        val targetDir = filesDir
         if (targetDir.exists()) {
             targetDir.deleteRecursively()
         }

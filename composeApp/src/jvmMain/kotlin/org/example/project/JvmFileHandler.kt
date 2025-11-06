@@ -14,16 +14,18 @@ import java.util.zip.ZipOutputStream
 class JvmFileHandler : FileHandler {
 
     private var baseDir: File
+    private val filesDir: File
 
     init {
         val home = System.getProperty("user.home")
         baseDir = File(home, ".openyarnstash")
-        if (!baseDir.exists()) {
-            baseDir.mkdirs()
+        filesDir = File(baseDir, "files")
+        if (!filesDir.exists()) {
+            filesDir.mkdirs()
         }
     }
 
-    private fun getFile(path: String) = File(baseDir, path)
+    private fun getFile(path: String) = File(filesDir, path)
 
     override suspend fun readFile(path: String): String {
         val file = getFile(path)
@@ -81,7 +83,7 @@ class JvmFileHandler : FileHandler {
     override suspend fun zipFiles(): ByteArray {
         val baos = ByteArrayOutputStream()
         ZipOutputStream(baos).use { zos ->
-            baseDir.listFiles()?.forEach { file ->
+            filesDir.listFiles()?.forEach { file ->
                 if (file.isFile) {
                     val entry = ZipEntry(file.name)
                     zos.putNextEntry(entry)
@@ -103,16 +105,16 @@ class JvmFileHandler : FileHandler {
     }
 
     override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
-        if (baseDir.exists()) {
-            baseDir.deleteRecursively()
+        if (filesDir.exists()) {
+            filesDir.deleteRecursively()
         }
-        baseDir.mkdirs()
+        filesDir.mkdirs()
 
         ZipInputStream(ByteArrayInputStream(zipBytes)).use { zis ->
             var ze: ZipEntry?
             while (zis.nextEntry.also { ze = it } != null) {
                 val entry = ze ?: continue
-                val entryFile = File(baseDir, entry.name)
+                val entryFile = File(filesDir, entry.name)
                 if (entry.isDirectory) {
                     entryFile.mkdirs()
                 } else {
