@@ -169,6 +169,7 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="export_json">Export JSON</string>
     <string name="export_zip">Export ZIP</string>
     <string name="import_json">Import JSON</string>
+    <string name="import_zip">Import ZIP</string>
     <string name="import_button_text">Import</string>
     <string name="import_dialog_title">Warning</string>
     <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>

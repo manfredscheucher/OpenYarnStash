@@ -477,6 +477,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             }
                                         }
                                     },
+                                    onImportZip = { zipBytes ->
+                                        scope.launch {
+                                            try {
+                                                val timestamp = getCurrentTimestamp()
+                                                fileHandler.renameFilesDirectory("files_$timestamp")
+                                                fileHandler.unzipAndReplaceFiles(zipBytes)
+                                                reloadAllData()
+                                                snackbarHostState.showSnackbar("ZIP import successful")
+                                            } catch (e: Exception) {
+                                                errorDialogMessage = "Failed to import ZIP: ${e.message}"
+                                            }
+                                        }
+                                    },
                                     onLocaleChange = { newLocale ->
                                         scope.launch {
                                             val newSettings = settings.copy(language = newLocale)

@@ -168,6 +168,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="export_json">JSON exportieren</string>
     <string name="export_zip">ZIP exportieren</string>
     <string name="import_json">JSON importieren</string>
+    <string name="import_zip">ZIP importieren</string>
     <string name="import_button_text">Importieren</string>
     <string name="import_dialog_title">Warnung</string>
     <string name="import_dialog_message">Die aktuelle Konfiguration wird durch den Import überschrieben. Sind Sie sicher, dass Sie fortfahren möchten?</string>

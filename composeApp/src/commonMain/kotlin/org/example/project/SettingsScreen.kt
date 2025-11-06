@@ -43,6 +43,7 @@ import openyarnstash.composeapp.generated.resources.export_zip
 import openyarnstash.composeapp.generated.resources.import_dialog_message
 import openyarnstash.composeapp.generated.resources.import_dialog_title
 import openyarnstash.composeapp.generated.resources.import_json
+import openyarnstash.composeapp.generated.resources.import_zip
 import openyarnstash.composeapp.generated.resources.language_label
 import openyarnstash.composeapp.generated.resources.settings
 import openyarnstash.composeapp.generated.resources.settings_title
@@ -58,11 +59,14 @@ fun SettingsScreen(
     onExport: () -> Unit,
     onExportZip: () -> Unit,
     onImport: (String) -> Unit,
+    onImportZip: (ByteArray) -> Unit,
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit
 ) {
-    var showFilePicker by remember { mutableStateOf(false) }
-    var showImportConfirmDialog by remember { mutableStateOf(false) }
+    var showJsonFilePicker by remember { mutableStateOf(false) }
+    var showZipFilePicker by remember { mutableStateOf(false) }
+    var showImportJsonConfirmDialog by remember { mutableStateOf(false) }
+    var showImportZipConfirmDialog by remember { mutableStateOf(false) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
     var lengthUnitDropdownExpanded by remember { mutableStateOf(false) }
 
@@ -187,20 +191,26 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Button(onClick = { showImportConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = { showImportJsonConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.import_json))
                 }
 
-                if (showImportConfirmDialog) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(onClick = { showImportZipConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(Res.string.import_zip))
+                }
+
+                if (showImportJsonConfirmDialog) {
                     AlertDialog(
-                        onDismissRequest = { showImportConfirmDialog = false },
+                        onDismissRequest = { showImportJsonConfirmDialog = false },
                         title = { Text(stringResource(Res.string.import_dialog_title)) },
                         text = { Text(stringResource(Res.string.import_dialog_message)) },
                         confirmButton = {
                             Button(
                                 onClick = {
-                                    showImportConfirmDialog = false
-                                    showFilePicker = true
+                                    showImportJsonConfirmDialog = false
+                                    showJsonFilePicker = true
                                 }
                             ) {
                                 Text(stringResource(Res.string.common_yes))
@@ -208,7 +218,7 @@ fun SettingsScreen(
                         },
                         dismissButton = {
                             Button(
-                                onClick = { showImportConfirmDialog = false }
+                                onClick = { showImportJsonConfirmDialog = false }
                             ) {
                                 Text(stringResource(Res.string.common_cancel))
                             }
@@ -216,11 +226,46 @@ fun SettingsScreen(
                     )
                 }
 
-                if (showFilePicker) {
+                if (showImportZipConfirmDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showImportZipConfirmDialog = false },
+                        title = { Text(stringResource(Res.string.import_dialog_title)) },
+                        text = { Text(stringResource(Res.string.import_dialog_message)) },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    showImportZipConfirmDialog = false
+                                    showZipFilePicker = true
+                                }
+                            ) {
+                                Text(stringResource(Res.string.common_yes))
+                            }
+                        },
+                        dismissButton = {
+                            Button(
+                                onClick = { showImportZipConfirmDialog = false }
+                            ) {
+                                Text(stringResource(Res.string.common_cancel))
+                            }
+                        }
+                    )
+                }
+
+
+                if (showJsonFilePicker) {
                     FilePicker(show = true) { fileContent ->
-                        showFilePicker = false
+                        showJsonFilePicker = false
                         if (fileContent != null) {
                             onImport(fileContent)
+                        }
+                    }
+                }
+                
+                if (showZipFilePicker) {
+                    FilePickerForZip(show = true) { fileContent ->
+                        showZipFilePicker = false
+                        if (fileContent != null) {
+                            onImportZip(fileContent)
                         }
                     }
                 }
@@ -231,3 +276,6 @@ fun SettingsScreen(
 
 @Composable
 expect fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit)
+
+@Composable
+expect fun FilePickerForZip(show: Boolean, onFileSelected: (ByteArray?) -> Unit)

@@ -1,12 +1,15 @@
 package org.example.project
 
 import android.content.Context
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
@@ -81,5 +84,35 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
             }
         }
         return baos.toByteArray()
+    }
+
+    override suspend fun renameFilesDirectory(newName: String) {
+        val currentFilesDir = context.filesDir
+        val newDir = File(currentFilesDir.parentFile, newName)
+        currentFilesDir.renameTo(newDir)
+    }
+
+    override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
+        val targetDir = context.filesDir
+        if (targetDir.exists()) {
+            targetDir.deleteRecursively()
+        }
+        targetDir.mkdirs()
+
+        ZipInputStream(ByteArrayInputStream(zipBytes)).use { zis ->
+            var entry: ZipEntry?
+            while (zis.nextEntry.also { entry = it } != null) {
+                val entryFile = File(targetDir, entry!!.name)
+                if (entry!!.isDirectory) {
+                    entryFile.mkdirs()
+                } else {
+                    entryFile.parentFile?.mkdirs()
+                    FileOutputStream(entryFile).use { fos ->
+                        zis.copyTo(fos)
+                    }
+                }
+                zis.closeEntry()
+            }
+        }
     }
 }
