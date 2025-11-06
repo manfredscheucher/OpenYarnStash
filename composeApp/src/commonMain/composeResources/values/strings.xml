@@ -21,12 +21,13 @@
     <!-- Project list -->
     <string name="project_list_title">Projects</string>
     <string name="project_list_empty">No projects. Tap + to add a new one.</string>
-    <string name="project_list_filter">Search by name TODO</string>
+    <string name="project_list_filter">Search by name</string>
     <string name="item_label_name">Name: %1$s</string>
 
     <!-- Pattern list -->
     <string name="pattern_list_title">Patterns</string>
     <string name="pattern_list_empty">No patterns yet. Tap + to add a new one.</string>
+    <string name="pattern_list_filter">Search by name or designer</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Back</string>
@@ -104,7 +105,7 @@
     <string name="pattern_form_new">New pattern</string>
     <string name="pattern_form_edit">Edit pattern</string>
     <string name="pattern_label_name">Name</string>
-    <string name="pattern_label_creator">Creator</string>
+    <string name="pattern_label_creator">Designer</string>
     <string name="pattern_label_gauge">Gauge</string>
     <string name="pattern_form_select_pdf">Select PDF</string>
     <string name="pattern_form_view_pdf">View PDF</string>

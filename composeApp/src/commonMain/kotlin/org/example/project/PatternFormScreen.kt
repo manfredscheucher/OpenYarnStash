@@ -47,6 +47,7 @@ import openyarnstash.composeapp.generated.resources.pattern_form_edit
 import openyarnstash.composeapp.generated.resources.pattern_form_new
 import openyarnstash.composeapp.generated.resources.pattern_label_creator
 import openyarnstash.composeapp.generated.resources.pattern_label_name
+import openyarnstash.composeapp.generated.resources.pattern_label_gauge
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,15 +61,16 @@ fun PatternFormScreen(
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
+    var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(name, creator) {
+    val hasChanges by remember(name, creator, gauge) {
         derivedStateOf {
             if (initial == null) {
-                name.isNotEmpty() || creator.isNotEmpty()
+                name.isNotEmpty() || creator.isNotEmpty() || gauge.isNotEmpty()
             } else {
-                name != initial.name || creator != (initial.creator ?: "")
+                name != initial.name || creator != (initial.creator ?: "") || gauge != (initial.gauge ?: "")
             }
         }
     }
@@ -76,7 +78,8 @@ fun PatternFormScreen(
     val saveAction = {
         val pattern = (initial ?: Pattern(id = -1, name = "")).copy(
             name = name,
-            creator = creator.ifBlank { null }
+            creator = creator.ifBlank { null },
+            gauge = gauge.ifBlank { null }
         )
         onSave(pattern)
     }
@@ -151,6 +154,8 @@ fun PatternFormScreen(
                 SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(24.dp))
                 Row(
                     Modifier.fillMaxWidth(),

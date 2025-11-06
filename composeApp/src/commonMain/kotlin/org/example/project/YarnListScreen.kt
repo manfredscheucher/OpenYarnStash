@@ -71,7 +71,10 @@ fun YarnListScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = onAddClick) {
+            LargeFloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
                     style = MaterialTheme.typography.displayMedium
@@ -157,8 +160,8 @@ fun YarnListScreen(
                         },
                         label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )

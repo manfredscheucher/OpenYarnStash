@@ -112,7 +112,10 @@ fun ProjectListScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = onAddClick) {
+            LargeFloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
                     style = MaterialTheme.typography.displayMedium
@@ -151,8 +154,8 @@ fun ProjectListScreen(
                         },
                         label = { Text("$statusText ($count)") },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )

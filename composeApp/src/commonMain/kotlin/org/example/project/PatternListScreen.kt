@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,10 +26,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -36,6 +39,7 @@ import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
 import openyarnstash.composeapp.generated.resources.common_plus_symbol
 import openyarnstash.composeapp.generated.resources.pattern_list_empty
+import openyarnstash.composeapp.generated.resources.pattern_list_filter
 import openyarnstash.composeapp.generated.resources.pattern_list_title
 import openyarnstash.composeapp.generated.resources.patterns
 import org.jetbrains.compose.resources.painterResource
@@ -52,6 +56,8 @@ fun PatternListScreen(
     AppBackHandler {
         onBack()
     }
+
+    var filter by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -79,7 +85,10 @@ fun PatternListScreen(
             )
         },
         floatingActionButton = {
-            LargeFloatingActionButton(onClick = onAddClick) {
+            LargeFloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
                     style = MaterialTheme.typography.displayMedium
@@ -98,13 +107,35 @@ fun PatternListScreen(
                     Text(stringResource(Res.string.pattern_list_empty))
                 }
             } else {
+                OutlinedTextField(
+                    value = filter,
+                    onValueChange = { filter = it },
+                    label = { Text(stringResource(Res.string.pattern_list_filter)) },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = stringResource(Res.string.pattern_list_filter)
+                        )
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                )
+                val filteredPatterns = patterns.filter {
+                    if (filter.isNotBlank()) {
+                        it.name.contains(filter, ignoreCase = true) ||
+                        it.creator?.contains(filter, ignoreCase = true) == true
+                    } else {
+                        true
+                    }
+                }.sortedBy { it.name }
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(patterns.sortedBy { it.name }) { pattern ->
+                ) {                    items(filteredPatterns) { pattern ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth(),
