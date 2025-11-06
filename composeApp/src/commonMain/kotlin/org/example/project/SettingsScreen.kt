@@ -176,11 +176,12 @@ fun SettingsScreen(
                     }
                 }
 
+                if(false) {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(Res.string.export_json))
+                    Button(onClick = onExport, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(Res.string.export_json))
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -189,10 +190,15 @@ fun SettingsScreen(
                     Text(stringResource(Res.string.export_zip))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                if (false){
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Button(onClick = { showImportJsonConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(Res.string.import_json))
+                    Button(
+                        onClick = { showImportJsonConfirmDialog = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(Res.string.import_json))
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
