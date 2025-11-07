@@ -73,7 +73,7 @@ fun YarnFormScreen(
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
     val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
     val removedInitialImageIds = remember { mutableStateListOf<Int>() }
-    var nextTempId by remember { mutableStateOf(-1) }
+    var nextTempId by remember { mutableStateOf(0) }
 
 
     val imagePicker = rememberImagePickerLauncher { imageData ->

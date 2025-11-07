@@ -72,7 +72,7 @@ fun ProjectFormScreen(
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
     val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
     val removedInitialImageIds = remember { mutableStateListOf<Int>() }
-    var nextTempId by remember { mutableStateOf(-1) }
+    var nextTempId by remember { mutableStateOf(0) }
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
