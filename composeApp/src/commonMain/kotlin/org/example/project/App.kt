@@ -221,13 +221,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
                                                 val finalImageIds = keptImageIds.toMutableList()
                                                 var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
-                                                newImages.values.forEach { imageData ->
-                                                    imageManager.saveYarnImage(editedYarn.id, nextImageId, imageData)
-                                                    finalImageIds.add(nextImageId)
-                                                    nextImageId++
+                                                newImages.keys.sorted().forEach { imageKey ->
+                                                    newImages[imageKey]?.let { imageData ->
+                                                        imageManager.saveYarnImage(
+                                                            editedYarn.id,
+                                                            nextImageId,
+                                                            imageData
+                                                        )
+                                                        finalImageIds.add(nextImageId)
+                                                        nextImageId++
+                                                    }
                                                 }
 
-                                                val finalYarn = editedYarn.copy(imageIds = finalImageIds.sorted())
+                                                val finalYarn = editedYarn.copy(imageIds = finalImageIds)
                                                 jsonDataManager.addOrUpdateYarn(finalYarn)
                                             }
                                             reloadAllData()
@@ -356,13 +362,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
                                                 val finalImageIds = keptImageIds.toMutableList()
                                                 var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
-                                                newImages.values.forEach { imageData ->
-                                                    imageManager.saveProjectImage(editedProject.id, nextImageId, imageData)
-                                                    finalImageIds.add(nextImageId)
-                                                    nextImageId++
+                                                newImages.keys.sorted().forEach { imageKey ->
+                                                    newImages[imageKey]?.let { imageData ->
+                                                        imageManager.saveProjectImage(
+                                                            editedProject.id,
+                                                            nextImageId,
+                                                            imageData
+                                                        )
+                                                        finalImageIds.add(nextImageId)
+                                                        nextImageId++
+                                                    }
                                                 }
 
-                                                val finalProject = editedProject.copy(imageIds = finalImageIds.sorted())
+                                                val finalProject = editedProject.copy(imageIds = finalImageIds)
                                                 jsonDataManager.addOrUpdateProject(finalProject)
                                             }
                                             reloadAllData()

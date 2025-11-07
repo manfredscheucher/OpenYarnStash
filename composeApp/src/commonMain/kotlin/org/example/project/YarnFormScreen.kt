@@ -78,7 +78,7 @@ fun YarnFormScreen(
 
     val imagePicker = rememberImagePickerLauncher { imageData ->
         newImages[nextTempId] = imageData
-        nextTempId--
+        nextTempId++
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -144,7 +144,7 @@ fun YarnFormScreen(
                 modified = getCurrentTimestamp(),
                 added = normalizeDateString(added),
                 notes = notes.ifBlank { null },
-                imageIds = finalImageIds.sorted()
+                imageIds = finalImageIds
             )
         onSave(yarn, newImages.toMap())
     }

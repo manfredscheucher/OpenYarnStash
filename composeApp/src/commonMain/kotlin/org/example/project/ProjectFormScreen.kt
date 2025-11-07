@@ -78,7 +78,7 @@ fun ProjectFormScreen(
 
     val imagePicker = rememberImagePickerLauncher {
         newImages[nextTempId] = it
-        nextTempId--
+        nextTempId++
     }
 
     val scope = rememberCoroutineScope()
@@ -162,7 +162,7 @@ fun ProjectFormScreen(
             gauge = gauge.ifBlank { null },
             rowCounters = rowCounters,
             patternId = patternId,
-            imageIds = finalImageIds.sorted()
+            imageIds = finalImageIds
         )
         onSave(project, newImages.toMap())
     }
