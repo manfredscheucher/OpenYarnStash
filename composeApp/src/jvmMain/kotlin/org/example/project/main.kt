@@ -1,9 +1,7 @@
 package org.example.project
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -17,33 +15,26 @@ fun main() = application {
     val imageManager = ImageManager(fileHandler)
     val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     val fileDownloader = FileDownloader()
-
-    var backHandler: (() -> Unit)? by remember { mutableStateOf(null) }
-    var backHandlingEnabled by remember { mutableStateOf(false) }
-
-    val setDesktopBackHandler = fun(enabled: Boolean, onBack: () -> Unit) {
-        backHandlingEnabled = enabled
-        backHandler = onBack
-    }
+    val backDispatcher = remember { DesktopBackDispatcher() }
 
     Window(
         onCloseRequest = ::exitApplication,
         onKeyEvent = {
-            if (backHandlingEnabled && it.type == KeyEventType.KeyDown && it.key == Key.Escape) {
-                backHandler?.invoke()
-                true
+            if (it.type == KeyEventType.KeyDown && it.key == Key.Escape) {
+                backDispatcher.dispatch()
             } else {
                 false
             }
         }
     ) {
-        App(
-            jsonDataManager,
-            imageManager,
-            settingsManager,
-            fileDownloader,
-            fileHandler,
-            setDesktopBackHandler
-        )
+        CompositionLocalProvider(LocalDesktopBackDispatcher provides backDispatcher) {
+            App(
+                jsonDataManager,
+                imageManager,
+                settingsManager,
+                fileDownloader,
+                fileHandler
+            )
+        }
     }
 }

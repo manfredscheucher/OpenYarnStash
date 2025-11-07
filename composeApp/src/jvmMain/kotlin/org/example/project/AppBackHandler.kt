@@ -1,12 +1,18 @@
 package org.example.project
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 
 @Composable
 actual fun AppBackHandler(enabled: Boolean, onBack: () -> Unit) {
-    val setDesktopBackHandler = LocalDesktopBackHandler.current
-    LaunchedEffect(enabled, onBack) {
-        setDesktopBackHandler?.invoke(enabled, onBack)
+    if (!enabled) {
+        return
+    }
+    val backDispatcher = LocalDesktopBackDispatcher.current
+    DisposableEffect(onBack) {
+        backDispatcher.register(onBack)
+        onDispose {
+            backDispatcher.unregister(onBack)
+        }
     }
 }
