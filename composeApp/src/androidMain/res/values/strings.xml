@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">OpenYarnStash</string>
-    <string name="yarn_form_not_used_in_projects">Not yet used in any projects</string>
-    <string name="import_dialog_title">Warning</string>
-    <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
-    <string name="import_button_text">Import</string>
-</resources>

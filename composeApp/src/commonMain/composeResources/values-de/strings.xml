@@ -11,7 +11,7 @@
 
     <!-- Yarn list -->
     <string name="yarn_list_title">Woll-Lager</string>
-    <string name="yarn_list_empty">Keine Wolle. Klicke +</string>
+    <string name="yarn_list_empty">Keine Wolle. Klicke + um eine neue hinzuzufügen.</string>
     <string name="yarn_list_summary">Aktuelle Menge: %1$d g (%2$d m)</string>
     <string name="yarn_list_summary_yards">Aktuelle Menge: %1$d g (%2$d yd)</string>
     <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
@@ -21,13 +21,13 @@
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
-    <string name="project_list_empty">Keine Projekte. Klicke + um ein neues hinzuzufügen.</string>
+    <string name="project_list_empty">Kein Projekt. Klicke + um ein neues hinzuzufügen.</string>
     <string name="project_list_filter">Suche nach Namen</string>
     <string name="item_label_name">Name: %1$s</string>
 
     <!-- Pattern list -->
     <string name="pattern_list_title">Anleitungen</string>
-    <string name="pattern_list_empty">Keine Anleitungen. Klicke + um eine neue hinzuzufügen.</string>
+    <string name="pattern_list_empty">Keine Anleitung. Klicke + um eine neue hinzuzufügen.</string>
     <string name="pattern_list_filter">Suche nach Namen oder Designer</string>
 
     <!-- Common labels/actions -->
