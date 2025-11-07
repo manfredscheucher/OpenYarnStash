@@ -38,7 +38,7 @@ fun YarnListScreen(
     onBack: () -> Unit,
     onSettingsChange: (Settings) -> Unit
 ) {
-    AppBackHandler {
+    BackButtonHandler {
         onBack()
     }
 

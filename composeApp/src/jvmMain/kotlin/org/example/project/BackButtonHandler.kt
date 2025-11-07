@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 
 @Composable
-actual fun AppBackHandler(enabled: Boolean, onBack: () -> Unit) {
+actual fun BackButtonHandler(enabled: Boolean, onBack: () -> Unit) {
     if (!enabled) {
         return
     }

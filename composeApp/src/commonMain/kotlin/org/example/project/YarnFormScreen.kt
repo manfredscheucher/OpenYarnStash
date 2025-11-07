@@ -147,7 +147,7 @@ fun YarnFormScreen(
         }
     }
 
-    AppBackHandler {
+    BackButtonHandler {
         backAction()
     }
 

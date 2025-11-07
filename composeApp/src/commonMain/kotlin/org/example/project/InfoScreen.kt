@@ -39,7 +39,7 @@ import org.jetbrains.compose.resources.stringResource
 fun InfoScreen(onBack: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
-    AppBackHandler {
+    BackButtonHandler {
         onBack()
     }
 

@@ -47,7 +47,7 @@ fun ProjectAssignmentsScreen(
         }
     }
 
-    AppBackHandler {
+    BackButtonHandler {
         backAction()
     }
 

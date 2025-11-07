@@ -92,7 +92,7 @@ fun PatternFormScreen(
         }
     }
 
-    AppBackHandler {
+    BackButtonHandler {
         backAction()
     }
 

@@ -70,7 +70,7 @@ fun SettingsScreen(
     var languageDropdownExpanded by remember { mutableStateOf(false) }
     var lengthUnitDropdownExpanded by remember { mutableStateOf(false) }
 
-    AppBackHandler {
+    BackButtonHandler {
         onBack()
     }
 

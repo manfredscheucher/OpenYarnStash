@@ -65,7 +65,7 @@ fun ProjectListScreen(
     onBack: () -> Unit,
     onSettingsChange: (Settings) -> Unit
 ) {
-    AppBackHandler {
+    BackButtonHandler {
         onBack()
     }
 
@@ -129,7 +129,7 @@ fun ProjectListScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                for (status in ProjectStatus.values()) {
+                for (status in ProjectStatus.entries) {
                     val statusText = when (status) {
                         ProjectStatus.PLANNING -> stringResource(Res.string.project_status_planning)
                         ProjectStatus.IN_PROGRESS -> stringResource(Res.string.project_status_in_progress)

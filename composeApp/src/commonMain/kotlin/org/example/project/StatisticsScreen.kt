@@ -97,7 +97,7 @@ fun StatisticsScreen(
     val finishedByYear = remember(finishedProjects) { finishedProjects.groupBy { yearKey(it.endDate) } }
     val finishedByMonth = remember(finishedProjects) { finishedProjects.groupBy { monthKey(it.endDate) } }
 
-    AppBackHandler { onBack() }
+    BackButtonHandler { onBack() }
 
     Scaffold(
         topBar = {

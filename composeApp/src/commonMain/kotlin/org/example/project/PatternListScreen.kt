@@ -53,7 +53,7 @@ fun PatternListScreen(
     onOpen: (Int) -> Unit,
     onBack: () -> Unit
 ) {
-    AppBackHandler {
+    BackButtonHandler {
         onBack()
     }
 
