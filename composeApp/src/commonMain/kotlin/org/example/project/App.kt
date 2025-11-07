@@ -24,7 +24,6 @@ import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 //import java.util.Locale // TODO
 import kotlin.NoSuchElementException // Ensure this import is present
-import kotlin.random.Random
 
 sealed class Screen {
     data object Home : Screen()
@@ -55,7 +54,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val emptyImageByteArray = remember { createEmptyImageByteArray() }
 
     suspend fun reloadAllData() {
         try {
@@ -126,8 +124,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
                         Screen.YarnList -> {
                             LaunchedEffect(yarns) {
-                                yarnImages =
-                                    yarns.associate { it.id to withContext(Dispatchers.Default) { imageManager.getYarnImage(it.id) } }
+                                yarnImages = yarns.associate { yarn ->
+                                    yarn.id to yarn.imageIds.firstOrNull()?.let { imageId ->
+                                        withContext(Dispatchers.Default) { imageManager.getYarnImage(yarn.id, imageId) }
+                                    }
+                                }
                             }
                             val defaultYarnName = stringResource(Res.string.yarn_new_default_name)
                             YarnListScreen(
@@ -164,17 +165,22 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     null
                                 }
                             }
-                            var yarnImage by remember { mutableStateOf<ByteArray?>(null) }
+                            var yarnImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
 
-                            LaunchedEffect(s.yarnId) {
-                                yarnImage = withContext(Dispatchers.Default) {
-                                    imageManager.getYarnImage(s.yarnId)
-                                }
+                            LaunchedEffect(s.yarnId, existingYarn) {
+                                yarnImagesMap = existingYarn?.imageIds?.associateWith { imageId ->
+                                    withContext(Dispatchers.Default) {
+                                        imageManager.getYarnImage(existingYarn.id, imageId)
+                                    }
+                                }?.filterValues { it != null }?.mapValues { it.value!! } ?: emptyMap()
                             }
 
                             LaunchedEffect(projects) {
-                                projectImages =
-                                    projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
+                                projectImages = projects.associate { project ->
+                                    project.id to project.imageIds.firstOrNull()?.let { imageId ->
+                                        withContext(Dispatchers.Default) { imageManager.getProjectImage(project.id, imageId) }
+                                    }
+                                }
                             }
 
                             if (existingYarn == null) {
@@ -183,7 +189,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 val relatedUsages = usages.filter { it.yarnId == existingYarn.id }
                                 YarnFormScreen(
                                     initial = existingYarn,
-                                    initialImage = yarnImage,
+                                    initialImages = yarnImagesMap,
                                     usagesForYarn = relatedUsages,
                                     projectById = { pid -> projects.firstOrNull { it.id == pid } },
                                     projectImages = projectImages,
@@ -191,25 +197,38 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     onBack = { screen = Screen.YarnList },
                                     onDelete = { yarnIdToDelete ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) { jsonDataManager.deleteYarn(yarnIdToDelete) }
+                                            withContext(Dispatchers.Default) {
+                                                val yarnToDelete = jsonDataManager.getYarnById(yarnIdToDelete)
+                                                yarnToDelete?.imageIds?.forEach { imageId ->
+                                                    imageManager.deleteYarnImage(yarnIdToDelete, imageId)
+                                                }
+                                                jsonDataManager.deleteYarn(yarnIdToDelete)
+                                            }
                                             reloadAllData()
                                             screen = Screen.YarnList
                                         }
                                     },
-                                    onSave = { editedYarn, image ->
+                                    onSave = { editedYarn, newImages ->
                                         scope.launch {
+                                            val existingImageIds = existingYarn.imageIds
+                                            val keptImageIds = editedYarn.imageIds.filter { it > 0 }
+                                            val idsToDelete = existingImageIds.filter { it !in keptImageIds }
+
                                             withContext(Dispatchers.Default) {
-                                                jsonDataManager.addOrUpdateYarn(editedYarn)
-                                                if (image != null) {
-                                                    if (image.contentEquals(emptyImageByteArray)) {
-                                                        imageManager.deleteYarnImage(editedYarn.id)
-                                                    } else {
-                                                        imageManager.saveYarnImage(
-                                                            editedYarn.id,
-                                                            image
-                                                        )
-                                                    }
+                                                idsToDelete.forEach { imageId ->
+                                                    imageManager.deleteYarnImage(editedYarn.id, imageId)
                                                 }
+
+                                                val finalImageIds = keptImageIds.toMutableList()
+                                                var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
+                                                newImages.values.forEach { imageData ->
+                                                    imageManager.saveYarnImage(editedYarn.id, nextImageId, imageData)
+                                                    finalImageIds.add(nextImageId)
+                                                    nextImageId++
+                                                }
+
+                                                val finalYarn = editedYarn.copy(imageIds = finalImageIds.sorted())
+                                                jsonDataManager.addOrUpdateYarn(finalYarn)
                                             }
                                             reloadAllData()
                                             screen = Screen.YarnList
@@ -233,12 +252,18 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
                         Screen.ProjectList -> {
                             LaunchedEffect(projects) {
-                                projectImages =
-                                    projects.associate { it.id to withContext(Dispatchers.Default) { imageManager.getProjectImage(it.id) } }
+                                projectImages = projects.associate { project ->
+                                    project.id to project.imageIds.firstOrNull()?.let { imageId ->
+                                        withContext(Dispatchers.Default) { imageManager.getProjectImage(project.id, imageId) }
+                                    }
+                                }
                             }
                             LaunchedEffect(yarns) {
-                                yarnImages =
-                                    yarns.associate { it.id to withContext(Dispatchers.Default) { imageManager.getYarnImage(it.id) } }
+                                yarnImages = yarns.associate { yarn ->
+                                    yarn.id to yarn.imageIds.firstOrNull()?.let { imageId ->
+                                        withContext(Dispatchers.Default) { imageManager.getYarnImage(yarn.id, imageId) }
+                                    }
+                                }
                             }
                             val defaultProjectName =
                                 stringResource(Res.string.project_new_default_name)
@@ -283,12 +308,14 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     null
                                 }
                             }
-                            var projectImage by remember { mutableStateOf<ByteArray?>(null) }
+                            var projectImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
 
-                            LaunchedEffect(s.projectId) {
-                                projectImage = withContext(Dispatchers.Default) {
-                                    imageManager.getProjectImage(s.projectId)
-                                }
+                            LaunchedEffect(s.projectId, existingProject) {
+                                projectImagesMap = existingProject?.imageIds?.associateWith { imageId ->
+                                    withContext(Dispatchers.Default) {
+                                        imageManager.getProjectImage(existingProject.id, imageId)
+                                    }
+                                }?.filterValues { it != null }?.mapValues { it.value!! } ?: emptyMap()
                             }
 
                             if (existingProject == null) {
@@ -298,32 +325,45 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     usages.filter { it.projectId == existingProject.id }
                                 ProjectFormScreen(
                                     initial = existingProject,
-                                    initialImage = projectImage,
+                                    initialImages = projectImagesMap,
                                     usagesForProject = usagesForCurrentProject,
                                     yarnById = { yarnId -> yarns.firstOrNull { it.id == yarnId } },
                                     patterns = patterns,
                                     onBack = { screen = Screen.ProjectList },
                                     onDelete = { id ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) { jsonDataManager.deleteProject(id) }
+                                            withContext(Dispatchers.Default) {
+                                                val projectToDelete = jsonDataManager.getProjectById(id)
+                                                projectToDelete?.imageIds?.forEach { imageId ->
+                                                    imageManager.deleteProjectImage(id, imageId)
+                                                }
+                                                jsonDataManager.deleteProject(id)
+                                            }
                                             reloadAllData()
                                             screen = Screen.ProjectList
                                         }
                                     },
-                                    onSave = { editedProject, image ->
+                                    onSave = { editedProject, newImages ->
                                         scope.launch {
+                                            val existingImageIds = existingProject.imageIds
+                                            val keptImageIds = editedProject.imageIds.filter { it > 0 }
+                                            val idsToDelete = existingImageIds.filter { it !in keptImageIds }
+
                                             withContext(Dispatchers.Default) {
-                                                jsonDataManager.addOrUpdateProject(editedProject)
-                                                if (image != null) {
-                                                    if (image.contentEquals(emptyImageByteArray)) {
-                                                        imageManager.deleteProjectImage(editedProject.id)
-                                                    } else {
-                                                        imageManager.saveProjectImage(
-                                                            editedProject.id,
-                                                            image
-                                                        )
-                                                    }
+                                                idsToDelete.forEach { imageId ->
+                                                    imageManager.deleteProjectImage(editedProject.id, imageId)
                                                 }
+
+                                                val finalImageIds = keptImageIds.toMutableList()
+                                                var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
+                                                newImages.values.forEach { imageData ->
+                                                    imageManager.saveProjectImage(editedProject.id, nextImageId, imageData)
+                                                    finalImageIds.add(nextImageId)
+                                                    nextImageId++
+                                                }
+
+                                                val finalProject = editedProject.copy(imageIds = finalImageIds.sorted())
+                                                jsonDataManager.addOrUpdateProject(finalProject)
                                             }
                                             reloadAllData()
                                             screen = Screen.ProjectList

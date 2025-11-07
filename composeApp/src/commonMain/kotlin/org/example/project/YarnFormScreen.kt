@@ -1,14 +1,17 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,14 +43,14 @@ fun normalizeIntInput(input: String): String {
 @Composable
 fun YarnFormScreen(
     initial: Yarn?,
-    initialImage: ByteArray?,
+    initialImages: Map<Int, ByteArray>,
     usagesForYarn: List<Usage>,
     projectById: (Int) -> Project?,
     projectImages: Map<Int, ByteArray?>,
     settings: Settings,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Yarn, ByteArray?) -> Unit,
+    onSave: (Yarn, Map<Int, ByteArray>) -> Unit,
     onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
 ) {
     val totalUsedAmount = usagesForYarn.sumOf { it.amount }
@@ -68,10 +71,14 @@ fun YarnFormScreen(
     val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
-    var newImage by remember { mutableStateOf<ByteArray?>(null) }
+    val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
+    val removedInitialImageIds = remember { mutableStateListOf<Int>() }
+    var nextTempId by remember { mutableStateOf(-1) }
 
-    val imagePicker = rememberImagePickerLauncher {
-        newImage = it
+
+    val imagePicker = rememberImagePickerLauncher { imageData ->
+        newImages[nextTempId] = imageData
+        nextTempId--
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -89,7 +96,8 @@ fun YarnFormScreen(
         amountText,
         added,
         notes,
-        newImage
+        newImages.size,
+        removedInitialImageIds.size
     ) {
         derivedStateOf {
             if (initial == null) {
@@ -97,7 +105,7 @@ fun YarnFormScreen(
                         blend.isNotEmpty() ||
                         dyeLot.isNotEmpty() || storagePlace.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
                         amountText.isNotEmpty() ||
-                        added.isNotEmpty() || notes.isNotEmpty() || newImage != null
+                        added.isNotEmpty() || notes.isNotEmpty() || newImages.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
@@ -111,7 +119,7 @@ fun YarnFormScreen(
                         amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
                         added != (initial.added ?: "") ||
                         notes != (initial.notes ?: "") ||
-                        newImage != null
+                        newImages.isNotEmpty() || removedInitialImageIds.isNotEmpty()
             }
         }
     }
@@ -119,6 +127,7 @@ fun YarnFormScreen(
     val saveAction = {
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
+        val finalImageIds = initialImages.keys.filter { it !in removedInitialImageIds } + newImages.keys
 
         val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, modified = getCurrentTimestamp()))
             .copy(
@@ -134,9 +143,10 @@ fun YarnFormScreen(
                 meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
                 modified = getCurrentTimestamp(),
                 added = normalizeDateString(added),
-                notes = notes.ifBlank { null }
+                notes = notes.ifBlank { null },
+                imageIds = finalImageIds.sorted()
             )
-        onSave(yarn, newImage)
+        onSave(yarn, newImages.toMap())
     }
 
     val backAction = {
@@ -223,11 +233,16 @@ fun YarnFormScreen(
                     .navigationBarsPadding()
                     .padding(16.dp)
             ) {
-                val displayedImage = newImage ?: initialImage
-                if (displayedImage != null && displayedImage.isNotEmpty()) {
-                    val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
+                val displayedImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
+                    (initialImages.filter { it.key !in removedInitialImageIds } + newImages).entries.sortedBy { it.key }
+                }
+
+                val previewImage = displayedImages.firstOrNull()?.value
+
+                if (previewImage != null) {
+                    val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
                     if (bitmap != null) {
-                        Image(bitmap, contentDescription = "Yarn Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                        Image(bitmap, contentDescription = "Yarn Preview Image", modifier = Modifier.fillMaxWidth().height(200.dp))
                     }
                 } else {
                     Image(
@@ -237,16 +252,39 @@ fun YarnFormScreen(
                     )
                 }
                 Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { imagePicker.launch() }) {
-                        Text(stringResource(Res.string.project_form_select_image))
-                    }
-                    if (displayedImage != null && displayedImage.isNotEmpty()) {
-                        Button(onClick = { newImage = byteArrayOf() }) {
-                            Text(stringResource(Res.string.project_form_remove_image))
+
+                if (displayedImages.isNotEmpty()) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(displayedImages, key = { it.key }) { (id, bytes) ->
+                            Box {
+                                val bitmap = remember(bytes) { bytes.toImageBitmap() }
+                                if (bitmap != null) {
+                                    Image(bitmap, contentDescription = "Image $id", modifier = Modifier.size(80.dp))
+                                }
+                                IconButton(
+                                    onClick = {
+                                        if (id > 0) { // Initial image
+                                            removedInitialImageIds.add(id)
+                                        } else { // New image
+                                            newImages.remove(id)
+                                        }
+                                    },
+                                    modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
+                                ) {
+                                    Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
+                                }
+                            }
                         }
                     }
+                    Spacer(Modifier.height(8.dp))
                 }
+
+                Button(onClick = { imagePicker.launch() }) {
+                    Text(stringResource(Res.string.project_form_select_image))
+                }
+
                 Spacer(Modifier.height(16.dp))
                 SelectAllOutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))

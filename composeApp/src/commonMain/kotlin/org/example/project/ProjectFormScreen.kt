@@ -1,47 +1,21 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -60,8 +34,8 @@ import org.example.project.pdf.getProjectPdfExporter
 import org.example.project.pdf.rememberPdfSaver
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.example.project.pdf.Project as PdfProject
 import org.example.project.pdf.Params as PdfParams
+import org.example.project.pdf.Project as PdfProject
 import org.example.project.pdf.Yarn as PdfYarn
 import org.example.project.pdf.YarnUsage as PdfYarnUsage
 
@@ -69,14 +43,14 @@ import org.example.project.pdf.YarnUsage as PdfYarnUsage
 @Composable
 fun ProjectFormScreen(
     initial: Project,
-    initialImage: ByteArray?,
+    initialImages: Map<Int, ByteArray>,
     usagesForProject: List<Usage>,
     yarnById: (Int) -> Yarn?,
     patterns: List<Pattern>,
     yarnImages: Map<Int, ByteArray?>,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Project, ByteArray?) -> Unit,
+    onSave: (Project, Map<Int, ByteArray>) -> Unit,
     onNavigateToAssignments: () -> Unit,
     onNavigateToPattern: (Int) -> Unit
 ) {
@@ -96,19 +70,26 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
-    var newImage by remember { mutableStateOf<ByteArray?>(null) }
+    val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
+    val removedInitialImageIds = remember { mutableStateListOf<Int>() }
+    var nextTempId by remember { mutableStateOf(-1) }
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
     val imagePicker = rememberImagePickerLauncher {
-        newImage = it
+        newImages[nextTempId] = it
+        nextTempId--
     }
-    
+
     val scope = rememberCoroutineScope()
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImage, rowCounters, patternId) {
+    val displayedImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
+        (initialImages.filter { it.key !in removedInitialImageIds } + newImages).entries.sortedBy { it.key }
+    }
+
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImages.size, removedInitialImageIds.size, rowCounters, patternId) {
         derivedStateOf {
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
@@ -118,7 +99,8 @@ fun ProjectFormScreen(
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge ?: "") ||
-                    newImage != null ||
+                    newImages.isNotEmpty() ||
+                    removedInitialImageIds.isNotEmpty() ||
                     rowCounters != initial.rowCounters ||
                     patternId != initial.patternId
         }
@@ -129,7 +111,7 @@ fun ProjectFormScreen(
             val projectData = PdfProject(
                 id = initial.id.toString(),
                 title = name,
-                imageBytes = newImage ?: initialImage ?: byteArrayOf()
+                imageBytes = displayedImages.firstOrNull()?.value ?: byteArrayOf()
             )
             val paramsData = PdfParams(
                 gauge = gauge.ifBlank { null },
@@ -167,6 +149,7 @@ fun ProjectFormScreen(
     }
 
     val saveAction = {
+        val finalImageIds = initialImages.keys.filter { it !in removedInitialImageIds } + newImages.keys
         val project = initial.copy(
             name = name,
             madeFor = forWho.ifBlank { null },
@@ -178,9 +161,10 @@ fun ProjectFormScreen(
             size = size.ifBlank { null },
             gauge = gauge.ifBlank { null },
             rowCounters = rowCounters,
-            patternId = patternId
+            patternId = patternId,
+            imageIds = finalImageIds.sorted()
         )
-        onSave(project, newImage)
+        onSave(project, newImages.toMap())
     }
 
     val backAction = {
@@ -276,11 +260,12 @@ fun ProjectFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
-            val displayedImage = newImage ?: initialImage
-            if (displayedImage != null && displayedImage.isNotEmpty()) {
-                val bitmap: ImageBitmap? = remember(displayedImage) { displayedImage.toImageBitmap() }
+            val previewImage = displayedImages.firstOrNull()?.value
+
+            if (previewImage != null) {
+                val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
                 if (bitmap != null) {
-                    Image(bitmap, contentDescription = "Project Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                    Image(bitmap, contentDescription = "Project Preview Image", modifier = Modifier.fillMaxWidth().height(200.dp))
                 }
             } else {
                 Image(
@@ -290,16 +275,39 @@ fun ProjectFormScreen(
                 )
             }
             Spacer(Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { imagePicker.launch() }) {
-                    Text(stringResource(Res.string.project_form_select_image))
-                }
-                if (displayedImage != null && displayedImage.isNotEmpty()) {
-                    Button(onClick = { newImage = byteArrayOf() }) {
-                        Text(stringResource(Res.string.project_form_remove_image))
+
+            if (displayedImages.isNotEmpty()) {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(displayedImages, key = { it.key }) { (id, bytes) ->
+                        Box {
+                            val bitmap = remember(bytes) { bytes.toImageBitmap() }
+                            if (bitmap != null) {
+                                Image(bitmap, contentDescription = "Image $id", modifier = Modifier.size(80.dp))
+                            }
+                            IconButton(
+                                onClick = {
+                                    if (id > 0) { // Initial image
+                                        removedInitialImageIds.add(id)
+                                    } else { // New image
+                                        newImages.remove(id)
+                                    }
+                                },
+                                modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
+                            }
+                        }
                     }
                 }
+                Spacer(Modifier.height(8.dp))
             }
+
+            Button(onClick = { imagePicker.launch() }) {
+                Text(stringResource(Res.string.project_form_select_image))
+            }
+
             Spacer(Modifier.height(16.dp))
             SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
