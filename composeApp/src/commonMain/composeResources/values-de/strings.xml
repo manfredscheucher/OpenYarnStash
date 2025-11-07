@@ -16,19 +16,19 @@
     <string name="yarn_list_summary_yards">Aktuelle Menge: %1$d g (%2$d yd)</string>
     <string name="yarn_item_label_modified">Zuletzt geändert: %1$s</string>
     <string name="yarn_list_hide_used">Verbrauchte Wolle</string>
-    <string name="yarn_list_filter">Suche nach Namen, Marke oder Farbe</string>
+    <string name="yarn_list_filter">Suche</string>
 
 
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
     <string name="project_list_empty">Kein Projekt. Klicke + um ein neues hinzuzufügen.</string>
-    <string name="project_list_filter">Suche nach Namen</string>
+    <string name="project_list_filter">Suche</string>
     <string name="item_label_name">Name: %1$s</string>
 
     <!-- Pattern list -->
     <string name="pattern_list_title">Anleitungen</string>
     <string name="pattern_list_empty">Keine Anleitung. Klicke + um eine neue hinzuzufügen.</string>
-    <string name="pattern_list_filter">Suche nach Namen oder Designer</string>
+    <string name="pattern_list_filter">Suche</string>
 
     <!-- Common labels/actions -->
     <string name="common_back">Zurück</string>

@@ -164,20 +164,20 @@ fun YarnListScreen(
                         ),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )
+                    OutlinedTextField(
+                        value = filter,
+                        onValueChange = { filter = it },
+                        label = { Text(stringResource(Res.string.yarn_list_filter)) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Filled.Search,
+                                contentDescription = stringResource(Res.string.yarn_list_filter)
+                            )
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    )
                 }
-                OutlinedTextField(
-                    value = filter,
-                    onValueChange = { filter = it },
-                    label = { Text(stringResource(Res.string.yarn_list_filter)) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = stringResource(Res.string.yarn_list_filter)
-                        )
-                    },
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                )
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
