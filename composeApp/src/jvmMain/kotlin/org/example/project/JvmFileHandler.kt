@@ -103,15 +103,16 @@ class JvmFileHandler : FileHandler {
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
-        val newDir = File(baseDir.parentFile, newName)
-        if (baseDir.renameTo(newDir)) {
-            baseDir = newDir
+        val newDir = File(baseDir, newName)
+        if (filesDir.renameTo(newDir)) {
+            // No need to update baseDir, as it's the parent of filesDir
         }
     }
 
     override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
         if (filesDir.exists()) {
-            filesDir.deleteRecursively()
+            val backupDirName = "files-${SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())}"
+            renameFilesDirectory(backupDirName)
         }
         filesDir.mkdirs()
 

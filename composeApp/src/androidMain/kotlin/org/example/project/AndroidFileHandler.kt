@@ -101,22 +101,21 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
-        val currentFilesDir = context.filesDir
-        val newDir = File(currentFilesDir.parentFile, newName)
-        currentFilesDir.renameTo(newDir)
+        val newDir = File(filesDir.parentFile, newName)
+        filesDir.renameTo(newDir)
     }
 
     override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
-        val targetDir = filesDir
-        if (targetDir.exists()) {
-            targetDir.deleteRecursively()
+        if (filesDir.exists()) {
+            val backupDirName = "files-${SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())}"
+            renameFilesDirectory(backupDirName)
         }
-        targetDir.mkdirs()
+        filesDir.mkdirs()
 
         ZipInputStream(ByteArrayInputStream(zipBytes)).use { zis ->
             var entry: ZipEntry?
             while (zis.nextEntry.also { entry = it } != null) {
-                val entryFile = File(targetDir, entry!!.name)
+                val entryFile = File(filesDir, entry!!.name)
                 if (entry!!.isDirectory) {
                     entryFile.mkdirs()
                 } else {
