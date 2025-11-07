@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -127,9 +128,7 @@ fun YarnListScreen(
                 val filteredYarnData = yarnData.filter {
                     val consumedOk = if (showConsumed) true else it.availableAmount > 0
                     val filterOk = if (filter.isNotBlank()) {
-                        it.yarnItem.name.contains(filter, ignoreCase = true) ||
-                        it.yarnItem.brand?.contains(filter, ignoreCase = true) == true ||
-                        it.yarnItem.color?.contains(filter, ignoreCase = true) == true
+                        Json.encodeToString(it.yarnItem).contains(filter, ignoreCase = true)
                     } else {
                         true
                     }

@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -71,7 +72,7 @@ fun ProjectListScreen(
 
     var activeStatuses by remember {
         mutableStateOf(
-            ProjectStatus.values().filter {
+            ProjectStatus.entries.filter {
                 settings.projectToggles[it.name] ?: true
             }.toSet()
         )
@@ -81,7 +82,7 @@ fun ProjectListScreen(
     val filteredProjects = projects.filter {
         val statusOk = it.status in activeStatuses
         val filterOk = if (filter.isNotBlank()) {
-            it.name.contains(filter, ignoreCase = true)
+            Json.encodeToString(it).contains(filter, ignoreCase = true)
         } else {
             true
         }
@@ -147,7 +148,7 @@ fun ProjectListScreen(
                             }
                             activeStatuses = newActiveStatuses
 
-                            val newProjectToggles = ProjectStatus.values().associate {
+                            val newProjectToggles = ProjectStatus.entries.associate {
                                 it.name to (it in newActiveStatuses)
                             }
                             onSettingsChange(settings.copy(projectToggles = newProjectToggles))
