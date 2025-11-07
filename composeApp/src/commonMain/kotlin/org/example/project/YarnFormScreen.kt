@@ -73,12 +73,10 @@ fun YarnFormScreen(
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
     val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
     val removedInitialImageIds = remember { mutableStateListOf<Int>() }
-    var nextTempId by remember { mutableStateOf(0) }
+    var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1)?:1) }
 
-
-    val imagePicker = rememberImagePickerLauncher { imageData ->
-        newImages[nextTempId] = imageData
-        nextTempId++
+    val imagePicker = rememberImagePickerLauncher {
+        newImages[nextTempId++] = it
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
