@@ -10,7 +10,7 @@ Since we are only two developers, we decided to focus on the Android app for the
 
 ## Support
 
-If you’d like to support development financially, we may add options such as Ko-fi in the future. For now, starring the repository and sharing feedback are the best ways to help. Thank you very much!
+If you’d like to support development financially, you can [buy us a coffee on Ko-fi](https://ko-fi.com/openyarnstash). Starring the repository and sharing feedback are also great ways to help. Thank you very much!
 
 
 ## Getting Started
