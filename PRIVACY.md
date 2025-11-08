@@ -35,4 +35,4 @@ Nothing is uploaded or transmitted in the background.
 Your data stays on your device. Protect it with your **device security** (screen lock, OS updates, local backups).
 
 ## Contact
-Questions or requests? Contact **openyarnstash@proton.me** or use the GitHub issue tracker.
+Questions or requests? Contact us via email (**openyarnstash@proton.me**) or use the GitHub issue tracker.
