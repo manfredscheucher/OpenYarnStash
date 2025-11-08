@@ -6,8 +6,10 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 
 fun main() = application {
     val fileHandler = JvmFileHandler()
@@ -19,6 +21,7 @@ fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
+        state = rememberWindowState(width = 1200.dp, height = 800.dp),
         onKeyEvent = {
             if (it.type == KeyEventType.KeyDown && it.key == Key.Escape) {
                 backDispatcher.dispatch()

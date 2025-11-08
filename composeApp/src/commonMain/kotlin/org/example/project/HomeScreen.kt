@@ -29,6 +29,7 @@ import openyarnstash.composeapp.generated.resources.home_button_statistics
 import openyarnstash.composeapp.generated.resources.home_button_yarns
 import openyarnstash.composeapp.generated.resources.home_title
 import openyarnstash.composeapp.generated.resources.info
+import openyarnstash.composeapp.generated.resources.info_how_to_help
 import openyarnstash.composeapp.generated.resources.info_screen_title
 import openyarnstash.composeapp.generated.resources.logo
 import openyarnstash.composeapp.generated.resources.patterns
@@ -48,7 +49,8 @@ fun HomeScreen(
     onOpenPatterns: () -> Unit,
     onOpenInfo: () -> Unit,
     onOpenStatistics: () -> Unit,
-    onOpenSettings: () -> Unit
+    onOpenSettings: () -> Unit,
+    onOpenHowToHelp: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -81,6 +83,10 @@ fun HomeScreen(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title))
                 HomeButton(onClick = onOpenInfo, icon = Res.drawable.info, text = stringResource(Res.string.info_screen_title))
+            }
+            Spacer(Modifier.height(16.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                HomeButton(onClick = onOpenHowToHelp, icon = Res.drawable.info, text = stringResource(Res.string.info_how_to_help))
             }
         }
     }

@@ -154,6 +154,7 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">How you can help</string>
     <string name="info_description">OpenYarnStash is an open-source app for managing your yarn supplies and knitting projects. It provides an overview, statistics, and progress indicators. The app is still under development – feedback is very welcome!</string>
     <string name="info_github_button">Open on GitHub</string>
     <string name="info_feedback_button">Send Feedback</string>

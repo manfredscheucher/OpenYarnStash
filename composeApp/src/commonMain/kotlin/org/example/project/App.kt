@@ -33,6 +33,7 @@ sealed class Screen {
     data class ProjectForm(val projectId: Int) : Screen() // projectId is no longer nullable
     data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
     data object Info : Screen()
+    data object HowToHelp : Screen()
     data object Statistics : Screen()
     data object Settings : Screen()
     data object PatternList : Screen()
@@ -119,7 +120,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                             onOpenPatterns = { screen = Screen.PatternList },
                             onOpenInfo = { screen = Screen.Info },
                             onOpenStatistics = { screen = Screen.Statistics },
-                            onOpenSettings = { screen = Screen.Settings }
+                            onOpenSettings = { screen = Screen.Settings },
+                            onOpenHowToHelp = { screen = Screen.HowToHelp }
                         )
 
                         Screen.YarnList -> {
@@ -484,6 +486,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
 
                         Screen.Info -> {
                             InfoScreen(onBack = { screen = Screen.Home })
+                        }
+
+                        Screen.HowToHelp -> {
+                            HowToHelpScreen(onBack = { screen = Screen.Home })
                         }
 
                         Screen.Statistics -> {
