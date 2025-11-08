@@ -485,7 +485,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                         }
 
                         Screen.Info -> {
-                            InfoScreen(onBack = { screen = Screen.Home })
+                            InfoScreen(onBack = { screen = Screen.Home }, onNavigateToHelp = { screen = Screen.HowToHelp })
                         }
 
                         Screen.HowToHelp -> {

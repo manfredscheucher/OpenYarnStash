@@ -28,15 +28,15 @@ import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.info
 import openyarnstash.composeapp.generated.resources.info_copyright_notice
 import openyarnstash.composeapp.generated.resources.info_description
-import openyarnstash.composeapp.generated.resources.info_feedback_button
 import openyarnstash.composeapp.generated.resources.info_github_button
 import openyarnstash.composeapp.generated.resources.info_screen_title
+import openyarnstash.composeapp.generated.resources.you_can_help_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoScreen(onBack: () -> Unit) {
+fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     BackButtonHandler {
@@ -77,10 +77,10 @@ fun InfoScreen(onBack: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { uriHandler.openUri("mailto:OpenYarnStash@proton.me?subject=feedback") },
+                onClick = { onNavigateToHelp() },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(Res.string.info_feedback_button))
+                Text(stringResource(Res.string.you_can_help_button))
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(stringResource(Res.string.info_copyright_notice), style = MaterialTheme.typography.bodySmall)
