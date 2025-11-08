@@ -123,11 +123,19 @@ fun HowToHelpScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(
-                            onClick = { uriHandler.openUri("https://github.com/manfredscheucher/OpenYarnStash/issues") },
+                            onClick = { uriHandler.openUri("https://github.com/manfredscheucher/OpenYarnStash") },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(stringResource(Res.string.github_issues_button))
+                            Text(stringResource(Res.string.github_button))
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = { uriHandler.openUri("mailto:openyarnstash@proton.me") },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(Res.string.email_button))
+                        }
+
                     }
                 }
             }
