@@ -1,6 +1,6 @@
 # OpenYarnStash
 
-**OpenYarnStash** is an app for managing your yarn stash and knitting projects. It provides a clear overview of your inventory and projects, along with helpful statistics like yarn usage and completed projects over time.
+**OpenYarnStash** is an open-source app for managing your yarn stash and knitting projects. It provides a clear overview of your inventory and projects, along with helpful statistics like yarn usage and completed projects over time. It gives you full control - all data is only stored locally on your device, and you can manually export and import to other devices.
 
 This project is in early development, with more features planned. Feedback is always welcome, preferably via the [issue tracker](https://github.com/manfredscheucher/OpenYarnStash/issues) or via [email](mailto:OpenYarnStash@proton.me). Also let us know if you like the app! As an [open-source software](https://en.wikipedia.org/wiki/Open-source_software) project, you can explore the full source code, build it yourself, and you are welcome to contribute.
 
