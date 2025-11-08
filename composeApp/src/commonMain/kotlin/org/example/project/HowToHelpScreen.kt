@@ -2,6 +2,7 @@ package org.example.project
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
@@ -27,13 +30,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.common_back
-import openyarnstash.composeapp.generated.resources.email_button
-import openyarnstash.composeapp.generated.resources.github_button
-import openyarnstash.composeapp.generated.resources.github_issues_button
-import openyarnstash.composeapp.generated.resources.info_github_button
-import openyarnstash.composeapp.generated.resources.ko_fi_button
+import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,7 +43,16 @@ fun HowToHelpScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("How you can help") },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = stringResource(Res.string.help_screen_title),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        Text(stringResource(Res.string.help_screen_title))
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -74,7 +80,7 @@ fun HowToHelpScreen(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Support us on Ko-fi:")
+                                    append(stringResource(Res.string.support_us_on_kofi))
                                 }
                             }
                         )
@@ -97,28 +103,28 @@ fun HowToHelpScreen(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Use the app & report issues:")
+                                    append(stringResource(Res.string.use_the_app_and_report_issues))
                                 }
                             }
                         )
                         Text(
-                            text = "Report bugs or translation mistakes via GitHub Issues or email."
+                            text = stringResource(Res.string.report_bugs_or_translation_mistakes)
                         )
                         Text(
-                            text = "To help us reproduce the bugs, please include:"
+                            text = stringResource(Res.string.to_help_us_reproduce_bugs)
                         )
                         Column(modifier = Modifier.padding(start = 16.dp)) {
-                            Text(text = "• Steps to reproduce")
-                            Text(text = "• Screenshots (if possible)")
-                            Text(text = "• App version/platform")
-                            Text(text = "• Data export (ZIP) from the app (Settings → Export data)")
+                            Text(text = stringResource(Res.string.steps_to_reproduce))
+                            Text(text = stringResource(Res.string.screenshots_if_possible))
+                            Text(text = stringResource(Res.string.app_version_platform))
+                            Text(text = stringResource(Res.string.data_export_from_app))
                         }
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Privacy note: ")
+                                    append(stringResource(Res.string.privacy_note))
                                 }
-                                append("Only share what you’re comfortable with. Remove sensitive info from attachments/exports.")
+                                append(stringResource(Res.string.only_share_what_you_are_comfortable_with))
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -148,12 +154,12 @@ fun HowToHelpScreen(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Suggest new features:")
+                                    append(stringResource(Res.string.suggest_new_features))
                                 }
                             }
                         )
                         Text(
-                            text = "Open a feature request on GitHub. Describe the goal, why it helps, and give examples."
+                            text = stringResource(Res.string.open_a_feature_request_on_github)
                         )
                     }
                 }
@@ -167,12 +173,12 @@ fun HowToHelpScreen(
                         Text(
                             text = buildAnnotatedString {
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Join the discussion:")
+                                    append(stringResource(Res.string.join_the_discussion))
                                 }
                             }
                         )
                         Text(
-                            text = "Participate in GitHub Discussions, upvote issues, and share feedback."
+                            text = stringResource(Res.string.participate_in_github_discussions)
                         )
                     }
                 }

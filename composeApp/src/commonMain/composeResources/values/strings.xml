@@ -173,6 +173,20 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="github_button">View on GitHub</string>
     <string name="github_issues_button">Report a Bug</string>
     <string name="email_button">Send an Email</string>
+    <string name="support_us_on_kofi">Support us on Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Use the app &amp; report issues:</string>
+    <string name="report_bugs_or_translation_mistakes">Report bugs or translation mistakes via GitHub Issues or email.</string>
+    <string name="to_help_us_reproduce_bugs">To help us reproduce the bugs, please include:</string>
+    <string name="steps_to_reproduce">• Steps to reproduce</string>
+    <string name="screenshots_if_possible">• Screenshots (if possible)</string>
+    <string name="app_version_platform">• App version/platform</string>
+    <string name="data_export_from_app">• Data export (ZIP) from the app (Settings → Export data)</string>
+    <string name="privacy_note">Privacy note: </string>
+    <string name="only_share_what_you_are_comfortable_with">Only share what you’re comfortable with. Remove sensitive info from attachments/exports.</string>
+    <string name="suggest_new_features">Suggest new features:</string>
+    <string name="open_a_feature_request_on_github">Open a feature request on GitHub. Describe the goal, why it helps, and give examples.</string>
+    <string name="join_the_discussion">Join the discussion:</string>
+    <string name="participate_in_github_discussions">Participate in GitHub Discussions, upvote issues, and share feedback.</string>
 
 
     <!-- Settings Screen -->

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.common_back
 import openyarnstash.composeapp.generated.resources.info
 import openyarnstash.composeapp.generated.resources.info_copyright_notice
 import openyarnstash.composeapp.generated.resources.info_description
@@ -59,7 +60,7 @@ fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
                 },
                 modifier = Modifier.padding(top = 2.dp)

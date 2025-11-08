@@ -172,6 +172,20 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="github_button">Auf GitHub ansehen</string>
     <string name="github_issues_button">Fehler melden</string>
     <string name="email_button">E-Mail senden</string>
+    <string name="support_us_on_kofi">Unterstütze uns auf Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Nutze die App &amp; melde Probleme:</string>
+    <string name="report_bugs_or_translation_mistakes">Melde Fehler oder Übersetzungsfehler über GitHub Issues oder per E-Mail.</string>
+    <string name="to_help_us_reproduce_bugs">Um uns zu helfen, die Fehler zu reproduzieren, gib bitte an:</string>
+    <string name="steps_to_reproduce">• Schritte zur Reproduktion</string>
+    <string name="screenshots_if_possible">• Screenshots (wenn möglich)</string>
+    <string name="app_version_platform">• App-Version/Plattform</string>
+    <string name="data_export_from_app">• Datenexport (ZIP) aus der App (Einstellungen → Daten exportieren)</string>
+    <string name="privacy_note">Datenschutzhinweis: </string>
+    <string name="only_share_what_you_are_comfortable_with">Teile nur, was du teilen möchtest. Entferne sensible Informationen aus Anhängen/Exporten.</string>
+    <string name="suggest_new_features">Schlage neue Funktionen vor:</string>
+    <string name="open_a_feature_request_on_github">Erstelle eine Funktionsanfrage auf GitHub. Beschreibe das Ziel, warum es hilft, und gib Beispiele.</string>
+    <string name="join_the_discussion">Beteilige dich an der Diskussion:</string>
+    <string name="participate_in_github_discussions">Nimm an GitHub-Diskussionen teil, stimme für Issues ab und teile Feedback.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>
