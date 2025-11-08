@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.help
 import openyarnstash.composeapp.generated.resources.home_button_patterns
 import openyarnstash.composeapp.generated.resources.home_button_projects
 import openyarnstash.composeapp.generated.resources.home_button_statistics
@@ -86,7 +87,7 @@ fun HomeScreen(
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                HomeButton(onClick = onOpenHowToHelp, icon = Res.drawable.info, text = stringResource(Res.string.info_how_to_help))
+                HomeButton(onClick = onOpenHowToHelp, icon = Res.drawable.help, text = stringResource(Res.string.info_how_to_help))
             }
         }
     }
