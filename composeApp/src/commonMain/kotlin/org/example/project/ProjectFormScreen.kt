@@ -80,6 +80,10 @@ fun ProjectFormScreen(
         newImages[nextTempId++] = it
     }
 
+    val cameraLauncher = rememberCameraLauncher { result ->
+        result?.let { newImages[nextTempId++] = it }
+    }
+
     val scope = rememberCoroutineScope()
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
@@ -303,8 +307,15 @@ fun ProjectFormScreen(
                 Spacer(Modifier.height(8.dp))
             }
 
-            Button(onClick = { imagePicker.launch() }) {
-                Text(stringResource(Res.string.project_form_select_image))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { imagePicker.launch() }) {
+                    Text(stringResource(Res.string.project_form_select_image))
+                }
+                cameraLauncher?.let {
+                    Button(onClick = { it.launch() }) {
+                        Text(stringResource(Res.string.project_form_take_image))
+                    }
+                }
             }
 
             Spacer(Modifier.height(16.dp))

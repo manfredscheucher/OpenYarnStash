@@ -96,6 +96,7 @@
     <string name="project_label_row_count">Row counter</string>
     <string name="project_form_add_counter">Add Counter</string>
     <string name="project_form_select_image">Select Image</string>
+    <string name="project_form_take_image">Take Image</string>
     <string name="project_form_remove_image">Remove Image</string>
     <string name="project_form_add_counter_dialog_title">Add new counter</string>
     <string name="project_form_add_counter_dialog_label">Counter name</string>

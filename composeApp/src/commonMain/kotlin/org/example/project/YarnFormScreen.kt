@@ -79,6 +79,10 @@ fun YarnFormScreen(
         newImages[nextTempId++] = it
     }
 
+    val cameraLauncher = rememberCameraLauncher { result ->
+        result?.let { newImages[nextTempId++] = it }
+    }
+
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
     val hasChanges by remember(
@@ -279,8 +283,15 @@ fun YarnFormScreen(
                     Spacer(Modifier.height(8.dp))
                 }
 
-                Button(onClick = { imagePicker.launch() }) {
-                    Text(stringResource(Res.string.project_form_select_image))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { imagePicker.launch() }) {
+                        Text(stringResource(Res.string.project_form_select_image))
+                    }
+                    cameraLauncher?.let {
+                        Button(onClick = { it.launch() }) {
+                            Text(stringResource(Res.string.project_form_take_image))
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(16.dp))

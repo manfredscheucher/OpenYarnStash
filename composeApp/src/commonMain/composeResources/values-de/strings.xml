@@ -96,6 +96,7 @@
     <string name="project_label_row_count">Reihenzähler</string>
     <string name="project_form_add_counter">Zähler hinzufügen</string>
     <string name="project_form_select_image">Bild auswählen</string>
+    <string name="project_form_take_image">Foto aufnehmen</string>
     <string name="project_form_remove_image">Bild entfernen</string>
     <string name="project_form_add_counter_dialog_title">Neuen Zähler hinzufügen</string>
     <string name="project_form_add_counter_dialog_label">Zählername</string>
