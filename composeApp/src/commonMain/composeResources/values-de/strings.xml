@@ -154,7 +154,7 @@
 
     <!-- Info Screen -->
     <string name="info_screen_title">Info</string>
-    <string name="info_how_to_help">Wie du helfen kannst</string>
+    <string name="info_how_to_help">Du kannst helfen!</string>
     <string name="info_description">OpenYarnStash ist eine Open-Source-App, mit der du deine Wollvorräte und Strickprojekte verwalten kannst. Sie bietet eine Übersicht, Statistiken und Fortschrittsanzeigen. Die App befindet sich noch in der Entwicklung – Feedback ist sehr willkommen!</string>
     <string name="info_github_button">Auf GitHub öffnen</string>
     <string name="info_feedback_button">Feedback senden</string>
