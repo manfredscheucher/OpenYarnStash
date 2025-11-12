@@ -25,7 +25,6 @@ import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.text.append
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +44,15 @@ fun YarnListScreen(
 
     var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
     var filter by remember { mutableStateOf("") }
+
+    val usagesByYarnId = remember(usages) {
+        usages.groupBy { it.yarnId }
+            .mapValues { entry -> entry.value.sumOf { it.amount } }
+    }
+
+    val yarnData = remember(yarns, usagesByYarnId) {
+        yarns.map { it.copy(usedAmount = usagesByYarnId[it.id] ?: 0) }
+    }
 
     Scaffold(
         topBar = {
@@ -94,49 +102,18 @@ fun YarnListScreen(
                     Text(stringResource(Res.string.yarn_list_empty))
                 }
             } else {
-                val usagesByYarnId = remember(usages) {
-                    usages.groupBy { it.yarnId }
-                        .mapValues { entry -> entry.value.sumOf { it.amount } }
-                }
-
-                val yarnData = remember(yarns, usagesByYarnId, settings.lengthUnit) {
-                    yarns.map { yarn ->
-                        val used = usagesByYarnId[yarn.id] ?: 0
-                        val available = (yarn.amount - used).coerceAtLeast(0)
-                        val meterage = yarn.meteragePerSkein
-                        val weight = yarn.weightPerSkein
-                        val availableMeterage = if (meterage != null && weight != null && weight > 0) {
-                            (available * meterage) / weight
-                        } else {
-                            null
-                        }
-                        val usedMeterage = if (meterage != null && weight != null && weight > 0) {
-                            (used * meterage) / weight
-                        } else {
-                            null
-                        }
-                        object {
-                            val yarnItem = yarn
-                            val usedAmount = used
-                            val availableAmount = available
-                            val availableMeterageAmount = availableMeterage
-                            val usedMeterageAmount = usedMeterage
-                        }
-                    }
-                }
-
                 val filteredYarnData = yarnData.filter {
                     val consumedOk = if (showConsumed) true else it.availableAmount > 0
                     val filterOk = if (filter.isNotBlank()) {
-                        Json.encodeToString(it.yarnItem).contains(filter, ignoreCase = true)
+                        Json.encodeToString(it).contains(filter, ignoreCase = true)
                     } else {
                         true
                     }
                     consumedOk && filterOk
-                }.sortedByDescending { it.yarnItem.modified }
+                }.sortedByDescending { it.modified }
 
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
-                val totalMeterage = yarnData.sumOf { it.availableMeterageAmount ?: 0 }
+                val totalMeterage = yarnData.sumOf { it.availableMeterage ?: 0 }
 
                 Text(
                     text = if (settings.lengthUnit == LengthUnit.METER)
@@ -184,20 +161,20 @@ fun YarnListScreen(
                         .weight(1f),
                     contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {                    items(filteredYarnData) { data ->
+                ) {                    items(filteredYarnData) { yarn ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            onClick = { onOpen(data.yarnItem.id) },
-                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(data.yarnItem.id))
+                            onClick = { onOpen(yarn.id) },
+                            colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
                         ) {
 
                             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                                 var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
-                                LaunchedEffect(data.yarnItem.id, data.yarnItem.imageIds) {
-                                    val imageId = data.yarnItem.imageIds.firstOrNull()
+                                LaunchedEffect(yarn.id, yarn.imageIds) {
+                                    val imageId = yarn.imageIds.firstOrNull()
                                     imageBytes = if (imageId != null) {
-                                        imageManager.getYarnImageThumbnail(data.yarnItem.id, imageId)
+                                        imageManager.getYarnImageThumbnail(yarn.id, imageId)
                                     } else {
                                         null
                                     }
@@ -207,7 +184,7 @@ fun YarnListScreen(
                                 if (bitmap != null) {
                                     Image(
                                         bitmap = bitmap,
-                                        contentDescription = "Yarn image for ${data.yarnItem.name}",
+                                        contentDescription = "Yarn image for ${yarn.name}",
                                         modifier = Modifier.size(64.dp),
                                         contentScale = ContentScale.Crop
                                     )
@@ -223,8 +200,7 @@ fun YarnListScreen(
                                 Column(modifier = Modifier.weight(1f)) {
 
                                     Text(buildAnnotatedString {
-                                        // Append brand with normal weight if it exists and is not blank
-                                        data.yarnItem.brand?.takeIf { it.isNotBlank() }?.let {
+                                        yarn.brand?.takeIf { it.isNotBlank() }?.let {
                                             withStyle(
                                                 style = SpanStyle(
                                                     fontStyle = FontStyle.Italic,
@@ -234,40 +210,38 @@ fun YarnListScreen(
                                                 append("$it ")
                                             }
                                         }
-                                        // Append yarn name with bold weight
                                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                            append(data.yarnItem.name)
+                                            append(yarn.name)
                                         }
-                                        // Append color with bold weight if it exists and is not blank
-                                        data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
+                                        yarn.color?.takeIf { it.isNotBlank() }?.let {
                                             append(" (${it})")
                                         }
                                     })
                                     Spacer(Modifier.height(8.dp))
-                                    if ((data.availableMeterageAmount ?: 0)+(data.usedMeterageAmount ?: 0) > 0) {
+                                    if ((yarn.availableMeterage ?: 0) + (yarn.usedMeterage ?: 0) > 0) {
                                         Text(
                                             if (settings.lengthUnit == LengthUnit.METER)
-                                                stringResource(Res.string.usage_used_with_meterage, data.usedAmount, data.usedMeterageAmount ?: 0)
+                                                stringResource(Res.string.usage_used_with_meterage, yarn.usedAmount, yarn.usedMeterage ?: 0)
                                             else
-                                                stringResource(Res.string.usage_used_with_yardage, data.usedAmount, data.usedMeterageAmount ?: 0)
+                                                stringResource(Res.string.usage_used_with_yardage, yarn.usedAmount, yarn.usedMeterage ?: 0)
                                         )
                                         Text(
                                             if (settings.lengthUnit == LengthUnit.METER)
-                                                stringResource(Res.string.usage_available_with_meterage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                                stringResource(Res.string.usage_available_with_meterage, yarn.availableAmount, yarn.availableMeterage ?: 0)
                                             else
-                                                stringResource(Res.string.usage_available_with_yardage, data.availableAmount, data.availableMeterageAmount ?: 0)
+                                                stringResource(Res.string.usage_available_with_yardage, yarn.availableAmount, yarn.availableMeterage ?: 0)
                                         )
                                     } else {
                                         Text(
                                             stringResource(
                                                 Res.string.usage_used,
-                                                data.usedAmount
+                                                yarn.usedAmount
                                             )
                                         )
                                         Text(
                                             stringResource(
                                                 Res.string.usage_available,
-                                                data.availableAmount
+                                                yarn.availableAmount
                                             )
                                         )
                                     }

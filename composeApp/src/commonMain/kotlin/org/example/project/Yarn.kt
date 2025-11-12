@@ -1,7 +1,7 @@
 package org.example.project
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.Transient
 
 @Serializable
 data class Yarn(
@@ -19,5 +19,30 @@ data class Yarn(
     val added: String? = null,
     val modified: String? = null,
     val storagePlace: String? = null,
-    val imageIds: List<Int> = emptyList()
-)
+    val imageIds: List<Int> = emptyList(),
+    @Transient val usedAmount: Int = 0
+) {
+    @Transient
+    val availableAmount: Int
+        get() = (amount - usedAmount).coerceAtLeast(0)
+
+    @Transient
+    val usedMeterage: Int?
+        get() {
+            return if (meteragePerSkein != null && weightPerSkein != null && weightPerSkein > 0) {
+                (usedAmount.toLong() * meteragePerSkein) / weightPerSkein
+            } else {
+                null
+            }?.toInt()
+        }
+
+    @Transient
+    val availableMeterage: Int?
+        get() {
+            return if (meteragePerSkein != null && weightPerSkein != null && weightPerSkein > 0) {
+                (availableAmount.toLong() * meteragePerSkein) / weightPerSkein
+            } else {
+                null
+            }?.toInt()
+        }
+}

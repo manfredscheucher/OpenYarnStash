@@ -75,6 +75,19 @@ fun YarnFormScreen(
     val removedInitialImageIds = remember { mutableStateListOf<Int>() }
     var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1)?:1) }
 
+    val currentYarnState by remember(amountText, weightPerSkeinText, meteragePerSkeinText, totalUsedAmount) {
+        derivedStateOf {
+            Yarn(
+                id = initial?.id ?: -1,
+                name = "", // Not needed for calculations
+                amount = amountText.toIntOrNull() ?: 0,
+                weightPerSkein = weightPerSkeinText.toIntOrNull(),
+                meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
+                usedAmount = totalUsedAmount
+            )
+        }
+    }
+
     val imagePicker = rememberImagePickerLauncher {
         newImages[nextTempId++] = it
     }
@@ -384,6 +397,38 @@ fun YarnFormScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f)
                     )
+                }
+                Spacer(Modifier.height(8.dp))
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if ((currentYarnState.availableMeterage ?: 0) + (currentYarnState.usedMeterage ?: 0) > 0) {
+                            Text(
+                                if (settings.lengthUnit == LengthUnit.METER)
+                                    stringResource(Res.string.usage_used_with_meterage, currentYarnState.usedAmount, currentYarnState.usedMeterage ?: 0)
+                                else
+                                    stringResource(Res.string.usage_used_with_yardage, currentYarnState.usedAmount, currentYarnState.usedMeterage ?: 0)
+                            )
+                            Text(
+                                if (settings.lengthUnit == LengthUnit.METER)
+                                    stringResource(Res.string.usage_available_with_meterage, currentYarnState.availableAmount, currentYarnState.availableMeterage ?: 0)
+                                else
+                                    stringResource(Res.string.usage_available_with_yardage, currentYarnState.availableAmount, currentYarnState.availableMeterage ?: 0)
+                            )
+                        } else {
+                            Text(
+                                stringResource(
+                                    Res.string.usage_used,
+                                    currentYarnState.usedAmount
+                                )
+                            )
+                            Text(
+                                stringResource(
+                                    Res.string.usage_available,
+                                    currentYarnState.availableAmount
+                                )
+                            )
+                        }
+                    }
                 }
                 Spacer(Modifier.height(8.dp))
                 DateInput(
