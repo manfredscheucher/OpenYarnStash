@@ -27,6 +27,15 @@ class JvmFileHandler : FileHandler {
 
     private fun getFile(path: String) = File(filesDir, path)
 
+    override fun openInputStream(path: String): FileInputSource? {
+        val file = getFile(path)
+        return if (file.exists()) {
+            FileInputStream(file)
+        } else {
+            null
+        }
+    }
+
     override suspend fun readFile(path: String): String {
         val file = getFile(path)
         return if (file.exists()) {

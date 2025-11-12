@@ -47,7 +47,7 @@ fun ProjectFormScreen(
     usagesForProject: List<Usage>,
     yarnById: (Int) -> Yarn?,
     patterns: List<Pattern>,
-    yarnImages: Map<Int, ByteArray?>,
+    imageManager: ImageManager,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Project, Map<Int, ByteArray>) -> Unit,
@@ -112,9 +112,9 @@ fun ProjectFormScreen(
     val exportPdf: () -> Unit = { // Using current state values
         scope.launch {
             val projectData = PdfProject(
-                id = initial.id.toString(),
-                title = name,
-                imageBytes = displayedImages.firstOrNull()?.value ?: byteArrayOf()
+                id = initial.id,
+                imageIds = initial.imageIds,
+                title = name
             )
             val paramsData = PdfParams(
                 gauge = gauge.ifBlank { null },
@@ -132,13 +132,14 @@ fun ProjectFormScreen(
                     }
                     PdfYarnUsage(
                         yarn = PdfYarn(
+                            id = yarn.id,
                             brand = yarn.brand,
                             name = yarn.name,
                             colorway = yarn.color,
                             lot = yarn.dyeLot,
                             material = yarn.blend,
                             weightClass = null, // Not available
-                            imageBytes = yarnImages[yarn.id]
+                            imageIds = yarn.imageIds
                         ),
                         gramsUsed = usage.amount.toDouble(),
                         metersUsed = metersUsed
@@ -146,7 +147,7 @@ fun ProjectFormScreen(
                 }
             }
 
-            val pdfBytes = pdfExporter.exportToPdf(projectData, paramsData, yarnUsagesData)
+            val pdfBytes = pdfExporter.exportToPdf(projectData, paramsData, yarnUsagesData, imageManager)
             pdfSaver("${name.replace(" ", "_")}.pdf", pdfBytes)
         }
     }
@@ -501,7 +502,15 @@ fun ProjectFormScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
                                     ) {
-                                        val imageBytes = yarnImages[yarn.id]
+                                        var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                        LaunchedEffect(yarn.id, yarn.imageIds) {
+                                            val imageId = yarn.imageIds.firstOrNull()
+                                            imageBytes = if (imageId != null) {
+                                                imageManager.getYarnImageThumbnail(yarn.id, imageId, 80, 80)
+                                            } else {
+                                                null
+                                            }
+                                        }
                                         val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
 
                                         if (bitmap != null) {

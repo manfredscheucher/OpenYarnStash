@@ -1,5 +1,6 @@
 package org.example.project.pdf
 
+import org.example.project.ImageManager
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.get
 
@@ -12,15 +13,19 @@ private external class jsPDF {
 }
 
 class ProjectPdfExporterJs : ProjectPdfExporter {
-    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray {
+    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>, imageManager: ImageManager): ByteArray {
         val pdf = js("new jspdf.jsPDF()") as jsPDF
         var y = 20
         pdf.text(project.title, 20, y); y += 12
-        project.imageBytes?.let { bytes ->
-            val dataUrl = "data:image/png;base64,${bytes.encodeBase64()}"
-            pdf.addImage(dataUrl, "PNG", 20, y, 120, 90)
-            y += 100
+
+        project.imageIds.firstOrNull()?.let { imageId ->
+            imageManager.getProjectImage(project.id, imageId)?.let { bytes ->
+                val dataUrl = "data:image/jpeg;base64,${bytes.encodeBase64()}"
+                pdf.addImage(dataUrl, "JPEG", 20, y, 120, 90)
+                y += 100
+            }
         }
+
         pdf.text("Parameter", 20, y); y += 10
         fun param(label: String, value: String?) {
             if (!value.isNullOrBlank()) {
@@ -36,8 +41,10 @@ class ProjectPdfExporterJs : ProjectPdfExporter {
         pdf.text("Verwendete Wolle", 20, y); y += 10
         yarns.forEach { usage ->
             val rowY = y
-            usage.yarn.imageBytes?.let { b ->
-                pdf.addImage("data:image/png;base64,${b.encodeBase64()}", "PNG", 20, y, 36, 36)
+            usage.yarn.imageIds.firstOrNull()?.let { imageId ->
+                imageManager.getYarnImage(usage.yarn.id, imageId)?.let { b ->
+                    pdf.addImage("data:image/jpeg;base64,${b.encodeBase64()}", "JPEG", 20, y, 36, 36)
+                }
             }
             val x = 20 + 36 + 8
             var textY = rowY + 5 // Adjust for vertical alignment

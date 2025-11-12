@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.example.project.ImageManager
 import java.io.ByteArrayOutputStream
 import kotlin.math.max
 
@@ -26,7 +27,7 @@ class ProjectPdfExporterAndroid : ProjectPdfExporter {
         private const val SECTION_GAP = 16
     }
 
-    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray = withContext(Dispatchers.Default) {
+    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>, imageManager: ImageManager): ByteArray = withContext(Dispatchers.Default) {
         val pdf = PdfDocument()
         var pageNumber = 1
         var page = pdf.startPage(PdfDocument.PageInfo.Builder(PAGE_WIDTH, PAGE_HEIGHT, pageNumber).create())
@@ -62,18 +63,20 @@ class ProjectPdfExporterAndroid : ProjectPdfExporter {
         canvas.drawText(project.title, MARGIN.toFloat(), (currentY - titlePaint.fontMetrics.top), titlePaint)
         currentY += (titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top).toInt() + SECTION_GAP
 
-        // Project Image (ByteArray)
-        project.imageBytes?.let { bytes ->
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)?.let { raw ->
-                val ratio = minOf(IMAGE_MAX_W.toFloat() / raw.width, IMAGE_MAX_H.toFloat() / raw.height)
-                val w = (raw.width * ratio).toInt().coerceAtLeast(1)
-                val h = (raw.height * ratio).toInt().coerceAtLeast(1)
-                val bmp = Bitmap.createScaledBitmap(raw, w, h, true)
-                ensureSpace(h + SECTION_GAP)
-                canvas.drawBitmap(bmp, null, Rect(MARGIN, currentY, MARGIN + w, currentY + h), null)
-                currentY += h + SECTION_GAP
-                if (bmp != raw) raw.recycle()
-                bmp.recycle()
+        // Project Image
+        project.imageIds.firstOrNull()?.let { imageId ->
+            imageManager.getProjectImageInputStream(project.id, imageId)?.use { stream ->
+                BitmapFactory.decodeStream(stream)?.let { raw ->
+                    val ratio = minOf(IMAGE_MAX_W.toFloat() / raw.width, IMAGE_MAX_H.toFloat() / raw.height)
+                    val w = (raw.width * ratio).toInt().coerceAtLeast(1)
+                    val h = (raw.height * ratio).toInt().coerceAtLeast(1)
+                    val bmp = Bitmap.createScaledBitmap(raw, w, h, true)
+                    ensureSpace(h + SECTION_GAP)
+                    canvas.drawBitmap(bmp, null, Rect(MARGIN, currentY, MARGIN + w, currentY + h), null)
+                    currentY += h + SECTION_GAP
+                    if (bmp != raw) raw.recycle()
+                    bmp.recycle()
+                }
             }
         }
 
@@ -101,11 +104,13 @@ class ProjectPdfExporterAndroid : ProjectPdfExporter {
 
         yarns.forEach { usage ->
             ensureSpace(ROW_IMAGE_SIZE + 24)
-            usage.yarn.imageBytes?.let { yBytes ->
-                BitmapFactory.decodeByteArray(yBytes, 0, yBytes.size)?.let { b ->
-                    val rect = Rect(MARGIN, currentY, MARGIN + ROW_IMAGE_SIZE, currentY + ROW_IMAGE_SIZE)
-                    canvas.drawBitmap(Bitmap.createScaledBitmap(b, ROW_IMAGE_SIZE, ROW_IMAGE_SIZE, true), null, rect, null)
-                    b.recycle()
+            usage.yarn.imageIds.firstOrNull()?.let { imageId ->
+                 imageManager.getYarnImageInputStream(usage.yarn.id, imageId)?.use { stream ->
+                    BitmapFactory.decodeStream(stream)?.let { b ->
+                        val rect = Rect(MARGIN, currentY, MARGIN + ROW_IMAGE_SIZE, currentY + ROW_IMAGE_SIZE)
+                        canvas.drawBitmap(Bitmap.createScaledBitmap(b, ROW_IMAGE_SIZE, ROW_IMAGE_SIZE, true), null, rect, null)
+                        b.recycle()
+                    }
                 }
             } ?: run { val r = Rect(MARGIN, currentY, MARGIN + ROW_IMAGE_SIZE, currentY + ROW_IMAGE_SIZE); canvas.drawRect(r, linePaint) }
 

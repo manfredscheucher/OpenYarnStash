@@ -1,5 +1,7 @@
 package org.example.project.pdf
 
+import org.example.project.ImageManager
+
 interface ProjectPdfExporter {
     /**
      * Erzeugt das PDF als ByteArray (A4). Speichern/Teilen übernimmt der Aufrufer.
@@ -7,6 +9,7 @@ interface ProjectPdfExporter {
     suspend fun exportToPdf(
         project: Project,
         params: Params,
-        yarns: List<YarnUsage>
+        yarns: List<YarnUsage>,
+        imageManager: ImageManager
     ): ByteArray
 }

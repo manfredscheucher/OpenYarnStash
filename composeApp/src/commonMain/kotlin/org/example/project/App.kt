@@ -337,6 +337,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     usagesForProject = usagesForCurrentProject,
                                     yarnById = { yarnId -> yarns.firstOrNull { it.id == yarnId } },
                                     patterns = patterns,
+                                    imageManager = imageManager,
                                     onBack = { screen = Screen.ProjectList },
                                     onDelete = { id ->
                                         scope.launch {
@@ -391,8 +392,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     },
                                     onNavigateToPattern = { patternId ->
                                         screen = Screen.PatternForm(patternId)
-                                    },
-                                    yarnImages = yarnImages
+                                    }
                                 )
                             }
                         }

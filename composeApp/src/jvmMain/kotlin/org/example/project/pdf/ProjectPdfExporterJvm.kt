@@ -6,10 +6,11 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.example.project.ImageManager
 import java.io.ByteArrayOutputStream
 
 class ProjectPdfExporterJvm : ProjectPdfExporter {
-    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>): ByteArray {
+    override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>, imageManager: ImageManager): ByteArray {
         val baos = ByteArrayOutputStream()
         PDDocument().use { d ->
             val page = PDPage(PDRectangle.A4)
@@ -28,13 +29,15 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                 text(project.title, 18f, true)
 
-                project.imageBytes?.let {
-                    val pdImg = JPEGFactory.createFromByteArray(d, it)
-                    val w = 240f
-                    val ratio = w / pdImg.width
-                    val h = pdImg.height * ratio
-                    cs.drawImage(pdImg, 36f, y - h, w, h)
-                    y -= h + 12f
+                project.imageIds.firstOrNull()?.let { imageId ->
+                    imageManager.getProjectImageInputStream(project.id, imageId)?.let { stream ->
+                        val pdImg = JPEGFactory.createFromStream(d, stream)
+                        val w = 240f
+                        val ratio = w / pdImg.width
+                        val h = pdImg.height * ratio
+                        cs.drawImage(pdImg, 36f, y - h, w, h)
+                        y -= h + 12f
+                    }
                 }
 
                 text("Parameter", 12f, true)
@@ -66,9 +69,11 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                 yarns.forEach { usage ->
                     val rowStartY = y
-                    usage.yarn.imageBytes?.let { ib ->
-                        val pdImg = JPEGFactory.createFromByteArray(d, ib)
-                        cs.drawImage(pdImg, 36f, rowStartY - 72f, 72f, 72f)
+                    usage.yarn.imageIds.firstOrNull()?.let { imageId ->
+                        imageManager.getYarnImageInputStream(usage.yarn.id, imageId)?.let { stream ->
+                            val pdImg = JPEGFactory.createFromStream(d, stream)
+                            cs.drawImage(pdImg, 36f, rowStartY - 72f, 72f, 72f)
+                        }
                     }
 
                     var textY = rowStartY
