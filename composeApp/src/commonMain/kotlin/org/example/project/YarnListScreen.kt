@@ -197,7 +197,7 @@ fun YarnListScreen(
                                 LaunchedEffect(data.yarnItem.id, data.yarnItem.imageIds) {
                                     val imageId = data.yarnItem.imageIds.firstOrNull()
                                     imageBytes = if (imageId != null) {
-                                        imageManager.getYarnImageThumbnail(data.yarnItem.id, imageId, 64, 64)
+                                        imageManager.getYarnImageThumbnail(data.yarnItem.id, imageId)
                                     } else {
                                         null
                                     }

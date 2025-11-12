@@ -506,7 +506,7 @@ fun ProjectFormScreen(
                                         LaunchedEffect(yarn.id, yarn.imageIds) {
                                             val imageId = yarn.imageIds.firstOrNull()
                                             imageBytes = if (imageId != null) {
-                                                imageManager.getYarnImageThumbnail(yarn.id, imageId, 80, 80)
+                                                imageManager.getYarnImageThumbnail(yarn.id, imageId)
                                             } else {
                                                 null
                                             }

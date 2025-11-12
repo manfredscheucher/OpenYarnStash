@@ -199,7 +199,7 @@ fun ProjectListScreen(
                                     LaunchedEffect(p.id, p.imageIds) {
                                         val imageId = p.imageIds.firstOrNull()
                                         imageBytes = if (imageId != null) {
-                                            imageManager.getProjectImageThumbnail(p.id, imageId, 64, 64)
+                                            imageManager.getProjectImageThumbnail(p.id, imageId)
                                         } else {
                                             null
                                         }
@@ -245,7 +245,7 @@ fun ProjectListScreen(
                                                     LaunchedEffect(yarn.id, yarn.imageIds) {
                                                         val imageId = yarn.imageIds.firstOrNull()
                                                         yarnImageBytes = if (imageId != null) {
-                                                            imageManager.getYarnImageThumbnail(yarn.id, imageId, 32, 32)
+                                                            imageManager.getYarnImageThumbnail(yarn.id, imageId)
                                                         } else {
                                                             null
                                                         }

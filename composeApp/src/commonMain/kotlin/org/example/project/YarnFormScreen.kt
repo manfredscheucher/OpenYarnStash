@@ -417,7 +417,7 @@ fun YarnFormScreen(
                                     LaunchedEffect(project.id, project.imageIds) {
                                         val imageId = project.imageIds.firstOrNull()
                                         imageBytes = if (imageId != null) {
-                                            imageManager.getProjectImageThumbnail(project.id, imageId, 40, 40)
+                                            imageManager.getProjectImageThumbnail(project.id, imageId)
                                         } else {
                                             null
                                         }

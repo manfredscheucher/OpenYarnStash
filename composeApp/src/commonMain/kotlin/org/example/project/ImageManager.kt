@@ -14,7 +14,7 @@ class ImageManager(private val fileHandler: FileHandler) {
         return fileHandler.openInputStream("img/project/${projectId}_$imageId.jpg")
     }
 
-    suspend fun getProjectImageThumbnail(projectId: Int, imageId: Int, maxWidth: Int, maxHeight: Int): ByteArray? {
+    suspend fun getProjectImageThumbnail(projectId: Int, imageId: Int, maxWidth: Int=256, maxHeight: Int=256): ByteArray? {
         val imageBytes = getProjectImage(projectId, imageId)
         return imageBytes?.let { resizeImage(it, maxWidth, maxHeight) }
     }
@@ -35,7 +35,7 @@ class ImageManager(private val fileHandler: FileHandler) {
         return fileHandler.openInputStream("img/yarn/${yarnId}_$imageId.jpg")
     }
 
-    suspend fun getYarnImageThumbnail(yarnId: Int, imageId: Int, maxWidth: Int, maxHeight: Int): ByteArray? {
+    suspend fun getYarnImageThumbnail(yarnId: Int, imageId: Int, maxWidth: Int=256, maxHeight: Int=256): ByteArray? {
         val imageBytes = getYarnImage(yarnId, imageId)
         return imageBytes?.let { resizeImage(it, maxWidth, maxHeight) }
     }
