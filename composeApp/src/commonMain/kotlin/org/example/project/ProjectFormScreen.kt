@@ -572,8 +572,11 @@ fun ProjectFormScreen(
                 TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                 Row {
                     if (!isNewProject) {
-                        TextButton(onClick = exportPdf) { Text(stringResource(Res.string.project_form_button_export_pdf)) }
-                        Spacer(Modifier.width(8.dp))
+                        if(false) // disable pdf export
+                        {
+                            TextButton(onClick = exportPdf) { Text(stringResource(Res.string.project_form_button_export_pdf)) }
+                            Spacer(Modifier.width(8.dp))
+                        }
                         TextButton(onClick = {
                             if (usagesForProject.isNotEmpty()) {
                                 showDeleteRestrictionDialog = true
