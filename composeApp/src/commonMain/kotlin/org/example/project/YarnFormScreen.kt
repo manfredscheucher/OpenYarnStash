@@ -46,7 +46,7 @@ fun YarnFormScreen(
     initialImages: Map<Int, ByteArray>,
     usagesForYarn: List<Usage>,
     projectById: (Int) -> Project?,
-    projectImages: Map<Int, ByteArray?>,
+    imageManager: ImageManager,
     settings: Settings,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
@@ -413,7 +413,15 @@ fun YarnFormScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.padding(vertical = 4.dp)
                                 ) {
-                                    val imageBytes = projectImages[project.id]
+                                    var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                    LaunchedEffect(project.id, project.imageIds) {
+                                        val imageId = project.imageIds.firstOrNull()
+                                        imageBytes = if (imageId != null) {
+                                            imageManager.getProjectImageThumbnail(project.id, imageId, 40, 40)
+                                        } else {
+                                            null
+                                        }
+                                    }
                                     val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
 
                                     if (bitmap != null) {

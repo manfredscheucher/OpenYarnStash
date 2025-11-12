@@ -36,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,10 +57,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProjectListScreen(
     projects: List<Project>,
-    projectImages: Map<Int, ByteArray?>,
+    imageManager: ImageManager,
     yarns: List<Yarn>,
     usages: List<Usage>,
-    yarnImages: Map<Int, ByteArray?>,
     settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
@@ -195,12 +195,21 @@ fun ProjectListScreen(
                                 colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
                             ) {
                                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    val imageBytes = projectImages[p.id]
-                                    if (imageBytes != null) {
-                                        val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                    var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                    LaunchedEffect(p.id, p.imageIds) {
+                                        val imageId = p.imageIds.firstOrNull()
+                                        imageBytes = if (imageId != null) {
+                                            imageManager.getProjectImageThumbnail(p.id, imageId, 64, 64)
+                                        } else {
+                                            null
+                                        }
+                                    }
+                                    val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                    if (bitmap != null) {
                                         Image(
                                             bitmap = bitmap,
-                                            contentDescription = "Project image for ${'$'}{p.name}",
+                                            contentDescription = "Project image for ${p.name}",
                                             modifier = Modifier.size(64.dp),
                                             contentScale = ContentScale.Crop
                                         )
@@ -222,10 +231,6 @@ fun ProjectListScreen(
                                         }
                                         Text(statusText)
 
-
-
-
-
                                         Spacer(Modifier.height(8.dp))
 
                                         val yarnsForProject = remember(p.id, usages, yarns) {
@@ -235,13 +240,22 @@ fun ProjectListScreen(
 
                                         if (yarnsForProject.isNotEmpty()) {
                                             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                yarnsForProject.take(5).forEach { yarn ->
-                                                    val yarnImageBytes = yarnImages[yarn.id]
-                                                    if (yarnImageBytes != null) {
-                                                        val bitmap = remember(yarnImageBytes) { yarnImageBytes.toImageBitmap() }
+                                                for (yarn in yarnsForProject.take(5)) {
+                                                    var yarnImageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                                    LaunchedEffect(yarn.id, yarn.imageIds) {
+                                                        val imageId = yarn.imageIds.firstOrNull()
+                                                        yarnImageBytes = if (imageId != null) {
+                                                            imageManager.getYarnImageThumbnail(yarn.id, imageId, 32, 32)
+                                                        } else {
+                                                            null
+                                                        }
+                                                    }
+                                                    val yarnBitmap = remember(yarnImageBytes) { yarnImageBytes?.toImageBitmap() }
+
+                                                    if (yarnBitmap != null) {
                                                         Image(
-                                                            bitmap = bitmap,
-                                                            contentDescription = "Yarn image for ${'$'}{yarn.name}",
+                                                            bitmap = yarnBitmap,
+                                                            contentDescription = "Yarn image for ${yarn.name}",
                                                             modifier = Modifier.size(32.dp),
                                                             contentScale = ContentScale.Crop
                                                         )
@@ -253,16 +267,8 @@ fun ProjectListScreen(
                                                         )
                                                     }
                                                 }
-
-
-
                                             }
                                         }
-
-
-
-
-
                                     }
                                 }
                             }
@@ -273,3 +279,4 @@ fun ProjectListScreen(
         }
     }
 }
+

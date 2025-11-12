@@ -31,7 +31,7 @@ import kotlin.text.append
 @Composable
 fun YarnListScreen(
     yarns: List<Yarn>,
-    yarnImages: Map<Int, ByteArray?>,
+    imageManager: ImageManager,
     usages: List<Usage>,
     settings: Settings,
     onAddClick: () -> Unit,
@@ -193,9 +193,18 @@ fun YarnListScreen(
                         ) {
 
                             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                val imageBytes = yarnImages[data.yarnItem.id]
-                                if (imageBytes != null) {
-                                    val bitmap = remember(imageBytes) { imageBytes.toImageBitmap() }
+                                var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                LaunchedEffect(data.yarnItem.id, data.yarnItem.imageIds) {
+                                    val imageId = data.yarnItem.imageIds.firstOrNull()
+                                    imageBytes = if (imageId != null) {
+                                        imageManager.getYarnImageThumbnail(data.yarnItem.id, imageId, 64, 64)
+                                    } else {
+                                        null
+                                    }
+                                }
+                                val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                if (bitmap != null) {
                                     Image(
                                         bitmap = bitmap,
                                         contentDescription = "Yarn image for ${data.yarnItem.name}",
@@ -231,7 +240,7 @@ fun YarnListScreen(
                                         }
                                         // Append color with bold weight if it exists and is not blank
                                         data.yarnItem.color?.takeIf { it.isNotBlank() }?.let {
-                                            append(" ($it)")
+                                            append(" (${it})")
                                         }
                                     })
                                     Spacer(Modifier.height(8.dp))

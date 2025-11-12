@@ -48,8 +48,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
     var patterns by remember { mutableStateOf(emptyList<Pattern>()) }
-    var projectImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
-    var yarnImages by remember { mutableStateOf<Map<Int, ByteArray?>>(emptyMap()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
     var errorDialogMessage by remember { mutableStateOf<String?>(null) }
 
@@ -125,17 +123,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                         )
 
                         Screen.YarnList -> {
-                            LaunchedEffect(yarns) {
-                                yarnImages = yarns.associate { yarn ->
-                                    yarn.id to yarn.imageIds.firstOrNull()?.let { imageId ->
-                                        withContext(Dispatchers.Default) { imageManager.getYarnImage(yarn.id, imageId) }
-                                    }
-                                }
-                            }
                             val defaultYarnName = stringResource(Res.string.yarn_new_default_name)
                             YarnListScreen(
                                 yarns = yarns.sortedByDescending { it.modified },
-                                yarnImages = yarnImages,
+                                imageManager = imageManager,
                                 usages = usages,
                                 settings = settings,
                                 onAddClick = {
@@ -177,14 +168,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                 }?.filterValues { it != null }?.mapValues { it.value!! } ?: emptyMap()
                             }
 
-                            LaunchedEffect(projects) {
-                                projectImages = projects.associate { project ->
-                                    project.id to project.imageIds.firstOrNull()?.let { imageId ->
-                                        withContext(Dispatchers.Default) { imageManager.getProjectImage(project.id, imageId) }
-                                    }
-                                }
-                            }
-
                             if (existingYarn == null) {
                                 LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
                             } else {
@@ -194,7 +177,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     initialImages = yarnImagesMap,
                                     usagesForYarn = relatedUsages,
                                     projectById = { pid -> projects.firstOrNull { it.id == pid } },
-                                    projectImages = projectImages,
+                                    imageManager = imageManager,
                                     settings = settings,
                                     onBack = { screen = Screen.YarnList },
                                     onDelete = { yarnIdToDelete ->
@@ -259,25 +242,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                         }
 
                         Screen.ProjectList -> {
-                            LaunchedEffect(projects) {
-                                projectImages = projects.associate { project ->
-                                    project.id to project.imageIds.firstOrNull()?.let { imageId ->
-                                        withContext(Dispatchers.Default) { imageManager.getProjectImage(project.id, imageId) }
-                                    }
-                                }
-                            }
-                            LaunchedEffect(yarns) {
-                                yarnImages = yarns.associate { yarn ->
-                                    yarn.id to yarn.imageIds.firstOrNull()?.let { imageId ->
-                                        withContext(Dispatchers.Default) { imageManager.getYarnImage(yarn.id, imageId) }
-                                    }
-                                }
-                            }
                             val defaultProjectName =
                                 stringResource(Res.string.project_new_default_name)
                             ProjectListScreen(
                                 projects = projects.sortedByDescending { it.modified },
-                                projectImages = projectImages,
+                                imageManager = imageManager,
                                 settings = settings,
                                 onAddClick = {
                                     scope.launch {
@@ -303,8 +272,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     }
                                 },
                                 yarns = yarns,
-                                usages = usages,
-                                yarnImages = yarnImages
+                                usages = usages
                             )
                         }
 
