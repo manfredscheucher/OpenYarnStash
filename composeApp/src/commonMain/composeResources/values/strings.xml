@@ -4,7 +4,7 @@
 
     <!-- Home -->
     <string name="home_title">OpenYarnStash</string>
-    <string name="home_button_yarns">Yarns</string>
+    <string name="home_button_yarns">Yarns</string>rag
     <string name="home_button_projects">Projects</string>
     <string name="home_button_patterns">Patterns</string>
     <string name="home_button_statistics">Statistics</string>
@@ -68,6 +68,7 @@
     <string name="yarn_new_default_name">Yarn#%1$d</string>
     <string name="form_unsaved_changes_title">Unsaved Changes</string>
     <string name="form_unsaved_changes_message">Do you want to save the changes?</string>
+    <string name="yarn_form_add_color">Add Color</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>
@@ -91,7 +92,7 @@
     <string name="project_new_default_name">Project#%1$d</string>
     <string name="row_counter_new_default_name">Row Counter #%1$d</string>
     <string name="project_label_needle_size">Needle Size</string>
-    <string name="project_label_size">Size</string>
+    <string name="project_label_size">Size</string>rag
     <string name="project_label_gauge">Gauge</string>
     <string name="project_label_row_count">Row counter</string>
     <string name="project_form_add_counter">Add Counter</string>
@@ -99,7 +100,7 @@
     <string name="project_form_take_image">Take Image</string>
     <string name="project_form_remove_image">Remove Image</string>
     <string name="project_form_add_counter_dialog_title">Add new counter</string>
-    <string name="project_form_add_counter_dialog_label">Counter name</string>
+    <string name="project_form_add_counter_dialog_label">Counter name</string>rag
     <string name="export_as_pdf">Export as PDF</string>
 
     <!-- Pattern form -->
@@ -172,13 +173,14 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="help_screen_title">How you can help</string>
     <string name="ko_fi_button">Buy us a coffee</string>
     <string name="github_button">View on GitHub</string>
-    <string name="github_issues_button">Report a Bug</string>
+    <string name="github_issues_button">Report a Bug</string>rag
     <string name="email_button">Send an Email</string>
     <string name="support_us_on_kofi">Support us on Ko-fi:</string>
     <string name="use_the_app_and_report_issues">Use the app &amp; report issues:</string>
     <string name="report_bugs_or_translation_mistakes">Report bugs or translation mistakes via GitHub Issues or email.</string>
     <string name="to_help_us_reproduce_bugs">To help us reproduce the bugs, please include:</string>
     <string name="steps_to_reproduce">• Steps to reproduce</string>
+rag
     <string name="screenshots_if_possible">• Screenshots (if possible)</string>
     <string name="app_version_platform">• App version/platform</string>
     <string name="data_export_from_app">• Data export (ZIP) from the app (Settings → Export data)</string>
@@ -197,7 +199,7 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="import_json">Import JSON</string>
     <string name="import_zip">Import ZIP</string>
     <string name="import_button_text">Import</string>
-    <string name="import_dialog_title">Warning</string>
+    <string name="import_dialog_title">Warning</string>rag
     <string name="import_dialog_message">The current configuration will be overwritten by the import. Are you sure you want to continue?</string>
     <string name="language_label">Language</string>
     <string name="length_unit_label">Length Unit</string>

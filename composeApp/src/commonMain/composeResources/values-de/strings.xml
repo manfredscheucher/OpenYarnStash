@@ -68,6 +68,7 @@
     <string name="yarn_new_default_name">Wolle#%1$d</string>
     <string name="form_unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="form_unsaved_changes_message">Möchten Sie die Änderungen speichern?</string>
+    <string name="yarn_form_add_color">Farbe hinzufügen</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>

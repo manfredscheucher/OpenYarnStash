@@ -45,4 +45,16 @@ data class Yarn(
                 null
             }?.toInt()
         }
+
+    fun copyForColor(): Yarn {
+        return Yarn(
+            id = -1,
+            name = this.name,
+            brand = this.brand,
+            blend = this.blend,
+            meteragePerSkein = this.meteragePerSkein,
+            weightPerSkein = this.weightPerSkein,
+            modified = getCurrentTimestamp()
+        )
+    }
 }

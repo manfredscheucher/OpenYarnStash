@@ -51,6 +51,7 @@ fun YarnFormScreen(
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Yarn, Map<Int, ByteArray>) -> Unit,
+    onAddColor: (Yarn) -> Unit,
     onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
 ) {
     val totalUsedAmount = usagesForYarn.sumOf { it.amount }
@@ -509,6 +510,14 @@ fun YarnFormScreen(
                     TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                     Row {
                         if (initial != null) {
+                            TextButton(onClick = {
+                                if (hasChanges) {
+                                    showUnsavedDialog = true
+                                } else {
+                                    onAddColor(initial)
+                                }
+                            }) { Text(stringResource(Res.string.yarn_form_add_color)) }
+                            Spacer(Modifier.width(8.dp))
                             if (usagesForYarn.isNotEmpty()) {
                                 TextButton(onClick = { onSetRemainingToZero(initial.id, totalUsedAmount) }) { Text(stringResource(Res.string.yarn_form_button_set_remaining_to_zero)) }
                             } else {
