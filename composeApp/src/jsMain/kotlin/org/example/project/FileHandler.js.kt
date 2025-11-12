@@ -69,4 +69,8 @@ actual class JsFileHandler : FileHandler {
     override suspend fun zipFiles(): ByteArray {
         throw NotImplementedError("ZIP export is not supported for JS target.")
     }
+
+    override suspend fun zipFiles(outputStream: OutputStream) {
+        throw NotImplementedError("ZIP export is not supported for JS target.")
+    }
 }

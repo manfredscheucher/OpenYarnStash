@@ -2,6 +2,13 @@ package org.example.project
 
 expect class FileInputSource
 
+expect abstract class OutputStream() {
+    abstract fun write(b: Int)
+    open fun write(b: ByteArray, off: Int, len: Int)
+    open fun flush()
+    open fun close()
+}
+
 interface FileHandler {
     suspend fun readFile(path: String): String
     suspend fun writeFile(path: String, content: String)
@@ -11,6 +18,7 @@ interface FileHandler {
     fun openInputStream(path: String): FileInputSource?
     suspend fun deleteFile(path: String)
     suspend fun zipFiles(): ByteArray
+    suspend fun zipFiles(outputStream: OutputStream)
     suspend fun renameFilesDirectory(newName: String)
     suspend fun unzipAndReplaceFiles(zipBytes: ByteArray)
     fun createTimestampedFileName(baseName: String, extension: String): String
