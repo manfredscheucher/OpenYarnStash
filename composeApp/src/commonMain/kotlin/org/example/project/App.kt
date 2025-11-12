@@ -225,6 +225,20 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             screen = Screen.YarnList
                                         }
                                     },
+                                    onAddColor = { yarnToCopy ->
+                                        scope.launch {
+                                            val newYarnWithNewId = jsonDataManager.createNewYarn(yarnToCopy.name)
+                                            val newYarn = newYarnWithNewId.copy(
+                                                brand = yarnToCopy.brand,
+                                                blend = yarnToCopy.blend,
+                                                meteragePerSkein = yarnToCopy.meteragePerSkein,
+                                                weightPerSkein = yarnToCopy.weightPerSkein
+                                            )
+                                            withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
+                                            reloadAllData()
+                                            screen = Screen.YarnForm(newYarn.id)
+                                        }
+                                    },
                                     onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
                                         scope.launch {
                                             jsonDataManager.getYarnById(yarnIdToUpdate)
