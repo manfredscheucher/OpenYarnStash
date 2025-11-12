@@ -15,8 +15,20 @@ class ImageManager(private val fileHandler: FileHandler) {
     }
 
     suspend fun getProjectImageThumbnail(projectId: Int, imageId: Int, maxWidth: Int=256, maxHeight: Int=256): ByteArray? {
+        val thumbnailPath = "img/project/${projectId}_${imageId}_${maxWidth}x${maxHeight}.jpg"
+        val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
+        if (cachedThumbnail != null) {
+            return cachedThumbnail
+        }
+
         val imageBytes = getProjectImage(projectId, imageId)
-        return imageBytes?.let { resizeImage(it, maxWidth, maxHeight) }
+        return imageBytes?.let {
+            val resizedImage = resizeImage(it, maxWidth, maxHeight)
+            resizedImage?.let {
+                fileHandler.writeBytes(thumbnailPath, it)
+            }
+            resizedImage
+        }
     }
 
     suspend fun deleteProjectImage(projectId: Int, imageId: Int) {
@@ -36,8 +48,20 @@ class ImageManager(private val fileHandler: FileHandler) {
     }
 
     suspend fun getYarnImageThumbnail(yarnId: Int, imageId: Int, maxWidth: Int=256, maxHeight: Int=256): ByteArray? {
+        val thumbnailPath = "img/yarn/${yarnId}_${imageId}_${maxWidth}x${maxHeight}.jpg"
+        val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
+        if (cachedThumbnail != null) {
+            return cachedThumbnail
+        }
+
         val imageBytes = getYarnImage(yarnId, imageId)
-        return imageBytes?.let { resizeImage(it, maxWidth, maxHeight) }
+        return imageBytes?.let {
+            val resizedImage = resizeImage(it, maxWidth, maxHeight)
+            resizedImage?.let {
+                fileHandler.writeBytes(thumbnailPath, it)
+            }
+            resizedImage
+        }
     }
 
     suspend fun deleteYarnImage(yarnId: Int, imageId: Int) {
