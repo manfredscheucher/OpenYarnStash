@@ -59,7 +59,7 @@ fun SettingsScreen(
     onExport: () -> Unit,
     onExportZip: () -> Unit,
     onImport: (String) -> Unit,
-    onImportZip: (ByteArray) -> Unit,
+    onImportZip: (Any) -> Unit,
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit
 ) {

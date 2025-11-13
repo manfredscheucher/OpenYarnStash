@@ -517,12 +517,14 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                             }
                                         }
                                     },
-                                    onImportZip = { zipBytes ->
+                                    onImportZip = { zipInputStream ->
                                         scope.launch {
                                             try {
                                                 val timestamp = getCurrentTimestamp()
-                                                fileHandler.renameFilesDirectory("files_$timestamp")
-                                                fileHandler.unzipAndReplaceFiles(zipBytes)
+                                                fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
+                                                withContext(Dispatchers.Default) {
+                                                    fileHandler.unzipAndReplaceFiles(zipInputStream)
+                                                }
                                                 reloadAllData()
                                                 snackbarHostState.showSnackbar("ZIP import successful")
                                             } catch (e: Exception) {

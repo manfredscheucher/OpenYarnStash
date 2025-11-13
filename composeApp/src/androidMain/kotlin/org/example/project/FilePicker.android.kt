@@ -29,14 +29,14 @@ actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
 }
 
 @Composable
-actual fun FilePickerForZip(show: Boolean, onFileSelected: (ByteArray?) -> Unit) {
+actual fun FilePickerForZip(show: Boolean, onFileSelected: (Any?) -> Unit) {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { uri ->
             uri?.let {
-                context.contentResolver.openInputStream(it)?.use { stream ->
-                    onFileSelected(stream.readBytes())
+                context.contentResolver.openInputStream(it)?.let {
+                    onFileSelected(it)
                 }
             } ?: onFileSelected(null)
         }

@@ -1,11 +1,9 @@
 package org.example.project
 
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.OutputStream
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipEntry
@@ -91,25 +89,7 @@ class JvmFileHandler : FileHandler {
     }
 
     override suspend fun zipFiles(): ByteArray {
-        val baos = ByteArrayOutputStream()
-        ZipOutputStream(baos).use { zos ->
-            filesDir.walkTopDown().filter { it.absolutePath != filesDir.absolutePath && it.name != "profileInstalled" }.forEach { file ->
-                val entryName = file.relativeTo(filesDir).path.replace(File.separatorChar, '/')
-                val zipEntry = if (file.isDirectory) {
-                    ZipEntry(entryName + "/")
-                } else {
-                    ZipEntry(entryName)
-                }
-                zos.putNextEntry(zipEntry)
-                if (file.isFile) {
-                    FileInputStream(file).use { fis ->
-                        fis.copyTo(zos)
-                    }
-                }
-                zos.closeEntry()
-            }
-        }
-        return baos.toByteArray()
+        throw UnsupportedOperationException("zipFiles is not supported on JVM")
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
@@ -119,14 +99,16 @@ class JvmFileHandler : FileHandler {
         }
     }
 
-    override suspend fun unzipAndReplaceFiles(zipBytes: ByteArray) {
+    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
+        val inputStream = zipInputStream as? InputStream ?: return
+
         if (filesDir.exists()) {
             val backupDirName = "files-${SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())}"
             renameFilesDirectory(backupDirName)
         }
         filesDir.mkdirs()
 
-        ZipInputStream(ByteArrayInputStream(zipBytes)).use { zis ->
+        ZipInputStream(inputStream).use { zis ->
             var ze: ZipEntry?
             while (zis.nextEntry.also { ze = it } != null) {
                 val entry = ze ?: continue

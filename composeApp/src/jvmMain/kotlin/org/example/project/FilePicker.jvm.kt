@@ -21,14 +21,14 @@ actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
 }
 
 @Composable
-actual fun FilePickerForZip(show: Boolean, onFileSelected: (ByteArray?) -> Unit) {
+actual fun FilePickerForZip(show: Boolean, onFileSelected: (Any?) -> Unit) {
     if (show) {
         val fileChooser = JFileChooser()
         fileChooser.fileFilter = FileNameExtensionFilter("ZIP Archives", "zip")
         val result = fileChooser.showOpenDialog(null)
         if (result == JFileChooser.APPROVE_OPTION) {
             val selectedFile: File = fileChooser.selectedFile
-            onFileSelected(selectedFile.readBytes())
+            onFileSelected(selectedFile.inputStream())
         } else {
             onFileSelected(null)
         }

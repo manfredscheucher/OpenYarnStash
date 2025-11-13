@@ -19,6 +19,6 @@ interface FileHandler {
     suspend fun deleteFile(path: String)
     suspend fun zipFiles(): ByteArray
     suspend fun renameFilesDirectory(newName: String)
-    suspend fun unzipAndReplaceFiles(zipBytes: ByteArray)
+    suspend fun unzipAndReplaceFiles(zipInputStream: Any)
     fun createTimestampedFileName(baseName: String, extension: String): String
 }
