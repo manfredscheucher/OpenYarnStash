@@ -92,12 +92,7 @@ class JvmFileHandler : FileHandler {
 
     override suspend fun zipFiles(): ByteArray {
         val baos = ByteArrayOutputStream()
-        zipFiles(baos)
-        return baos.toByteArray()
-    }
-
-    override suspend fun zipFiles(outputStream: OutputStream) {
-        ZipOutputStream(outputStream).use { zos ->
+        ZipOutputStream(baos).use { zos ->
             filesDir.walkTopDown().filter { it.absolutePath != filesDir.absolutePath && it.name != "profileInstalled" }.forEach { file ->
                 val entryName = file.relativeTo(filesDir).path.replace(File.separatorChar, '/')
                 val zipEntry = if (file.isDirectory) {
@@ -114,6 +109,7 @@ class JvmFileHandler : FileHandler {
                 zos.closeEntry()
             }
         }
+        return baos.toByteArray()
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
