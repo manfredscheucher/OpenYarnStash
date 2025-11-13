@@ -85,6 +85,7 @@ fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(stringResource(Res.string.info_copyright_notice), style = MaterialTheme.typography.bodySmall)
+            VersionInfoView()
         }
     }
 }
