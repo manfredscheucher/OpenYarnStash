@@ -13,11 +13,12 @@ class MainActivity : ComponentActivity() {
         val fileHandler = AndroidFileHandler(this)
         val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
         val imageManager = ImageManager(fileHandler)
+        val pdfManager = PdfManager(fileHandler)
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
         val fileDownloader = FileDownloader(this)
 
         setContent {
-            App(jsonDataManager, imageManager, settingsManager, fileDownloader, fileHandler)
+            App(jsonDataManager, imageManager, pdfManager, settingsManager, fileDownloader, fileHandler)
         }
     }
 }

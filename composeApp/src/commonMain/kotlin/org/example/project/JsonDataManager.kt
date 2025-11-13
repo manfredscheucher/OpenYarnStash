@@ -213,6 +213,14 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         save()
     }
 
+    suspend fun updatePatternPdfId(patternId: Int, pdfId: Int?) {
+        val index = data.patterns.indexOfFirst { it.id == patternId }
+        if (index != -1) {
+            data.patterns[index] = data.patterns[index].copy(pdfId = pdfId)
+        }
+        save()
+    }
+
     fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
         val yarn = getYarnById(yarnId) ?: return 0
         val used = data.usages

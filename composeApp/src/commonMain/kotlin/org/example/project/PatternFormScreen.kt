@@ -48,6 +48,8 @@ import openyarnstash.composeapp.generated.resources.pattern_form_new
 import openyarnstash.composeapp.generated.resources.pattern_label_creator
 import openyarnstash.composeapp.generated.resources.pattern_label_name
 import openyarnstash.composeapp.generated.resources.pattern_label_gauge
+import openyarnstash.composeapp.generated.resources.pattern_form_select_pdf
+import openyarnstash.composeapp.generated.resources.pattern_form_remove_pdf
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -55,22 +57,28 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PatternFormScreen(
     initial: Pattern?,
+    initialPdf: ByteArray?,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Pattern) -> Unit
+    onSave: (Pattern, ByteArray?) -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
     var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
+    var pdf by remember { mutableStateOf(initialPdf) }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
-    val hasChanges by remember(name, creator, gauge) {
+    val pdfPicker = rememberPdfPickerLauncher {
+        pdf = it
+    }
+
+    val hasChanges by remember(name, creator, gauge, pdf) {
         derivedStateOf {
             if (initial == null) {
-                name.isNotEmpty() || creator.isNotEmpty() || gauge.isNotEmpty()
+                name.isNotEmpty() || creator.isNotEmpty() || gauge.isNotEmpty() || pdf != null
             } else {
-                name != initial.name || creator != (initial.creator ?: "") || gauge != (initial.gauge ?: "")
+                name != initial.name || creator != (initial.creator ?: "") || gauge != (initial.gauge ?: "") || pdf != initialPdf
             }
         }
     }
@@ -81,7 +89,7 @@ fun PatternFormScreen(
             creator = creator.ifBlank { null },
             gauge = gauge.ifBlank { null }
         )
-        onSave(pattern)
+        onSave(pattern, pdf)
     }
 
     val backAction = {
@@ -156,6 +164,19 @@ fun PatternFormScreen(
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(16.dp))
+                if (pdf == null) {
+                    Button(onClick = { pdfPicker("application/pdf") }) {
+                        Text(stringResource(Res.string.pattern_form_select_pdf))
+                    }
+                } else {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("pattern.pdf")
+                        Button(onClick = { pdf = null }) {
+                            Text(stringResource(Res.string.pattern_form_remove_pdf))
+                        }
+                    }
+                }
                 Spacer(Modifier.height(24.dp))
                 Row(
                     Modifier.fillMaxWidth(),

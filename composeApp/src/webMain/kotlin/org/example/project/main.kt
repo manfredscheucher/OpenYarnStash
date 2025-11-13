@@ -8,10 +8,11 @@ fun main() {
     val fileHandler = JsFileHandler()
     val jsonDataManager = JsonDataManager(fileHandler)
     val imageManager = ImageManager(fileHandler)
+    val pdfManager = PdfManager(fileHandler)
     val settingsManager = JsonSettingsManager(fileHandler)
     val fileDownloader = JsFileDownloader()
 
     ComposeViewport("root") {
-        App(jsonDataManager, imageManager, settingsManager, fileDownloader, fileHandler)
+        App(jsonDataManager, imageManager, pdfManager, settingsManager, fileDownloader, fileHandler)
     }
 }

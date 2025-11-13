@@ -41,7 +41,7 @@ sealed class Screen {
 }
 
 @Composable
-fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsManager: JsonSettingsManager, fileDownloader: FileDownloader, fileHandler: FileHandler) {
+fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager: PdfManager, settingsManager: JsonSettingsManager, fileDownloader: FileDownloader, fileHandler: FileHandler) {
     var screen by remember { mutableStateOf<Screen>(Screen.Home) }
     var settings by remember { mutableStateOf(Settings()) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
@@ -438,11 +438,25 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                     null
                                 }
                             }
+
+                            var initialPdf by remember { mutableStateOf<ByteArray?>(null) }
+
+                            LaunchedEffect(s.patternId, existingPattern) {
+                                initialPdf = if (existingPattern != null) {
+                                    withContext(Dispatchers.Default) {
+                                        pdfManager.getPatternPdf(existingPattern.id)
+                                    }
+                                } else {
+                                    null
+                                }
+                            }
+
                             if (existingPattern == null) {
                                 LaunchedEffect(s.patternId) { screen = Screen.PatternList }
                             } else {
                                 PatternFormScreen(
                                     initial = existingPattern,
+                                    initialPdf = initialPdf,
                                     onBack = { screen = Screen.PatternList },
                                     onDelete = { patternIdToDelete ->
                                         scope.launch {
@@ -450,14 +464,24 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, settingsMa
                                                 val updatedProject = projectToUpdate.copy(patternId = null)
                                                 withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(updatedProject) }
                                             }
-                                            withContext(Dispatchers.Default) { jsonDataManager.deletePattern(patternIdToDelete) }
+                                            withContext(Dispatchers.Default) {
+                                                pdfManager.deletePatternPdf(patternIdToDelete)
+                                                jsonDataManager.deletePattern(patternIdToDelete)
+                                            }
                                             reloadAllData()
                                             screen = Screen.PatternList
                                         }
                                     },
-                                    onSave = { editedPattern ->
+                                    onSave = { editedPattern, pdf ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) { jsonDataManager.addOrUpdatePattern(editedPattern) }
+                                            withContext(Dispatchers.Default) {
+                                                if (pdf != null) {
+                                                    pdfManager.savePatternPdf(editedPattern.id, pdf)
+                                                } else {
+                                                    pdfManager.deletePatternPdf(editedPattern.id)
+                                                }
+                                                jsonDataManager.addOrUpdatePattern(editedPattern)
+                                            }
                                             reloadAllData()
                                             screen = Screen.PatternList
                                         }
