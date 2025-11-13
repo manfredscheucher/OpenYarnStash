@@ -7,7 +7,7 @@ import java.io.File
 
 actual class FileDownloader(private val context: Context) {
     actual fun download(fileName: String, data: String) {
-        val file = File(context.cacheDir, fileName)
+        val file = File(context.filesDir, fileName)
         file.writeText(data)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -19,7 +19,7 @@ actual class FileDownloader(private val context: Context) {
     }
 
     actual fun download(fileName: String, data: ByteArray) {
-        val file = File(context.cacheDir, fileName)
+        val file = File(context.filesDir, fileName)
         file.writeBytes(data)
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
