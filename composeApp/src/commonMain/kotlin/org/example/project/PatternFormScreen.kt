@@ -75,6 +75,7 @@ fun PatternFormScreen(
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
 
     val pdfPicker = rememberPdfPickerLauncher {
         pdf = it
@@ -99,12 +100,17 @@ fun PatternFormScreen(
         onSave(pattern, pdf)
     }
 
-    val backAction = {
+    val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
             showUnsavedDialog = true
+            onConfirmUnsaved = onConfirm
         } else {
-            onBack()
+            onConfirm()
         }
+    }
+
+    val backAction = {
+        confirmDiscardChanges(onBack)
     }
 
     BackButtonHandler {
@@ -127,7 +133,7 @@ fun PatternFormScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onBack()
+                        onConfirmUnsaved()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }
@@ -135,6 +141,7 @@ fun PatternFormScreen(
                     TextButton(onClick = {
                         saveAction()
                         showUnsavedDialog = false
+                        onConfirmUnsaved()
                     }) {
                         Text(stringResource(Res.string.common_yes))
                     }
@@ -178,7 +185,7 @@ fun PatternFormScreen(
                     }
                 } else {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = onViewPdf) {
+                        Button(onClick = { confirmDiscardChanges(onViewPdf) }) {
                             Text(stringResource(Res.string.pattern_form_view_pdf))
                         }
                         Button(onClick = { pdf = null }) {
