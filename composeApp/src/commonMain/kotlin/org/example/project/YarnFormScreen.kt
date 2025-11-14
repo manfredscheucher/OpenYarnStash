@@ -89,8 +89,8 @@ fun YarnFormScreen(
         }
     }
 
-    val imagePicker = rememberImagePickerLauncher {
-        newImages[nextTempId++] = it
+    val imagePicker = rememberImagePickerLauncher { images ->
+        images.forEach { newImages[nextTempId++] = it }
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->

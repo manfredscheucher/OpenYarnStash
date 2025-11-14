@@ -15,17 +15,17 @@ actual class ImagePickerLauncher(
 }
 
 @Composable
-actual fun rememberImagePickerLauncher(onImageSelected: (ByteArray) -> Unit): ImagePickerLauncher {
+actual fun rememberImagePickerLauncher(onImagesSelected: (List<ByteArray>) -> Unit): ImagePickerLauncher {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        uri?.let {
-            context.contentResolver.openInputStream(it)?.use { inputStream ->
-                val resizedImage = resizeImage(inputStream.readBytes(), 400, 400)
-                onImageSelected(resizedImage)
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        val imageBytes = uris.mapNotNull { uri ->
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                resizeImage(inputStream.readBytes(), 400, 400)
             }
         }
+        onImagesSelected(imageBytes)
     }
     return remember { ImagePickerLauncher(launcher) }
 }
