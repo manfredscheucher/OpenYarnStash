@@ -6,6 +6,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -87,6 +89,7 @@ kotlin {
             implementation(libs.kotlin.browser)
         }
         named("commonMain") {
+            kotlin.srcDir(generateVersionInfo)
             kotlin.srcDir(generateVersionInfo.map { it.outputDir })
         }
     }
@@ -144,15 +147,17 @@ abstract class GenerateVersionInfo @Inject constructor(
 
     @TaskAction
     fun run() {
-        val version = project.version.toString()
+        val properties = Properties()
+        val propertiesFile = project.rootProject.file("gradle.properties")
+        if (propertiesFile.exists()) {
+            FileInputStream(propertiesFile).use { properties.load(it) }
+        }
+        val version = properties.getProperty("version", "unspecified")
 
-        // 1) bevorzugt aus CI
-        val envSha = System.getenv("GIT_SHA")?.takeIf { it.isNotBlank() }
-
-        // 2) sonst lokal aus git, aber ohne Build-Abbruch bei Fehler
-        val sha = envSha ?: runCatching {
+        val sha = runCatching {
             val out = ByteArrayOutputStream()
             execOps.exec {
+                workingDir = project.rootDir
                 commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
@@ -161,6 +166,7 @@ abstract class GenerateVersionInfo @Inject constructor(
 
         val isDirty = runCatching {
             execOps.exec {
+                workingDir = project.rootDir
                 commandLine("git", "diff", "--quiet")
             }
             false
