@@ -20,12 +20,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -71,6 +75,7 @@ fun PatternFormScreen(
     initial: Pattern?,
     initialPdf: ByteArray?,
     projects: List<Project>,
+    patterns: List<Pattern>,
     imageManager: ImageManager,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
@@ -192,7 +197,37 @@ fun PatternFormScreen(
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = category, onValueChange = { category = it }, label = { Text(stringResource(Res.string.pattern_label_category)) }, modifier = Modifier.fillMaxWidth())
+                var expanded by remember { mutableStateOf(false) }
+                val categories = remember { patterns.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct() }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextField(
+                        modifier = Modifier.fillMaxWidth().menuAnchor(),
+                        value = category,
+                        onValueChange = { category = it },
+                        label = { Text(stringResource(Res.string.pattern_label_category)) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        categories.forEach { selectionOption ->
+                            DropdownMenuItem(
+                                text = { Text(selectionOption) },
+                                onClick = {
+                                    category = selectionOption
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(16.dp))
