@@ -2,11 +2,13 @@ package org.example.project
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -457,77 +459,62 @@ fun YarnFormScreen(
 
                 if (initial != null) {
                     Spacer(Modifier.height(16.dp))
-                    val yarnHeight = 50
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        val totalHeight = if (usagesForYarn.isNotEmpty()) {
-                            (usagesForYarn.size * yarnHeight).dp + 75.dp
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f), RoundedCornerShape(4.dp))
+                            .padding(8.dp)
+                    ) {
+                        Text(stringResource(Res.string.usage_projects_title), style = MaterialTheme.typography.bodySmall)
+                        Spacer(Modifier.height(8.dp))
+                        if (usagesForYarn.isEmpty()) {
+                            Text(stringResource(Res.string.yarn_form_no_projects_assigned), modifier = Modifier.padding(start = 8.dp))
                         } else {
-                            64.dp
-                        }
-                        OutlinedTextField(
-                            value = " ",
-                            onValueChange = { },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(totalHeight),
-                            readOnly = true,
-                            label = { Text(stringResource(Res.string.usage_projects_title)) }
-                        )
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 8.dp, top = 16.dp, end = 8.dp)
-                        ) {
-                            if (usagesForYarn.isEmpty()) {
-                                Text(stringResource(Res.string.yarn_form_no_projects_assigned), modifier = Modifier.padding(start = 8.dp))
-                            } else {
-                                usagesForYarn.forEach { usage ->
-                                    val project = projectById(usage.projectId)
-                                    if (project != null) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-                                        ) {
-                                            var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
-                                            LaunchedEffect(project.id, project.imageIds) {
-                                                val imageId = project.imageIds.firstOrNull()
-                                                imageBytes = if (imageId != null) {
-                                                    imageManager.getProjectImageThumbnail(project.id, imageId)
-                                                } else {
-                                                    null
-                                                }
-                                            }
-                                            val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
-
-                                            if (bitmap != null) {
-                                                Image(
-                                                    bitmap = bitmap,
-                                                    contentDescription = "Project image",
-                                                    modifier = Modifier.size(40.dp)
-                                                )
+                            usagesForYarn.forEach { usage ->
+                                val project = projectById(usage.projectId)
+                                if (project != null) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+                                    ) {
+                                        var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                        LaunchedEffect(project.id, project.imageIds) {
+                                            val imageId = project.imageIds.firstOrNull()
+                                            imageBytes = if (imageId != null) {
+                                                imageManager.getProjectImageThumbnail(project.id, imageId)
                                             } else {
-                                                Image(
-                                                    painter = painterResource(Res.drawable.projects),
-                                                    contentDescription = "Default project image",
-                                                    modifier = Modifier.size(40.dp).alpha(0.5f)
-                                                )
+                                                null
                                             }
+                                        }
+                                        val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
 
-                                            Spacer(Modifier.width(8.dp))
+                                        if (bitmap != null) {
+                                            Image(
+                                                bitmap = bitmap,
+                                                contentDescription = "Project image",
+                                                modifier = Modifier.size(40.dp)
+                                            )
+                                        } else {
+                                            Image(
+                                                painter = painterResource(Res.drawable.projects),
+                                                contentDescription = "Default project image",
+                                                modifier = Modifier.size(40.dp).alpha(0.5f)
+                                            )
+                                        }
 
-                                            var usageText = "${project.name}: ${usage.amount} g"
-                                            initial.weightPerSkein?.let { weightPerSkein ->
-                                                initial.meteragePerSkein?.let { meteragePerSkein ->
-                                                    if (weightPerSkein > 0) {
-                                                        val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
-                                                        usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
-                                                    }
+                                        Spacer(Modifier.width(8.dp))
+
+                                        var usageText = "${project.name}: ${usage.amount} g"
+                                        initial.weightPerSkein?.let { weightPerSkein ->
+                                            initial.meteragePerSkein?.let { meteragePerSkein ->
+                                                if (weightPerSkein > 0) {
+                                                    val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
+                                                    usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
                                                 }
                                             }
-                                            Text(usageText, modifier = Modifier.weight(1f))
-                                            Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
-                                                Text(stringResource(Res.string.yarn_form_view_project))
-                                            }
+                                        }
+                                        Text(usageText, modifier = Modifier.weight(1f))
+                                        Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
+                                            Text(stringResource(Res.string.yarn_form_view_project))
                                         }
                                     }
                                 }
