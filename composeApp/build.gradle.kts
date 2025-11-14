@@ -176,17 +176,18 @@ abstract class GenerateVersionInfo @Inject constructor(
         val version = versionName.get()
 
         // SHA via git rev-parse (Fallback auf "unknown" wenn .git oder git fehlt)
-        val sha = runCatching {
             val out = ByteArrayOutputStream()
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
             execOps.exec {
                 workingDir = wd
-                commandLine("git", "rev-parse", "--short", "HEAD")
+                commandLine("pwd")
+                //commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
-            out.toString().trim().ifEmpty { "unknown" }
-        }.getOrDefault("unknown")
+        val sha =
+            out.toString().trim().ifEmpty { "unknown1" }
+         //.getOrDefault("unknown2")
 
         // Dirty-Flag per Exit-Code (0 clean, !=0 dirty)
         val isDirty = runCatching {
@@ -197,7 +198,7 @@ abstract class GenerateVersionInfo @Inject constructor(
                 isIgnoreExitValue = true
             }
             result.exitValue != 0
-        }.getOrDefault(false)
+        }.getOrDefault(null)
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
