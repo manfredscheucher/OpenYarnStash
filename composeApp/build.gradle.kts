@@ -154,23 +154,25 @@ abstract class GenerateVersionInfo @Inject constructor(
         }
         val version = properties.getProperty("version", "unspecified")
 
-        val sha = runCatching {
-            val out = ByteArrayOutputStream()
-            execOps.exec {
-                workingDir = project.rootDir
-                commandLine("git", "rev-parse", "--short", "HEAD")
-                standardOutput = out
-            }
-            out.toString().trim().ifEmpty { "unknown" }
-        }.getOrDefault("unknown")
+        val shaOut = ByteArrayOutputStream()
+        execOps.exec {
+            workingDir = project.rootDir
+            commandLine("git", "rev-parse", "--short", "HEAD")
+            standardOutput = shaOut
+        }
+        val sha = shaOut.toString().trim()
 
-        val isDirty = runCatching {
+        var isDirty = true
+        try {
             execOps.exec {
                 workingDir = project.rootDir
                 commandLine("git", "diff", "--quiet")
             }
-            false
-        }.getOrDefault(true)
+            isDirty = false
+        } catch (e: Exception) {
+            // The command returns a non-zero exit code if there are changes, which causes an exception.
+            // We expect this, so we leave isDirty as true.
+        }
 
         val pkg = "org.example.project"
 
