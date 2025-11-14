@@ -251,7 +251,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                     screen = Screen.YarnList
                                                 }
                                         }
-                                    }
+                                    },
+                                    onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
                                 )
                             }
                         }

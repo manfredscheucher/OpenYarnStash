@@ -52,7 +52,8 @@ fun YarnFormScreen(
     onDelete: (Int) -> Unit,
     onSave: (Yarn, Map<Int, ByteArray>) -> Unit,
     onAddColor: (Yarn) -> Unit,
-    onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit
+    onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit,
+    onNavigateToProject: (Int) -> Unit
 ) {
     val totalUsedAmount = usagesForYarn.sumOf { it.amount }
 
@@ -98,6 +99,7 @@ fun YarnFormScreen(
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
 
     val hasChanges by remember(
         name,
@@ -165,12 +167,17 @@ fun YarnFormScreen(
         onSave(yarn, newImages.toMap())
     }
 
-    val backAction = {
+    val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
             showUnsavedDialog = true
+            onConfirmUnsaved = onConfirm
         } else {
-            onBack()
+            onConfirm()
         }
+    }
+
+    val backAction = {
+        confirmDiscardChanges(onBack)
     }
 
     BackButtonHandler {
@@ -193,7 +200,7 @@ fun YarnFormScreen(
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
                         showUnsavedDialog = false
-                        onBack()
+                        onConfirmUnsaved()
                     }) {
                         Text(stringResource(Res.string.common_no))
                     }
@@ -201,6 +208,7 @@ fun YarnFormScreen(
                     TextButton(onClick = {
                         saveAction()
                         showUnsavedDialog = false
+                        onConfirmUnsaved()
                     }) {
                         Text(stringResource(Res.string.common_yes))
                     }
@@ -495,7 +503,10 @@ fun YarnFormScreen(
                                             }
                                         }
                                     }
-                                    Text(usageText)
+                                    Text(usageText, modifier = Modifier.weight(1f))
+                                    Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
+                                        Text(stringResource(Res.string.yarn_form_view_project))
+                                    }
                                 }
                             }
                         }
@@ -511,11 +522,7 @@ fun YarnFormScreen(
                     Row {
                         if (initial != null) {
                             TextButton(onClick = {
-                                if (hasChanges) {
-                                    showUnsavedDialog = true
-                                } else {
-                                    onAddColor(initial)
-                                }
+                                confirmDiscardChanges { onAddColor(initial) }
                             }) { Text(stringResource(Res.string.yarn_form_add_color)) }
                             Spacer(Modifier.width(8.dp))
                             if (usagesForYarn.isNotEmpty()) {

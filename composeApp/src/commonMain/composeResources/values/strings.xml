@@ -69,6 +69,7 @@
     <string name="form_unsaved_changes_title">Unsaved Changes</string>
     <string name="form_unsaved_changes_message">Do you want to save the changes?</string>
     <string name="yarn_form_add_color">Add Color</string>
+    <string name="yarn_form_view_project">View Project</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>
