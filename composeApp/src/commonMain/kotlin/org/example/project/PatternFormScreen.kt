@@ -1,5 +1,6 @@
 package org.example.project
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -32,7 +34,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -55,7 +59,9 @@ import openyarnstash.composeapp.generated.resources.pattern_form_view_pdf
 import openyarnstash.composeapp.generated.resources.pattern_form_no_projects_assigned
 import openyarnstash.composeapp.generated.resources.pattern_form_assigned_projects
 import openyarnstash.composeapp.generated.resources.pattern_form_view_project
+import openyarnstash.composeapp.generated.resources.projects
 import org.example.project.components.SelectAllOutlinedTextField
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +70,7 @@ fun PatternFormScreen(
     initial: Pattern?,
     initialPdf: ByteArray?,
     projects: List<Project>,
+    imageManager: ImageManager,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Pattern, ByteArray?) -> Unit,
@@ -204,8 +211,36 @@ fun PatternFormScreen(
                     Text(stringResource(Res.string.pattern_form_assigned_projects))
                     Spacer(Modifier.height(8.dp))
                     projectsWithPattern.forEach { project ->
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(project.name)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                        ) {
+                            var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                            LaunchedEffect(project.id, project.imageIds) {
+                                val imageId = project.imageIds.firstOrNull()
+                                imageBytes = if (imageId != null) {
+                                    imageManager.getProjectImageThumbnail(project.id, imageId)
+                                } else {
+                                    null
+                                }
+                            }
+                            val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                            if (bitmap != null) {
+                                Image(
+                                    bitmap = bitmap,
+                                    contentDescription = "Project image",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            } else {
+                                Image(
+                                    painter = painterResource(Res.drawable.projects),
+                                    contentDescription = "Default project image",
+                                    modifier = Modifier.size(40.dp).alpha(0.5f)
+                                )
+                            }
+                            Spacer(Modifier.width(8.dp))
+                            Text(project.name, modifier = Modifier.weight(1f))
                             Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
                                 Text(stringResource(Res.string.pattern_form_view_project))
                             }

@@ -459,6 +459,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     initial = existingPattern,
                                     initialPdf = initialPdf,
                                     projects = projects,
+                                    imageManager = imageManager,
                                     onBack = { screen = Screen.PatternList },
                                     onDelete = { patternIdToDelete ->
                                         scope.launch {
