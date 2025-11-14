@@ -7,8 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-const val GIT_HASH = "a5b658fba261d840f7dba6721cfe7bc6d832e059"
-const val IS_DIRTY = true
+// These values are now provided by the generated GeneratedVersionInfo object.
+// The constants here will reference the generated values.
+const val VERSION_NAME = GeneratedVersionInfo.VERSION
+const val GIT_HASH = GeneratedVersionInfo.GIT_SHA
+const val IS_DIRTY = GeneratedVersionInfo.IS_DIRTY
 
 @Composable
 fun VersionInfoView() {

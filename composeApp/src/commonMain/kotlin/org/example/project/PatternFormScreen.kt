@@ -198,7 +198,7 @@ fun PatternFormScreen(
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 var expanded by remember { mutableStateOf(false) }
-                val categories = remember { patterns.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct() }
+                val categories = patterns.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct()
 
                 ExposedDropdownMenuBox(
                     expanded = expanded,

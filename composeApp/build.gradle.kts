@@ -1,5 +1,11 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.TaskAction
+import org.gradle.process.ExecOperations
+import javax.inject.Inject
+import java.io.ByteArrayOutputStream
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -90,7 +96,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = project.version.toString()
     }
     packaging {
         resources {
@@ -119,7 +125,67 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.example.project"
-            packageVersion = "1.0.0"
+            packageVersion = project.version.toString()
         }
+    }
+}
+
+abstract class GenerateVersionInfo @Inject constructor(
+    private val execOps: ExecOperations
+) : DefaultTask() {
+
+    @get:OutputDirectory
+    val outputDir = project.layout.buildDirectory.dir("generated/versionInfo")
+
+    @TaskAction
+    fun run() {
+        val version = project.version.toString()
+
+        // 1) bevorzugt aus CI
+        val envSha = System.getenv("GIT_SHA")?.takeIf { it.isNotBlank() }
+
+        // 2) sonst lokal aus git, aber ohne Build-Abbruch bei Fehler
+        val sha = envSha ?: runCatching {
+            val out = ByteArrayOutputStream()
+            execOps.exec {
+                commandLine("git", "rev-parse", "--short", "HEAD")
+                standardOutput = out
+            }
+            out.toString().trim().ifEmpty { "unknown" }
+        }.getOrDefault("unknown")
+
+        val isDirty = runCatching {
+            execOps.exec {
+                commandLine("git", "diff", "--quiet")
+            }
+            false
+        }.getOrDefault(true)
+
+        val pkg = "org.example.project"
+
+        val dir = outputDir.get().asFile
+        dir.mkdirs()
+        val file = dir.resolve("GeneratedVersionInfo.kt")
+        file.writeText(
+            """
+            // Generated – do not edit.
+            package $pkg
+
+            object GeneratedVersionInfo {
+                const val VERSION = "$version"
+                const val GIT_SHA = "$sha"
+                const val IS_DIRTY = $isDirty
+            }
+            """.trimIndent()
+        )
+    }
+}
+
+val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionInfo::class.java)
+
+kotlin {
+    sourceSets.named("commonMain") {
+        kotlin.srcDir(generateVersionInfo)
+        kotlin.srcDir(generateVersionInfo.map { it.outputDir })
     }
 }
