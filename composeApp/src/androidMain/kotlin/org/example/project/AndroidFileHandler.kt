@@ -87,7 +87,30 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun zipFiles(): ByteArray {
-        throw UnsupportedOperationException("zipFiles is not supported on Android")
+        val tempFile = File.createTempFile("export", ".zip", context.cacheDir)
+        try {
+            FileOutputStream(tempFile).use { fos ->
+                ZipOutputStream(fos).use { zos ->
+                    val buffer = ByteArray(8192)
+                    filesDir.listFiles()?.forEach { file ->
+                        if (file.isFile) {
+                            FileInputStream(file).use { fis ->
+                                val entry = ZipEntry(file.name)
+                                zos.putNextEntry(entry)
+                                var len: Int
+                                while (fis.read(buffer).also { len = it } > 0) {
+                                    zos.write(buffer, 0, len)
+                                }
+                                zos.closeEntry()
+                            }
+                        }
+                    }
+                }
+            }
+            return tempFile.readBytes()
+        } finally {
+            tempFile.delete()
+        }
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
