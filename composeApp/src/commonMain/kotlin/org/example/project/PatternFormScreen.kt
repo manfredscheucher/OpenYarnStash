@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +51,7 @@ import openyarnstash.composeapp.generated.resources.pattern_label_name
 import openyarnstash.composeapp.generated.resources.pattern_label_gauge
 import openyarnstash.composeapp.generated.resources.pattern_form_select_pdf
 import openyarnstash.composeapp.generated.resources.pattern_form_remove_pdf
+import openyarnstash.composeapp.generated.resources.pattern_form_view_pdf
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,12 +62,17 @@ fun PatternFormScreen(
     initialPdf: ByteArray?,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
-    onSave: (Pattern, ByteArray?) -> Unit
+    onSave: (Pattern, ByteArray?) -> Unit,
+    onViewPdf: () -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
     var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
-    var pdf by remember { mutableStateOf(initialPdf) }
+    var pdf by remember { mutableStateOf<ByteArray?>(null) }
+
+    LaunchedEffect(initialPdf) {
+        pdf = initialPdf
+    }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
 
@@ -171,7 +178,9 @@ fun PatternFormScreen(
                     }
                 } else {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("pattern.pdf")
+                        Button(onClick = onViewPdf) {
+                            Text(stringResource(Res.string.pattern_form_view_pdf))
+                        }
                         Button(onClick = { pdf = null }) {
                             Text(stringResource(Res.string.pattern_form_remove_pdf))
                         }

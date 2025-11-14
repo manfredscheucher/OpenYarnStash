@@ -38,6 +38,7 @@ sealed class Screen {
     data object Settings : Screen()
     data object PatternList : Screen()
     data class PatternForm(val patternId: Int) : Screen()
+    data class PdfViewer(val patternId: Int) : Screen()
 }
 
 @Composable
@@ -485,7 +486,25 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             reloadAllData()
                                             screen = Screen.PatternList
                                         }
-                                    }
+                                    },
+                                    onViewPdf = { screen = Screen.PdfViewer(s.patternId) }
+                                )
+                            }
+                        }
+
+                        is Screen.PdfViewer -> {
+                            var pdf by remember { mutableStateOf<ByteArray?>(null) }
+
+                            LaunchedEffect(s.patternId) {
+                                pdf = withContext(Dispatchers.Default) {
+                                    pdfManager.getPatternPdf(s.patternId)
+                                }
+                            }
+
+                            if (pdf != null) {
+                                PdfViewerScreen(
+                                    pdf = pdf!!,
+                                    onBack = { screen = Screen.PatternForm(s.patternId) }
                                 )
                             }
                         }
