@@ -59,6 +59,7 @@ import openyarnstash.composeapp.generated.resources.pattern_form_view_pdf
 import openyarnstash.composeapp.generated.resources.pattern_form_no_projects_assigned
 import openyarnstash.composeapp.generated.resources.pattern_form_assigned_projects
 import openyarnstash.composeapp.generated.resources.pattern_form_view_project
+import openyarnstash.composeapp.generated.resources.pattern_label_category
 import openyarnstash.composeapp.generated.resources.projects
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.painterResource
@@ -79,6 +80,7 @@ fun PatternFormScreen(
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
+    var category by remember { mutableStateOf(initial?.category ?: "") }
     var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
     var pdf by remember { mutableStateOf<ByteArray?>(null) }
 
@@ -93,12 +95,12 @@ fun PatternFormScreen(
         pdf = it
     }
 
-    val hasChanges by remember(name, creator, gauge, pdf) {
+    val hasChanges by remember(name, creator, category, gauge, pdf) {
         derivedStateOf {
             if (initial == null) {
-                name.isNotEmpty() || creator.isNotEmpty() || gauge.isNotEmpty() || pdf != null
+                name.isNotEmpty() || creator.isNotEmpty() || category.isNotEmpty() || gauge.isNotEmpty() || pdf != null
             } else {
-                name != initial.name || creator != (initial.creator ?: "") || gauge != (initial.gauge ?: "") || pdf != initialPdf
+                name != initial.name || creator != (initial.creator ?: "") || category != (initial.category ?: "") || gauge != (initial.gauge ?: "") || pdf != initialPdf
             }
         }
     }
@@ -107,6 +109,7 @@ fun PatternFormScreen(
         val pattern = (initial ?: Pattern(id = -1, name = "")).copy(
             name = name,
             creator = creator.ifBlank { null },
+            category = category.ifBlank { null },
             gauge = gauge.ifBlank { null }
         )
         onSave(pattern, pdf)
@@ -188,6 +191,8 @@ fun PatternFormScreen(
                 SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                SelectAllOutlinedTextField(value = category, onValueChange = { category = it }, label = { Text(stringResource(Res.string.pattern_label_category)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(16.dp))

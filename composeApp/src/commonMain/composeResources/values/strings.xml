@@ -110,6 +110,7 @@
     <string name="pattern_form_edit">Edit pattern</string>
     <string name="pattern_label_name">Name</string>
     <string name="pattern_label_creator">Designer</string>
+    <string name="pattern_label_category">Category</string>
     <string name="pattern_label_gauge">Gauge</string>
     <string name="pattern_form_select_pdf">Select PDF</string>
     <string name="pattern_form_remove_pdf">Remove PDF</string>

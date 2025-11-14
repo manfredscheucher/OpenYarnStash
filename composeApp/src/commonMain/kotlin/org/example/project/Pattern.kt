@@ -7,6 +7,7 @@ data class Pattern(
     val id: Int,
     val name: String,
     val creator: String? = null,
+    val category: String? = null,
     val gauge: String? = null,
     val pdfId: Int? = null
 )

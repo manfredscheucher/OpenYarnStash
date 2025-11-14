@@ -33,7 +33,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -123,7 +122,8 @@ fun PatternListScreen(
                 val filteredPatterns = patterns.filter {
                     if (filter.isNotBlank()) {
                         it.name.contains(filter, ignoreCase = true) ||
-                        it.creator?.contains(filter, ignoreCase = true) == true
+                        it.creator?.contains(filter, ignoreCase = true) == true ||
+                        it.category?.contains(filter, ignoreCase = true) == true
                     } else {
                         true
                     }
@@ -153,7 +153,7 @@ fun PatternListScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(pattern.name, style = MaterialTheme.typography.titleMedium)
                                     pattern.creator?.let {
-                                        Text(it, style = MaterialTheme.typography.bodySmall, fontStyle = FontStyle.Italic)
+                                        Text(it, style = MaterialTheme.typography.bodySmall)
                                     }
                                 }
                             }
