@@ -52,7 +52,8 @@ fun ProjectFormScreen(
     onDelete: (Int) -> Unit,
     onSave: (Project, Map<Int, ByteArray>) -> Unit,
     onNavigateToAssignments: () -> Unit,
-    onNavigateToPattern: (Int) -> Unit
+    onNavigateToPattern: (Int) -> Unit,
+    onNavigateToYarn: (Int) -> Unit
 ) {
     val isNewProject = initial.id == -1
 
@@ -70,6 +71,7 @@ fun ProjectFormScreen(
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
+    var showUnsavedDialogForYarn by remember { mutableStateOf<Int?>(null) }
     val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
     val removedInitialImageIds = remember { mutableStateListOf<Int>() }
     var showAddCounterDialog by remember { mutableStateOf(false) }
@@ -187,6 +189,14 @@ fun ProjectFormScreen(
         }
     }
 
+    val yarnAction: (Int) -> Unit = { yarnId ->
+        if (hasChanges) {
+            showUnsavedDialogForYarn = yarnId
+        } else {
+            onNavigateToYarn(yarnId)
+        }
+    }
+
     BackButtonHandler {
         backAction()
     }
@@ -222,6 +232,23 @@ fun ProjectFormScreen(
             }
         )
     }
+
+    showUnsavedDialogForYarn?.let { yarnId ->
+        UnsavedChangesDialog(
+            onDismiss = { showUnsavedDialogForYarn = null },
+            onStay = { showUnsavedDialogForYarn = null },
+            onDiscard = {
+                showUnsavedDialogForYarn = null
+                onNavigateToYarn(yarnId)
+            },
+            onSave = {
+                saveAction()
+                showUnsavedDialogForYarn = null
+                onNavigateToYarn(yarnId)
+            }
+        )
+    }
+
 
     if (showDeleteRestrictionDialog) {
         DeleteRestrictionDialog(
@@ -529,20 +556,27 @@ fun ProjectFormScreen(
 
                                         Spacer(Modifier.width(8.dp))
 
-                                        Text(buildAnnotatedString {
-                                            yarn.brand?.takeIf { it.isNotBlank() }?.let {
-                                                withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
-                                                    append("$it ")
+                                        Column(Modifier.weight(1f)) {
+                                            Text(buildAnnotatedString {
+                                                yarn.brand?.takeIf { it.isNotBlank() }?.let {
+                                                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic, fontWeight = FontWeight.SemiBold)) {
+                                                        append("$it ")
+                                                    }
                                                 }
-                                            }
-                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                                append(yarn.name)
-                                            }
-                                            yarn.color?.takeIf { it.isNotBlank() }?.let {
-                                                append(" ($it)")
-                                            }
-                                            append(": ${usage.amount} g")
-                                        })
+                                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                    append(yarn.name)
+                                                }
+                                                yarn.color?.takeIf { it.isNotBlank() }?.let {
+                                                    append(" ($it)")
+                                                }
+                                            })
+                                            Text("${usage.amount} g")
+                                        }
+                                        Spacer(Modifier.width(8.dp))
+
+                                        Button(onClick = { yarnAction(yarn.id) }) {
+                                            Text(stringResource(Res.string.project_form_view_yarn))
+                                        }
                                     }
                                 } else {
                                     Text("- ERROR: yarnid ${usage.yarnId} does not exist!")

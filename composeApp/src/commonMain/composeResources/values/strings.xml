@@ -84,6 +84,7 @@
     <string name="project_form_button_assignments">Assign yarn</string>
     <string name="project_form_button_export_pdf">PDF Export</string>
     <string name="project_form_view_pattern">View Pattern</string>
+    <string name="project_form_view_yarn">View Yarn</string>
     <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
     <string name="delete_project_restricted_title">Deletion Not Possible</string>
     <string name="delete_project_restricted_message">Deletion is only possible if no yarn is assigned. Return assigned yarn to the stash to proceed with deletion.</string>
