@@ -545,7 +545,7 @@ fun ProjectFormScreen(
                                         })
                                     }
                                 } else {
-                                    Text("- ${usage.yarnId}: ${usage.amount} g")
+                                    Text("- ERROR: yarnid ${usage.yarnId} does not exist!")
                                 }
                             }
                         }
