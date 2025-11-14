@@ -52,6 +52,9 @@ import openyarnstash.composeapp.generated.resources.pattern_label_gauge
 import openyarnstash.composeapp.generated.resources.pattern_form_select_pdf
 import openyarnstash.composeapp.generated.resources.pattern_form_remove_pdf
 import openyarnstash.composeapp.generated.resources.pattern_form_view_pdf
+import openyarnstash.composeapp.generated.resources.pattern_form_no_projects_assigned
+import openyarnstash.composeapp.generated.resources.pattern_form_assigned_projects
+import openyarnstash.composeapp.generated.resources.pattern_form_view_project
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,10 +63,12 @@ import org.jetbrains.compose.resources.stringResource
 fun PatternFormScreen(
     initial: Pattern?,
     initialPdf: ByteArray?,
+    projects: List<Project>,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Pattern, ByteArray?) -> Unit,
-    onViewPdf: () -> Unit
+    onViewPdf: () -> Unit,
+    onNavigateToProject: (Int) -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
@@ -192,6 +197,23 @@ fun PatternFormScreen(
                             Text(stringResource(Res.string.pattern_form_remove_pdf))
                         }
                     }
+                }
+                Spacer(Modifier.height(16.dp))
+                val projectsWithPattern = projects.filter { it.patternId == initial?.id }
+                if (projectsWithPattern.isNotEmpty()) {
+                    Text(stringResource(Res.string.pattern_form_assigned_projects))
+                    Spacer(Modifier.height(8.dp))
+                    projectsWithPattern.forEach { project ->
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(project.name)
+                            Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
+                                Text(stringResource(Res.string.pattern_form_view_project))
+                            }
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                } else {
+                    Text(stringResource(Res.string.pattern_form_no_projects_assigned))
                 }
                 Spacer(Modifier.height(24.dp))
                 Row(

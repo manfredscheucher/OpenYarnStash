@@ -458,6 +458,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 PatternFormScreen(
                                     initial = existingPattern,
                                     initialPdf = initialPdf,
+                                    projects = projects,
                                     onBack = { screen = Screen.PatternList },
                                     onDelete = { patternIdToDelete ->
                                         scope.launch {
@@ -487,7 +488,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             screen = Screen.PatternList
                                         }
                                     },
-                                    onViewPdf = { screen = Screen.PdfViewer(s.patternId) }
+                                    onViewPdf = { screen = Screen.PdfViewer(s.patternId) },
+                                    onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
                                 )
                             }
                         }
