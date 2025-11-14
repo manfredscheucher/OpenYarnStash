@@ -376,6 +376,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     },
                                     onNavigateToPattern = { patternId ->
                                         screen = Screen.PatternForm(patternId)
+                                    },
+                                    onNavigateToYarn = { yarnId ->
+                                        screen = Screen.YarnForm(yarnId)
                                     }
                                 )
                             }
