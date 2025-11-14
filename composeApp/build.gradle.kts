@@ -16,6 +16,8 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0" // Example – adapt to your version
 }
 
+val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionInfo::class.java)
+
 kotlin {
     androidTarget()
     /*
@@ -83,6 +85,9 @@ kotlin {
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)
+        }
+        named("commonMain") {
+            kotlin.srcDir(generateVersionInfo.map { it.outputDir })
         }
     }
 }
@@ -178,14 +183,5 @@ abstract class GenerateVersionInfo @Inject constructor(
             }
             """.trimIndent()
         )
-    }
-}
-
-val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionInfo::class.java)
-
-kotlin {
-    sourceSets.named("commonMain") {
-        kotlin.srcDir(generateVersionInfo)
-        kotlin.srcDir(generateVersionInfo.map { it.outputDir })
     }
 }
