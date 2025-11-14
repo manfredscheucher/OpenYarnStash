@@ -1,13 +1,19 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
-import java.util.Properties
-import java.io.FileInputStream
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -18,17 +24,18 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0" // Example – adapt to your version
 }
 
+// ---- Version-Info-Task vorab registrieren (wird unten verdrahtet) ----
 val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionInfo::class.java)
 
 kotlin {
     androidTarget()
     /*
-        androidTarget {
-            compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_11)
-            }
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
         }
-        */
+    }
+    */
     /*
     listOf(
         iosArm64(),
@@ -41,20 +48,19 @@ kotlin {
     }
     */
 
-    
     jvm()
-    
+
     js {
         browser()
         binaries.executable()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -88,9 +94,11 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)
         }
+
+        // <<< generierte Quelle in commonMain einhängen
         named("commonMain") {
-            kotlin.srcDir(generateVersionInfo)
-            kotlin.srcDir(generateVersionInfo.map { it.outputDir })
+            val versionGenOut = layout.buildDirectory.dir("generated/versionInfo")
+            kotlin.srcDir(versionGenOut) // Gradle kümmert sich um Provider
         }
     }
 }
@@ -138,58 +146,88 @@ compose.desktop {
     }
 }
 
+/* =========================================================================================
+   CC-sichere Task: erzeugt build/generated/versionInfo/GeneratedVersionInfo.kt
+   - Nur git (rev-parse, diff-index), kein Env
+   - Saubere Inputs/Outputs, keine impliziten Abhängigkeiten
+   ========================================================================================= */
 abstract class GenerateVersionInfo @Inject constructor(
     private val execOps: ExecOperations
 ) : DefaultTask() {
 
+    // Nur .git als (optionales) Input -> verhindert "liest Projektroot" & implizite Abhängigkeiten
+    @get:InputDirectory
+    @get:Optional
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val gitDir: DirectoryProperty
+
+    // version & package als Inputs (cachebar, CC-freundlich)
+    @get:Input
+    abstract val versionName: Property<String>
+
+    @get:Input
+    abstract val packageName: Property<String>
+
     @get:OutputDirectory
-    val outputDir = project.layout.buildDirectory.dir("generated/versionInfo")
+    abstract val outputDir: DirectoryProperty
 
     @TaskAction
     fun run() {
-        val properties = Properties()
-        val propertiesFile = project.rootProject.file("gradle.properties")
-        if (propertiesFile.exists()) {
-            FileInputStream(propertiesFile).use { properties.load(it) }
-        }
-        val version = properties.getProperty("version", "unspecified")
+        val version = versionName.get()
 
-        val shaOut = ByteArrayOutputStream()
-        execOps.exec {
-            workingDir = project.rootDir
-            commandLine("git", "rev-parse", "--short", "HEAD")
-            standardOutput = shaOut
-        }
-        val sha = shaOut.toString().trim()
-
-        var isDirty = true
-        try {
+        // SHA via git rev-parse (Fallback auf "unknown" wenn .git oder git fehlt)
+        val sha = runCatching {
+            val out = ByteArrayOutputStream()
+            val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
+            require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
             execOps.exec {
-                workingDir = project.rootDir
-                commandLine("git", "diff", "--quiet")
+                workingDir = wd
+                commandLine("git", "rev-parse", "--short", "HEAD")
+                standardOutput = out
             }
-            isDirty = false
-        } catch (e: Exception) {
-            // The command returns a non-zero exit code if there are changes, which causes an exception.
-            // We expect this, so we leave isDirty as true.
-        }
+            out.toString().trim().ifEmpty { "unknown" }
+        }.getOrDefault("unknown")
 
-        val pkg = "org.example.project"
+        // Dirty-Flag per Exit-Code (0 clean, !=0 dirty)
+        val isDirty = runCatching {
+            val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
+            val result = execOps.exec {
+                workingDir = wd
+                commandLine("git", "diff-index", "--quiet", "HEAD", "--")
+                isIgnoreExitValue = true
+            }
+            result.exitValue != 0
+        }.getOrDefault(false)
 
-        val dir = outputDir.get().asFile
-        dir.mkdirs()
-        val file = dir.resolve("GeneratedVersionInfo.kt")
-        file.writeText(
+        val dir = outputDir.get().asFile.apply { mkdirs() }
+        dir.resolve("GeneratedVersionInfo.kt").writeText(
             """
             // Generated – do not edit.
-            package $pkg
+            package ${packageName.get()}
 
             object GeneratedVersionInfo {
-                const val VERSION = "$version"
-                const val GIT_SHA = "$sha"
-                const val IS_DIRTY = $isDirty
+                const val VERSION: String = "$version"
+                const val GIT_SHA: String = "$sha"
+                const val IS_DIRTY: Boolean = $isDirty
             }
             """.trimIndent()
         )
     }
+}
+
+val versionGenOut = layout.buildDirectory.dir("generated/versionInfo")
+
+generateVersionInfo.configure {
+    // .git als optionales Input deklarieren
+    val gitDirFile = rootProject.layout.projectDirectory.dir(".git")
+    if (gitDirFile.asFile.exists()) {
+        gitDir.set(gitDirFile)
+    }
+    versionName.set(project.provider { project.version.toString() }) // kommt aus gradle.properties (version=…)
+    packageName.set("org.example.project") // <<< falls dein Package anders ist, hier anpassen
+    outputDir.set(versionGenOut)
+}
+
+tasks.withType(KotlinCompilationTask::class.java).configureEach {
+    dependsOn(generateVersionInfo)
 }
