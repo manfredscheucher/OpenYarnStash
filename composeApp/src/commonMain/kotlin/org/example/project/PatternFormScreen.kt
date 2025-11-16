@@ -73,7 +73,7 @@ fun PatternFormScreen(
 
     LaunchedEffect(initial) {
         if (initial != null) {
-            val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id)
+            val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id, PdfManager.LARGE_THUMBNAIL_WIDTH, PdfManager.LARGE_THUMBNAIL_HEIGHT)
             if (thumbnailBytes != null) {
                 pdfThumbnail = thumbnailBytes.toImageBitmap()
             }

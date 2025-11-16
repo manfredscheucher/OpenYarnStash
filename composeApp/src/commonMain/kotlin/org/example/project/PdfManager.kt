@@ -12,35 +12,39 @@ class PdfManager(private val fileHandler: FileHandler) {
     private val thumbnailGenerator by lazy { PdfThumbnailGeneratorFactory.create() }
 
     companion object {
-        private const val THUMBNAIL_WIDTH = 256
-        private const val THUMBNAIL_HEIGHT = 256
+        const val THUMBNAIL_WIDTH = 256
+        const val THUMBNAIL_HEIGHT = 256
+        const val LARGE_THUMBNAIL_WIDTH = 2048
+        const val LARGE_THUMBNAIL_HEIGHT = 2048
     }
 
     private fun getPatternPdfPath(patternId: Int): String {
-        return     "$pdfsDir/$patternId.pdf"
+        return "$pdfsDir/$patternId.pdf"
     }
-    private fun getPatternPdfThumbnailPath(patternId: Int): String {
-        return "$pdfThumbnailsDir/${patternId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.png"
+
+    private fun getPatternPdfThumbnailPath(patternId: Int, width: Int, height: Int): String {
+        return "$pdfThumbnailsDir/${patternId}_${width}x${height}.png"
     }
 
     suspend fun savePatternPdf(patternId: Int, pdfBytes: ByteArray): Int {
         val pdfId = 1 // Since we only have one pdf per pattern, the id is always 1
         withContext(Dispatchers.Default) {
-            fileHandler.writeBytes("$pdfsDir/$patternId.pdf", pdfBytes)
+            fileHandler.writeBytes(getPatternPdfPath(patternId), pdfBytes)
         }
-        // Generate and save a thumbnail right away
-        generateAndSaveThumbnail(patternId, pdfBytes)
+        // Generate and save thumbnails right away
+        generateAndSaveThumbnail(patternId, pdfBytes, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+        generateAndSaveThumbnail(patternId, pdfBytes, LARGE_THUMBNAIL_WIDTH, LARGE_THUMBNAIL_HEIGHT)
         return pdfId
     }
 
     suspend fun getPatternPdf(patternId: Int): ByteArray? {
         return withContext(Dispatchers.Default) {
-            fileHandler.readBytes("$pdfsDir/$patternId.pdf")
+            fileHandler.readBytes(getPatternPdfPath(patternId))
         }
     }
 
-    suspend fun getPatternPdfThumbnail(patternId: Int, maxWidth: Int = THUMBNAIL_WIDTH, maxHeight: Int = THUMBNAIL_HEIGHT): ByteArray? {
-        val thumbnailPath = getPatternPdfThumbnailPath(patternId)
+    suspend fun getPatternPdfThumbnail(patternId: Int, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
+        val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
         var thumbnailBytes = withContext(Dispatchers.Default) {
             fileHandler.readBytes(thumbnailPath)
         }
@@ -48,7 +52,7 @@ class PdfManager(private val fileHandler: FileHandler) {
         if (thumbnailBytes == null) {
             val pdfBytes = getPatternPdf(patternId)
             if (pdfBytes != null) {
-                thumbnailBytes = thumbnailGenerator.generateThumbnail(pdfBytes, maxWidth, maxHeight)
+                thumbnailBytes = thumbnailGenerator.generateThumbnail(pdfBytes, width, height)
                 if (thumbnailBytes != null) {
                     withContext(Dispatchers.Default) {
                         fileHandler.writeBytes(thumbnailPath, thumbnailBytes)
@@ -59,11 +63,10 @@ class PdfManager(private val fileHandler: FileHandler) {
         return thumbnailBytes
     }
 
-
-    private suspend fun generateAndSaveThumbnail(patternId: Int, pdfBytes: ByteArray, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT) {
+    private suspend fun generateAndSaveThumbnail(patternId: Int, pdfBytes: ByteArray, width: Int, height: Int) {
         val thumbnailBytes = thumbnailGenerator.generateThumbnail(pdfBytes, width, height)
         if (thumbnailBytes != null) {
-            val thumbnailPath = getPatternPdfThumbnailPath(patternId)
+            val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
             withContext(Dispatchers.Default) {
                 fileHandler.writeBytes(thumbnailPath, thumbnailBytes)
             }
@@ -73,8 +76,9 @@ class PdfManager(private val fileHandler: FileHandler) {
     suspend fun deletePatternPdf(patternId: Int) {
         withContext(Dispatchers.Default) {
             fileHandler.deleteFile(getPatternPdfPath(patternId))
-            // Also delete the thumbnail
-            fileHandler.deleteFile(getPatternPdfThumbnailPath(patternId))
+            // Also delete the thumbnails
+            fileHandler.deleteFile(getPatternPdfThumbnailPath(patternId, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
+            fileHandler.deleteFile(getPatternPdfThumbnailPath(patternId, LARGE_THUMBNAIL_WIDTH, LARGE_THUMBNAIL_HEIGHT))
         }
     }
 }
