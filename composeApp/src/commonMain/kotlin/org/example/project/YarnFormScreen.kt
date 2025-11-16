@@ -3,6 +3,7 @@ package org.example.project
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -78,6 +79,8 @@ fun YarnFormScreen(
 
     val images = remember { mutableStateMapOf<Int, ByteArray>() }
     var nextTempId by remember { mutableStateOf(-1) }
+    var selectedImageId by remember { mutableStateOf<Int?>(null) }
+
 
     LaunchedEffect(initialImages) {
         images.clear()
@@ -272,7 +275,16 @@ fun YarnFormScreen(
                     images.entries.sortedBy { it.key }
                 }
 
-                val previewImage = displayedImages.firstOrNull()?.value
+                LaunchedEffect(displayedImages) {
+                    val keys = displayedImages.map { it.key }
+                    if (selectedImageId == null && keys.isNotEmpty()) {
+                        selectedImageId = keys.first()
+                    } else if (selectedImageId != null && selectedImageId !in keys) {
+                        selectedImageId = keys.firstOrNull()
+                    }
+                }
+
+                val previewImage = selectedImageId?.let { images[it] }
 
                 if (previewImage != null) {
                     val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
@@ -296,7 +308,12 @@ fun YarnFormScreen(
                             Box {
                                 val bitmap = remember(bytes) { bytes.toImageBitmap() }
                                 if (bitmap != null) {
-                                    Image(bitmap, contentDescription = "Image $id", modifier = Modifier.size(80.dp))
+                                    Image(
+                                        bitmap,
+                                        contentDescription = "Image $id",
+                                        modifier = Modifier.size(80.dp)
+                                            .clickable { selectedImageId = id }
+                                    )
                                 }
                                 IconButton(
                                     onClick = { images.remove(id) },

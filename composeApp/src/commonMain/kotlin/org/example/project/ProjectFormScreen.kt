@@ -2,6 +2,7 @@ package org.example.project
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -77,6 +78,8 @@ fun ProjectFormScreen(
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
     var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1)?:1) }
+    var selectedImageId by remember { mutableStateOf<Int?>(null) }
+
 
     val imagePicker = rememberImagePickerLauncher { images ->
         images.forEach { newImages[nextTempId++] = it }
@@ -90,9 +93,10 @@ fun ProjectFormScreen(
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
-    val displayedImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
-        (initialImages.filter { it.key !in removedInitialImageIds } + newImages).entries.sortedBy { it.key }
+    val allImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
+        initialImages.filter { it.key !in removedInitialImageIds } + newImages
     }
+    val displayedImages = allImages.entries.sortedBy { it.key }
 
     val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImages.size, removedInitialImageIds.size, rowCounters, patternId) {
         derivedStateOf {
@@ -291,7 +295,16 @@ fun ProjectFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
-            val previewImage = displayedImages.firstOrNull()?.value
+            LaunchedEffect(displayedImages) {
+                val keys = displayedImages.map { it.key }
+                if (selectedImageId == null && keys.isNotEmpty()) {
+                    selectedImageId = keys.first()
+                } else if (selectedImageId != null && selectedImageId !in keys) {
+                    selectedImageId = keys.firstOrNull()
+                }
+            }
+
+            val previewImage = selectedImageId?.let { allImages[it] }
 
             if (previewImage != null) {
                 val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
@@ -315,14 +328,17 @@ fun ProjectFormScreen(
                         Box {
                             val bitmap = remember(bytes) { bytes.toImageBitmap() }
                             if (bitmap != null) {
-                                Image(bitmap, contentDescription = "Image $id", modifier = Modifier.size(80.dp))
+                                Image(
+                                    bitmap,
+                                    contentDescription = "Image $id",
+                                    modifier = Modifier.size(80.dp).clickable { selectedImageId = id })
                             }
                             IconButton(
                                 onClick = {
-                                    if (id > 0) { // Initial image
-                                        removedInitialImageIds.add(id)
-                                    } else { // New image
+                                    if (newImages.containsKey(id)) {
                                         newImages.remove(id)
+                                    } else {
+                                        removedInitialImageIds.add(id)
                                     }
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
