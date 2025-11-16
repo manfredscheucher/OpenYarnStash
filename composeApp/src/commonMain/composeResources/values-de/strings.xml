@@ -108,6 +108,7 @@
     <string name="pattern_form_edit">Anleitung bearbeiten</string>
     <string name="pattern_label_name">Name</string>
     <string name="pattern_label_creator">Designer</string>
+    <string name="pattern_label_category">Kategorie</string>
     <string name="pattern_label_gauge">Maschenprobe</string>
     <string name="pattern_form_select_pdf">PDF auswählen</string>
     <string name="pattern_form_remove_pdf">PDF entfernen</string>
