@@ -6,12 +6,16 @@ class ImageManager(private val fileHandler: FileHandler) {
         private const val THUMBNAIL_WIDTH = 256
         private const val THUMBNAIL_HEIGHT = 256
     }
+    private val projectImagesDir = "img/project"
+    private val projectImageThumbnailsDir = "img/project/thumbnails"
+    private val yarnImagesDir = "img/yarn"
+    private val yarnImageThumbnailsDir = "img/yarn/thumbnails"
 
-    private fun getProjectImagePath(projectId: Int, imageId: Int) = "img/project/${projectId}_$imageId.jpg"
-    private fun getProjectImageThumbnailPath(projectId: Int, imageId: Int, width: Int, height: Int) = "img/project/${projectId}_${imageId}_${width}x${height}.jpg"
+    private fun getProjectImagePath(projectId: Int, imageId: Int) = "$projectImagesDir/${projectId}_$imageId.jpg"
+    private fun getProjectImageThumbnailPath(projectId: Int, imageId: Int, width: Int, height: Int) = "$projectImageThumbnailsDir/${projectId}_${imageId}_${width}x${height}.jpg"
 
-    private fun getYarnImagePath(yarnId: Int, imageId: Int) = "img/yarn/${yarnId}_$imageId.jpg"
-    private fun getYarnImageThumbnailPath(yarnId: Int, imageId: Int, width: Int, height: Int) = "img/yarn/${yarnId}_${imageId}_${width}x${height}.jpg"
+    private fun getYarnImagePath(yarnId: Int, imageId: Int) = "$yarnImagesDir/${yarnId}_$imageId.jpg"
+    private fun getYarnImageThumbnailPath(yarnId: Int, imageId: Int, width: Int, height: Int) = "$yarnImageThumbnailsDir/${yarnId}_${imageId}_${width}x${height}.jpg"
 
 
     suspend fun saveProjectImage(projectId: Int, imageId: Int, image: ByteArray) {
