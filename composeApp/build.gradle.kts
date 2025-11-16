@@ -109,7 +109,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "openyarnstash"
+        applicationId = "org.example.OpenYarnStash"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -137,7 +137,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "org.example.project.MainKt"
+        mainClass = "org.example.OpenYarnStash"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
@@ -177,7 +177,7 @@ abstract class GenerateVersionInfo @Inject constructor(
             execOps.exec {
                 workingDir = wd
                 environment("PATH", "/usr/bin:${System.getenv("PATH")}")
-                commandLine("date") // TODO: fix
+                commandLine("sh", "-c", "echo \$PATH")
                 //commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
