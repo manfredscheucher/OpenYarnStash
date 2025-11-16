@@ -41,30 +41,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
-import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.common_back
-import openyarnstash.composeapp.generated.resources.common_cancel
-import openyarnstash.composeapp.generated.resources.common_delete
-import openyarnstash.composeapp.generated.resources.common_no
-import openyarnstash.composeapp.generated.resources.common_save
-import openyarnstash.composeapp.generated.resources.common_stay
-import openyarnstash.composeapp.generated.resources.common_yes
-import openyarnstash.composeapp.generated.resources.form_unsaved_changes_message
-import openyarnstash.composeapp.generated.resources.form_unsaved_changes_title
-import openyarnstash.composeapp.generated.resources.pattern_form_edit
-import openyarnstash.composeapp.generated.resources.pattern_form_new
-import openyarnstash.composeapp.generated.resources.pattern_label_creator
-import openyarnstash.composeapp.generated.resources.pattern_label_name
-import openyarnstash.composeapp.generated.resources.pattern_label_gauge
-import openyarnstash.composeapp.generated.resources.pattern_form_select_pdf
-import openyarnstash.composeapp.generated.resources.pattern_form_remove_pdf
-import openyarnstash.composeapp.generated.resources.pattern_form_view_pdf
-import openyarnstash.composeapp.generated.resources.pattern_form_no_projects_assigned
-import openyarnstash.composeapp.generated.resources.pattern_form_assigned_projects
-import openyarnstash.composeapp.generated.resources.pattern_form_view_project
-import openyarnstash.composeapp.generated.resources.pattern_label_category
-import openyarnstash.composeapp.generated.resources.projects
+import openyarnstash.composeapp.generated.resources.*
 import org.example.project.components.SelectAllOutlinedTextField
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -76,6 +55,7 @@ fun PatternFormScreen(
     initialPdf: ByteArray?,
     projects: List<Project>,
     patterns: List<Pattern>,
+    pdfManager: PdfManager,
     imageManager: ImageManager,
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
@@ -88,6 +68,17 @@ fun PatternFormScreen(
     var category by remember { mutableStateOf(initial?.category ?: "") }
     var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
     var pdf by remember { mutableStateOf<ByteArray?>(null) }
+    var pdfThumbnail by remember { mutableStateOf<ImageBitmap?>(null) }
+
+
+    LaunchedEffect(initial) {
+        if (initial != null) {
+            val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id)
+            if (thumbnailBytes != null) {
+                pdfThumbnail = thumbnailBytes.toImageBitmap()
+            }
+        }
+    }
 
     LaunchedEffect(initialPdf) {
         pdf = initialPdf
@@ -193,6 +184,45 @@ fun PatternFormScreen(
                     .navigationBarsPadding()
                     .padding(16.dp)
             ) {
+                if (pdfThumbnail != null) {
+                    Image(
+                        bitmap = pdfThumbnail!!,
+                        contentDescription = "PDF Preview",
+                        modifier = Modifier.fillMaxWidth().height(200.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(Res.drawable.projects), // Placeholder
+                        contentDescription = "Default PDF icon",
+                        modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+
+                if (pdf == null && initialPdf == null) {
+                    Button(onClick = { pdfPicker("application/pdf") }) {
+                        Text(stringResource(Res.string.pattern_form_select_pdf))
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = if (initialPdf != null) Arrangement.SpaceBetween else Arrangement.End
+                    ) {
+                        if (initialPdf != null) {
+                            Button(onClick = { confirmDiscardChanges(onViewPdf) }) {
+                                Text(stringResource(Res.string.pattern_form_view_pdf))
+                            }
+                        }
+                        Button(onClick = {
+                            pdf = null
+                            pdfThumbnail = null
+                        }) {
+                            Text(stringResource(Res.string.pattern_form_remove_pdf))
+                        }
+                    }
+                }
+                Spacer(Modifier.height(16.dp))
+
                 SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
@@ -231,21 +261,7 @@ fun PatternFormScreen(
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(16.dp))
-                if (pdf == null) {
-                    Button(onClick = { pdfPicker("application/pdf") }) {
-                        Text(stringResource(Res.string.pattern_form_select_pdf))
-                    }
-                } else {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = { confirmDiscardChanges(onViewPdf) }) {
-                            Text(stringResource(Res.string.pattern_form_view_pdf))
-                        }
-                        Button(onClick = { pdf = null }) {
-                            Text(stringResource(Res.string.pattern_form_remove_pdf))
-                        }
-                    }
-                }
-                Spacer(Modifier.height(16.dp))
+
                 val projectsWithPattern = projects.filter { it.patternId == initial?.id }
                 if (projectsWithPattern.isNotEmpty()) {
                     Text(stringResource(Res.string.pattern_form_assigned_projects))

@@ -465,6 +465,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     initialPdf = initialPdf,
                                     projects = projects,
                                     patterns = patterns,
+                                    pdfManager = pdfManager,
                                     imageManager = imageManager,
                                     onBack = { screen = Screen.PatternList },
                                     onDelete = { patternIdToDelete ->
