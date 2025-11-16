@@ -14,6 +14,7 @@ import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import kotlin.system.exitProcess
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -21,10 +22,10 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    kotlin("plugin.serialization") version "2.0.0" // Example – adapt to your version
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
-// ---- Version-Info-Task vorab registrieren (wird unten verdrahtet) ----
+
 val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionInfo::class.java)
 
 kotlin {
@@ -35,7 +36,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    */
     
     listOf(
         iosArm64(),
@@ -46,6 +46,7 @@ kotlin {
             isStatic = true
         }
     }
+    */
     
 
     jvm()
@@ -97,10 +98,9 @@ kotlin {
             implementation(libs.kotlin.browser)
         }
 
-        // <<< generierte Quelle in commonMain einhängen
         named("commonMain") {
             val versionGenOut = layout.buildDirectory.dir("generated/versionInfo")
-            kotlin.srcDir(versionGenOut) // Gradle kümmert sich um Provider
+            kotlin.srcDir(versionGenOut)
         }
     }
 }
@@ -110,7 +110,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "io.github.manfredscheucher.openyarnstash"
+        applicationId = "openyarnstash"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -148,22 +148,15 @@ compose.desktop {
     }
 }
 
-/* =========================================================================================
-   CC-sichere Task: erzeugt build/generated/versionInfo/GeneratedVersionInfo.kt
-   - Nur git (rev-parse, diff-index), kein Env
-   - Saubere Inputs/Outputs, keine impliziten Abhängigkeiten
-   ========================================================================================= */
 abstract class GenerateVersionInfo @Inject constructor(
     private val execOps: ExecOperations
 ) : DefaultTask() {
 
-    // Nur .git als (optionales) Input -> verhindert "liest Projektroot" & implizite Abhängigkeiten
     @get:InputDirectory
     @get:Optional
     @get:PathSensitive(PathSensitivity.NONE)
     abstract val gitDir: DirectoryProperty
 
-    // version & package als Inputs (cachebar, CC-freundlich)
     @get:Input
     abstract val versionName: Property<String>
 
@@ -176,23 +169,28 @@ abstract class GenerateVersionInfo @Inject constructor(
     @TaskAction
     fun run() {
         val version = versionName.get()
-
-        // SHA via git rev-parse (Fallback auf "unknown" wenn .git oder git fehlt)
-            val out = ByteArrayOutputStream()
-            val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
-            require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
+        val out = ByteArrayOutputStream()
+        val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
+        require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
+        println("reading git commit")
+        var sha = "unknown"
+        try {
             execOps.exec {
                 workingDir = wd
-                //commandLine("pwd")
-                commandLine("git", "rev-parse", "--short", "HEAD")
+                environment("PATH", "/usr/bin:${System.getenv("PATH")}")
+                commandLine("pwd") // TODO: fix
+                //commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
-        val sha =
-            out.toString().trim().ifEmpty { "unknown1" }
-         //.getOrDefault("unknown2")
-        println("git commit: $sha")
+            sha = out.toString().trim()
+            println("last commit: $sha")
+        }
+        catch (e: org.gradle.api.tasks.TaskExecutionException)
+        {
+            println("error running git!")
+            //exitProcess(-1)
+        }
 
-        // Dirty-Flag per Exit-Code (0 clean, !=0 dirty)
         val isDirty = runCatching {
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             val result = execOps.exec {
@@ -222,13 +220,12 @@ abstract class GenerateVersionInfo @Inject constructor(
 val versionGenOut = layout.buildDirectory.dir("generated/versionInfo")
 
 generateVersionInfo.configure {
-    // .git als optionales Input deklarieren
     val gitDirFile = rootProject.layout.projectDirectory.dir(".git")
     if (gitDirFile.asFile.exists()) {
         gitDir.set(gitDirFile)
     }
-    versionName.set(project.provider { project.version.toString() }) // kommt aus gradle.properties (version=…)
-    packageName.set("org.example.project") // <<< falls dein Package anders ist, hier anpassen
+    versionName.set(project.provider { project.version.toString() })
+    packageName.set("org.example.project")
     outputDir.set(versionGenOut)
 }
 
