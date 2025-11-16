@@ -195,7 +195,7 @@ abstract class GenerateVersionInfo @Inject constructor(
                 commandLine("git", "diff-index", "--quiet", "HEAD", "--")
                 isIgnoreExitValue = true
             }
-            if (result.exitValue != 0) "clean" else "dirty"
+            if (result.exitValue != 0) "dirty" else "clean"
         }.getOrDefault("unknown")
         println("isDirty $isDirty")
 
