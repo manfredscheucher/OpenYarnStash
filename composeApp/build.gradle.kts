@@ -188,25 +188,14 @@ abstract class GenerateVersionInfo @Inject constructor(
         }
         println("git commit: $sha")
 
-        val isDirty: String = runCatching {
+        var isDirty: String = runCatching {
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
-            val headExists = runCatching {
-                execOps.exec {
-                    workingDir = wd
-                    commandLine("git", "rev-parse", "--verify", "HEAD")
-                    isIgnoreExitValue = true
-                }.exitValue == 0
-            }.getOrDefault(false)
-            if (!headExists) "dirty" else {
-                val result = execOps.exec {
-                    workingDir = wd
-                    commandLine("git", "diff-index", "--quiet", "HEAD", "--")
-                    isIgnoreExitValue = true
-                }
-                if (result.exitValue != 0) "dirty" else "clean"
+            val result = execOps.exec {
+                workingDir = wd
+                commandLine("git", "diff-index", "--quiet", "HEAD") // TODO
             }
+            if (result.exitValue != 0) "dirty" else "clean"
         }.getOrDefault("unknown")
-
         println("isDirty $isDirty")
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
