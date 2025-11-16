@@ -459,6 +459,12 @@ fun YarnFormScreen(
                                 )
                             )
                         }
+                        if (initial != null && usagesForYarn.isNotEmpty()) {
+                            Spacer(Modifier.height(8.dp))
+                            Button(onClick = { onSetRemainingToZero(initial.id, totalUsedAmount) }) {
+                                Text(stringResource(Res.string.yarn_form_button_set_remaining_to_zero))
+                            }
+                        }
                     }
                 }
                 Spacer(Modifier.height(8.dp))
@@ -551,10 +557,8 @@ fun YarnFormScreen(
                             TextButton(onClick = {
                                 confirmDiscardChanges { onAddColor(initial) }
                             }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                            Spacer(Modifier.width(8.dp))
-                            if (usagesForYarn.isNotEmpty()) {
-                                TextButton(onClick = { onSetRemainingToZero(initial.id, totalUsedAmount) }) { Text(stringResource(Res.string.yarn_form_button_set_remaining_to_zero)) }
-                            } else {
+                            if (usagesForYarn.isEmpty()) {
+                                Spacer(Modifier.width(8.dp))
                                 TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                             }
                             Spacer(Modifier.width(8.dp))
