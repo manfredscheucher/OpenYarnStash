@@ -192,10 +192,12 @@ abstract class GenerateVersionInfo @Inject constructor(
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             val result = execOps.exec {
                 workingDir = wd
-                commandLine("git", "diff-index", "--quiet", "HEAD") // TODO
+                commandLine("git", "diff-index", "--quiet", "HEAD") 
             }
             if (result.exitValue != 0) "dirty" else "clean"
         }.getOrDefault("unknown")
+
+        isDirty = "unknown" // TODO: does not work yet
         println("isDirty $isDirty")
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
