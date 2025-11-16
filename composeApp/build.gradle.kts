@@ -36,27 +36,29 @@ kotlin {
         }
     }
     */
-    /*
+    
     listOf(
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "OpenYarnStash"
             isStatic = true
         }
     }
-    */
+    
 
     jvm()
 
     js {
+        outputModuleName = "OpenYarnStash"
         browser()
         binaries.executable()
     }
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
+        outputModuleName = "OpenYarnStash"
         browser()
         binaries.executable()
     }
@@ -108,7 +110,7 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "org.example.project"
+        applicationId = "io.github.manfredscheucher.openyarnstash"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -140,7 +142,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.example.project"
+            packageName = "OpenYarnStash"
             packageVersion = project.version.toString()
         }
     }
@@ -181,13 +183,14 @@ abstract class GenerateVersionInfo @Inject constructor(
             require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
             execOps.exec {
                 workingDir = wd
-                commandLine("pwd")
-                //commandLine("git", "rev-parse", "--short", "HEAD")
+                //commandLine("pwd")
+                commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
         val sha =
             out.toString().trim().ifEmpty { "unknown1" }
          //.getOrDefault("unknown2")
+        println("git commit: $sha")
 
         // Dirty-Flag per Exit-Code (0 clean, !=0 dirty)
         val isDirty = runCatching {
