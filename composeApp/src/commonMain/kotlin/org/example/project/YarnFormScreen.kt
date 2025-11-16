@@ -82,7 +82,6 @@ fun YarnFormScreen(
     var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1) ?: 1) }
     var selectedImageId by remember { mutableStateOf<Int?>(null) }
 
-
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
             newImages[nextTempId++] = bytes
@@ -99,7 +98,7 @@ fun YarnFormScreen(
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
     var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
-    
+
     val allImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
         initialImages.filter { it.key !in removedInitialImageIds } + newImages
     }
