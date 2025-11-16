@@ -99,10 +99,12 @@ class JvmFileHandler : FileHandler {
     }
 
     private fun addFolderToZip(folder: File, zos: ZipOutputStream) {
+        println("zip: add folder $folder")
         folder.listFiles()?.forEach { file ->
             if (file.isDirectory) {
                 addFolderToZip(file, zos)
             } else {
+                println("zip: add file $file")
                 FileInputStream(file).use { fis ->
                     val entry = ZipEntry(filesDir.toURI().relativize(file.toURI()).path)
                     zos.putNextEntry(entry)
@@ -123,10 +125,6 @@ class JvmFileHandler : FileHandler {
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
         val inputStream = zipInputStream as? InputStream ?: return
 
-        if (filesDir.exists()) {
-            val backupDirName = "files-${SimpleDateFormat("yyyyMMdd-HHmmss").format(Date())}"
-            renameFilesDirectory(backupDirName)
-        }
         filesDir.mkdirs()
 
         ZipInputStream(inputStream).use { zis ->
