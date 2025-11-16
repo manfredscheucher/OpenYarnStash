@@ -14,7 +14,6 @@ import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-import kotlin.system.exitProcess
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -185,10 +184,9 @@ abstract class GenerateVersionInfo @Inject constructor(
             sha = out.toString().trim()
             println("last commit: $sha")
         }
-        catch (e: org.gradle.api.tasks.TaskExecutionException)
+        catch (e: TaskExecutionException)
         {
-            println("error running git!")
-            //exitProcess(-1)
+            println("error running git: ${e.toString()}")
         }
 
         val isDirty = runCatching {
