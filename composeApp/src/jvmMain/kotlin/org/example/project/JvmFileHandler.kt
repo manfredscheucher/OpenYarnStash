@@ -1,6 +1,7 @@
 package org.example.project
 
 import java.awt.Desktop
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -90,7 +91,26 @@ class JvmFileHandler : FileHandler {
     }
 
     override suspend fun zipFiles(): ByteArray {
-        throw UnsupportedOperationException("zipFiles is not supported on JVM")
+        val baos = ByteArrayOutputStream()
+        ZipOutputStream(baos).use { zos ->
+            addFolderToZip(filesDir, zos)
+        }
+        return baos.toByteArray()
+    }
+
+    private fun addFolderToZip(folder: File, zos: ZipOutputStream) {
+        folder.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                addFolderToZip(file, zos)
+            } else {
+                FileInputStream(file).use { fis ->
+                    val entry = ZipEntry(filesDir.toURI().relativize(file.toURI()).path)
+                    zos.putNextEntry(entry)
+                    fis.copyTo(zos)
+                    zos.closeEntry()
+                }
+            }
+        }
     }
 
     override suspend fun renameFilesDirectory(newName: String) {

@@ -93,20 +93,7 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         try {
             FileOutputStream(tempFile).use { fos ->
                 ZipOutputStream(fos).use { zos ->
-                    val buffer = ByteArray(8192)
-                    filesDir.listFiles()?.forEach { file ->
-                        if (file.isFile) {
-                            FileInputStream(file).use { fis ->
-                                val entry = ZipEntry(file.name)
-                                zos.putNextEntry(entry)
-                                var len: Int
-                                while (fis.read(buffer).also { len = it } > 0) {
-                                    zos.write(buffer, 0, len)
-                                }
-                                zos.closeEntry()
-                            }
-                        }
-                    }
+                    addFolderToZip(filesDir, zos)
                 }
             }
             return tempFile.readBytes()
@@ -114,6 +101,22 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
             tempFile.delete()
         }
     }
+
+    private fun addFolderToZip(folder: File, zos: ZipOutputStream) {
+        folder.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                addFolderToZip(file, zos)
+            } else {
+                FileInputStream(file).use { fis ->
+                    val entry = ZipEntry(filesDir.toURI().relativize(file.toURI()).path)
+                    zos.putNextEntry(entry)
+                    fis.copyTo(zos)
+                    zos.closeEntry()
+                }
+            }
+        }
+    }
+
 
     override suspend fun renameFilesDirectory(newName: String) {
         val newDir = File(filesDir.parentFile, newName)
