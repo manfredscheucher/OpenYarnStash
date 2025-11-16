@@ -177,7 +177,7 @@ abstract class GenerateVersionInfo @Inject constructor(
             execOps.exec {
                 workingDir = wd
                 environment("PATH", "/usr/bin:${System.getenv("PATH")}")
-                commandLine("pwd") // TODO: fix
+                commandLine("date") // TODO: fix
                 //commandLine("git", "rev-parse", "--short", "HEAD")
                 standardOutput = out
             }
