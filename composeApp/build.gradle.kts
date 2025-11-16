@@ -14,6 +14,7 @@ import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import kotlin.system.exitProcess
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -171,33 +172,32 @@ abstract class GenerateVersionInfo @Inject constructor(
         val out = ByteArrayOutputStream()
         val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
         require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
-        println("reading git commit")
         var sha = "unknown"
         try {
             execOps.exec {
                 workingDir = wd
-                environment("PATH", "/usr/bin:${System.getenv("PATH")}")
-                commandLine("sh", "-c", "echo \$PATH")
-                //commandLine("git", "rev-parse", "--short", "HEAD")
+                commandLine("cat",".git/refs/heads/main")
                 standardOutput = out
+                isIgnoreExitValue = true
             }
             sha = out.toString().trim()
-            println("last commit: $sha")
         }
         catch (e: TaskExecutionException)
         {
             println("error running git: ${e.toString()}")
         }
+        println("git commit: $sha")
 
-        val isDirty = runCatching {
+        var isDirty: String = runCatching {
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             val result = execOps.exec {
                 workingDir = wd
                 commandLine("git", "diff-index", "--quiet", "HEAD", "--")
                 isIgnoreExitValue = true
             }
-            result.exitValue != 0
-        }.getOrDefault(null)
+            if (result.exitValue != 0) "clean" else "dirty"
+        }.getOrDefault("unknown")
+        println("isDirty $isDirty")
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
@@ -208,7 +208,7 @@ abstract class GenerateVersionInfo @Inject constructor(
             object GeneratedVersionInfo {
                 const val VERSION: String = "$version"
                 const val GIT_SHA: String = "$sha"
-                const val IS_DIRTY: Boolean = $isDirty
+                const val IS_DIRTY: String = "$isDirty"
             }
             """.trimIndent()
         )

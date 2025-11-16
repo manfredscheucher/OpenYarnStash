@@ -11,9 +11,7 @@ import androidx.compose.ui.unit.dp
 fun VersionInfoView() {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text("Version: ${GeneratedVersionInfo.VERSION}")
-        val commitText = GeneratedVersionInfo.GIT_SHA?.let { sha ->
-            if (GeneratedVersionInfo.IS_DIRTY) "$sha (dirty)" else sha
-        } ?: "(unknown)"
+        val commitText = GeneratedVersionInfo.GIT_SHA.let { sha -> "$sha (${GeneratedVersionInfo.IS_DIRTY})" }
         Text("Commit: $commitText")
     }
 }
