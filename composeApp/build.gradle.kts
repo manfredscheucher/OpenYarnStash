@@ -188,17 +188,32 @@ abstract class GenerateVersionInfo @Inject constructor(
         }
         println("git commit: $sha")
 
-        var isDirty: String = runCatching {
+        var isDirty = runCatching {
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             val result = execOps.exec {
                 workingDir = wd
-                commandLine("git", "diff-index", "--quiet", "HEAD") 
+                commandLine("git", "diff-index", "--quiet", "HEAD")
             }
             if (result.exitValue != 0) "dirty" else "clean"
         }.getOrDefault("unknown")
-
         isDirty = "unknown" // TODO: does not work yet
         println("isDirty $isDirty")
+
+        val outDate = ByteArrayOutputStream()
+        var date = "unknown"
+        try {
+            execOps.exec {
+                workingDir = wd
+                commandLine("date", "+%Y-%m-%dT%H:%M:%S")
+                standardOutput = outDate
+                isIgnoreExitValue = true
+            }
+            date = outDate.toString().trim()
+        } catch (e: TaskExecutionException) {
+            println("error running date: ${e.toString()}")
+        }
+        println("date: $date")
+
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
@@ -210,6 +225,7 @@ abstract class GenerateVersionInfo @Inject constructor(
                 const val VERSION: String = "$version"
                 const val GIT_SHA: String = "$sha"
                 const val IS_DIRTY: String = "$isDirty"
+                const val BUILD_DATE: String = "$date"
             }
             """.trimIndent()
         )
