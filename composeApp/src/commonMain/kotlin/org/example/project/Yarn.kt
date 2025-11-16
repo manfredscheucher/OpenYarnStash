@@ -20,7 +20,8 @@ data class Yarn(
     val modified: String? = null,
     val storagePlace: String? = null,
     val imageIds: List<Int> = emptyList(),
-    @Transient val usedAmount: Int = 0
+    @Transient val usedAmount: Int = 0,
+    @Transient val imagesChanged: Boolean = false
 ) {
     @Transient
     val availableAmount: Int

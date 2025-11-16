@@ -29,7 +29,8 @@ data class Project(
     val modified: String? = null,
     val rowCounters: List<RowCounter> = emptyList(),
     val patternId: Int? = null,
-    val imageIds: List<Int> = emptyList()
+    val imageIds: List<Int> = emptyList(),
+    @Transient val imagesChanged: Boolean = false
 ) {
     @Transient
     val status: ProjectStatus = when {

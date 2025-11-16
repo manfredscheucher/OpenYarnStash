@@ -79,14 +79,16 @@ fun ProjectFormScreen(
     var patternDropdownExpanded by remember { mutableStateOf(false) }
     var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1)?:1) }
     var selectedImageId by remember { mutableStateOf<Int?>(null) }
-
+    var imagesChanged by remember { mutableStateOf(false) }
 
     val imagePicker = rememberImagePickerLauncher { images ->
         images.forEach { newImages[nextTempId++] = it }
+        imagesChanged = true
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->
         result?.let { newImages[nextTempId++] = it }
+        imagesChanged = true
     }
 
     val scope = rememberCoroutineScope()
@@ -172,7 +174,8 @@ fun ProjectFormScreen(
             gauge = gauge.ifBlank { null },
             rowCounters = rowCounters,
             patternId = patternId,
-            imageIds = finalImageIds
+            imageIds = finalImageIds,
+            imagesChanged = imagesChanged
         )
         onSave(project, newImages.toMap())
     }
@@ -340,6 +343,7 @@ fun ProjectFormScreen(
                                     } else {
                                         removedInitialImageIds.add(id)
                                     }
+                                    imagesChanged = true
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                             ) {

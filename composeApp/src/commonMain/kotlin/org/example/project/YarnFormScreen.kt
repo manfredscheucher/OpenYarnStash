@@ -75,6 +75,7 @@ fun YarnFormScreen(
     val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
+    var imagesChanged by remember { mutableStateOf(false) }
 
     val images = remember { mutableStateMapOf<Int, ByteArray>() }
     var nextTempId by remember { mutableStateOf(-1) }
@@ -91,10 +92,12 @@ fun YarnFormScreen(
         newImageBytes.forEach { bytes ->
             images[nextTempId--] = bytes
         }
+        imagesChanged = true
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->
         result?.let { images[nextTempId--] = it }
+        imagesChanged = true
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -175,7 +178,8 @@ fun YarnFormScreen(
                 modified = getCurrentTimestamp(),
                 added = normalizeDateString(added),
                 notes = notes.ifBlank { null },
-                imageIds = finalImageIds
+                imageIds = finalImageIds,
+                imagesChanged = imagesChanged
             )
         onSave(yarn, images.filterKeys { it < 0 }.toMap())
     }
@@ -315,7 +319,7 @@ fun YarnFormScreen(
                                     )
                                 }
                                 IconButton(
-                                    onClick = { images.remove(id) },
+                                    onClick = { images.remove(id); imagesChanged = true },
                                     modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                                 ) {
                                     Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))

@@ -45,6 +45,9 @@ import openyarnstash.composeapp.generated.resources.import_dialog_title
 import openyarnstash.composeapp.generated.resources.import_json
 import openyarnstash.composeapp.generated.resources.import_zip
 import openyarnstash.composeapp.generated.resources.language_label
+import openyarnstash.composeapp.generated.resources.length_unit_label
+import openyarnstash.composeapp.generated.resources.length_unit_meters
+import openyarnstash.composeapp.generated.resources.length_unit_yards
 import openyarnstash.composeapp.generated.resources.settings
 import openyarnstash.composeapp.generated.resources.settings_title
 import org.jetbrains.compose.resources.painterResource
@@ -146,9 +149,9 @@ fun SettingsScreen(
                     onExpandedChange = { lengthUnitDropdownExpanded = it }
                 ) {
                     OutlinedTextField(
-                        value = if (currentLengthUnit == LengthUnit.METER) "Meters" else "Yards", // TODO: Localize
+                        value = if (currentLengthUnit == LengthUnit.METER) stringResource(Res.string.length_unit_meters) else stringResource(Res.string.length_unit_yards),
                         onValueChange = {},
-                        label = { Text("Length Unit") }, // TODO: Localize
+                        label = { Text(stringResource(Res.string.length_unit_label)) },
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = lengthUnitDropdownExpanded) },
                         modifier = Modifier
@@ -160,14 +163,14 @@ fun SettingsScreen(
                         onDismissRequest = { lengthUnitDropdownExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Meters") }, // TODO: Localize
+                            text = { Text(stringResource(Res.string.length_unit_meters)) },
                             onClick = {
                                 onLengthUnitChange(LengthUnit.METER)
                                 lengthUnitDropdownExpanded = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Yards") }, // TODO: Localize
+                            text = { Text(stringResource(Res.string.length_unit_yards)) },
                             onClick = {
                                 onLengthUnitChange(LengthUnit.YARD)
                                 lengthUnitDropdownExpanded = false
