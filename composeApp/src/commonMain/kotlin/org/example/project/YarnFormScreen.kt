@@ -55,7 +55,6 @@ fun YarnFormScreen(
     onDelete: (Int) -> Unit,
     onSave: (Yarn, Map<Int, ByteArray>) -> Unit,
     onAddColor: (Yarn) -> Unit,
-    onSetRemainingToZero: (yarnId: Int, newAmount: Int) -> Unit,
     onNavigateToProject: (Int) -> Unit
 ) {
     val totalUsedAmount = usagesForYarn.sumOf { it.amount }
@@ -461,7 +460,9 @@ fun YarnFormScreen(
                         }
                         if (initial != null && usagesForYarn.isNotEmpty()) {
                             Spacer(Modifier.height(8.dp))
-                            Button(onClick = { onSetRemainingToZero(initial.id, totalUsedAmount) }) {
+                            Button(onClick = {
+                                amountText = totalUsedAmount.toString()
+                            }) {
                                 Text(stringResource(Res.string.yarn_form_button_set_remaining_to_zero))
                             }
                         }

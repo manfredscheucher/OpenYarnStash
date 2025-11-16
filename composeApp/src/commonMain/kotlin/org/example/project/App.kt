@@ -240,18 +240,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             screen = Screen.YarnForm(newYarn.id)
                                         }
                                     },
-                                    onSetRemainingToZero = { yarnIdToUpdate, newAmount ->
-                                        scope.launch {
-                                            jsonDataManager.getYarnById(yarnIdToUpdate)
-                                                ?.let { yarnToUpdate ->
-                                                    val updatedYarn =
-                                                        yarnToUpdate.copy(amount = newAmount)
-                                                    withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(updatedYarn) }
-                                                    reloadAllData()
-                                                    screen = Screen.YarnList
-                                                }
-                                        }
-                                    },
                                     onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
                                 )
                             }
