@@ -422,6 +422,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                         Screen.PatternList -> {
                             PatternListScreen(
                                 patterns = patterns,
+                                pdfManager = pdfManager,
                                 onAddClick = {
                                     scope.launch {
                                         val newPattern = jsonDataManager.createNewPattern()

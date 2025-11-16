@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -48,6 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PatternListScreen(
     patterns: List<Pattern>,
+    pdfManager: PdfManager,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
     onBack: () -> Unit
@@ -144,11 +146,26 @@ fun PatternListScreen(
                         ) {
 
                             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Image(
-                                    painter = painterResource(Res.drawable.patterns),
-                                    contentDescription = "Pattern icon",
-                                    modifier = Modifier.size(64.dp)
-                                )
+                                var imageBytes by remember { mutableStateOf<ByteArray?>(null) }
+                                LaunchedEffect(pattern.id) {
+                                    imageBytes = pdfManager.getPatternPdfThumbnail(pattern.id)
+                                }
+                                val bitmap = remember(imageBytes) { imageBytes?.toImageBitmap() }
+
+                                if (bitmap != null) {
+                                    Image(
+                                        bitmap = bitmap,
+                                        contentDescription = "Pattern thumbnail for ${pattern.name}",
+                                        modifier = Modifier.size(64.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(Res.drawable.patterns),
+                                        contentDescription = "Pattern icon",
+                                        modifier = Modifier.size(64.dp)
+                                    )
+                                }
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(pattern.name, style = MaterialTheme.typography.titleMedium)
