@@ -1,5 +1,6 @@
 package org.example.project
 
+import java.awt.Desktop
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -123,6 +124,13 @@ class JvmFileHandler : FileHandler {
                 }
                 zis.closeEntry()
             }
+        }
+    }
+
+    override fun openFileExternally(path: String) {
+        val file = getFile(path)
+        if (file.exists() && Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(file)
         }
     }
 }

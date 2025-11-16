@@ -115,6 +115,7 @@
     <string name="pattern_form_select_pdf">Select PDF</string>
     <string name="pattern_form_remove_pdf">Remove PDF</string>
     <string name="pattern_form_view_pdf">View PDF</string>
+    <string name="pattern_form_view_pdf_externally">View Externally</string>
     <string name="pattern_form_no_projects_assigned">Not assigned to any projects yet.</string>
     <string name="pattern_form_assigned_projects">Assigned Projects</string>
     <string name="pattern_form_view_project">View Project</string>

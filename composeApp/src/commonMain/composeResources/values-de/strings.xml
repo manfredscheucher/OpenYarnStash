@@ -112,6 +112,7 @@
     <string name="pattern_form_select_pdf">PDF auswählen</string>
     <string name="pattern_form_remove_pdf">PDF entfernen</string>
     <string name="pattern_form_view_pdf">PDF ansehen</string>
+    <string name="pattern_form_view_pdf_externally">Extern ansehen</string>
 
     <!-- Project Assignments -->
     <string name="project_assignments_title">Woll-Zuweisungen für %1$s</string>

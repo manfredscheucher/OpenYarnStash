@@ -497,6 +497,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         }
                                     },
                                     onViewPdf = { screen = Screen.PdfViewer(s.patternId) },
+                                    onViewPdfExternally = { pdfManager.openPatternPdfExternally(s.patternId) },
                                     onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
                                 )
                             }

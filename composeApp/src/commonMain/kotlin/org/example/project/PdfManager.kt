@@ -43,6 +43,11 @@ class PdfManager(private val fileHandler: FileHandler) {
         }
     }
 
+    fun openPatternPdfExternally(patternId: Int) {
+        val path = getPatternPdfPath(patternId)
+        fileHandler.openFileExternally(path)
+    }
+
     suspend fun getPatternPdfThumbnail(patternId: Int, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
         val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
         var thumbnailBytes = withContext(Dispatchers.Default) {
