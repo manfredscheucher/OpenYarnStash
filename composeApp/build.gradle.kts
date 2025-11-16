@@ -192,7 +192,7 @@ abstract class GenerateVersionInfo @Inject constructor(
             val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
             val result = execOps.exec {
                 workingDir = wd
-                commandLine("git", "diff-index", "--quiet", "HEAD", "--")
+                commandLine("git", "diff-index", "--quiet", "HEAD")
                 isIgnoreExitValue = true
             }
             if (result.exitValue != 0) "dirty" else "clean"
