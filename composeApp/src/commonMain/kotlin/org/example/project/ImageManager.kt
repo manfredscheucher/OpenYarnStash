@@ -12,10 +12,10 @@ class ImageManager(private val fileHandler: FileHandler) {
     private val yarnImageThumbnailsDir = "img/yarn/thumbnails"
 
     private fun getProjectImagePath(projectId: Int, imageId: Int) = "$projectImagesDir/${projectId}_$imageId.jpg"
-    private fun getProjectImageThumbnailPath(projectId: Int, imageId: Int, width: Int, height: Int) = "$projectImageThumbnailsDir/${projectId}_${imageId}_${width}x${height}.jpg"
+    private fun getProjectImageThumbnailPath(projectId: Int, imageId: Int) = "$projectImageThumbnailsDir/${projectId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
 
     private fun getYarnImagePath(yarnId: Int, imageId: Int) = "$yarnImagesDir/${yarnId}_$imageId.jpg"
-    private fun getYarnImageThumbnailPath(yarnId: Int, imageId: Int, width: Int, height: Int) = "$yarnImageThumbnailsDir/${yarnId}_${imageId}_${width}x${height}.jpg"
+    private fun getYarnImageThumbnailPath(yarnId: Int, imageId: Int) = "$yarnImageThumbnailsDir/${yarnId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
 
 
     suspend fun saveProjectImage(projectId: Int, imageId: Int, image: ByteArray) {
@@ -31,7 +31,7 @@ class ImageManager(private val fileHandler: FileHandler) {
     }
 
     suspend fun getProjectImageThumbnail(projectId: Int, imageId: Int): ByteArray? {
-        val thumbnailPath = getProjectImageThumbnailPath(projectId, imageId, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+        val thumbnailPath = getProjectImageThumbnailPath(projectId, imageId)
         val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
         if (cachedThumbnail != null) {
             return cachedThumbnail
@@ -49,7 +49,7 @@ class ImageManager(private val fileHandler: FileHandler) {
 
     suspend fun deleteProjectImage(projectId: Int, imageId: Int) {
         fileHandler.deleteFile(getProjectImagePath(projectId, imageId))
-        fileHandler.deleteFile(getProjectImageThumbnailPath(projectId, imageId, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
+        fileHandler.deleteFile(getProjectImageThumbnailPath(projectId, imageId))
     }
 
     suspend fun saveYarnImage(yarnId: Int, imageId: Int, image: ByteArray) {
@@ -65,7 +65,7 @@ class ImageManager(private val fileHandler: FileHandler) {
     }
 
     suspend fun getYarnImageThumbnail(yarnId: Int, imageId: Int): ByteArray? {
-        val thumbnailPath = getYarnImageThumbnailPath(yarnId, imageId, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+        val thumbnailPath = getYarnImageThumbnailPath(yarnId, imageId)
         val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
         if (cachedThumbnail != null) {
             return cachedThumbnail
@@ -83,6 +83,6 @@ class ImageManager(private val fileHandler: FileHandler) {
 
     suspend fun deleteYarnImage(yarnId: Int, imageId: Int) {
         fileHandler.deleteFile(getYarnImagePath(yarnId, imageId))
-        fileHandler.deleteFile(getYarnImageThumbnailPath(yarnId, imageId, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT))
+        fileHandler.deleteFile(getYarnImageThumbnailPath(yarnId, imageId))
     }
 }
