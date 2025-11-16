@@ -66,7 +66,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.activity.compose)
-            implementation("androidx.exifinterface:exifinterface:1.3.7")
+            implementation(libs.androidx.exifinterface)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
