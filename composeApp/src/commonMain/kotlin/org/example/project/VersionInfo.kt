@@ -13,5 +13,6 @@ fun VersionInfoView() {
         Text("Version: ${GeneratedVersionInfo.VERSION}")
         val commitText = GeneratedVersionInfo.GIT_SHA.let { sha -> "$sha (${GeneratedVersionInfo.IS_DIRTY})" }
         Text("Commit: $commitText")
+        Text("Build Date: ${GeneratedVersionInfo.BUILD_DATE}")
     }
 }
