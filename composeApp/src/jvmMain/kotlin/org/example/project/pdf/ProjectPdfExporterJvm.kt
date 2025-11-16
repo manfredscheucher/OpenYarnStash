@@ -5,6 +5,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import org.example.project.ImageManager
 import java.io.ByteArrayOutputStream
@@ -20,7 +21,7 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                 fun text(t: String, size: Float, bold: Boolean = false) {
                     cs.beginText()
-                    cs.setFont(if (bold) PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA, size)
+                    cs.setFont(PDType1Font(if (bold) Standard14Fonts.FontName.HELVETICA_BOLD else Standard14Fonts.FontName.HELVETICA), size)
                     cs.newLineAtOffset(36f, y)
                     cs.showText(t)
                     cs.endText()
@@ -45,12 +46,12 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
                 fun param(label: String, value: String?) {
                     if (!value.isNullOrBlank()) {
                         cs.beginText()
-                        cs.setFont(PDType1Font.HELVETICA_BOLD, 10f)
+                        cs.setFont(PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 10f)
                         cs.newLineAtOffset(36f, y)
                         cs.showText(label)
                         cs.endText()
                         cs.beginText()
-                        cs.setFont(PDType1Font.HELVETICA, 10f)
+                        cs.setFont(PDType1Font(Standard14Fonts.FontName.HELVETICA), 10f)
                         cs.newLineAtOffset(156f, y)
                         cs.showText(value)
                         cs.endText()
@@ -81,7 +82,7 @@ class ProjectPdfExporterJvm : ProjectPdfExporter {
 
                     fun line(s: String, size: Float = 10f) {
                         cs.beginText()
-                        cs.setFont(PDType1Font.HELVETICA, size)
+                        cs.setFont(PDType1Font(Standard14Fonts.FontName.HELVETICA), size)
                         cs.newLineAtOffset(textX, textY - size)
                         cs.showText(s)
                         cs.endText()

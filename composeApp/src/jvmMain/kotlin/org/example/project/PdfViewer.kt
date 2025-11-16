@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.rendering.PDFRenderer
 
@@ -19,7 +20,7 @@ actual fun PdfViewer(
     modifier: Modifier
 ) {
     val bitmaps = remember {
-        val document = PDDocument.load(pdf)
+        val document = Loader.loadPDF(pdf)
         val renderer = PDFRenderer(document)
         val images = (0 until document.numberOfPages).map {
             renderer.renderImageWithDPI(it, 300f)
