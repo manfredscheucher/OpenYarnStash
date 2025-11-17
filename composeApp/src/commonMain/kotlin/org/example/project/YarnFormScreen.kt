@@ -156,7 +156,13 @@ fun YarnFormScreen(
     val saveAction = {
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
+        
         val newImagesToUpload = images.filter { it.key !in initialImages.keys }
+        val removedImageIds = initialImages.keys.filter { it !in images.keys }
+
+        println("Saving new images with ids: ${newImagesToUpload.keys}")
+        println("Removing old images with ids: $removedImageIds")
+        
         val finalImageIds = images.keys.toList()
         val yarnImagesChanged = images.keys != initialImages.keys
 
