@@ -10,10 +10,10 @@ enum class LogLevel {
     OFF,
     FATAL,
     ERROR,
-//    WARN,
+    WARN,
     INFO,
     DEBUG,
-//    TRACE
+    TRACE
 }
 
 @Serializable

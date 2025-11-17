@@ -93,6 +93,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             is Screen.PdfViewer -> "PdfViewer(patternId=${s.patternId})"
         }
         logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
+        logger.logImportantFiles(LogLevel.TRACE)
     }
 
     if (showNotImplementedDialog) {
@@ -164,10 +165,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 onBack = { screen = Screen.Home },
                                 onSettingsChange = { newSettings ->
                                     scope.launch {
-                                        if (settings.logLevel != newSettings.logLevel) {
-                                            logger.log(LogLevel.INFO, "LogLevel changed")
-                                            logger.logImportantFiles(LogLevel.DEBUG)
-                                        }
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
