@@ -190,11 +190,25 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             var yarnImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
 
                             LaunchedEffect(s.yarnId, existingYarn) {
-                                yarnImagesMap = existingYarn?.imageIds?.associateWith { imageId ->
-                                    withContext(Dispatchers.Default) {
-                                        imageManager.getYarnImage(existingYarn.id, imageId)
+                                val imageMap = mutableMapOf<Int, ByteArray>()
+                                existingYarn?.imageIds?.forEach { imageId ->
+                                    try {
+                                        withContext(Dispatchers.Default) {
+                                            imageManager.getYarnImage(existingYarn.id, imageId)
+                                                ?. let{
+                                                    imageMap[imageId] = it
+                                                } ?: scope.launch {
+                                                    logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
+                                                }
+                                        }
+                                    } catch (e: Exception) {
+                                        scope.launch {
+                                            logger.log(LogLevel.ERROR, "Failed to load image for yarn ${existingYarn.id}, imageId $imageId")
+                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        }
                                     }
-                                }?.filterValues { it != null }?.mapValues { it.value!! } ?: emptyMap()
+                                }
+                                yarnImagesMap = imageMap
                             }
 
                             if (existingYarn == null) {
@@ -205,7 +219,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     initial = existingYarn,
                                     initialImages = yarnImagesMap,
                                     usagesForYarn = relatedUsages,
-                                    projectById = { pid -> projects.firstOrNull { it.id == pid } },
+                                    projectById = { pid ->
+                                        projects.firstOrNull { it.id == pid }.also {
+                                            if (it == null) {
+                                                scope.launch {
+                                                    logger.log(LogLevel.WARN, "Project with id $pid not found, referenced by yarn ${existingYarn.id}")
+                                                }
+                                            }
+                                        }
+                                    },
                                     imageManager = imageManager,
                                     settings = settings,
                                     onBack = { screen = Screen.YarnList },
@@ -323,11 +345,25 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             var projectImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
 
                             LaunchedEffect(s.projectId, existingProject) {
-                                projectImagesMap = existingProject?.imageIds?.associateWith { imageId ->
-                                    withContext(Dispatchers.Default) {
-                                        imageManager.getProjectImage(existingProject.id, imageId)
+                                val imageMap = mutableMapOf<Int, ByteArray>()
+                                existingProject?.imageIds?.forEach { imageId ->
+                                    try {
+                                        withContext(Dispatchers.Default) {
+                                            imageManager.getProjectImage(existingProject.id, imageId)
+                                                ?. let{
+                                                    imageMap[imageId] = it
+                                                } ?: scope.launch {
+                                                logger.log(LogLevel.WARN, "Image not found for project ${existingProject.id}, imageId $imageId")
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        scope.launch {
+                                            logger.log(LogLevel.ERROR, "Failed to load image for project ${existingProject.id}, imageId $imageId")
+                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        }
                                     }
-                                }?.filterValues { it != null }?.mapValues { it.value!! } ?: emptyMap()
+                                }
+                                projectImagesMap = imageMap
                             }
 
                             if (existingProject == null) {
@@ -339,7 +375,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     initial = existingProject,
                                     initialImages = projectImagesMap,
                                     usagesForProject = usagesForCurrentProject,
-                                    yarnById = { yarnId -> yarns.firstOrNull { it.id == yarnId } },
+                                    yarnById = { yarnId ->
+                                        yarns.firstOrNull { it.id == yarnId }.also {
+                                            if (it == null) {
+                                                scope.launch {
+                                                    logger.log(LogLevel.WARN, "Yarn with id $yarnId not found, referenced by project ${existingProject.id}")
+                                                }
+                                            }
+                                        }
+                                    },
                                     patterns = patterns,
                                     imageManager = imageManager,
                                     onBack = { screen = Screen.ProjectList },
@@ -476,12 +520,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             var initialPdf by remember { mutableStateOf<ByteArray?>(null) }
 
                             LaunchedEffect(s.patternId, existingPattern) {
-                                initialPdf = if (existingPattern != null) {
+                                try {
                                     withContext(Dispatchers.Default) {
-                                        pdfManager.getPatternPdf(existingPattern.id)
+                                        pdfManager.getPatternPdf(existingPattern!!.id)
+                                            ?. let{
+                                                initialPdf = it
+                                            } ?: scope.launch {
+                                            logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern?.id}")
+                                        }
                                     }
-                                } else {
-                                    null
+                                } catch (e: Exception) {
+                                    scope.launch {
+                                        logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}")
+                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                    }
+                                    initialPdf = null
                                 }
                             }
 
