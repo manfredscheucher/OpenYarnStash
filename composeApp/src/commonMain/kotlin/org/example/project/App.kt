@@ -531,7 +531,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             ?. let{
                                                 initialPdf = it
                                             } ?: scope.launch {
-                                            logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern?.id}")
+                                            logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern.id}")
                                         }
                                     }
                                 } catch (e: Exception) {
