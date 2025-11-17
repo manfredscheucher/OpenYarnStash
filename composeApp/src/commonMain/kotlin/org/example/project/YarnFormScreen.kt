@@ -83,13 +83,17 @@ fun YarnFormScreen(
 
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
-            images[nextTempId++] = bytes
+            val newId = nextTempId++
+            images[newId] = bytes
+            println("Image added with id: $newId")
         }
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->
         result?.let {
-            images[nextTempId++] = it
+            val newId = nextTempId++
+            images[newId] = it
+            println("Image added with id: $newId")
         }
     }
 
@@ -312,7 +316,10 @@ fun YarnFormScreen(
                                     )
                                 }
                                 IconButton(
-                                    onClick = { images.remove(id) },
+                                    onClick = {
+                                        images.remove(id)
+                                        println("Image removed with id: $id")
+                                    },
                                     modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                                 ) {
                                     Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
