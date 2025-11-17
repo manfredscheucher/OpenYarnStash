@@ -54,7 +54,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val logger = remember { Logger(fileHandler) }
+    val logger = remember(settings) { Logger(fileHandler, settings) }
 
     suspend fun reloadAllData() {
         try {
@@ -65,12 +65,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             patterns = data.patterns
         } catch (e: Exception) {
             errorDialogMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
+            logger.log("Failed to load data: ${e.message}", LogLevel.ERRORS_ONLY)
         }
     }
 
     LaunchedEffect(Unit) {
-        logger.log("app started", logFiles = true)
         settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
+        logger.log("App started", LogLevel.VERBOSE, logFiles = true)
         setAppLanguage(settings.language)
         reloadAllData()
     }
@@ -108,7 +109,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
-            key(settings.language, settings.lengthUnit) {
+            key(settings.language, settings.lengthUnit, settings.logLevel) {
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -533,15 +534,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 SettingsScreen(
                                     currentLocale = settings.language,
                                     currentLengthUnit = settings.lengthUnit,
+                                    currentLogLevel = settings.logLevel,
                                     onBack = { screen = Screen.Home },
-                                    onExport = {
-                                        scope.launch {
-                                            withContext(Dispatchers.Default) { jsonDataManager.backup() } // Best-effort backup
-                                            val json = withContext(Dispatchers.Default) { jsonDataManager.getRawJson() }
-                                            val exportFileName = fileHandler.createTimestampedFileName("open-yarn-stash", "json")
-                                            fileDownloader.download(exportFileName, json)
-                                        }
-                                    },
                                     onExportZip = {
                                          scope.launch {
                                             val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
@@ -589,6 +583,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onLengthUnitChange = { newLengthUnit ->
                                         scope.launch {
                                             val newSettings = settings.copy(lengthUnit = newLengthUnit)
+                                            withContext(Dispatchers.Default) {
+                                                settingsManager.saveSettings(newSettings)
+                                            }
+                                            settings = newSettings
+                                        }
+                                    },
+                                    onLogLevelChange = { newLogLevel ->
+                                        scope.launch {
+                                            val newSettings = settings.copy(logLevel = newLogLevel)
                                             withContext(Dispatchers.Default) {
                                                 settingsManager.saveSettings(newSettings)
                                             }

@@ -205,6 +205,8 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="length_unit_label">Längeneinheit</string>
     <string name="length_unit_meters">Meter</string>
     <string name="length_unit_yards">Yards</string>
+    <string name="log_level_label">Log-Level</string>
+    <string name="log_level_description">Die Log-Datei wird lokal auf dem Gerät gespeichert und kann über den ZIP-Export eingesehen werden.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nicht implementiert</string>

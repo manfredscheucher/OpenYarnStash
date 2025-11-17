@@ -23,6 +23,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,16 +39,16 @@ import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_yes
-import openyarnstash.composeapp.generated.resources.export_json
 import openyarnstash.composeapp.generated.resources.export_zip
 import openyarnstash.composeapp.generated.resources.import_dialog_message
 import openyarnstash.composeapp.generated.resources.import_dialog_title
-import openyarnstash.composeapp.generated.resources.import_json
 import openyarnstash.composeapp.generated.resources.import_zip
 import openyarnstash.composeapp.generated.resources.language_label
 import openyarnstash.composeapp.generated.resources.length_unit_label
 import openyarnstash.composeapp.generated.resources.length_unit_meters
 import openyarnstash.composeapp.generated.resources.length_unit_yards
+import openyarnstash.composeapp.generated.resources.log_level_label
+import openyarnstash.composeapp.generated.resources.log_level_description
 import openyarnstash.composeapp.generated.resources.settings
 import openyarnstash.composeapp.generated.resources.settings_title
 import org.jetbrains.compose.resources.painterResource
@@ -58,13 +59,14 @@ import org.jetbrains.compose.resources.stringResource
 fun SettingsScreen(
     currentLocale: String,
     currentLengthUnit: LengthUnit,
+    currentLogLevel: LogLevel,
     onBack: () -> Unit,
-    onExport: () -> Unit,
     onExportZip: () -> Unit,
     onImport: (String) -> Unit,
     onImportZip: (Any) -> Unit,
     onLocaleChange: (String) -> Unit,
-    onLengthUnitChange: (LengthUnit) -> Unit
+    onLengthUnitChange: (LengthUnit) -> Unit,
+    onLogLevelChange: (LogLevel) -> Unit
 ) {
     var showJsonFilePicker by remember { mutableStateOf(false) }
     var showZipFilePicker by remember { mutableStateOf(false) }
@@ -72,6 +74,7 @@ fun SettingsScreen(
     var showImportZipConfirmDialog by remember { mutableStateOf(false) }
     var languageDropdownExpanded by remember { mutableStateOf(false) }
     var lengthUnitDropdownExpanded by remember { mutableStateOf(false) }
+    var logLevelDropdownExpanded by remember { mutableStateOf(false) }
 
     BackButtonHandler {
         onBack()
@@ -181,6 +184,43 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                ExposedDropdownMenuBox(
+                    expanded = logLevelDropdownExpanded,
+                    onExpandedChange = { logLevelDropdownExpanded = it }
+                ) {
+                    OutlinedTextField(
+                        value = currentLogLevel.name,
+                        onValueChange = {},
+                        label = { Text(stringResource(Res.string.log_level_label)) },
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = logLevelDropdownExpanded) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = logLevelDropdownExpanded,
+                        onDismissRequest = { logLevelDropdownExpanded = false }
+                    ) {
+                        LogLevel.values().forEach { level ->
+                            DropdownMenuItem(
+                                text = { Text(level.name) },
+                                onClick = {
+                                    onLogLevelChange(level)
+                                    logLevelDropdownExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                Text(
+                    text = stringResource(Res.string.log_level_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Button(onClick = onExportZip, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.export_zip))
                 }
@@ -240,7 +280,6 @@ fun SettingsScreen(
                         }
                     )
                 }
-
 
                 if (showJsonFilePicker) {
                     FilePicker(show = true) { fileContent ->
