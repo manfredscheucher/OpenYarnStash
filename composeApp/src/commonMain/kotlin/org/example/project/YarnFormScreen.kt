@@ -75,33 +75,26 @@ fun YarnFormScreen(
     val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
-    var imagesChanged by remember { mutableStateOf(false) }
 
-    val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
-    val removedInitialImageIds = remember { mutableStateListOf<Int>() }
-    var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1) ?: 1) }
-    var selectedImageId by remember { mutableStateOf<Int?>(null) }
+    val images = remember(initialImages) { mutableStateMapOf(*initialImages.toList().toTypedArray()) }
+    var nextTempId by remember { mutableStateOf((initialImages.keys.maxOrNull() ?: 0) + 1) }
+    var selectedImageId by remember { mutableStateOf<Int?>(initialImages.keys.firstOrNull()) }
+
 
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
-            newImages[nextTempId++] = bytes
+            images[nextTempId++] = bytes
         }
-        imagesChanged = true
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->
         result?.let {
-            newImages[nextTempId++] = it
-            imagesChanged = true
+            images[nextTempId++] = it
         }
     }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
     var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
-
-    val allImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
-        initialImages.filter { it.key !in removedInitialImageIds } + newImages
-    }
 
     val currentYarnState by remember(amountText, weightPerSkeinText, meteragePerSkeinText, totalUsedAmount) {
         derivedStateOf {
@@ -129,16 +122,15 @@ fun YarnFormScreen(
         amountText,
         added,
         notes,
-        newImages.size,
-        removedInitialImageIds.size
     ) {
         derivedStateOf {
+            val imagesChanged = images.keys != initialImages.keys
             if (initial == null) {
                 name.isNotEmpty() || color.isNotEmpty() || colorCode.isNotEmpty() || brand.isNotEmpty() ||
                         blend.isNotEmpty() ||
                         dyeLot.isNotEmpty() || storagePlace.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
                         amountText.isNotEmpty() ||
-                        added.isNotEmpty() || notes.isNotEmpty() || newImages.isNotEmpty()
+                        added.isNotEmpty() || notes.isNotEmpty() || images.isNotEmpty()
             } else {
                 name != initial.name ||
                         color != (initial.color ?: "") ||
@@ -152,7 +144,7 @@ fun YarnFormScreen(
                         amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
                         added != (initial.added ?: "") ||
                         notes != (initial.notes ?: "") ||
-                        newImages.isNotEmpty() || removedInitialImageIds.isNotEmpty()
+                        imagesChanged
             }
         }
     }
@@ -160,7 +152,9 @@ fun YarnFormScreen(
     val saveAction = {
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
-        val finalImageIds = (initial?.imageIds?.filter { it !in removedInitialImageIds } ?: emptyList()) + newImages.keys
+        val newImagesToUpload = images.filter { it.key !in initialImages.keys }
+        val finalImageIds = images.keys.toList()
+        val yarnImagesChanged = images.keys != initialImages.keys
 
         val yarn = (initial ?: Yarn(id = -1, name = "", amount = 0, modified = getCurrentTimestamp()))
             .copy(
@@ -178,9 +172,9 @@ fun YarnFormScreen(
                 added = normalizeDateString(added),
                 notes = notes.ifBlank { null },
                 imageIds = finalImageIds,
-                imagesChanged = imagesChanged || newImages.isNotEmpty() || removedInitialImageIds.isNotEmpty()
+                imagesChanged = yarnImagesChanged
             )
-        onSave(yarn, newImages.toMap())
+        onSave(yarn, newImagesToUpload)
     }
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
@@ -273,8 +267,8 @@ fun YarnFormScreen(
                     .navigationBarsPadding()
                     .padding(16.dp)
             ) {
-                val displayedImages = remember(allImages.size) {
-                    allImages.entries.sortedBy { it.key }
+                val displayedImages = remember(images.size) {
+                    images.entries.sortedBy { it.key }
                 }
 
                 LaunchedEffect(displayedImages) {
@@ -286,7 +280,7 @@ fun YarnFormScreen(
                     }
                 }
 
-                val previewImage = selectedImageId?.let { allImages[it] }
+                val previewImage = selectedImageId?.let { images[it] }
 
                 if (previewImage != null) {
                     val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
@@ -318,14 +312,7 @@ fun YarnFormScreen(
                                     )
                                 }
                                 IconButton(
-                                    onClick = {
-                                        if (newImages.containsKey(id)) {
-                                            newImages.remove(id)
-                                        } else {
-                                            removedInitialImageIds.add(id)
-                                        }
-                                        imagesChanged = true
-                                    },
+                                    onClick = { images.remove(id) },
                                     modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                                 ) {
                                     Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))

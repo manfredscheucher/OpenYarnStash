@@ -73,35 +73,32 @@ fun ProjectFormScreen(
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
     var showUnsavedDialogForYarn by remember { mutableStateOf<Int?>(null) }
-    val newImages = remember { mutableStateMapOf<Int, ByteArray>() }
-    val removedInitialImageIds = remember { mutableStateListOf<Int>() }
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
-    var nextTempId by remember { mutableStateOf(initial?.imageIds?.maxOrNull()?.plus(1)?:1) }
-    var selectedImageId by remember { mutableStateOf<Int?>(null) }
-    var imagesChanged by remember { mutableStateOf(false) }
 
-    val imagePicker = rememberImagePickerLauncher { images ->
-        images.forEach { newImages[nextTempId++] = it }
-        imagesChanged = true
+    val images = remember(initialImages) { mutableStateMapOf(*initialImages.toList().toTypedArray()) }
+    var nextTempId by remember { mutableStateOf((initialImages.keys.maxOrNull() ?: 0) + 1) }
+    var selectedImageId by remember { mutableStateOf<Int?>(initialImages.keys.firstOrNull()) }
+
+    val imagePicker = rememberImagePickerLauncher { newImageBytes ->
+        newImageBytes.forEach { bytes ->
+            images[nextTempId++] = bytes
+        }
     }
 
     val cameraLauncher = rememberCameraLauncher { result ->
-        result?.let { newImages[nextTempId++] = it }
-        imagesChanged = true
+        result?.let {
+            images[nextTempId++] = it
+        }
     }
 
     val scope = rememberCoroutineScope()
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
-    val allImages = remember(initialImages, removedInitialImageIds.size, newImages.size) {
-        initialImages.filter { it.key !in removedInitialImageIds } + newImages
-    }
-    val displayedImages = allImages.entries.sortedBy { it.key }
-
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, newImages.size, removedInitialImageIds.size, rowCounters, patternId) {
+    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, rowCounters, patternId) {
         derivedStateOf {
+            val imagesChanged = images.keys != initialImages.keys
             name != initial.name ||
                     forWho != (initial.madeFor ?: "") ||
                     startDate != (initial.startDate ?: "") ||
@@ -110,8 +107,7 @@ fun ProjectFormScreen(
                     needleSize != (initial.needleSize ?: "") ||
                     size != (initial.size ?: "") ||
                     gauge != (initial.gauge ?: "") ||
-                    newImages.isNotEmpty() ||
-                    removedInitialImageIds.isNotEmpty() ||
+                    imagesChanged ||
                     rowCounters != initial.rowCounters ||
                     patternId != initial.patternId
         }
@@ -161,7 +157,9 @@ fun ProjectFormScreen(
     }
 
     val saveAction = {
-        val finalImageIds = initialImages.keys.filter { it !in removedInitialImageIds } + newImages.keys
+        val newImagesToUpload = images.filter { it.key !in initialImages.keys }
+        val finalImageIds = images.keys.toList()
+        val projectImagesChanged = images.keys != initialImages.keys
         val project = initial.copy(
             name = name,
             madeFor = forWho.ifBlank { null },
@@ -175,9 +173,9 @@ fun ProjectFormScreen(
             rowCounters = rowCounters,
             patternId = patternId,
             imageIds = finalImageIds,
-            imagesChanged = imagesChanged
+            imagesChanged = projectImagesChanged
         )
-        onSave(project, newImages.toMap())
+        onSave(project, newImagesToUpload)
     }
 
     val backAction = {
@@ -298,6 +296,10 @@ fun ProjectFormScreen(
                 .navigationBarsPadding()
                 .padding(16.dp)
         ) {
+            val displayedImages = remember(images.size) {
+                images.entries.sortedBy { it.key }
+            }
+
             LaunchedEffect(displayedImages) {
                 val keys = displayedImages.map { it.key }
                 if (selectedImageId == null && keys.isNotEmpty()) {
@@ -307,7 +309,7 @@ fun ProjectFormScreen(
                 }
             }
 
-            val previewImage = selectedImageId?.let { allImages[it] }
+            val previewImage = selectedImageId?.let { images[it] }
 
             if (previewImage != null) {
                 val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
@@ -337,14 +339,7 @@ fun ProjectFormScreen(
                                     modifier = Modifier.size(80.dp).clickable { selectedImageId = id })
                             }
                             IconButton(
-                                onClick = {
-                                    if (newImages.containsKey(id)) {
-                                        newImages.remove(id)
-                                    } else {
-                                        removedInitialImageIds.add(id)
-                                    }
-                                    imagesChanged = true
-                                },
+                                onClick = { images.remove(id) },
                                 modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                             ) {
                                 Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
