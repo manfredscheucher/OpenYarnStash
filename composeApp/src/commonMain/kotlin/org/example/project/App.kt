@@ -69,7 +69,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
     }
 
     LaunchedEffect(Unit) {
-        logger.log("hallo welt",)
+        logger.log("app started", logFiles = true)
         settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
         setAppLanguage(settings.language)
         reloadAllData()

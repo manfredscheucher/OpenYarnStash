@@ -2,10 +2,10 @@ package org.example.project
 
 class Logger(private val fileHandler: FileHandler) {
 
-    private val logFilePath = "files/log.txt"
-    private val stashFilePath = "files/stash.json"
-    private val settingsFilePath = "files/settings.json"
-    private val filesDirPath = "files"
+    private val logFilePath = "log.txt"
+    private val stashFilePath = "stash.json"
+    private val settingsFilePath = "settings.json"
+    private val filesDirPath = "."
 
     suspend fun log(message: String, logFiles: Boolean = false) {
         val timestamp = getCurrentTimestamp()
