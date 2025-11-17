@@ -85,6 +85,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.kotlinx.datetime)
             implementation(libs.koalaplot.core)
+            implementation(libs.kotlinx.io.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
