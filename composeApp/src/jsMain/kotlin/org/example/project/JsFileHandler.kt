@@ -15,6 +15,10 @@ class JsFileHandler : FileHandler {
         // Not implemented for JS
     }
 
+    override suspend fun appendText(path: String, content: String) {
+        // Not implemented for JS
+    }
+
     override suspend fun backupFile(path: String): String? {
         // Not implemented for JS
         return null

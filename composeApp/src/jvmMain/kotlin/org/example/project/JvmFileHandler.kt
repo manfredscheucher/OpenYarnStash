@@ -53,6 +53,12 @@ class JvmFileHandler : FileHandler {
         file.writeText(content)
     }
 
+    override suspend fun appendText(path: String, content: String) {
+        val file = getFile(path)
+        file.parentFile?.mkdirs()
+        file.appendText(content)
+    }
+
     override suspend fun backupFile(path: String): String? {
         val file = getFile(path)
         if (file.exists()) {

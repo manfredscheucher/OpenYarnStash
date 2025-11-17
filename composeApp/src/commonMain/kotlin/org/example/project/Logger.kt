@@ -17,14 +17,7 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
         println(logMessage)
 
         try {
-            val existingContent = try {
-                fileHandler.readText(logFilePath)
-            } catch (e: Exception) {
-                ""
-            }
-
-            val newContent = existingContent + logMessage
-            fileHandler.writeText(logFilePath, newContent)
+            fileHandler.appendText(logFilePath, logMessage)
         } catch (e: Exception) {
             println("Error writing to log file: ${e.message}")
         }
