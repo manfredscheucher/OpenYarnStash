@@ -64,14 +64,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             usages = data.usages
             patterns = data.patterns
         } catch (e: Exception) {
-            errorDialogMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
-            logger.log("Failed to load data: ${e.message}", LogLevel.ERRORS_ONLY)
+            val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
+            errorDialogMessage = errorMessage
+            logger.log(LogLevel.ERROR,errorMessage)
         }
     }
 
     LaunchedEffect(Unit) {
         settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
-        logger.log("App started", LogLevel.VERBOSE, logFiles = true)
+        logger.log(LogLevel.INFO,"App started" )
+        logger.logImportantFiles(LogLevel.DEBUG)
         setAppLanguage(settings.language)
         reloadAllData()
     }

@@ -7,9 +7,13 @@ enum class LengthUnit {
 }
 
 enum class LogLevel {
-    DISABLED,
-    ERRORS_ONLY,
-    VERBOSE
+    OFF,
+    FATAL,
+    ERROR,
+//    WARN,
+    INFO,
+    DEBUG,
+//    TRACE
 }
 
 @Serializable
@@ -19,5 +23,5 @@ data class Settings(
     val hideUsedYarns: Boolean = false,
     val statisticTimespan: String = "year",
     val lengthUnit: LengthUnit = LengthUnit.METER,
-    val logLevel: LogLevel = LogLevel.DISABLED
+    val logLevel: LogLevel = LogLevel.ERROR
 )

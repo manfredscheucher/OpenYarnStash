@@ -7,6 +7,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.zip.ZipEntry
@@ -169,5 +170,22 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
             .filter { it.isFile }
             .map { filesDir.toURI().relativize(it.toURI()).path }
             .toList()
+    }
+
+    override suspend fun getFileHash(path: String): String? {
+        val file = getFile(path)
+        if (!file.exists() || !file.isFile) {
+            return null
+        }
+        val md = MessageDigest.getInstance("SHA-256")
+        FileInputStream(file).use { fis ->
+            val buffer = ByteArray(8192)
+            var bytesRead = fis.read(buffer)
+            while (bytesRead != -1) {
+                md.update(buffer, 0, bytesRead)
+                bytesRead = fis.read(buffer)
+            }
+        }
+        return md.digest().joinToString("") { "%02x".format(it) }
     }
 }

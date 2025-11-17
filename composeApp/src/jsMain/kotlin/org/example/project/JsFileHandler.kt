@@ -63,4 +63,9 @@ class JsFileHandler : FileHandler {
         // This functionality is not available in the browser environment.
         return emptyList()
     }
+
+    override suspend fun getFileHash(path: String): String? {
+        // This functionality is not available in the browser environment.
+        return null
+    }
 }
