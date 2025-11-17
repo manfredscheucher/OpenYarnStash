@@ -64,7 +64,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
         } catch (e: Exception) {
             val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
             errorDialogMessage = errorMessage
-            logger.log(LogLevel.ERROR,errorMessage)
+            logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData")
+            logger.log(LogLevel.DEBUG, "Error details: $e")
         }
     }
 
@@ -178,7 +179,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingYarn = remember(s.yarnId, yarns) {
                                 try {
                                     jsonDataManager.getYarnById(s.yarnId)
-                                } catch (_: NoSuchElementException) {
+                                } catch (e: NoSuchElementException) {
+                                    scope.launch {
+                                        logger.log(LogLevel.ERROR, "Failed to get yarn by id ${s.yarnId} in YarnForm")
+                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                    }
                                     null
                                 }
                             }
@@ -307,7 +312,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingProject = remember(s.projectId, projects) {
                                 try {
                                     jsonDataManager.getProjectById(s.projectId)
-                                } catch (_: NoSuchElementException) {
+                                } catch (e: NoSuchElementException) {
+                                    scope.launch {
+                                        logger.log(LogLevel.ERROR, "Failed to get project by id ${s.projectId} in ProjectForm")
+                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                    }
                                     null
                                 }
                             }
@@ -410,7 +419,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             yarnId,
                                             forProjectId = s.projectId
                                         )
-                                    } catch (_: NoSuchElementException) {
+                                    } catch (e: NoSuchElementException) {
+                                        scope.launch {
+                                            logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen")
+                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        }
                                         0
                                     }
                                 },
@@ -451,7 +464,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingPattern = remember(s.patternId, patterns) {
                                 try {
                                     jsonDataManager.getPatternById(s.patternId)
-                                } catch (_: NoSuchElementException) {
+                                } catch (e: NoSuchElementException) {
+                                    scope.launch {
+                                        logger.log(LogLevel.ERROR, "Failed to get pattern by id ${s.patternId} in PatternForm")
+                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                    }
                                     null
                                 }
                             }
@@ -571,7 +588,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 reloadAllData()
                                                 snackbarHostState.showSnackbar("Import successful")
                                             } catch (e: Exception) {
-                                                errorDialogMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
+                                                val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
+                                                errorDialogMessage = errorMessage
+                                                scope.launch {
+                                                    logger.log(LogLevel.ERROR, "Failed to import data in onImport")
+                                                    logger.log(LogLevel.DEBUG, "Error details: $e")
+                                                }
                                             }
                                         }
                                     },
@@ -586,7 +608,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 reloadAllData()
                                                 snackbarHostState.showSnackbar("ZIP import successful")
                                             } catch (e: Exception) {
-                                                errorDialogMessage = "Failed to import ZIP: ${e.message}"
+                                                val errorMessage = "Failed to import ZIP: ${e.message}"
+                                                errorDialogMessage = errorMessage
+                                                scope.launch {
+                                                    logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip")
+                                                    logger.log(LogLevel.DEBUG, "Error details: $e")
+                                                }
                                             }
                                         }
                                     },
