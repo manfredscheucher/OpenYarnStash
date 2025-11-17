@@ -161,14 +161,7 @@ fun ProjectFormScreen(
     }
 
     val saveAction = {
-        val newImagesToUpload = images.filter { it.key !in initialImages.keys }
-        val removedImageIds = initialImages.keys.filter { it !in images.keys }
-
-        println("Saving new images with ids: ${newImagesToUpload.keys}")
-        println("Removing old images with ids: $removedImageIds")
-
         val finalImageIds = images.keys.toList()
-        val projectImagesChanged = images.keys != initialImages.keys
         val project = initial.copy(
             name = name,
             madeFor = forWho.ifBlank { null },
@@ -182,9 +175,9 @@ fun ProjectFormScreen(
             rowCounters = rowCounters,
             patternId = patternId,
             imageIds = finalImageIds,
-            imagesChanged = projectImagesChanged
+            imagesChanged = initialImages.keys != images.keys
         )
-        onSave(project, newImagesToUpload)
+        onSave(project, images.toMap())
     }
 
     val backAction = {

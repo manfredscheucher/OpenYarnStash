@@ -252,30 +252,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedYarn, newImages ->
                                         scope.launch {
                                             val existingImageIds = existingYarn.imageIds
-                                            val keptImageIds = editedYarn.imageIds.filter { it > 0 }
-                                            val idsToDelete = existingImageIds.filter { it !in keptImageIds }
+                                            val finalImageIds = editedYarn.imageIds
+                                            val idsToDelete = existingImageIds.filter { it !in finalImageIds }
 
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->
                                                     imageManager.deleteYarnImage(editedYarn.id, imageId)
                                                 }
-
-                                                val finalImageIds = keptImageIds.toMutableList()
-                                                var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
-                                                newImages.keys.sorted().forEach { imageKey ->
-                                                    newImages[imageKey]?.let { imageData ->
-                                                        imageManager.saveYarnImage(
-                                                            editedYarn.id,
-                                                            nextImageId,
-                                                            imageData
-                                                        )
-                                                        finalImageIds.add(nextImageId)
-                                                        nextImageId++
-                                                    }
+                                                newImages.entries.forEach { (imageId, imageData) ->
+                                                    imageManager.saveYarnImage(
+                                                        editedYarn.id,
+                                                        imageId,
+                                                        imageData
+                                                    )
                                                 }
-
-                                                val finalYarn = editedYarn.copy(imageIds = finalImageIds)
-                                                jsonDataManager.addOrUpdateYarn(finalYarn)
+                                                jsonDataManager.addOrUpdateYarn(editedYarn)
                                             }
                                             reloadAllData()
                                             screen = Screen.YarnList
@@ -408,30 +399,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedProject, newImages ->
                                         scope.launch {
                                             val existingImageIds = existingProject.imageIds
-                                            val keptImageIds = editedProject.imageIds.filter { it > 0 }
-                                            val idsToDelete = existingImageIds.filter { it !in keptImageIds }
-
+                                            val finalImageIds = editedProject.imageIds
+                                            val idsToDelete = existingImageIds.filter { it !in finalImageIds }
+                                            
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->
                                                     imageManager.deleteProjectImage(editedProject.id, imageId)
                                                 }
-
-                                                val finalImageIds = keptImageIds.toMutableList()
-                                                var nextImageId = (existingImageIds.maxOrNull() ?: 0) + 1
-                                                newImages.keys.sorted().forEach { imageKey ->
-                                                    newImages[imageKey]?.let { imageData ->
-                                                        imageManager.saveProjectImage(
-                                                            editedProject.id,
-                                                            nextImageId,
-                                                            imageData
-                                                        )
-                                                        finalImageIds.add(nextImageId)
-                                                        nextImageId++
-                                                    }
+                                                newImages.entries.sortedBy { it.key }.forEach { (imageId, imageData) ->
+                                                    imageManager.saveProjectImage(
+                                                        editedProject.id,
+                                                        imageId,
+                                                        imageData
+                                                    )
                                                 }
-
-                                                val finalProject = editedProject.copy(imageIds = finalImageIds)
-                                                jsonDataManager.addOrUpdateProject(finalProject)
+                                                jsonDataManager.addOrUpdateProject(editedProject)
                                             }
                                             reloadAllData()
                                             screen = Screen.ProjectList
