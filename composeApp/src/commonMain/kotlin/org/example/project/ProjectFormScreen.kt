@@ -276,8 +276,8 @@ fun ProjectFormScreen(
     }
 
     val status = when {
-        !endDate.isNullOrBlank() -> ProjectStatus.FINISHED
-        !startDate.isNullOrBlank() -> ProjectStatus.IN_PROGRESS
+        endDate.isBlank() -> ProjectStatus.FINISHED
+        startDate.isBlank() -> ProjectStatus.IN_PROGRESS
         else -> ProjectStatus.PLANNING
     }
 
