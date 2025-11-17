@@ -1,88 +1,57 @@
 package org.example.project
 
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.readString
+class Logger(private val fileHandler: FileHandler) {
 
-object Logger {
+    private val logFilePath = "files/log.txt"
+    private val stashFilePath = "files/stash.json"
+    private val settingsFilePath = "files/settings.json"
+    private val filesDirPath = "files"
 
-    private const val LOG_FILE = "files/log.txt"
-    private const val STASH_FILE = "files/stash.json"
-    private const val SETTINGS_FILE = "files/settings.json"
-    private const val FILES_DIR = "files"
-
-    fun log(message: String, logFiles: Boolean = false) {
+    suspend fun log(message: String, logFiles: Boolean = false) {
         val timestamp = getCurrentTimestamp()
         val logMessage = "$timestamp: $message\n"
 
         println(logMessage)
 
         try {
-            val path = Path(LOG_FILE)
-            val parent = path.parent!!
-            if (!SystemFileSystem.exists(parent)) {
-                SystemFileSystem.createDirectories(parent, false)
+            val existingContent = try {
+                fileHandler.readBytes(logFilePath)
+            } catch (e: Exception) {
+                null
             }
-            SystemFileSystem.sink(path, append = true).buffered().use {
-                it.write(logMessage.encodeToByteArray())
+
+            val newContent = if (existingContent != null) {
+                existingContent + logMessage.encodeToByteArray()
+            } else {
+                logMessage.encodeToByteArray()
             }
+            fileHandler.writeBytes(logFilePath, newContent)
         } catch (e: Exception) {
             println("Error writing to log file: ${e.message}")
         }
 
         if (logFiles) {
-            printFileContent(STASH_FILE)
-            printFileContent(SETTINGS_FILE)
-            printDirectoryContents(FILES_DIR)
+            logFileContent(stashFilePath)
+            logFileContent(settingsFilePath)
+            logDirectoryContents(filesDirPath)
         }
     }
 
-    private fun printFileContent(filePath: String) {
-        val path = Path(filePath)
-        println("\n--- Content of $filePath ---")
-        try {
-            if (SystemFileSystem.exists(path)) {
-                val content = SystemFileSystem.source(path).buffered().use { it.readString() }
-                println(content)
-            } else {
-                println("File not found.")
-            }
+    private suspend fun logFileContent(filePath: String) {
+        val content = try {
+            fileHandler.readFile(filePath)
         } catch (e: Exception) {
-            println("Error reading file: ${e.message}")
+            "Error reading file: ${e.message}"
         }
-        println("--- End of $filePath ---\n")
+        log("Content of $filePath:\n$content")
     }
 
-    private fun printDirectoryContents(dirPath: String) {
-        val path = Path(dirPath)
-        println("\n--- Recursive listing of '$dirPath' ---")
-        try {
-            val metadata = SystemFileSystem.metadataOrNull(path)
-            if (metadata?.isDirectory == true) {
-                listDirectoryRecursively(path, "")
-            } else {
-                println("Directory not found or not a directory.")
-            }
+    private suspend fun logDirectoryContents(dirPath: String) {
+        val fileList = try {
+            fileHandler.listFilesRecursively(dirPath)
         } catch (e: Exception) {
-            println("Error listing directory: ${e.message}")
+            listOf("Error listing directory: ${e.message}")
         }
-        println("--- End of listing ---\n")
-    }
-
-    private fun listDirectoryRecursively(dir: Path, prefix: String) {
-        try {
-            SystemFileSystem.list(dir).forEach { entry ->
-                val metadata = SystemFileSystem.metadataOrNull(entry)
-                if (metadata?.isDirectory == true) {
-                    println("$prefix${entry.name}/")
-                    listDirectoryRecursively(entry, "$prefix  ")
-                } else {
-                    println("$prefix${entry.name}")
-                }
-            }
-        } catch (e: Exception) {
-            println("$prefix  -> Error: ${e.message}")
-        }
+        log("Recursive listing of '$dirPath':\n${fileList.joinToString("\n")}")
     }
 }

@@ -159,4 +159,15 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
             context.startActivity(intent)
         }
     }
+
+    override suspend fun listFilesRecursively(path: String): List<String> {
+        val rootDir = getFile(path)
+        if (!rootDir.exists() || !rootDir.isDirectory) {
+            return emptyList()
+        }
+        return rootDir.walkTopDown()
+            .filter { it.isFile }
+            .map { filesDir.toURI().relativize(it.toURI()).path }
+            .toList()
+    }
 }

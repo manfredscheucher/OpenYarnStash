@@ -151,4 +151,15 @@ class JvmFileHandler : FileHandler {
             Desktop.getDesktop().open(file)
         }
     }
+
+    override suspend fun listFilesRecursively(path: String): List<String> {
+        val rootDir = getFile(path)
+        if (!rootDir.exists() || !rootDir.isDirectory) {
+            return emptyList()
+        }
+        return rootDir.walkTopDown()
+            .filter { it.isFile }
+            .map { filesDir.toURI().relativize(it.toURI()).path }
+            .toList()
+    }
 }

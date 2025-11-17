@@ -54,6 +54,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val logger = remember { Logger(fileHandler) }
 
     suspend fun reloadAllData() {
         try {
@@ -68,6 +69,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
     }
 
     LaunchedEffect(Unit) {
+        logger.log("hallo welt",)
         settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
         setAppLanguage(settings.language)
         reloadAllData()

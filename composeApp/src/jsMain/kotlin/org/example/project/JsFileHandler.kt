@@ -58,4 +58,9 @@ class JsFileHandler : FileHandler {
     override fun openFileExternally(path: String) {
         // Not implemented for JS
     }
+
+    override suspend fun listFilesRecursively(path: String): List<String> {
+        // This functionality is not available in the browser environment.
+        return emptyList()
+    }
 }
