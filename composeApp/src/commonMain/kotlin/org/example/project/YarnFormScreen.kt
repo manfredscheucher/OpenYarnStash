@@ -305,14 +305,12 @@ fun YarnFormScreen(
                         items(displayedImages, key = { it.key }) { (id, bytes) ->
                             Box {
                                 val bitmap = remember(bytes) { bytes.toImageBitmap() }
-                                if (bitmap != null) {
-                                    Image(
-                                        bitmap,
-                                        contentDescription = "Image $id",
-                                        modifier = Modifier.size(80.dp)
-                                            .clickable { selectedImageId = id }
-                                    )
-                                }
+                                Image(
+                                    bitmap,
+                                    contentDescription = "Image $id",
+                                    modifier = Modifier.size(80.dp)
+                                        .clickable { selectedImageId = id }
+                                )
                                 IconButton(
                                     onClick = {
                                         images.remove(id)
