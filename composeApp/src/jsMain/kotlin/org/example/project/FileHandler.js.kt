@@ -16,11 +16,11 @@ external object Base64 {
 
 actual class JsFileHandler : FileHandler {
 
-    override suspend fun readFile(path: String): String {
+    override suspend fun readText(path: String): String {
         return localStorage.getItem(path) ?: ""
     }
 
-    override suspend fun writeFile(path: String, content: String) {
+    override suspend fun writeText(path: String, content: String) {
         localStorage.setItem(path, content)
     }
 

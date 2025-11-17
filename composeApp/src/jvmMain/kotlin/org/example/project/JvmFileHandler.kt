@@ -38,7 +38,7 @@ class JvmFileHandler : FileHandler {
         }
     }
 
-    override suspend fun readFile(path: String): String {
+    override suspend fun readText(path: String): String {
         val file = getFile(path)
         return if (file.exists()) {
             file.readText()
@@ -47,7 +47,7 @@ class JvmFileHandler : FileHandler {
         }
     }
 
-    override suspend fun writeFile(path: String, content: String) {
+    override suspend fun writeText(path: String, content: String) {
         val file = getFile(path)
         file.parentFile?.mkdirs()
         file.writeText(content)

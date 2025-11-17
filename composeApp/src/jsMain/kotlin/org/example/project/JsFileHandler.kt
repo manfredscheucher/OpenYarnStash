@@ -6,12 +6,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class JsFileHandler : FileHandler {
-    override suspend fun readFile(path: String): String {
+    override suspend fun readText(path: String): String {
         // Not implemented for JS
         return ""
     }
 
-    override suspend fun writeFile(path: String, content: String) {
+    override suspend fun writeText(path: String, content: String) {
         // Not implemented for JS
     }
 

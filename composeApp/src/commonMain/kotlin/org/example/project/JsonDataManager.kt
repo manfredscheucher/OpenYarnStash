@@ -16,7 +16,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
      * it initializes with default empty lists.
      */
     suspend fun load(): AppData {
-        val content = fileHandler.readFile(filePath)
+        val content = fileHandler.readText(filePath)
         data = if (content.isNotEmpty()) {
             try {
                 val appData = Json.decodeFromString<AppData>(content)
@@ -40,14 +40,14 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
      */
     private suspend fun save() {
         val content = Json.encodeToString(data)
-        fileHandler.writeFile(filePath, content)
+        fileHandler.writeText(filePath, content)
     }
 
     /**
      * Provides the raw JSON content of the current data.
      */
     suspend fun getRawJson(): String {
-        return fileHandler.readFile(filePath)
+        return fileHandler.readText(filePath)
     }
 
     /**
@@ -72,7 +72,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         fileHandler.backupFile(filePath)
 
         // Then, write the new content to the main file.
-        fileHandler.writeFile(filePath, content)
+        fileHandler.writeText(filePath, content)
 
         // Finally, update the in-memory data.
         data = newData

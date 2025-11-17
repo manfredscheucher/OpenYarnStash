@@ -8,7 +8,7 @@ class JsonSettingsManager(private val fileHandler: FileHandler, private val file
     private var settings: Settings = Settings()
 
     suspend fun loadSettings(): Settings {
-        val content = fileHandler.readFile(filePath)
+        val content = fileHandler.readText(filePath)
         settings = if (content.isNotEmpty()) {
             try {
                 Json.decodeFromString<Settings>(content)
@@ -28,6 +28,6 @@ class JsonSettingsManager(private val fileHandler: FileHandler, private val file
     suspend fun saveSettings(settings: Settings) {
         this.settings = settings
         val content = Json.encodeToString(this@JsonSettingsManager.settings)
-        fileHandler.writeFile(filePath, content)
+        fileHandler.writeText(filePath, content)
     }
 }

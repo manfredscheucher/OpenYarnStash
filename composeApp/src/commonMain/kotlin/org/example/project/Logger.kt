@@ -18,13 +18,13 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
 
         try {
             val existingContent = try {
-                fileHandler.readFile(logFilePath)
+                fileHandler.readText(logFilePath)
             } catch (e: Exception) {
                 ""
             }
 
             val newContent = existingContent + logMessage
-            fileHandler.writeFile(logFilePath, newContent)
+            fileHandler.writeText(logFilePath, newContent)
         } catch (e: Exception) {
             println("Error writing to log file: ${e.message}")
         }
@@ -38,7 +38,7 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
 
     private suspend fun logFile(level: LogLevel,filePath: String) {
         val content = try {
-            fileHandler.readFile(filePath)
+            fileHandler.readText(filePath)
         } catch (e: Exception) {
             "Error reading file: ${e.message}"
         }
