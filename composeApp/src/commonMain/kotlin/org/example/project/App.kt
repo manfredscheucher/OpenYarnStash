@@ -1,8 +1,6 @@
 package org.example.project
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -76,6 +74,25 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
         logger.logImportantFiles(LogLevel.DEBUG)
         setAppLanguage(settings.language)
         reloadAllData()
+    }
+
+    LaunchedEffect(screen) {
+        val screenName = when (val s = screen) {
+            is Screen.Home -> "Home"
+            is Screen.YarnList -> "YarnList"
+            is Screen.YarnForm -> "YarnForm(yarnId=${s.yarnId})"
+            is Screen.ProjectList -> "ProjectList"
+            is Screen.ProjectForm -> "ProjectForm(projectId=${s.projectId})"
+            is Screen.ProjectAssignments -> "ProjectAssignments(projectId=${s.projectId}, projectName='${s.projectName}')"
+            is Screen.Info -> "Info"
+            is Screen.HowToHelp -> "HowToHelp"
+            is Screen.Statistics -> "Statistics"
+            is Screen.Settings -> "Settings"
+            is Screen.PatternList -> "PatternList"
+            is Screen.PatternForm -> "PatternForm(patternId=${s.patternId})"
+            is Screen.PdfViewer -> "PdfViewer(patternId=${s.patternId})"
+        }
+        logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
     }
 
     if (showNotImplementedDialog) {
@@ -164,7 +181,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingYarn = remember(s.yarnId, yarns) {
                                 try {
                                     jsonDataManager.getYarnById(s.yarnId)
-                                } catch (e: NoSuchElementException) {
+                                } catch (_: NoSuchElementException) {
                                     null
                                 }
                             }
@@ -293,7 +310,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingProject = remember(s.projectId, projects) {
                                 try {
                                     jsonDataManager.getProjectById(s.projectId)
-                                } catch (e: NoSuchElementException) {
+                                } catch (_: NoSuchElementException) {
                                     null
                                 }
                             }
@@ -396,7 +413,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             yarnId,
                                             forProjectId = s.projectId
                                         )
-                                    } catch (e: NoSuchElementException) {
+                                    } catch (_: NoSuchElementException) {
                                         0
                                     }
                                 },
@@ -437,7 +454,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             val existingPattern = remember(s.patternId, patterns) {
                                 try {
                                     jsonDataManager.getPatternById(s.patternId)
-                                } catch (e: NoSuchElementException) {
+                                } catch (_: NoSuchElementException) {
                                     null
                                 }
                             }
