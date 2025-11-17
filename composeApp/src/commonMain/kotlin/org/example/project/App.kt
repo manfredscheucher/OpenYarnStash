@@ -67,11 +67,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData")
             logger.log(LogLevel.DEBUG, "Error details: $e")
         }
+        logger.log(LogLevel.INFO,"Data reloaded" )
+        logger.logImportantFiles(LogLevel.TRACE)
     }
 
     LaunchedEffect(Unit) {
         settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
-        logger.log(LogLevel.INFO,"App started" )
+    }
+
+    LaunchedEffect(settings) {
+        logger.log(LogLevel.INFO,"Settings reloaded" )
         logger.logImportantFiles(LogLevel.DEBUG)
         setAppLanguage(settings.language)
         reloadAllData()
