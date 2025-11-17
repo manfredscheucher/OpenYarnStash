@@ -147,6 +147,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 onBack = { screen = Screen.Home },
                                 onSettingsChange = { newSettings ->
                                     scope.launch {
+                                        if (settings.logLevel != newSettings.logLevel) {
+                                            logger.log(LogLevel.INFO, "LogLevel changed")
+                                            logger.logImportantFiles(LogLevel.DEBUG)
+                                        }
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
@@ -539,7 +543,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     currentLogLevel = settings.logLevel,
                                     onBack = { screen = Screen.Home },
                                     onExportZip = {
-                                         scope.launch {
+                                        scope.launch {
                                             val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
                                             fileDownloader.download(exportFileName, fileHandler.zipFiles())
                                         }
