@@ -1,3 +1,4 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package org.example.project
 
 import android.graphics.Bitmap
@@ -5,6 +6,11 @@ import android.graphics.BitmapFactory
 import java.io.ByteArrayOutputStream
 
 actual fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArray {
+    val options = BitmapFactory.Options().apply {
+        inJustDecodeBounds = true
+    }
+    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+
     val originalBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     val width = originalBitmap.width
     val height = originalBitmap.height
@@ -29,6 +35,10 @@ actual fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArr
     val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, finalWidth, finalHeight, true)
 
     val outputStream = ByteArrayOutputStream()
-    resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+    val format = when (options.outMimeType) {
+        "image/png" -> Bitmap.CompressFormat.PNG
+        else -> Bitmap.CompressFormat.JPEG
+    }
+    resizedBitmap.compress(format, 90, outputStream)
     return outputStream.toByteArray()
 }

@@ -1,3 +1,4 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package org.example.project
 
 import androidx.compose.runtime.Composable
@@ -25,17 +26,16 @@ actual class ImagePickerLauncher(
                 val image = ImageIO.read(file)
                 if (image != null) {
                     val baos = ByteArrayOutputStream()
-                    var formatName = file.extension.lowercase()
-                    if (formatName == "jpeg") {
-                        formatName = "jpg"
+                    val formatName = file.extension.lowercase().let {
+                        if (it == "jpeg") "jpg" else it
                     }
+                    
                     if (formatName == "jpg" || formatName == "png") {
                         ImageIO.write(image, formatName, baos)
                         resizeImage(baos.toByteArray(), 400, 400)
                     } else {
-                        // Fallback to jpg
-                        ImageIO.write(image, "jpg", baos)
-                        resizeImage(baos.toByteArray(), 400, 400)
+                        // Unsupported format, do not process
+                        null
                     }
                 } else {
                     null
