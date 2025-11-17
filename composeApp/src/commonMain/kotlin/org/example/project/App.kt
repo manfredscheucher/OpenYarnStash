@@ -252,14 +252,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedYarn, newImages ->
                                         scope.launch {
                                             val existingImageIds = existingYarn.imageIds
-                                            val finalImageIds = editedYarn.imageIds
-                                            val idsToDelete = existingImageIds.filter { it !in finalImageIds }
+                                            val newImagesToUpload = newImages.filter { it.key !in existingYarn.imageIds }
+                                            val idsToDelete = existingImageIds.filter { it !in newImages.keys }
+                                            println("Upload images: $newImagesToUpload")
+                                            println("Removing old images with ids: $idsToDelete")
 
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->
                                                     imageManager.deleteYarnImage(editedYarn.id, imageId)
                                                 }
-                                                newImages.entries.forEach { (imageId, imageData) ->
+                                                newImagesToUpload.entries.forEach { (imageId, imageData) ->
                                                     imageManager.saveYarnImage(
                                                         editedYarn.id,
                                                         imageId,
@@ -399,14 +401,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedProject, newImages ->
                                         scope.launch {
                                             val existingImageIds = existingProject.imageIds
-                                            val finalImageIds = editedProject.imageIds
-                                            val idsToDelete = existingImageIds.filter { it !in finalImageIds }
-                                            
+                                            val newImagesToUpload = newImages.filter { it.key !in existingImageIds }
+                                            val idsToDelete = existingImageIds.filter { it !in newImages.keys }
+                                            println("Upload images: $newImagesToUpload")
+                                            println("Removing old images with ids: $idsToDelete")
+
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->
                                                     imageManager.deleteProjectImage(editedProject.id, imageId)
                                                 }
-                                                newImages.entries.sortedBy { it.key }.forEach { (imageId, imageData) ->
+                                                newImagesToUpload.entries.sortedBy { it.key }.forEach { (imageId, imageData) ->
                                                     imageManager.saveProjectImage(
                                                         editedProject.id,
                                                         imageId,

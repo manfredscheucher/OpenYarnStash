@@ -77,8 +77,9 @@ fun ProjectFormScreen(
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
     val images = remember(initialImages) { mutableStateMapOf(*initialImages.toList().toTypedArray()) }
-    var nextTempId by remember { mutableStateOf((initialImages.keys.maxOrNull() ?: 0) + 1) }
-    var selectedImageId by remember { mutableStateOf<Int?>(initialImages.keys.firstOrNull()) }
+    var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
+    var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
+
 
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
