@@ -76,7 +76,11 @@ fun ProjectFormScreen(
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
-    val images = remember(initialImages) { mutableStateMapOf(*initialImages.toList().toTypedArray()) }
+    val images = remember { mutableStateMapOf<Int, ByteArray>() }
+    LaunchedEffect(initialImages) {
+        images.clear()
+        images.putAll(initialImages)
+    }
     var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
     var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
 
@@ -276,8 +280,8 @@ fun ProjectFormScreen(
     }
 
     val status = when {
-        endDate.isBlank() -> ProjectStatus.FINISHED
-        startDate.isBlank() -> ProjectStatus.IN_PROGRESS
+        !endDate.isNullOrBlank() -> ProjectStatus.FINISHED
+        !startDate.isNullOrBlank() -> ProjectStatus.IN_PROGRESS
         else -> ProjectStatus.PLANNING
     }
 

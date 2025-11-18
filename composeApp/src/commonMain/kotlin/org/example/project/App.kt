@@ -261,6 +261,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 idsToDelete.forEach { imageId ->
                                                     imageManager.deleteYarnImage(editedYarn.id, imageId)
                                                 }
+
                                                 newImagesToUpload.entries.forEach { (imageId, imageData) ->
                                                     imageManager.saveYarnImage(
                                                         editedYarn.id,
@@ -268,6 +269,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                         imageData
                                                     )
                                                 }
+
                                                 jsonDataManager.addOrUpdateYarn(editedYarn)
                                             }
                                             reloadAllData()
@@ -417,6 +419,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                         imageData
                                                     )
                                                 }
+
                                                 jsonDataManager.addOrUpdateProject(editedProject)
                                             }
                                             reloadAllData()

@@ -76,7 +76,11 @@ fun YarnFormScreen(
     var added by remember { mutableStateOf(initial?.added ?: "") }
     var notes by remember { mutableStateOf(initial?.notes ?: "") }
 
-    val images = remember(initialImages) { mutableStateMapOf(*initialImages.toList().toTypedArray()) }
+    val images = remember { mutableStateMapOf<Int, ByteArray>() }
+    LaunchedEffect(initialImages) {
+        images.clear()
+        images.putAll(initialImages)
+    }
     var nextTempId by remember(initial?.id) { mutableStateOf((initial?.imageIds?.maxOrNull() ?: 0) + 1) }
     var selectedImageId by remember(initial?.id) { mutableStateOf(initial?.imageIds?.firstOrNull()) }
 
