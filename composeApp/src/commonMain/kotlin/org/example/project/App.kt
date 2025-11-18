@@ -560,10 +560,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedPattern, pdf ->
                                         scope.launch {
                                             withContext(Dispatchers.Default) {
-                                                if (pdf != null) {
-                                                    pdfManager.savePatternPdf(editedPattern.id, pdf)
-                                                } else {
-                                                    pdfManager.deletePatternPdf(editedPattern.id)
+                                                if (initialPdf.contentEquals(pdf)) {
+                                                    if (pdf != null) {
+                                                        pdfManager.savePatternPdf(editedPattern.id, pdf)
+                                                    } else {
+                                                        pdfManager.deletePatternPdf(editedPattern.id)
+                                                    }
                                                 }
                                                 jsonDataManager.addOrUpdatePattern(editedPattern)
                                             }
