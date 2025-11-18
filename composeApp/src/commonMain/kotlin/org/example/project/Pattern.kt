@@ -9,5 +9,6 @@ data class Pattern(
     val creator: String? = null,
     val category: String? = null,
     val gauge: String? = null,
-    val pdfId: Int? = null
+    val pdfId: Int? = null,
+    val modified: String? = null
 )

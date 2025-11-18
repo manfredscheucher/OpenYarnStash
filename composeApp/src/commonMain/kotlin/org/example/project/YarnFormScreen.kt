@@ -483,7 +483,7 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
-                Text(stringResource(Res.string.yarn_item_label_modified, modifiedState))
+                Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
 
                 if (initial != null) {
                     Spacer(Modifier.height(16.dp))

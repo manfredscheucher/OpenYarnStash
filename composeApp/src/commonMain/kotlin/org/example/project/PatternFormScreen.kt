@@ -68,6 +68,7 @@ fun PatternFormScreen(
     var creator by remember { mutableStateOf(initial?.creator ?: "") }
     var category by remember { mutableStateOf(initial?.category ?: "") }
     var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
+    val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
     var pdf by remember { mutableStateOf<ByteArray?>(null) }
     var pdfThumbnail by remember { mutableStateOf<ImageBitmap?>(null) }
 
@@ -107,7 +108,8 @@ fun PatternFormScreen(
             name = name,
             creator = creator.ifBlank { null },
             category = category.ifBlank { null },
-            gauge = gauge.ifBlank { null }
+            gauge = gauge.ifBlank { null },
+            modified = getCurrentTimestamp()
         )
         onSave(pattern, pdf)
     }
@@ -266,6 +268,8 @@ fun PatternFormScreen(
                 }
                 Spacer(Modifier.height(8.dp))
                 SelectAllOutlinedTextField(value = gauge, onValueChange = { gauge = it }, label = { Text(stringResource(Res.string.pattern_label_gauge)) }, modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+                Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
                 Spacer(Modifier.height(16.dp))
 
                 val projectsWithPattern = projects.filter { it.patternId == initial?.id }

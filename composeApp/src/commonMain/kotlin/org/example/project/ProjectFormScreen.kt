@@ -68,7 +68,7 @@ fun ProjectFormScreen(
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
     var rowCounters by remember { mutableStateOf(initial.rowCounters) }
     var patternId by remember { mutableStateOf(initial.patternId) }
-    val modified by remember { mutableStateOf(initial.modified) }
+    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialogForBack by remember { mutableStateOf(false) }
     var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
@@ -280,8 +280,8 @@ fun ProjectFormScreen(
     }
 
     val status = when {
-        !endDate.isNullOrBlank() -> ProjectStatus.FINISHED
-        !startDate.isNullOrBlank() -> ProjectStatus.IN_PROGRESS
+        endDate.isBlank() -> ProjectStatus.FINISHED
+        startDate.isBlank() -> ProjectStatus.IN_PROGRESS
         else -> ProjectStatus.PLANNING
     }
 
@@ -508,10 +508,8 @@ fun ProjectFormScreen(
             }
             Text("Status: $statusText", style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(8.dp))
-            if (modified != null) {
-                Text(stringResource(Res.string.yarn_item_label_modified, modified ?: ""))
-                Spacer(Modifier.height(8.dp))
-            }
+            Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
+            Spacer(Modifier.height(8.dp))
             SelectAllOutlinedTextField(
                 value = notes,
                 onValueChange = { notes = it },
