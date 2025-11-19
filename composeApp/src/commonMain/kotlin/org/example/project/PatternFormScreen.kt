@@ -60,7 +60,6 @@ fun PatternFormScreen(
     onBack: () -> Unit,
     onDelete: (Int) -> Unit,
     onSave: (Pattern, ByteArray?) -> Unit,
-    onViewPdf: () -> Unit,
     onViewPdfExternally: () -> Unit,
     onNavigateToProject: (Int) -> Unit
 ) {
@@ -212,13 +211,8 @@ fun PatternFormScreen(
                         horizontalArrangement = if (initialPdf != null) Arrangement.SpaceBetween else Arrangement.End
                     ) {
                         if (initialPdf != null) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)){
-                                Button(onClick = { confirmDiscardChanges(onViewPdf) }) {
-                                    Text(stringResource(Res.string.pattern_form_view_pdf))
-                                }
-                                Button(onClick = { confirmDiscardChanges(onViewPdfExternally) }) {
-                                    Text(stringResource(Res.string.pattern_form_view_pdf_externally))
-                                }
+                            Button(onClick = { confirmDiscardChanges(onViewPdfExternally) }) {
+                                Text(stringResource(Res.string.pattern_form_view_pdf))
                             }
                         }
                         Button(onClick = {

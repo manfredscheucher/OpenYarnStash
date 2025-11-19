@@ -93,7 +93,6 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.pdfbox)
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)

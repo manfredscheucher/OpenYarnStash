@@ -36,7 +36,6 @@ sealed class Screen {
     data object Settings : Screen()
     data object PatternList : Screen()
     data class PatternForm(val patternId: Int) : Screen()
-    data class PdfViewer(val patternId: Int) : Screen()
 }
 
 @Composable
@@ -96,7 +95,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             is Screen.Settings -> "Settings"
             is Screen.PatternList -> "PatternList"
             is Screen.PatternForm -> "PatternForm(patternId=${s.patternId})"
-            is Screen.PdfViewer -> "PdfViewer(patternId=${s.patternId})"
         }
         logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
         logger.logImportantFiles(LogLevel.TRACE)
@@ -573,26 +571,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             screen = Screen.PatternList
                                         }
                                     },
-                                    onViewPdf = { screen = Screen.PdfViewer(s.patternId) },
                                     onViewPdfExternally = { pdfManager.openPatternPdfExternally(s.patternId) },
                                     onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
-                                )
-                            }
-                        }
-
-                        is Screen.PdfViewer -> {
-                            var pdf by remember { mutableStateOf<ByteArray?>(null) }
-
-                            LaunchedEffect(s.patternId) {
-                                pdf = withContext(Dispatchers.Default) {
-                                    pdfManager.getPatternPdf(s.patternId)
-                                }
-                            }
-
-                            if (pdf != null) {
-                                PdfViewerScreen(
-                                    pdf = pdf!!,
-                                    onBack = { screen = Screen.PatternForm(s.patternId) }
                                 )
                             }
                         }
