@@ -23,11 +23,11 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
                 validateData(appData)
                 appData
             } catch (e: SerializationException) {
-                Logger.log(LogLevel.ERROR, "Failed to decode JSON data in fun load: ${e.message}")
+                Logger.log(LogLevel.ERROR, "Failed to decode JSON data in fun load: ${e.message}", e)
                 // Re-throw the exception to be handled by the caller
                 throw e
             } catch (e: Exception) {
-                Logger.log(LogLevel.ERROR, "Failed to load data in fun load: ${e.message}")
+                Logger.log(LogLevel.ERROR, "Failed to load data in fun load: ${e.message}", e)
                 // Handle other exceptions
                 throw e
             }

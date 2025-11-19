@@ -62,7 +62,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
         } catch (e: Exception) {
             val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
             errorDialogMessage = errorMessage
-            Logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData: ${e.message}")
+            Logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData: ${e.message}", e)
         }
         Logger.log(LogLevel.INFO,"Data reloaded" )
         Logger.logImportantFiles(LogLevel.TRACE)
@@ -182,7 +182,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getYarnById(s.yarnId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        Logger.log(LogLevel.ERROR, "Failed to get yarn by id ${s.yarnId} in YarnForm: ${e.message}")
+                                        Logger.log(LogLevel.ERROR, "Failed to get yarn by id ${s.yarnId} in YarnForm: ${e.message}", e)
                                     }
                                     null
                                 }
@@ -203,7 +203,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         }
                                     } catch (e: Exception) {
                                         scope.launch {
-                                            Logger.log(LogLevel.ERROR, "Failed to load image for yarn ${existingYarn.id}, imageId $imageId: ${e.message}")
+                                            Logger.log(LogLevel.ERROR, "Failed to load image for yarn ${existingYarn.id}, imageId $imageId: ${e.message}", e)
                                         }
                                     }
                                 }
@@ -330,7 +330,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getProjectById(s.projectId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        Logger.log(LogLevel.ERROR, "Failed to get project by id ${s.projectId} in ProjectForm: ${e.message}")
+                                        Logger.log(LogLevel.ERROR, "Failed to get project by id ${s.projectId} in ProjectForm: ${e.message}", e)
                                     }
                                     null
                                 }
@@ -351,7 +351,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         }
                                     } catch (e: Exception) {
                                         scope.launch {
-                                            Logger.log(LogLevel.ERROR, "Failed to load image for project ${existingProject.id}, imageId $imageId: ${e.message}")
+                                            Logger.log(LogLevel.ERROR, "Failed to load image for project ${existingProject.id}, imageId $imageId: ${e.message}", e)
                                         }
                                     }
                                 }
@@ -451,7 +451,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         )
                                     } catch (e: NoSuchElementException) {
                                         scope.launch {
-                                            Logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen: ${e.message}")
+                                            Logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen: ${e.message}", e)
                                         }
                                         0
                                     }
@@ -495,7 +495,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getPatternById(s.patternId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        Logger.log(LogLevel.ERROR, "Failed to get pattern by id ${s.patternId} in PatternForm: ${e.message}")
+                                        Logger.log(LogLevel.ERROR, "Failed to get pattern by id ${s.patternId} in PatternForm: ${e.message}", e)
                                     }
                                     null
                                 }
@@ -515,7 +515,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     }
                                 } catch (e: Exception) {
                                     scope.launch {
-                                        Logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}: ${e.message}")
+                                        Logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}: ${e.message}", e)
                                     }
                                     initialPdf = null
                                 }
@@ -611,7 +611,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
                                                 errorDialogMessage = errorMessage
                                                 scope.launch {
-                                                    Logger.log(LogLevel.ERROR, "Failed to import data in onImport: ${e.message}")
+                                                    Logger.log(LogLevel.ERROR, "Failed to import data in onImport: ${e.message}", e)
                                                 }
                                             }
                                         }
@@ -630,7 +630,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 val errorMessage = "Failed to import ZIP: ${e.message}"
                                                 errorDialogMessage = errorMessage
                                                 scope.launch {
-                                                    Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip: ${e.message}")
+                                                    Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip: ${e.message}", e)
                                                 }
                                             }
                                         }
