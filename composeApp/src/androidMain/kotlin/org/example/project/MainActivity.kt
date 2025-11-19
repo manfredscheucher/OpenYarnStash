@@ -17,6 +17,8 @@ class MainActivity : ComponentActivity() {
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
         val fileDownloader = FileDownloader(this)
 
+        Logger.init(fileHandler, settingsManager.settings.value)
+
         setContent {
             App(jsonDataManager, imageManager, pdfManager, settingsManager, fileDownloader, fileHandler)
         }

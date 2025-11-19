@@ -51,7 +51,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val logger = remember(settings) { Logger(fileHandler, settings) }
 
     suspend fun reloadAllData() {
         try {
@@ -63,11 +62,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
         } catch (e: Exception) {
             val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
             errorDialogMessage = errorMessage
-            logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData")
-            logger.log(LogLevel.DEBUG, "Error details: $e")
+            Logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData")
+            Logger.log(LogLevel.DEBUG, "Error details: $e")
         }
-        logger.log(LogLevel.INFO,"Data reloaded" )
-        logger.logImportantFiles(LogLevel.TRACE)
+        Logger.log(LogLevel.INFO,"Data reloaded" )
+        Logger.logImportantFiles(LogLevel.TRACE)
     }
 
     LaunchedEffect(Unit) {
@@ -75,8 +74,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
     }
 
     LaunchedEffect(settings) {
-        logger.log(LogLevel.INFO,"Settings reloaded" )
-        logger.logImportantFiles(LogLevel.DEBUG)
+        Logger.log(LogLevel.INFO,"Settings reloaded" )
+        Logger.logImportantFiles(LogLevel.DEBUG)
         setAppLanguage(settings.language)
         reloadAllData()
     }
@@ -96,8 +95,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             is Screen.PatternList -> "PatternList"
             is Screen.PatternForm -> "PatternForm(patternId=${s.patternId})"
         }
-        logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
-        logger.logImportantFiles(LogLevel.TRACE)
+        Logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
+        Logger.logImportantFiles(LogLevel.TRACE)
     }
 
     if (showNotImplementedDialog) {
@@ -184,8 +183,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getYarnById(s.yarnId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        logger.log(LogLevel.ERROR, "Failed to get yarn by id ${s.yarnId} in YarnForm")
-                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        Logger.log(LogLevel.ERROR, "Failed to get yarn by id ${s.yarnId} in YarnForm")
+                                        Logger.log(LogLevel.DEBUG, "Error details: $e")
                                     }
                                     null
                                 }
@@ -201,13 +200,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 ?. let{
                                                     imageMap[imageId] = it
                                                 } ?: scope.launch {
-                                                    logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
+                                                    Logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
                                                 }
                                         }
                                     } catch (e: Exception) {
                                         scope.launch {
-                                            logger.log(LogLevel.ERROR, "Failed to load image for yarn ${existingYarn.id}, imageId $imageId")
-                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                            Logger.log(LogLevel.ERROR, "Failed to load image for yarn ${existingYarn.id}, imageId $imageId")
+                                            Logger.log(LogLevel.DEBUG, "Error details: $e")
                                         }
                                     }
                                 }
@@ -226,7 +225,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         projects.firstOrNull { it.id == pid }.also {
                                             if (it == null) {
                                                 scope.launch {
-                                                    logger.log(LogLevel.WARN, "Project with id $pid not found, referenced by yarn ${existingYarn.id}")
+                                                    Logger.log(LogLevel.WARN, "Project with id $pid not found, referenced by yarn ${existingYarn.id}")
                                                 }
                                             }
                                         }
@@ -334,8 +333,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getProjectById(s.projectId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        logger.log(LogLevel.ERROR, "Failed to get project by id ${s.projectId} in ProjectForm")
-                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        Logger.log(LogLevel.ERROR, "Failed to get project by id ${s.projectId} in ProjectForm")
+                                        Logger.log(LogLevel.DEBUG, "Error details: $e")
                                     }
                                     null
                                 }
@@ -351,13 +350,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 ?. let{
                                                     imageMap[imageId] = it
                                                 } ?: scope.launch {
-                                                logger.log(LogLevel.WARN, "Image not found for project ${existingProject.id}, imageId $imageId")
+                                                Logger.log(LogLevel.WARN, "Image not found for project ${existingProject.id}, imageId $imageId")
                                             }
                                         }
                                     } catch (e: Exception) {
                                         scope.launch {
-                                            logger.log(LogLevel.ERROR, "Failed to load image for project ${existingProject.id}, imageId $imageId")
-                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                            Logger.log(LogLevel.ERROR, "Failed to load image for project ${existingProject.id}, imageId $imageId")
+                                            Logger.log(LogLevel.DEBUG, "Error details: $e")
                                         }
                                     }
                                 }
@@ -377,7 +376,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         yarns.firstOrNull { it.id == yarnId }.also {
                                             if (it == null) {
                                                 scope.launch {
-                                                    logger.log(LogLevel.WARN, "Yarn with id $yarnId not found, referenced by project ${existingProject.id}")
+                                                    Logger.log(LogLevel.WARN, "Yarn with id $yarnId not found, referenced by project ${existingProject.id}")
                                                 }
                                             }
                                         }
@@ -457,8 +456,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         )
                                     } catch (e: NoSuchElementException) {
                                         scope.launch {
-                                            logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen")
-                                            logger.log(LogLevel.DEBUG, "Error details: $e")
+                                            Logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen")
+                                            Logger.log(LogLevel.DEBUG, "Error details: $e")
                                         }
                                         0
                                     }
@@ -502,8 +501,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     jsonDataManager.getPatternById(s.patternId)
                                 } catch (e: NoSuchElementException) {
                                     scope.launch {
-                                        logger.log(LogLevel.ERROR, "Failed to get pattern by id ${s.patternId} in PatternForm")
-                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        Logger.log(LogLevel.ERROR, "Failed to get pattern by id ${s.patternId} in PatternForm")
+                                        Logger.log(LogLevel.DEBUG, "Error details: $e")
                                     }
                                     null
                                 }
@@ -518,13 +517,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             ?. let{
                                                 initialPdf = it
                                             } ?: scope.launch {
-                                            logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern.id}")
+                                            Logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern.id}")
                                         }
                                     }
                                 } catch (e: Exception) {
                                     scope.launch {
-                                        logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}")
-                                        logger.log(LogLevel.DEBUG, "Error details: $e")
+                                        Logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}")
+                                        Logger.log(LogLevel.DEBUG, "Error details: $e")
                                     }
                                     initialPdf = null
                                 }
@@ -620,8 +619,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
                                                 errorDialogMessage = errorMessage
                                                 scope.launch {
-                                                    logger.log(LogLevel.ERROR, "Failed to import data in onImport")
-                                                    logger.log(LogLevel.DEBUG, "Error details: $e")
+                                                    Logger.log(LogLevel.ERROR, "Failed to import data in onImport")
+                                                    Logger.log(LogLevel.DEBUG, "Error details: $e")
                                                 }
                                             }
                                         }
@@ -640,8 +639,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 val errorMessage = "Failed to import ZIP: ${e.message}"
                                                 errorDialogMessage = errorMessage
                                                 scope.launch {
-                                                    logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip")
-                                                    logger.log(LogLevel.DEBUG, "Error details: $e")
+                                                    Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip")
+                                                    Logger.log(LogLevel.DEBUG, "Error details: $e")
                                                 }
                                             }
                                         }

@@ -1,6 +1,17 @@
 package org.example.project
 
-class Logger(private val fileHandler: FileHandler, private val settings: Settings) {
+object Logger {
+
+    private lateinit var fileHandler: FileHandler
+    lateinit var settings: Settings
+        private set
+
+    fun init(fileHandler: FileHandler, settings: Settings) {
+        if (!this::fileHandler.isInitialized) {
+            this.fileHandler = fileHandler
+        }
+        this.settings = settings
+    }
 
     private val logFilePath = "log.txt"
     private val stashFilePath = "stash.json"
@@ -8,6 +19,10 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
     private val filesDirPath = "."
 
     suspend fun log(level: LogLevel,message: String) {
+        if (!this::fileHandler.isInitialized) {
+            println("Logger fileHandler not initialized!")
+            return
+        }
         if (settings.logLevel == LogLevel.OFF) return
         if (level.ordinal > settings.logLevel.ordinal) return
 
@@ -15,6 +30,7 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
         val logMessage = "$timestamp: [${level.name}] $message\n"
 
         println(logMessage)
+
 
         try {
             fileHandler.appendText(logFilePath, logMessage)
@@ -24,6 +40,13 @@ class Logger(private val fileHandler: FileHandler, private val settings: Setting
     }
 
     suspend fun logImportantFiles(level: LogLevel) {
+        if (!this::fileHandler.isInitialized) {
+            println("Logger fileHandler not initialized!")
+            return
+        }
+        if (settings.logLevel == LogLevel.OFF) return
+        if (level.ordinal > settings.logLevel.ordinal) return
+
         logFile(level,stashFilePath)
         logFile(level,settingsFilePath)
         logDirectoryContents(level,filesDirPath)
