@@ -29,7 +29,7 @@ object Logger {
         val timestamp = getCurrentTimestamp()
         val logMessage = buildString {
             append("$timestamp: [${level.name}] $message")
-            if (throwable != null && level.ordinal >= LogLevel.DEBUG.ordinal) {
+            if (throwable != null && settings.logLevel.ordinal >= LogLevel.DEBUG.ordinal) {
                 append("\n")
                 append(throwable.stackTraceToString())
             }

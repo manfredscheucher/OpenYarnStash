@@ -587,84 +587,83 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                         }
 
                         Screen.Settings -> {
-                            key(settings.language, settings.lengthUnit) {
-                                SettingsScreen(
-                                    currentLocale = settings.language,
-                                    currentLengthUnit = settings.lengthUnit,
-                                    currentLogLevel = settings.logLevel,
-                                    onBack = { screen = Screen.Home },
-                                    onExportZip = {
-                                        scope.launch {
-                                            val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
-                                            fileDownloader.download(exportFileName, fileHandler.zipFiles())
-                                        }
-                                    },
-                                    onImport = { fileContent ->
-                                        scope.launch {
-                                            try {
-                                                withContext(Dispatchers.Default) {
-                                                    jsonDataManager.importData(fileContent)
-                                                }
-                                                reloadAllData()
-                                                snackbarHostState.showSnackbar("Import successful")
-                                            } catch (e: Exception) {
-                                                val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
-                                                errorDialogMessage = errorMessage
-                                                scope.launch {
-                                                    Logger.log(LogLevel.ERROR, "Failed to import data in onImport: ${e.message}", e)
-                                                }
-                                            }
-                                        }
-                                    },
-                                    onImportZip = { zipInputStream ->
-                                        scope.launch {
-                                            try {
-                                                val timestamp = getCurrentTimestamp()
-                                                fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
-                                                withContext(Dispatchers.Default) {
-                                                    fileHandler.unzipAndReplaceFiles(zipInputStream)
-                                                }
-                                                reloadAllData()
-                                                snackbarHostState.showSnackbar("ZIP import successful")
-                                            } catch (e: Exception) {
-                                                val errorMessage = "Failed to import ZIP: ${e.message}"
-                                                errorDialogMessage = errorMessage
-                                                scope.launch {
-                                                    Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip: ${e.message}", e)
-                                                }
-                                            }
-                                        }
-                                    },
-                                    onLocaleChange = { newLocale ->
-                                        scope.launch {
-                                            val newSettings = settings.copy(language = newLocale)
+                            SettingsScreen(
+                                currentLocale = settings.language,
+                                currentLengthUnit = settings.lengthUnit,
+                                currentLogLevel = settings.logLevel,
+                                fileHandler = fileHandler,
+                                onBack = { screen = Screen.Home },
+                                onExportZip = {
+                                    scope.launch {
+                                        val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
+                                        fileDownloader.download(exportFileName, fileHandler.zipFiles())
+                                    }
+                                },
+                                onImport = { fileContent ->
+                                    scope.launch {
+                                        try {
                                             withContext(Dispatchers.Default) {
-                                                settingsManager.saveSettings(newSettings)
+                                                jsonDataManager.importData(fileContent)
                                             }
-                                            setAppLanguage(newLocale)
-                                            settings = newSettings
-                                        }
-                                    },
-                                    onLengthUnitChange = { newLengthUnit ->
-                                        scope.launch {
-                                            val newSettings = settings.copy(lengthUnit = newLengthUnit)
-                                            withContext(Dispatchers.Default) {
-                                                settingsManager.saveSettings(newSettings)
+                                            reloadAllData()
+                                            snackbarHostState.showSnackbar("Import successful")
+                                        } catch (e: Exception) {
+                                            val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
+                                            errorDialogMessage = errorMessage
+                                            scope.launch {
+                                                Logger.log(LogLevel.ERROR, "Failed to import data in onImport: ${e.message}", e)
                                             }
-                                            settings = newSettings
-                                        }
-                                    },
-                                    onLogLevelChange = { newLogLevel ->
-                                        scope.launch {
-                                            val newSettings = settings.copy(logLevel = newLogLevel)
-                                            withContext(Dispatchers.Default) {
-                                                settingsManager.saveSettings(newSettings)
-                                            }
-                                            settings = newSettings
                                         }
                                     }
-                                )
-                            }
+                                },
+                                onImportZip = { zipInputStream ->
+                                    scope.launch {
+                                        try {
+                                            val timestamp = getCurrentTimestamp()
+                                            fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
+                                            withContext(Dispatchers.Default) {
+                                                fileHandler.unzipAndReplaceFiles(zipInputStream)
+                                            }
+                                            reloadAllData()
+                                            snackbarHostState.showSnackbar("ZIP import successful")
+                                        } catch (e: Exception) {
+                                            val errorMessage = "Failed to import ZIP: ${e.message}"
+                                            errorDialogMessage = errorMessage
+                                            scope.launch {
+                                                Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip: ${e.message}", e)
+                                            }
+                                        }
+                                    }
+                                },
+                                onLocaleChange = { newLocale ->
+                                    scope.launch {
+                                        val newSettings = settings.copy(language = newLocale)
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        setAppLanguage(newLocale)
+                                        settings = newSettings
+                                    }
+                                },
+                                onLengthUnitChange = { newLengthUnit ->
+                                    scope.launch {
+                                        val newSettings = settings.copy(lengthUnit = newLengthUnit)
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        settings = newSettings
+                                    }
+                                },
+                                onLogLevelChange = { newLogLevel ->
+                                    scope.launch {
+                                        val newSettings = settings.copy(logLevel = newLogLevel)
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        settings = newSettings
+                                    }
+                                }
+                            )
                         }
                     }
                 }
