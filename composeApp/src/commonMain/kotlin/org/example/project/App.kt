@@ -40,7 +40,8 @@ sealed class Screen {
 
 @Composable
 fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager: PdfManager, settingsManager: JsonSettingsManager, fileDownloader: FileDownloader, fileHandler: FileHandler) {
-    var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+    var navStack by remember { mutableStateOf(listOf<Screen>(Screen.Home)) }
+    val screen = navStack.last()
     var settings by remember { mutableStateOf(Settings()) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
@@ -51,6 +52,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    fun navigateTo(newScreen: Screen) {
+        navStack = navStack + newScreen
+    }
+
+    fun navigateBack() {
+        if (navStack.size > 1) {
+            navStack = navStack.dropLast(1)
+        }
+    }
 
     suspend fun reloadAllData() {
         try {
@@ -139,13 +150,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                 ) {
                     when (val s = screen) {
                         Screen.Home -> HomeScreen(
-                            onOpenYarns = { screen = Screen.YarnList },
-                            onOpenProjects = { screen = Screen.ProjectList },
-                            onOpenPatterns = { screen = Screen.PatternList },
-                            onOpenInfo = { screen = Screen.Info },
-                            onOpenStatistics = { screen = Screen.Statistics },
-                            onOpenSettings = { screen = Screen.Settings },
-                            onOpenHowToHelp = { screen = Screen.HowToHelp }
+                            onOpenYarns = { navigateTo(Screen.YarnList) },
+                            onOpenProjects = { navigateTo(Screen.ProjectList) },
+                            onOpenPatterns = { navigateTo(Screen.PatternList) },
+                            onOpenInfo = { navigateTo(Screen.Info) },
+                            onOpenStatistics = { navigateTo(Screen.Statistics) },
+                            onOpenSettings = { navigateTo(Screen.Settings) },
+                            onOpenHowToHelp = { navigateTo(Screen.HowToHelp) }
                         )
 
                         Screen.YarnList -> {
@@ -160,11 +171,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         val newYarn = jsonDataManager.createNewYarn(defaultYarnName)
                                         withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
                                         reloadAllData()
-                                        screen = Screen.YarnForm(newYarn.id)
+                                        navigateTo(Screen.YarnForm(newYarn.id))
                                     }
                                 },
-                                onOpen = { id -> screen = Screen.YarnForm(id) },
-                                onBack = { screen = Screen.Home },
+                                onOpen = { id -> navigateTo(Screen.YarnForm(id)) },
+                                onBack = { navigateBack() },
                                 onSettingsChange = { newSettings ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
@@ -211,7 +222,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             }
 
                             if (existingYarn == null) {
-                                LaunchedEffect(s.yarnId) { screen = Screen.YarnList }
+                                LaunchedEffect(s.yarnId) { navigateBack() }
                             } else {
                                 val relatedUsages = usages.filter { it.yarnId == existingYarn.id }
                                 YarnFormScreen(
@@ -229,7 +240,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     },
                                     imageManager = imageManager,
                                     settings = settings,
-                                    onBack = { screen = Screen.YarnList },
+                                    onBack = { navigateBack() },
                                     onDelete = { yarnIdToDelete ->
                                         scope.launch {
                                             withContext(Dispatchers.Default) {
@@ -240,7 +251,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.deleteYarn(yarnIdToDelete)
                                             }
                                             reloadAllData()
-                                            screen = Screen.YarnList
+                                            navStack = navStack.filterNot { it is Screen.YarnForm && it.yarnId == yarnIdToDelete }
                                         }
                                     },
                                     onSave = { editedYarn, newImages ->
@@ -267,7 +278,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdateYarn(editedYarn)
                                             }
                                             reloadAllData()
-                                            screen = Screen.YarnList
+                                            navigateBack()
                                         }
                                     },
                                     onAddColor = { yarnToCopy ->
@@ -281,10 +292,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             )
                                             withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
                                             reloadAllData()
-                                            screen = Screen.YarnForm(newYarn.id)
+                                            navigateTo(Screen.YarnForm(newYarn.id))
                                         }
                                     },
-                                    onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
+                                    onNavigateToProject = { projectId -> navigateTo(Screen.ProjectForm(projectId)) }
                                 )
                             }
                         }
@@ -306,11 +317,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             )
                                         }
                                         reloadAllData()
-                                        screen = Screen.ProjectForm(newProject.id)
+                                        navigateTo(Screen.ProjectForm(newProject.id))
                                     }
                                 },
-                                onOpen = { id -> screen = Screen.ProjectForm(id) },
-                                onBack = { screen = Screen.Home },
+                                onOpen = { id -> navigateTo(Screen.ProjectForm(id)) },
+                                onBack = { navigateBack() },
                                 onSettingsChange = { newSettings ->
                                     scope.launch {
                                         withContext(Dispatchers.Default) {
@@ -359,7 +370,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             }
 
                             if (existingProject == null) {
-                                LaunchedEffect(s.projectId) { screen = Screen.ProjectList }
+                                LaunchedEffect(s.projectId) { navigateBack() }
                             } else {
                                 val usagesForCurrentProject =
                                     usages.filter { it.projectId == existingProject.id }
@@ -378,7 +389,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     },
                                     patterns = patterns,
                                     imageManager = imageManager,
-                                    onBack = { screen = Screen.ProjectList },
+                                    onBack = { navigateBack() },
                                     onDelete = { id ->
                                         scope.launch {
                                             withContext(Dispatchers.Default) {
@@ -389,7 +400,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.deleteProject(id)
                                             }
                                             reloadAllData()
-                                            screen = Screen.ProjectList
+                                            navStack = navStack.filterNot { (it is Screen.ProjectForm && it.projectId == id) || (it is Screen.ProjectAssignments && it.projectId == id) }
                                         }
                                     },
                                     onSave = { editedProject, newImages ->
@@ -415,20 +426,20 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdateProject(editedProject)
                                             }
                                             reloadAllData()
-                                            screen = Screen.ProjectList
+                                            navigateBack()
                                         }
                                     },
                                     onNavigateToAssignments = {
-                                        screen = Screen.ProjectAssignments(
+                                        navigateTo(Screen.ProjectAssignments(
                                             existingProject.id,
                                             existingProject.name
-                                        )
+                                        ))
                                     },
                                     onNavigateToPattern = { patternId ->
-                                        screen = Screen.PatternForm(patternId)
+                                        navigateTo(Screen.PatternForm(patternId))
                                     },
                                     onNavigateToYarn = { yarnId ->
-                                        screen = Screen.YarnForm(yarnId)
+                                        navigateTo(Screen.YarnForm(yarnId))
                                     }
                                 )
                             }
@@ -465,10 +476,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             )
                                         }
                                         reloadAllData()
-                                        screen = Screen.ProjectForm(s.projectId)
+                                        navigateBack()
                                     }
                                 },
-                                onBack = { screen = Screen.ProjectForm(s.projectId) }
+                                onBack = { navigateBack() }
                             )
                         }
 
@@ -481,11 +492,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                         val newPattern = jsonDataManager.createNewPattern()
                                         withContext(Dispatchers.Default) { jsonDataManager.addOrUpdatePattern(newPattern) }
                                         reloadAllData()
-                                        screen = Screen.PatternForm(newPattern.id)
+                                        navigateTo(Screen.PatternForm(newPattern.id))
                                     }
                                 },
-                                onOpen = { id -> screen = Screen.PatternForm(id) },
-                                onBack = { screen = Screen.Home }
+                                onOpen = { id -> navigateTo(Screen.PatternForm(id)) },
+                                onBack = { navigateBack() }
                             )
                         }
 
@@ -522,7 +533,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             }
 
                             if (existingPattern == null) {
-                                LaunchedEffect(s.patternId) { screen = Screen.PatternList }
+                                LaunchedEffect(s.patternId) { navigateBack() }
                             } else {
                                 PatternFormScreen(
                                     initial = existingPattern,
@@ -531,7 +542,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     patterns = patterns,
                                     pdfManager = pdfManager,
                                     imageManager = imageManager,
-                                    onBack = { screen = Screen.PatternList },
+                                    onBack = { navigateBack() },
                                     onDelete = { patternIdToDelete ->
                                         scope.launch {
                                             projects.filter { it.patternId == patternIdToDelete }.forEach { projectToUpdate ->
@@ -543,7 +554,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.deletePattern(patternIdToDelete)
                                             }
                                             reloadAllData()
-                                            screen = Screen.PatternList
+                                            navStack = navStack.filterNot { it is Screen.PatternForm && it.patternId == patternIdToDelete }
                                         }
                                     },
                                     onSave = { editedPattern, pdf ->
@@ -559,21 +570,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdatePattern(editedPattern)
                                             }
                                             reloadAllData()
-                                            screen = Screen.PatternList
+                                            navigateBack()
                                         }
                                     },
                                     onViewPdfExternally = { pdfManager.openPatternPdfExternally(s.patternId) },
-                                    onNavigateToProject = { projectId -> screen = Screen.ProjectForm(projectId) }
+                                    onNavigateToProject = { projectId -> navigateTo(Screen.ProjectForm(projectId)) }
                                 )
                             }
                         }
 
                         Screen.Info -> {
-                            InfoScreen(onBack = { screen = Screen.Home }, onNavigateToHelp = { screen = Screen.HowToHelp })
+                            InfoScreen(onBack = { navigateBack() }, onNavigateToHelp = { navigateTo(Screen.HowToHelp) })
                         }
 
                         Screen.HowToHelp -> {
-                            HowToHelpScreen(onBack = { screen = Screen.Home })
+                            HowToHelpScreen(onBack = { navigateBack() })
                         }
 
                         Screen.Statistics -> {
@@ -581,7 +592,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 yarns = yarns,
                                 projects = projects,
                                 usages = usages,
-                                onBack = { screen = Screen.Home },
+                                onBack = { navigateBack() },
                                 settings = settings
                             )
                         }
@@ -592,7 +603,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 currentLengthUnit = settings.lengthUnit,
                                 currentLogLevel = settings.logLevel,
                                 fileHandler = fileHandler,
-                                onBack = { screen = Screen.Home },
+                                onBack = { navigateBack() },
                                 onExportZip = {
                                     scope.launch {
                                         val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
