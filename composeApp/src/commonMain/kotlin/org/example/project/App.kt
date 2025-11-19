@@ -549,7 +549,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedPattern, pdf ->
                                         scope.launch {
                                             withContext(Dispatchers.Default) {
-                                                if (initialPdf.contentEquals(pdf)) {
+                                                if (!initialPdf.contentEquals(pdf)) {
                                                     if (pdf != null) {
                                                         pdfManager.savePatternPdf(editedPattern.id, pdf)
                                                     } else {
