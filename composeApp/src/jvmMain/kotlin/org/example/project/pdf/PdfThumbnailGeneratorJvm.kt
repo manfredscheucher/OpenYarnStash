@@ -2,6 +2,8 @@ package org.example.project.pdf
 
 import org.apache.pdfbox.Loader
 import org.apache.pdfbox.rendering.PDFRenderer
+import org.example.project.LogLevel
+import org.example.project.Logger
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
@@ -27,6 +29,7 @@ class PdfThumbnailGeneratorJvm : PdfThumbnailGenerator {
                 }
             }
         } catch (e: Exception) {
+            Logger.log(LogLevel.ERROR, "Failed to generate thumbnail: ${e.message}")
             e.printStackTrace()
             null
         }

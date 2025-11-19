@@ -24,11 +24,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
@@ -37,6 +39,8 @@ import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.date_input_day
 import openyarnstash.composeapp.generated.resources.date_input_month
 import openyarnstash.composeapp.generated.resources.date_input_year
+import org.example.project.LogLevel
+import org.example.project.Logger
 import org.example.project.getCurrentTimestamp
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,6 +94,7 @@ fun DateInput(
     var expandedYear by remember { mutableStateOf(false) }
     var expandedMonth by remember { mutableStateOf(false) }
     var expandedDay by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     val currentYear = getCurrentTimestamp().substring(0, 4).toInt()
     val years = (currentYear - 10..currentYear + 10).toList()
@@ -102,6 +107,9 @@ fun DateInput(
                 val startOfNextMonth = startOfMonth.plus(1, DateTimeUnit.MONTH)
                 startOfMonth.daysUntil(startOfNextMonth)
             } catch (e: Exception) {
+                scope.launch {
+                    Logger.log(LogLevel.ERROR, "Failed to calculate days in month", e)
+                }
                 31
             }
         } else {

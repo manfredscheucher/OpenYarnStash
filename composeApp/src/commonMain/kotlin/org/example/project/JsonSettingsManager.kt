@@ -13,9 +13,11 @@ class JsonSettingsManager(private val fileHandler: FileHandler, private val file
             try {
                 Json.decodeFromString<Settings>(content)
             } catch (e: SerializationException) {
+                Logger.log(LogLevel.ERROR, "Error decoding settings JSON: ${e.message}")
                 println("Error decoding settings JSON: ${e.message}")
                 Settings()
             } catch (e: Exception) {
+                Logger.log(LogLevel.ERROR, "An unexpected error occurred while loading settings: ${e.message}")
                 println("An unexpected error occurred while loading settings: ${e.message}")
                 Settings()
             }

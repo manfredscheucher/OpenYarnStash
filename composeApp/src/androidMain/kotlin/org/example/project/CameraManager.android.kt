@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
@@ -18,17 +19,21 @@ import androidx.exifinterface.media.ExifInterface
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import kotlinx.coroutines.launch
 
 @Composable
 actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): CameraLauncher? {
     val context = LocalContext.current
     var photoUri by remember { mutableStateOf<Uri?>(null) }
+    val scope = rememberCoroutineScope()
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             photoUri?.let { uri ->
-                val imageBytes = getRotatedImageBytes(context, uri)
-                onResult(imageBytes)
+                scope.launch {
+                    val imageBytes = getRotatedImageBytes(context, uri)
+                    onResult(imageBytes)
+                }
             }
         } else {
             onResult(null)
@@ -38,17 +43,24 @@ actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): CameraLaunche
     return remember(launcher) {
         object : CameraLauncher {
             override fun launch() {
-                val file = createImageFile(context)
-                val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-                photoUri = uri
-                launcher.launch(uri)
+                try {
+                    val file = createImageFile(context)
+                    val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+                    photoUri = uri
+                    launcher.launch(uri)
+                } catch (e: IOException) {
+                    scope.launch {
+                        Logger.log(LogLevel.ERROR, "Failed to create image file", e)
+                    }
+                    onResult(null)
+                }
             }
         }
     }
 }
 
-private fun getRotatedImageBytes(context: Context, photoUri: Uri): ByteArray? {
-    try {
+private suspend fun getRotatedImageBytes(context: Context, photoUri: Uri): ByteArray? {
+    return try {
         val inputStream = context.contentResolver.openInputStream(photoUri) ?: return null
         val originalBitmap = BitmapFactory.decodeStream(inputStream)
         inputStream.close()
@@ -78,11 +90,12 @@ private fun getRotatedImageBytes(context: Context, photoUri: Uri): ByteArray? {
         val rotatedBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
         val stream = ByteArrayOutputStream()
         rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        return stream.toByteArray()
+        stream.toByteArray()
 
     } catch (e: IOException) {
+        Logger.log(LogLevel.ERROR, "Failed to get rotated image bytes", e)
         e.printStackTrace()
-        return null
+        null
     }
 }
 

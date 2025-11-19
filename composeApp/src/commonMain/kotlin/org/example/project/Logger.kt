@@ -18,7 +18,7 @@ object Logger {
     private val settingsFilePath = "settings.json"
     private val filesDirPath = "."
 
-    suspend fun log(level: LogLevel,message: String) {
+    suspend fun log(level: LogLevel, message: String, throwable: Throwable? = null) {
         if (!this::fileHandler.isInitialized) {
             println("Logger fileHandler not initialized!")
             return
@@ -27,9 +27,16 @@ object Logger {
         if (level.ordinal > settings.logLevel.ordinal) return
 
         val timestamp = getCurrentTimestamp()
-        val logMessage = "$timestamp: [${level.name}] $message\n"
+        val logMessage = buildString {
+            append("$timestamp: [${level.name}] $message")
+            if (throwable != null) {
+                append("\n")
+                append(throwable.stackTraceToString())
+            }
+            append("\n")
+        }
 
-        println(logMessage)
+        println(logMessage.trimEnd())
 
 
         try {

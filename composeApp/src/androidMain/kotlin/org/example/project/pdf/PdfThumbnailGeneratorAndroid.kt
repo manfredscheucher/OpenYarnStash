@@ -5,6 +5,8 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.example.project.LogLevel
+import org.example.project.Logger
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -38,6 +40,7 @@ class PdfThumbnailGeneratorAndroid : PdfThumbnailGenerator {
                 }
             }
         } catch (e: Exception) {
+            Logger.log(LogLevel.ERROR, "Failed to generate thumbnail: ${e.message}")
             e.printStackTrace()
             null
         }
