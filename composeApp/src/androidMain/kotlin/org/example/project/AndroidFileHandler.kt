@@ -132,6 +132,12 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         filesDir.renameTo(newDir)
     }
 
+    override suspend fun deleteFilesDirectory() {
+        if (filesDir.exists()) {
+            filesDir.deleteRecursively()
+        }
+    }
+
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
         val inputStream = zipInputStream as? InputStream ?: return
 

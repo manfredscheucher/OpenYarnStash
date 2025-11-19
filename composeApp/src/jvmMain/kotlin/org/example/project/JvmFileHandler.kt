@@ -129,6 +129,12 @@ class JvmFileHandler : FileHandler {
         }
     }
 
+    override suspend fun deleteFilesDirectory() {
+        if (filesDir.exists()) {
+            filesDir.deleteRecursively()
+        }
+    }
+
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
         val inputStream = zipInputStream as? InputStream ?: return
 

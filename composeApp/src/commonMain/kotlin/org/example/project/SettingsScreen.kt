@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_yes
 import openyarnstash.composeapp.generated.resources.export_zip
@@ -64,6 +66,7 @@ fun SettingsScreen(
     currentLocale: String,
     currentLengthUnit: LengthUnit,
     currentLogLevel: LogLevel,
+    backupOldFolderOnImport: Boolean,
     fileHandler: FileHandler,
     onBack: () -> Unit,
     onExportZip: () -> Unit,
@@ -71,7 +74,8 @@ fun SettingsScreen(
     onImportZip: (Any) -> Unit,
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit,
-    onLogLevelChange: (LogLevel) -> Unit
+    onLogLevelChange: (LogLevel) -> Unit,
+    onBackupOldFolderOnImportChange: (Boolean) -> Unit
 ) {
     var showJsonFilePicker by remember { mutableStateOf(false) }
     var showZipFilePicker by remember { mutableStateOf(false) }
@@ -256,6 +260,11 @@ fun SettingsScreen(
 
                 Button(onClick = { showImportZipConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.import_zip))
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = backupOldFolderOnImport, onCheckedChange = onBackupOldFolderOnImportChange)
+                    Text(stringResource(Res.string.backup_old_folder_on_import))
                 }
 
                 if (showImportJsonConfirmDialog) {

@@ -213,6 +213,7 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Logging Level</string>
     <string name="log_level_description">The log file is stored locally on the device and can be viewed via ZIP export.</string>
+    <string name="backup_old_folder_on_import">Backup old folder on import</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>

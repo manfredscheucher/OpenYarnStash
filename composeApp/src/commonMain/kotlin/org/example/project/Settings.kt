@@ -23,5 +23,6 @@ data class Settings(
     val hideUsedYarns: Boolean = false,
     val statisticTimespan: String = "year",
     val lengthUnit: LengthUnit = LengthUnit.METER,
-    val logLevel: LogLevel = LogLevel.ERROR
+    val logLevel: LogLevel = LogLevel.ERROR,
+    val backupOldFolderOnImport: Boolean = false
 )

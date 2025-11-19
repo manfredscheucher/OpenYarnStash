@@ -142,7 +142,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
-            key(settings.language, settings.lengthUnit, settings.logLevel) {
+            key(settings.language, settings.lengthUnit, settings.logLevel, settings.backupOldFolderOnImport) {
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -598,6 +598,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 currentLocale = settings.language,
                                 currentLengthUnit = settings.lengthUnit,
                                 currentLogLevel = settings.logLevel,
+                                backupOldFolderOnImport = settings.backupOldFolderOnImport,
                                 fileHandler = fileHandler,
                                 onBack = { navigateBack() },
                                 onExportZip = {
@@ -626,8 +627,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 onImportZip = { zipInputStream ->
                                     scope.launch {
                                         try {
-                                            val timestamp = getCurrentTimestamp()
-                                            fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
+                                            if (settings.backupOldFolderOnImport) {
+                                                val timestamp = getCurrentTimestamp()
+                                                fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
+                                            } else {
+                                                fileHandler.deleteFilesDirectory()
+                                            }
                                             withContext(Dispatchers.Default) {
                                                 fileHandler.unzipAndReplaceFiles(zipInputStream)
                                             }
@@ -664,6 +669,15 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 onLogLevelChange = { newLogLevel ->
                                     scope.launch {
                                         val newSettings = settings.copy(logLevel = newLogLevel)
+                                        withContext(Dispatchers.Default) {
+                                            settingsManager.saveSettings(newSettings)
+                                        }
+                                        settings = newSettings
+                                    }
+                                },
+                                onBackupOldFolderOnImportChange = { newBackupOldFolderOnImport ->
+                                    scope.launch {
+                                        val newSettings = settings.copy(backupOldFolderOnImport = newBackupOldFolderOnImport)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
