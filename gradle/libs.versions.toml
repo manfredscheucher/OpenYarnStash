@@ -7,21 +7,22 @@ androidx-activity = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-core = "1.17.0"
 androidx-espresso = "3.7.0"
-androidx-lifecycle = "2.9.4"
+androidx-lifecycle = "2.9.6"
 androidx-testExt = "1.3.0"
-composeHotReload = "1.0.0-beta07"
-composeMultiplatform = "1.9.0"
+composeHotReload = "1.0.0-rc03"
+composeMultiplatform = "1.9.3"
 exifinterface = "1.4.1"
 junit = "4.13.2"
-koalaplotCore = "0.9.1"
-kotlin = "2.2.20"
-kotlinBrowser = "2025.9.11"
+koalaplotCore = "0.10.2"
+kotlin = "2.2.21"
+kotlinBrowser = "2025.11.8"
 kotlinx-coroutines = "1.10.2"
 kotlinxDatetime = "0.7.1"
 kotlinxIo = "0.8.0"
 kotlinxSerializationJson = "1.9.0"
-material = "1.10.0"
+material = "1.13.0"
 pdfbox = "3.0.6"
+reorderable = "3.0.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -45,6 +46,7 @@ kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.re
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
