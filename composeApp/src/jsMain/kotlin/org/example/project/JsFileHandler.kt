@@ -72,4 +72,14 @@ class JsFileHandler : FileHandler {
         // This functionality is not available in the browser environment.
         return null
     }
+
+    override suspend fun getDirectorySize(path: String): Long {
+        // Not implemented for JS
+        return 0L
+    }
+
+    override suspend fun getFileSize(path: String): Long {
+        // Not implemented for JS
+        return 0L
+    }
 }

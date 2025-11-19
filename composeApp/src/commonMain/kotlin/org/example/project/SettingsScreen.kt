@@ -29,13 +29,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_yes
@@ -60,6 +64,7 @@ fun SettingsScreen(
     currentLocale: String,
     currentLengthUnit: LengthUnit,
     currentLogLevel: LogLevel,
+    fileHandler: FileHandler,
     onBack: () -> Unit,
     onExportZip: () -> Unit,
     onImport: (String) -> Unit,
@@ -75,6 +80,16 @@ fun SettingsScreen(
     var languageDropdownExpanded by remember { mutableStateOf(false) }
     var lengthUnitDropdownExpanded by remember { mutableStateOf(false) }
     var logLevelDropdownExpanded by remember { mutableStateOf(false) }
+
+    var filesDirSize by remember { mutableStateOf(0L) }
+    var logFileSize by remember { mutableStateOf(0L) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.Default) {
+            filesDirSize = fileHandler.getDirectorySize(".")
+            logFileSize = fileHandler.getFileSize("log.txt")
+        }
+    }
 
     BackButtonHandler {
         onBack()
@@ -218,12 +233,24 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
+                Text(
+                    text = "Log file size: ${formatSize(logFileSize)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = onExportZip, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.export_zip))
                 }
+                Text(
+                    text = "Total files size: ${formatSize(filesDirSize)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 4.dp).fillMaxWidth()
+                )
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -300,5 +327,13 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+}
+
+private fun formatSize(size: Long): String {
+    return when {
+        size < 1024 -> "$size B"
+        size < 1024 * 1024 -> "%.2f KB".format(size / 1024.0)
+        else -> "%.2f MB".format(size / (1024.0 * 1024.0))
     }
 }

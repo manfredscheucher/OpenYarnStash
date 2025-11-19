@@ -25,5 +25,8 @@ interface FileHandler {
     suspend fun listFilesRecursively(path: String): List<String>
     suspend fun getFileHash(path: String): String?
 
+    suspend fun getDirectorySize(path: String): Long
+    suspend fun getFileSize(path: String): Long
+
     fun openFileExternally(path: String)
 }

@@ -186,4 +186,21 @@ class JvmFileHandler : FileHandler {
         }
         return md.digest().joinToString("") { "%02x".format(it) }
     }
+
+    override suspend fun getDirectorySize(path: String): Long {
+        val directory = getFile(path)
+        if (!directory.exists() || !directory.isDirectory) {
+            return 0L
+        }
+        return directory.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    }
+
+    override suspend fun getFileSize(path: String): Long {
+        val file = getFile(path)
+        return if (file.exists() && file.isFile) {
+            file.length()
+        } else {
+            0L
+        }
+    }
 }
