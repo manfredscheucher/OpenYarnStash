@@ -278,7 +278,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdateYarn(editedYarn)
                                             }
                                             reloadAllData()
-                                            navigateBack()
                                         }
                                     },
                                     onAddColor = { yarnToCopy ->
@@ -426,7 +425,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdateProject(editedProject)
                                             }
                                             reloadAllData()
-                                            navigateBack()
                                         }
                                     },
                                     onNavigateToAssignments = {
@@ -476,7 +474,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             )
                                         }
                                         reloadAllData()
-                                        navigateBack()
                                     }
                                 },
                                 onBack = { navigateBack() }
@@ -570,7 +567,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 jsonDataManager.addOrUpdatePattern(editedPattern)
                                             }
                                             reloadAllData()
-                                            navigateBack()
                                         }
                                     },
                                     onViewPdfExternally = { pdfManager.openPatternPdfExternally(s.patternId) },
