@@ -26,9 +26,9 @@ import kotlin.NoSuchElementException // Ensure this import is present
 sealed class Screen {
     data object Home : Screen()
     data object YarnList : Screen()
-    data class YarnForm(val yarnId: Int) : Screen() // yarnId is no longer nullable
+    data class YarnForm(val yarnId: Int) : Screen()
     data object ProjectList : Screen()
-    data class ProjectForm(val projectId: Int) : Screen() // projectId is no longer nullable
+    data class ProjectForm(val projectId: Int) : Screen()
     data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
     data object Info : Screen()
     data object HowToHelp : Screen()
@@ -209,8 +209,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                                 ?. let{
                                                     imageMap[imageId] = it
                                                 } ?: scope.launch {
-                                                    Logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
-                                                }
+                                                Logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
+                                            }
                                         }
                                     } catch (e: Exception) {
                                         scope.launch {
@@ -243,15 +243,20 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onBack = { navigateBack() },
                                     onDelete = { yarnIdToDelete ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) {
-                                                val yarnToDelete = jsonDataManager.getYarnById(yarnIdToDelete)
-                                                yarnToDelete?.imageIds?.forEach { imageId ->
-                                                    imageManager.deleteYarnImage(yarnIdToDelete, imageId)
+                                            try {
+                                                withContext(Dispatchers.Default) {
+                                                    val yarnToDelete = jsonDataManager.getYarnById(yarnIdToDelete)
+                                                    yarnToDelete!!.imageIds.forEach { imageId ->
+                                                        imageManager.deleteYarnImage(yarnIdToDelete, imageId)
+                                                    }
+                                                    jsonDataManager.deleteYarn(yarnIdToDelete)
                                                 }
-                                                jsonDataManager.deleteYarn(yarnIdToDelete)
+                                                reloadAllData()
+                                                navStack = navStack.filterNot { it is Screen.YarnForm && it.yarnId == yarnIdToDelete }
+                                            } catch (e: Exception) {
+                                                Logger.log(LogLevel.ERROR, "Failed to delete yarn with id $yarnIdToDelete: ${e.message}", e)
+                                                errorDialogMessage = "Failed to delete yarn: ${e.message}"
                                             }
-                                            reloadAllData()
-                                            navStack = navStack.filterNot { it is Screen.YarnForm && it.yarnId == yarnIdToDelete }
                                         }
                                     },
                                     onSave = { editedYarn, newImages ->
@@ -389,17 +394,22 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     patterns = patterns,
                                     imageManager = imageManager,
                                     onBack = { navigateBack() },
-                                    onDelete = { id ->
+                                    onDelete = { projectIdToDelete ->
                                         scope.launch {
-                                            withContext(Dispatchers.Default) {
-                                                val projectToDelete = jsonDataManager.getProjectById(id)
-                                                projectToDelete?.imageIds?.forEach { imageId ->
-                                                    imageManager.deleteProjectImage(id, imageId)
+                                            try {
+                                                withContext(Dispatchers.Default) {
+                                                    val projectToDelete = jsonDataManager.getProjectById(projectIdToDelete)
+                                                    projectToDelete!!.imageIds.forEach { imageId ->
+                                                        imageManager.deleteProjectImage(projectIdToDelete, imageId)
+                                                    }
+                                                    jsonDataManager.deleteProject(projectIdToDelete)
                                                 }
-                                                jsonDataManager.deleteProject(id)
+                                                reloadAllData()
+                                                navStack = navStack.filterNot { (it is Screen.ProjectForm && it.projectId == projectIdToDelete) || (it is Screen.ProjectAssignments && it.projectId == projectIdToDelete) }
+                                            } catch (e: Exception) {
+                                                Logger.log(LogLevel.ERROR, "Failed to delete project with id $projectIdToDelete: ${e.message}", e)
+                                                errorDialogMessage = "Failed to delete project: ${e.message}"
                                             }
-                                            reloadAllData()
-                                            navStack = navStack.filterNot { (it is Screen.ProjectForm && it.projectId == id) || (it is Screen.ProjectAssignments && it.projectId == id) }
                                         }
                                     },
                                     onSave = { editedProject, newImages ->
@@ -512,20 +522,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                             var initialPdf by remember { mutableStateOf<ByteArray?>(null) }
 
                             LaunchedEffect(s.patternId, existingPattern) {
-                                try {
-                                    withContext(Dispatchers.Default) {
-                                        pdfManager.getPatternPdf(existingPattern!!.id)
-                                            ?. let{
-                                                initialPdf = it
-                                            } ?: scope.launch {
-                                            Logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern.id}")
+                                if (existingPattern != null) {
+                                    try {
+                                        withContext(Dispatchers.Default) {
+                                            pdfManager.getPatternPdf(existingPattern.id)
+                                                ?.let { initialPdf = it }
+                                                ?: scope.launch {
+                                                    Logger.log(LogLevel.WARN, "PDF not found for pattern ${existingPattern.id}")
+                                                }
                                         }
+                                    } catch (e: Exception) {
+                                        scope.launch {
+                                            Logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern.id}: ${e.message}", e)
+                                        }
+                                        initialPdf = null
                                     }
-                                } catch (e: Exception) {
-                                    scope.launch {
-                                        Logger.log(LogLevel.ERROR, "Failed to load PDF for pattern ${existingPattern?.id}: ${e.message}", e)
-                                    }
-                                    initialPdf = null
                                 }
                             }
 
@@ -557,7 +568,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                     onSave = { editedPattern, pdf ->
                                         scope.launch {
                                             withContext(Dispatchers.Default) {
-                                                if (!initialPdf.contentEquals(pdf)) {
+                                                if (initialPdf == null && pdf != null || initialPdf != null && pdf == null || (initialPdf != null && pdf != null && !initialPdf.contentEquals(pdf))) {
                                                     if (pdf != null) {
                                                         pdfManager.savePatternPdf(editedPattern.id, pdf)
                                                     } else {
