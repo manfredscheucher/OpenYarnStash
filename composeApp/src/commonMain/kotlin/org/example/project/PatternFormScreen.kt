@@ -51,7 +51,7 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatternFormScreen(
-    initial: Pattern?,
+    initial: Pattern,
     initialPdf: ByteArray?,
     projects: List<Project>,
     patterns: List<Pattern>,
@@ -63,17 +63,17 @@ fun PatternFormScreen(
     onViewPdfExternally: () -> Unit,
     onNavigateToProject: (Int) -> Unit
 ) {
-    var name by remember { mutableStateOf(initial?.name ?: "") }
-    var creator by remember { mutableStateOf(initial?.creator ?: "") }
-    var category by remember { mutableStateOf(initial?.category ?: "") }
-    var gauge by remember { mutableStateOf(initial?.gauge ?: "") }
-    val modifiedState by remember { mutableStateOf(initial?.modified ?: getCurrentTimestamp()) }
+    var name by remember { mutableStateOf(initial.name) }
+    var creator by remember { mutableStateOf(initial.creator ?: "") }
+    var category by remember { mutableStateOf(initial.category ?: "") }
+    var gauge by remember { mutableStateOf(initial.gauge ?: "") }
+    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
     var pdf by remember { mutableStateOf<ByteArray?>(null) }
     var pdfThumbnail by remember { mutableStateOf<ImageBitmap?>(null) }
 
 
     LaunchedEffect(initial) {
-        if (initial != null) {
+        if (initial.id != -1) {
             val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id, PdfManager.LARGE_THUMBNAIL_WIDTH, PdfManager.LARGE_THUMBNAIL_HEIGHT)
             if (thumbnailBytes != null) {
                 pdfThumbnail = thumbnailBytes.toImageBitmap()
@@ -95,7 +95,7 @@ fun PatternFormScreen(
     val changes by remember(name, creator, category, gauge, pdf) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
-            if (initial == null) {
+            if (initial.id == -1) {
                 if (name.isNotEmpty()) changedFields.add("name")
                 if (creator.isNotEmpty()) changedFields.add("creator")
                 if (category.isNotEmpty()) changedFields.add("category")
@@ -114,7 +114,7 @@ fun PatternFormScreen(
     val hasChanges by derivedStateOf { changes.isNotEmpty() }
 
     val saveAction = {
-        val pattern = (initial ?: Pattern(id = -1, name = "")).copy(
+        val pattern = initial.copy(
             name = name,
             creator = creator.ifBlank { null },
             category = category.ifBlank { null },
@@ -179,7 +179,7 @@ fun PatternFormScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (initial == null) stringResource(Res.string.pattern_form_new) else stringResource(Res.string.pattern_form_edit)) },
+                title = { Text(if (initial.id == -1) stringResource(Res.string.pattern_form_new) else stringResource(Res.string.pattern_form_edit)) },
                 navigationIcon = {
                     IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
@@ -278,7 +278,7 @@ fun PatternFormScreen(
                 Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
                 Spacer(Modifier.height(16.dp))
 
-                val projectsWithPattern = projects.filter { it.patternId == initial?.id }
+                val projectsWithPattern = projects.filter { it.patternId == initial.id }
                 if (projectsWithPattern.isNotEmpty()) {
                     Text(stringResource(Res.string.pattern_form_assigned_projects))
                     Spacer(Modifier.height(8.dp))
@@ -329,7 +329,7 @@ fun PatternFormScreen(
                 ) {
                     TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                     Row {
-                        if (initial != null) {
+                        if (initial.id != -1) {
                             TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                             Spacer(Modifier.width(8.dp))
                         }
