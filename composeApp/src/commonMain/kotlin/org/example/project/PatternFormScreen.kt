@@ -97,7 +97,7 @@ fun PatternFormScreen(
             if (creator != (initial.creator ?: "")) changedFields.add("creator")
             if (category != (initial.category ?: "")) changedFields.add("category")
             if (gauge != (initial.gauge ?: "")) changedFields.add("gauge")
-            if (pdf != initialPdf) changedFields.add("pdf")
+            if (!pdf.contentEquals(initialPdf)) changedFields.add("pdf")
             changedFields
         }
     }
