@@ -117,7 +117,8 @@ fun ProjectFormScreen(
         gauge,
         rowCounters,
         patternId,
-        images
+        images,
+        initialImages
     ) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()

@@ -90,7 +90,7 @@ fun PatternFormScreen(
         pdf = it
     }
 
-    val changes by remember(name, creator, category, gauge, pdf) {
+    val changes by remember(name, creator, category, gauge, pdf, initialPdf) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
             if (name != initial.name) changedFields.add("name")

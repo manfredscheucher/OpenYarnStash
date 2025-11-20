@@ -131,7 +131,8 @@ fun YarnFormScreen(
         amountText,
         added,
         notes,
-        images
+        images,
+        initialImages
     ) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
