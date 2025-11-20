@@ -80,6 +80,7 @@ fun YarnFormScreen(
     LaunchedEffect(initialImages) {
         images.clear()
         images.putAll(initialImages)
+        println(" launch effect: images: ${images.toMap().keys} initial images ${initialImages.keys}")
     }
     var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
     var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
@@ -130,7 +131,7 @@ fun YarnFormScreen(
         amountText,
         added,
         notes,
-        images.size
+        images
     ) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
@@ -146,7 +147,8 @@ fun YarnFormScreen(
             if (amountText != (initial.amount.toString().takeIf { it != "0" } ?: "")) changedFields.add("amountText")
             if (added != (initial.added ?: "")) changedFields.add("added")
             if (notes != (initial.notes ?: "")) changedFields.add("notes")
-            if (images.keys != initialImages.keys) changedFields.add("images")
+            println("images: ${images.toMap().keys}!= ${initialImages.keys}")
+            if (images.toMap().keys != initialImages.keys) changedFields.add("images")
             changedFields
         }
     }
@@ -172,7 +174,7 @@ fun YarnFormScreen(
             added = normalizeDateString(added),
             notes = notes.ifBlank { null },
             imageIds = finalImageIds,
-            imagesChanged = initialImages.keys != images.keys
+            imagesChanged = initialImages.keys != images.keys // TODO: not used anywhere
         )
         onSave(yarn, images.toMap())
     }
