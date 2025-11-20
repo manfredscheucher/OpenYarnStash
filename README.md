@@ -16,12 +16,12 @@ We appreciate your understanding and encourage you to report any issues - in cas
 ## How you can help
 
 The project is in early development and any type of feedback is very welcome!
-Also let us know if you like the app! :)
+Also let us know if you like the app!
 
 * Leave a star for our [github repository](https://github.com/manfredscheucher/OpenYarnStash/) 
 * Use the [github issue tracker](https://github.com/manfredscheucher/OpenYarnStash/issues) for reporting bugs/feature requests and discussing open tickets,
 * Join [our discord server](https://discord.gg/g2DpAXUX) for discussions
 * Just write as an [email](mailto:OpenYarnStash@proton.me)
 
-Thank you very much!
+Thank you very much! :)
 
