@@ -11,6 +11,10 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 
+actual fun initializeLogger(fileHandler: FileHandler, settings: Settings) {
+    Logger.init(fileHandler, settings)
+}
+
 fun main() = application {
     val fileHandler = JvmFileHandler()
     val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
@@ -19,6 +23,8 @@ fun main() = application {
     val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     val fileDownloader = FileDownloader()
     val backDispatcher = remember { DesktopBackDispatcher() }
+
+    initializeLogger(fileHandler, settingsManager.settings)
 
     Window(
         onCloseRequest = ::exitApplication,

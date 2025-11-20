@@ -5,6 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 
+actual fun initializeLogger(fileHandler: FileHandler, settings: Settings) {
+    Logger.init(fileHandler, settings)
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +21,7 @@ class MainActivity : ComponentActivity() {
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
         val fileDownloader = FileDownloader(this)
 
-        Logger.init(fileHandler, settingsManager.settings.value)
+        initializeLogger(fileHandler, settingsManager.settings)
 
         setContent {
             App(jsonDataManager, imageManager, pdfManager, settingsManager, fileDownloader, fileHandler)

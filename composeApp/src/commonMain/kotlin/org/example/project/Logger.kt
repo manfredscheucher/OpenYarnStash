@@ -1,13 +1,15 @@
 package org.example.project
 
+expect fun initializeLogger(fileHandler: FileHandler, settings: Settings)
+
 object Logger {
 
-    private lateinit var fileHandler: FileHandler
+    private var fileHandler: FileHandler? = null
     lateinit var settings: Settings
         private set
 
     fun init(fileHandler: FileHandler, settings: Settings) {
-        if (!this::fileHandler.isInitialized) {
+        if (this.fileHandler == null) {
             this.fileHandler = fileHandler
         }
         this.settings = settings
@@ -19,8 +21,8 @@ object Logger {
     private val filesDirPath = "."
 
     suspend fun log(level: LogLevel, message: String, throwable: Throwable? = null) {
-        if (!this::fileHandler.isInitialized) {
-            println("Logger fileHandler not initialized!")
+        if (fileHandler == null) {
+            println("Logger fileHandler not initialized! losing message: $message")
             return
         }
         if (settings.logLevel == LogLevel.OFF) return
@@ -40,14 +42,14 @@ object Logger {
 
 
         try {
-            fileHandler.appendText(logFilePath, logMessage)
+            fileHandler?.appendText(logFilePath, logMessage)
         } catch (e: Exception) {
             println("Error writing to log file: ${e.message}")
         }
     }
 
     suspend fun logImportantFiles(level: LogLevel) {
-        if (!this::fileHandler.isInitialized) {
+        if (fileHandler == null) {
             println("Logger fileHandler not initialized!")
             return
         }
@@ -61,7 +63,7 @@ object Logger {
 
     private suspend fun logFile(level: LogLevel,filePath: String) {
         val content = try {
-            fileHandler.readText(filePath)
+            fileHandler?.readText(filePath)
         } catch (e: Exception) {
             "Error reading file: ${e.message}"
         }
@@ -70,16 +72,16 @@ object Logger {
 
     suspend fun logDirectoryContents(level: LogLevel,dirPath: String) {
         val fileList = try {
-            fileHandler.listFilesRecursively(dirPath)
+            fileHandler?.listFilesRecursively(dirPath)
         } catch (e: Exception) {
             listOf("Error listing directory: ${e.message}")
         }
 
-        val hashedFiles = fileList.map { filePath ->
-            val hash = fileHandler.getFileHash(filePath) ?: "NO HASH"
+        val hashedFiles = fileList?.map { filePath ->
+            val hash = fileHandler?.getFileHash(filePath) ?: "NO HASH"
             "$hash  $filePath"
         }
 
-        log(level,"Recursive listing of '$dirPath':\n${hashedFiles.joinToString("\n")}")
+        log(level,"Recursive listing of '$dirPath':\n${hashedFiles?.joinToString("\n")}")
     }
 }

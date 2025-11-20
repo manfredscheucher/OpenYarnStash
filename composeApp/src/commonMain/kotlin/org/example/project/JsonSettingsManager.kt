@@ -5,7 +5,8 @@ import kotlinx.serialization.json.Json
 
 class JsonSettingsManager(private val fileHandler: FileHandler, private val filePath: String) {
 
-    private var settings: Settings = Settings()
+    var settings: Settings = Settings()
+        private set
 
     suspend fun loadSettings(): Settings {
         val content = fileHandler.readText(filePath)
