@@ -191,7 +191,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="suggest_new_features">Schlage neue Funktionen vor:</string>
     <string name="open_a_feature_request_on_github">Erstelle einen Feature-Request auf GitHub. Beschreibe, warum dieses Feature nützlich ist, vielleicht mit einem kurzen Beispielen.</string>
     <string name="join_the_discussion">Beteilige dich an der Diskussion:</string>
-    <string name="participate_in_github_discussions">Lass uns Feedback da, nimm an Discord- und GitHub-Diskussionen teil, und lass vergib einen Stern auf Github.</string>
+    <string name="participate_in_github_discussions">Gib uns Feedback, nimm an Discord- und GitHub-Diskussionen teil und vergib einen Stern auf GitHub.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Einstellungen</string>
