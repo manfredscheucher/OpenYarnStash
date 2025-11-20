@@ -178,6 +178,11 @@ fun YarnFormScreen(
         onSave(yarn, images.toMap())
     }
 
+    val saveAndBackAction = {
+        saveAction()
+        onBack()
+    }
+
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
             println("[INFO] YarnFormScreen has changes: ${changes.joinToString(", ")}")
@@ -560,7 +565,7 @@ fun YarnFormScreen(
                             TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                         }
                         Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                        Button(onClick = saveAndBackAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

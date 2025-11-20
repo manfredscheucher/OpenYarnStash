@@ -114,6 +114,11 @@ fun PatternFormScreen(
         onSave(pattern, pdf)
     }
 
+    val saveAndBackAction = {
+        saveAction()
+        onBack()
+    }
+
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
             println("INFO: PatternFormScreen has changes: ${changes.joinToString(", ")}")
@@ -321,7 +326,7 @@ fun PatternFormScreen(
                     Row {
                         TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                        Button(onClick = saveAndBackAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }
