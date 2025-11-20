@@ -208,16 +208,16 @@ fun PatternFormScreen(
                 }
                 Spacer(Modifier.height(16.dp))
 
-                if (pdf == null && initialPdf == null) {
+                if (pdf == null) {
                     Button(onClick = { pdfPicker("application/pdf") }) {
                         Text(stringResource(Res.string.pattern_form_select_pdf))
                     }
                 } else {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = if (initialPdf != null) Arrangement.SpaceBetween else Arrangement.End
+                        horizontalArrangement = if (pdf != null) Arrangement.SpaceBetween else Arrangement.End
                     ) {
-                        if (initialPdf != null) {
+                        if (pdf != null) {
                             Button(onClick = { confirmDiscardChanges(onViewPdfExternally) }) {
                                 Text(stringResource(Res.string.pattern_form_view_pdf))
                             }
