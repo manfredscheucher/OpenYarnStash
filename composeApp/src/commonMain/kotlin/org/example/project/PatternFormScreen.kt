@@ -92,15 +92,26 @@ fun PatternFormScreen(
         pdf = it
     }
 
-    val hasChanges by remember(name, creator, category, gauge, pdf) {
+    val changes by remember(name, creator, category, gauge, pdf) {
         derivedStateOf {
+            val changedFields = mutableListOf<String>()
             if (initial == null) {
-                name.isNotEmpty() || creator.isNotEmpty() || category.isNotEmpty() || gauge.isNotEmpty() || pdf != null
+                if (name.isNotEmpty()) changedFields.add("name")
+                if (creator.isNotEmpty()) changedFields.add("creator")
+                if (category.isNotEmpty()) changedFields.add("category")
+                if (gauge.isNotEmpty()) changedFields.add("gauge")
+                if (pdf != null) changedFields.add("pdf")
             } else {
-                name != initial.name || creator != (initial.creator ?: "") || category != (initial.category ?: "") || gauge != (initial.gauge ?: "") || pdf != initialPdf
+                if (name != initial.name) changedFields.add("name")
+                if (creator != (initial.creator ?: "")) changedFields.add("creator")
+                if (category != (initial.category ?: "")) changedFields.add("category")
+                if (gauge != (initial.gauge ?: "")) changedFields.add("gauge")
+                if (pdf != initialPdf) changedFields.add("pdf")
             }
+            changedFields
         }
     }
+    val hasChanges by derivedStateOf { changes.isNotEmpty() }
 
     val saveAction = {
         val pattern = (initial ?: Pattern(id = -1, name = "")).copy(
@@ -115,6 +126,7 @@ fun PatternFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
+            println("INFO: PatternFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {

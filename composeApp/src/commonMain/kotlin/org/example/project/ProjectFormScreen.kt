@@ -105,22 +105,37 @@ fun ProjectFormScreen(
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
-    val hasChanges by remember(initial, name, forWho, startDate, endDate, notes, needleSize, size, gauge, rowCounters, patternId) {
+    val changes by remember(
+        initial,
+        name,
+        forWho,
+        startDate,
+        endDate,
+        notes,
+        needleSize,
+        size,
+        gauge,
+        rowCounters,
+        patternId,
+        images.size
+    ) {
         derivedStateOf {
-            val imagesChanged = images.keys != initialImages.keys
-            name != initial.name ||
-                    forWho != (initial.madeFor ?: "") ||
-                    startDate != (initial.startDate ?: "") ||
-                    endDate != (initial.endDate ?: "") ||
-                    notes != (initial.notes ?: "") ||
-                    needleSize != (initial.needleSize ?: "") ||
-                    size != (initial.size ?: "") ||
-                    gauge != (initial.gauge ?: "") ||
-                    imagesChanged ||
-                    rowCounters != initial.rowCounters ||
-                    patternId != initial.patternId
+            val changedFields = mutableListOf<String>()
+            if (name != initial.name) changedFields.add("name")
+            if (forWho != (initial.madeFor ?: "")) changedFields.add("forWho")
+            if (startDate != (initial.startDate ?: "")) changedFields.add("startDate")
+            if (endDate != (initial.endDate ?: "")) changedFields.add("endDate")
+            if (notes != (initial.notes ?: "")) changedFields.add("notes")
+            if (needleSize != (initial.needleSize ?: "")) changedFields.add("needleSize")
+            if (size != (initial.size ?: "")) changedFields.add("size")
+            if (gauge != (initial.gauge ?: "")) changedFields.add("gauge")
+            if (rowCounters != initial.rowCounters) changedFields.add("rowCounters")
+            if (patternId != initial.patternId) changedFields.add("patternId")
+            if (images.keys != initialImages.keys) changedFields.add("images")
+            changedFields
         }
     }
+    val hasChanges by derivedStateOf { changes.isNotEmpty() }
 
     val exportPdf: () -> Unit = { // Using current state values
         scope.launch {
@@ -187,6 +202,7 @@ fun ProjectFormScreen(
 
     val backAction = {
         if (hasChanges) {
+            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialogForBack = true
         } else {
             onBack()
@@ -195,6 +211,7 @@ fun ProjectFormScreen(
 
     val assignAction = {
         if (hasChanges) {
+            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialogForAssignments = true
         } else {
             onNavigateToAssignments()
@@ -203,6 +220,7 @@ fun ProjectFormScreen(
 
     val yarnAction: (Int) -> Unit = { yarnId ->
         if (hasChanges) {
+            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialogForYarn = yarnId
         } else {
             onNavigateToYarn(yarnId)

@@ -117,7 +117,7 @@ fun YarnFormScreen(
         }
     }
 
-    val hasChanges by remember(
+    val changes by remember(
         name,
         color,
         colorCode,
@@ -130,32 +130,43 @@ fun YarnFormScreen(
         amountText,
         added,
         notes,
+        images.size
     ) {
         derivedStateOf {
-            val imagesChanged = images.keys != initialImages.keys
+            val changedFields = mutableListOf<String>()
             if (initial == null) {
-                name.isNotEmpty() || color.isNotEmpty() || colorCode.isNotEmpty() || brand.isNotEmpty() ||
-                        blend.isNotEmpty() ||
-                        dyeLot.isNotEmpty() || storagePlace.isNotEmpty() || weightPerSkeinText.isNotEmpty() || meteragePerSkeinText.isNotEmpty() ||
-                        amountText.isNotEmpty() ||
-                        added.isNotEmpty() || notes.isNotEmpty() || images.isNotEmpty()
+                if (name.isNotEmpty()) changedFields.add("name")
+                if (color.isNotEmpty()) changedFields.add("color")
+                if (colorCode.isNotEmpty()) changedFields.add("colorCode")
+                if (brand.isNotEmpty()) changedFields.add("brand")
+                if (blend.isNotEmpty()) changedFields.add("blend")
+                if (dyeLot.isNotEmpty()) changedFields.add("dyeLot")
+                if (storagePlace.isNotEmpty()) changedFields.add("storagePlace")
+                if (weightPerSkeinText.isNotEmpty()) changedFields.add("weightPerSkeinText")
+                if (meteragePerSkeinText.isNotEmpty()) changedFields.add("meteragePerSkeinText")
+                if (amountText.isNotEmpty()) changedFields.add("amountText")
+                if (added.isNotEmpty()) changedFields.add("added")
+                if (notes.isNotEmpty()) changedFields.add("notes")
+                if (images.isNotEmpty()) changedFields.add("images")
             } else {
-                name != initial.name ||
-                        color != (initial.color ?: "") ||
-                        colorCode != (initial.colorCode ?: "") ||
-                        brand != (initial.brand ?: "") ||
-                        blend != (initial.blend ?: "") ||
-                        dyeLot != (initial.dyeLot ?: "") ||
-                        storagePlace != (initial.storagePlace ?: "") ||
-                        weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "") ||
-                        meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "") ||
-                        amountText != (initial.amount.toString().takeIf { it != "0" } ?: "") ||
-                        added != (initial.added ?: "") ||
-                        notes != (initial.notes ?: "") ||
-                        imagesChanged
+                if (name != initial.name) changedFields.add("name")
+                if (color != (initial.color ?: "")) changedFields.add("color")
+                if (colorCode != (initial.colorCode ?: "")) changedFields.add("colorCode")
+                if (brand != (initial.brand ?: "")) changedFields.add("brand")
+                if (blend != (initial.blend ?: "")) changedFields.add("blend")
+                if (dyeLot != (initial.dyeLot ?: "")) changedFields.add("dyeLot")
+                if (storagePlace != (initial.storagePlace ?: "")) changedFields.add("storagePlace")
+                if (weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "")) changedFields.add("weightPerSkeinText")
+                if (meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "")) changedFields.add("meteragePerSkeinText")
+                if (amountText != (initial.amount.toString().takeIf { it != "0" } ?: "")) changedFields.add("amountText")
+                if (added != (initial.added ?: "")) changedFields.add("added")
+                if (notes != (initial.notes ?: "")) changedFields.add("notes")
+                if (images.keys != initialImages.keys) changedFields.add("images")
             }
+            changedFields
         }
     }
+    val hasChanges by derivedStateOf { changes.isNotEmpty() }
 
     val saveAction = {
         val enteredAmount = amountText.toIntOrNull() ?: 0
@@ -185,6 +196,7 @@ fun YarnFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
+            println("INFO: YarnFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {
