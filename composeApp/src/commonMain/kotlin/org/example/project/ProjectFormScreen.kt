@@ -70,9 +70,8 @@ fun ProjectFormScreen(
     var patternId by remember { mutableStateOf(initial.patternId) }
     val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
-    var showUnsavedDialogForBack by remember { mutableStateOf(false) }
-    var showUnsavedDialogForAssignments by remember { mutableStateOf(false) }
-    var showUnsavedDialogForYarn by remember { mutableStateOf<Int?>(null) }
+    var showUnsavedDialog by remember { mutableStateOf(false) }
+    var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
@@ -200,82 +199,54 @@ fun ProjectFormScreen(
         onSave(project, images.toMap())
     }
 
-    val backAction = {
+    val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
             println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
-            showUnsavedDialogForBack = true
+            showUnsavedDialog = true
+            onConfirmUnsaved = onConfirm
         } else {
-            onBack()
+            onConfirm()
         }
     }
 
-    val assignAction = {
-        if (hasChanges) {
-            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
-            showUnsavedDialogForAssignments = true
-        } else {
-            onNavigateToAssignments()
-        }
-    }
-
-    val yarnAction: (Int) -> Unit = { yarnId ->
-        if (hasChanges) {
-            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
-            showUnsavedDialogForYarn = yarnId
-        } else {
-            onNavigateToYarn(yarnId)
-        }
-    }
+    val backAction = { confirmDiscardChanges(onBack) }
+    val assignAction = { confirmDiscardChanges(onNavigateToAssignments) }
 
     BackButtonHandler {
         backAction()
     }
 
-    if (showUnsavedDialogForBack) {
-        UnsavedChangesDialog(
-            onDismiss = { showUnsavedDialogForBack = false },
-            onStay = { showUnsavedDialogForBack = false },
-            onDiscard = {
-                showUnsavedDialogForBack = false
-                onBack()
+    if (showUnsavedDialog) {
+        AlertDialog(
+            onDismissRequest = { showUnsavedDialog = false },
+            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
+            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { showUnsavedDialog = false }) {
+                        Text(stringResource(Res.string.common_stay))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        showUnsavedDialog = false
+                        onConfirmUnsaved()
+                    }) {
+                        Text(stringResource(Res.string.common_no))
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    TextButton(onClick = {
+                        saveAction()
+                        showUnsavedDialog = false
+                        onConfirmUnsaved()
+                    }) {
+                        Text(stringResource(Res.string.common_yes))
+                    }
+                }
             },
-            onSave = {
-                saveAction()
-                showUnsavedDialogForBack = false
-                onBack()
-            }
-        )
-    }
-
-    if (showUnsavedDialogForAssignments) {
-        UnsavedChangesDialog(
-            onDismiss = { showUnsavedDialogForAssignments = false },
-            onStay = { showUnsavedDialogForAssignments = false },
-            onDiscard = {
-                showUnsavedDialogForAssignments = false
-                onNavigateToAssignments()
-            },
-            onSave = {
-                saveAction()
-                showUnsavedDialogForAssignments = false
-                onNavigateToAssignments()
-            }
-        )
-    }
-
-    showUnsavedDialogForYarn?.let { yarnId ->
-        UnsavedChangesDialog(
-            onDismiss = { showUnsavedDialogForYarn = null },
-            onStay = { showUnsavedDialogForYarn = null },
-            onDiscard = {
-                showUnsavedDialogForYarn = null
-                onNavigateToYarn(yarnId)
-            },
-            onSave = {
-                saveAction()
-                showUnsavedDialogForYarn = null
-                onNavigateToYarn(yarnId)
-            }
+            dismissButton = null
         )
     }
 
@@ -430,7 +401,7 @@ fun ProjectFormScreen(
             }
             if (patternId != null) {
                 Spacer(Modifier.height(8.dp))
-                Button(onClick = { onNavigateToPattern(patternId!!) }) {
+                Button(onClick = { confirmDiscardChanges { onNavigateToPattern(patternId!!) } }) {
                     Text(stringResource(Res.string.project_form_view_pattern))
                 }
             }
@@ -615,7 +586,7 @@ fun ProjectFormScreen(
                                         }
                                         Spacer(Modifier.width(8.dp))
 
-                                        Button(onClick = { yarnAction(yarn.id) }) {
+                                        Button(onClick = { confirmDiscardChanges { onNavigateToYarn(yarn.id) } }) {
                                             Text(stringResource(Res.string.project_form_view_yarn))
                                         }
                                     }
@@ -699,39 +670,6 @@ private fun AddCounterDialog(
                 Text(stringResource(Res.string.common_cancel))
             }
         }
-    )
-}
-
-@Composable
-private fun UnsavedChangesDialog(
-    onDismiss: () -> Unit,
-    onStay: () -> Unit,
-    onDiscard: () -> Unit,
-    onSave: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
-        text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
-        confirmButton = {
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = onStay) {
-                    Text(stringResource(Res.string.common_stay))
-                }
-                Spacer(Modifier.width(8.dp))
-                TextButton(onClick = onDiscard) {
-                    Text(stringResource(Res.string.common_no))
-                }
-                Spacer(Modifier.width(8.dp))
-                TextButton(onClick = onSave) {
-                    Text(stringResource(Res.string.common_yes))
-                }
-            }
-        },
-        dismissButton = null
     )
 }
 
