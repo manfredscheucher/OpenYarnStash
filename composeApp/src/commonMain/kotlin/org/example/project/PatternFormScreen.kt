@@ -73,11 +73,9 @@ fun PatternFormScreen(
 
 
     LaunchedEffect(initial) {
-        if (initial.id != -1) {
-            val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id, PdfManager.LARGE_THUMBNAIL_WIDTH, PdfManager.LARGE_THUMBNAIL_HEIGHT)
-            if (thumbnailBytes != null) {
-                pdfThumbnail = thumbnailBytes.toImageBitmap()
-            }
+        val thumbnailBytes = pdfManager.getPatternPdfThumbnail(initial.id, PdfManager.LARGE_THUMBNAIL_WIDTH, PdfManager.LARGE_THUMBNAIL_HEIGHT)
+        if (thumbnailBytes != null) {
+            pdfThumbnail = thumbnailBytes.toImageBitmap()
         }
     }
 
@@ -95,19 +93,11 @@ fun PatternFormScreen(
     val changes by remember(name, creator, category, gauge, pdf) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
-            if (initial.id == -1) {
-                if (name.isNotEmpty()) changedFields.add("name")
-                if (creator.isNotEmpty()) changedFields.add("creator")
-                if (category.isNotEmpty()) changedFields.add("category")
-                if (gauge.isNotEmpty()) changedFields.add("gauge")
-                if (pdf != null) changedFields.add("pdf")
-            } else {
-                if (name != initial.name) changedFields.add("name")
-                if (creator != (initial.creator ?: "")) changedFields.add("creator")
-                if (category != (initial.category ?: "")) changedFields.add("category")
-                if (gauge != (initial.gauge ?: "")) changedFields.add("gauge")
-                if (pdf != initialPdf) changedFields.add("pdf")
-            }
+            if (name != initial.name) changedFields.add("name")
+            if (creator != (initial.creator ?: "")) changedFields.add("creator")
+            if (category != (initial.category ?: "")) changedFields.add("category")
+            if (gauge != (initial.gauge ?: "")) changedFields.add("gauge")
+            if (pdf != initialPdf) changedFields.add("pdf")
             changedFields
         }
     }
@@ -179,7 +169,7 @@ fun PatternFormScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (initial.id == -1) stringResource(Res.string.pattern_form_new) else stringResource(Res.string.pattern_form_edit)) },
+                title = { Text(stringResource(Res.string.pattern_form_edit)) },
                 navigationIcon = {
                     IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
@@ -329,10 +319,8 @@ fun PatternFormScreen(
                 ) {
                     TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                     Row {
-                        if (initial.id != -1) {
-                            TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
-                            Spacer(Modifier.width(8.dp))
-                        }
+                        TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
+                        Spacer(Modifier.width(8.dp))
                         Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }

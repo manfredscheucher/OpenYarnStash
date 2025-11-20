@@ -134,35 +134,19 @@ fun YarnFormScreen(
     ) {
         derivedStateOf {
             val changedFields = mutableListOf<String>()
-            if (initial.id == -1) {
-                if (name.isNotEmpty()) changedFields.add("name")
-                if (color.isNotEmpty()) changedFields.add("color")
-                if (colorCode.isNotEmpty()) changedFields.add("colorCode")
-                if (brand.isNotEmpty()) changedFields.add("brand")
-                if (blend.isNotEmpty()) changedFields.add("blend")
-                if (dyeLot.isNotEmpty()) changedFields.add("dyeLot")
-                if (storagePlace.isNotEmpty()) changedFields.add("storagePlace")
-                if (weightPerSkeinText.isNotEmpty()) changedFields.add("weightPerSkeinText")
-                if (meteragePerSkeinText.isNotEmpty()) changedFields.add("meteragePerSkeinText")
-                if (amountText.isNotEmpty()) changedFields.add("amountText")
-                if (added.isNotEmpty()) changedFields.add("added")
-                if (notes.isNotEmpty()) changedFields.add("notes")
-                if (images.isNotEmpty()) changedFields.add("images")
-            } else {
-                if (name != initial.name) changedFields.add("name")
-                if (color != (initial.color ?: "")) changedFields.add("color")
-                if (colorCode != (initial.colorCode ?: "")) changedFields.add("colorCode")
-                if (brand != (initial.brand ?: "")) changedFields.add("brand")
-                if (blend != (initial.blend ?: "")) changedFields.add("blend")
-                if (dyeLot != (initial.dyeLot ?: "")) changedFields.add("dyeLot")
-                if (storagePlace != (initial.storagePlace ?: "")) changedFields.add("storagePlace")
-                if (weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "")) changedFields.add("weightPerSkeinText")
-                if (meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "")) changedFields.add("meteragePerSkeinText")
-                if (amountText != (initial.amount.toString().takeIf { it != "0" } ?: "")) changedFields.add("amountText")
-                if (added != (initial.added ?: "")) changedFields.add("added")
-                if (notes != (initial.notes ?: "")) changedFields.add("notes")
-                if (images.keys != initialImages.keys) changedFields.add("images")
-            }
+            if (name != initial.name) changedFields.add("name")
+            if (color != (initial.color ?: "")) changedFields.add("color")
+            if (colorCode != (initial.colorCode ?: "")) changedFields.add("colorCode")
+            if (brand != (initial.brand ?: "")) changedFields.add("brand")
+            if (blend != (initial.blend ?: "")) changedFields.add("blend")
+            if (dyeLot != (initial.dyeLot ?: "")) changedFields.add("dyeLot")
+            if (storagePlace != (initial.storagePlace ?: "")) changedFields.add("storagePlace")
+            if (weightPerSkeinText != (initial.weightPerSkein?.toString() ?: "")) changedFields.add("weightPerSkeinText")
+            if (meteragePerSkeinText != (initial.meteragePerSkein?.toString() ?: "")) changedFields.add("meteragePerSkeinText")
+            if (amountText != (initial.amount.toString().takeIf { it != "0" } ?: "")) changedFields.add("amountText")
+            if (added != (initial.added ?: "")) changedFields.add("added")
+            if (notes != (initial.notes ?: "")) changedFields.add("notes")
+            if (images.keys != initialImages.keys) changedFields.add("images")
             changedFields
         }
     }
@@ -246,26 +230,24 @@ fun YarnFormScreen(
     }
 
     LaunchedEffect(initial) {
-        if (initial.id != -1) {
-            val gpb = initial.weightPerSkein
-            val amount = initial.amount
-            if (gpb != null && gpb > 0 && amount > 0) {
-                val balls = amount.toDouble() / gpb.toDouble()
-                numberOfBallsText = if (balls == balls.toInt().toDouble()) {
-                    balls.toInt().toString()
-                } else {
-                    (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
-                }
-            } else if (gpb != null && gpb > 0 && amount == 0) {
-                numberOfBallsText = "0"
+        val gpb = initial.weightPerSkein
+        val amount = initial.amount
+        if (gpb != null && gpb > 0 && amount > 0) {
+            val balls = amount.toDouble() / gpb.toDouble()
+            numberOfBallsText = if (balls == balls.toInt().toDouble()) {
+                balls.toInt().toString()
+            } else {
+                (round(balls * 100) / 100.0).toString().trimEnd('0').trimEnd('.')
             }
+        } else if (gpb != null && gpb > 0 && amount == 0) {
+            numberOfBallsText = "0"
         }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (initial.id == -1) stringResource(Res.string.yarn_form_new) else stringResource(Res.string.yarn_form_edit)) },
+                title = { Text(stringResource(Res.string.yarn_form_edit)) },
                 navigationIcon = {
                     IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
@@ -473,7 +455,7 @@ fun YarnFormScreen(
                                 )
                             )
                         }
-                        if (initial.id != -1 && usagesForYarn.isNotEmpty()) {
+                        if (usagesForYarn.isNotEmpty()) {
                             Spacer(Modifier.height(8.dp))
                             Button(onClick = {
                                 amountText = totalUsedAmount.toString()
@@ -569,16 +551,14 @@ fun YarnFormScreen(
                 ) {
                     TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                     Row {
-                        if (initial.id != -1) {
-                            TextButton(onClick = {
-                                confirmDiscardChanges { onAddColor(initial) }
-                            }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                            if (usagesForYarn.isEmpty()) {
-                                Spacer(Modifier.width(8.dp))
-                                TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
-                            }
+                        TextButton(onClick = {
+                            confirmDiscardChanges { onAddColor(initial) }
+                        }) { Text(stringResource(Res.string.yarn_form_add_color)) }
+                        if (usagesForYarn.isEmpty()) {
                             Spacer(Modifier.width(8.dp))
+                            TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                         }
+                        Spacer(Modifier.width(8.dp))
                         Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
