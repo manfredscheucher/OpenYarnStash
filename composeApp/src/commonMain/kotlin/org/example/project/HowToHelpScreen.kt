@@ -185,6 +185,13 @@ fun HowToHelpScreen(
                         Text(
                             text = stringResource(Res.string.participate_in_github_discussions)
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = { uriHandler.openUri("https://discord.gg/g2DpAXUX") },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(Res.string.discord_button))
+                        }
                     }
                 }
             }

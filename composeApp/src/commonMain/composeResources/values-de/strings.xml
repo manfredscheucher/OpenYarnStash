@@ -176,6 +176,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="ko_fi_button">Lade uns einen Kaffee ein</string>
     <string name="github_button">Auf GitHub ansehen</string>
     <string name="github_issues_button">Fehler melden</string>
+    <string name="discord_button">Discord beitreten</string>
     <string name="email_button">E-Mail senden</string>
     <string name="support_us_on_kofi">Unterstütze uns auf Ko-fi:</string>
     <string name="use_the_app_and_report_issues">Nutze die App &amp; melde Probleme:</string>
@@ -183,7 +184,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="to_help_us_reproduce_bugs">Um uns zu helfen, die Fehler zu reproduzieren, gib bitte an:</string>
     <string name="steps_to_reproduce">• Schritte zur Reproduktion</string>
     <string name="screenshots_if_possible">• Screenshots (wenn möglich)</string>
-    <string name="app_version_platform">• App-Version/Plattform</string>
+    <string name="app_version_platform">• App-Version/Plattform (siehe Info-Screen)</string>
     <string name="data_export_from_app">• Datenexport (ZIP) aus der App (Einstellungen → Daten exportieren)</string>
     <string name="privacy_note">Datenschutzhinweis: </string>
     <string name="only_share_what_you_are_comfortable_with">Teile nur, was du teilen möchtest. Entferne sensible Informationen aus Anhängen/Exporten.</string>
