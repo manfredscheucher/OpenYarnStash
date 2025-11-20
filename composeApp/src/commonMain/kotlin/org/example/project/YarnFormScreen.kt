@@ -80,7 +80,6 @@ fun YarnFormScreen(
     LaunchedEffect(initialImages) {
         images.clear()
         images.putAll(initialImages)
-        println(" launch effect: images: ${images.toMap().keys} initial images ${initialImages.keys}")
     }
     var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
     var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
@@ -148,7 +147,6 @@ fun YarnFormScreen(
             if (amountText != (initial.amount.toString().takeIf { it != "0" } ?: "")) changedFields.add("amountText")
             if (added != (initial.added ?: "")) changedFields.add("added")
             if (notes != (initial.notes ?: "")) changedFields.add("notes")
-            println("images: ${images.toMap().keys}!= ${initialImages.keys}")
             if (images.toMap().keys != initialImages.keys) changedFields.add("images")
             changedFields
         }
@@ -182,7 +180,7 @@ fun YarnFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
-            print("[INFO] YarnFormScreen has changes: ${changes.joinToString(", ")}")
+            println("[INFO] YarnFormScreen has changes: ${changes.joinToString(", ")}")
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {
