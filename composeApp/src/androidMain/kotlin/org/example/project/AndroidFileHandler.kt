@@ -110,12 +110,12 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     private fun addFolderToZip(folder: File, zos: ZipOutputStream) {
-        println("zip: add folder $folder")
+        println("[DEBUG] zip: add folder $folder")
         folder.listFiles()?.forEach { file ->
             if (file.isDirectory) {
                 addFolderToZip(file, zos)
             } else {
-                println("zip: add file $file")
+                println("[DEBUG] zip: add file $file")
                 FileInputStream(file).use { fis ->
                     val entry = ZipEntry(filesDir.toURI().relativize(file.toURI()).path)
                     zos.putNextEntry(entry)

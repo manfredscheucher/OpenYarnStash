@@ -17,7 +17,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
@@ -84,12 +86,17 @@ fun YarnFormScreen(
     var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
     var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
 
+    var showUnsavedDialog by remember { mutableStateOf(false) }
+    var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
+    val scope = rememberCoroutineScope()
 
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
             val newId = nextTempId++
             images[newId] = bytes
-            println("Image added with id: $newId")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
+            }
         }
     }
 
@@ -97,12 +104,11 @@ fun YarnFormScreen(
         result?.let {
             val newId = nextTempId++
             images[newId] = it
-            println("Image added with id: $newId")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
+            }
         }
     }
-
-    var showUnsavedDialog by remember { mutableStateOf(false) }
-    var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
 
     val currentYarnState by remember(amountText, weightPerSkeinText, meteragePerSkeinText, totalUsedAmount) {
         derivedStateOf {
@@ -185,7 +191,9 @@ fun YarnFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
-            println("[INFO] YarnFormScreen has changes: ${changes.joinToString(", ")}")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "YarnFormScreen has changes: ${changes.joinToString(", ")}")
+            }
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {
@@ -317,7 +325,9 @@ fun YarnFormScreen(
                                 IconButton(
                                     onClick = {
                                         images.remove(id)
-                                        println("Image removed with id: $id")
+                                        scope.launch {
+                                            Logger.log(LogLevel.DEBUG, "Image removed with id: $id")
+                                        }
                                     },
                                     modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                                 ) {

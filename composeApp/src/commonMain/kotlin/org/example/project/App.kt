@@ -264,8 +264,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             val existingImageIds = existingYarn.imageIds
                                             val newImagesToUpload = newImages.filter { it.key !in existingYarn.imageIds }
                                             val idsToDelete = existingImageIds.filter { it !in newImages.keys }
-                                            println("Upload images: $newImagesToUpload")
-                                            println("Removing old images with ids: $idsToDelete")
+                                            Logger.log(LogLevel.DEBUG, "Upload images: $newImagesToUpload")
+                                            Logger.log(LogLevel.DEBUG, "Removing old images with ids: $idsToDelete")
 
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->
@@ -417,8 +417,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                             val existingImageIds = existingProject.imageIds
                                             val newImagesToUpload = newImages.filter { it.key !in existingImageIds }
                                             val idsToDelete = existingImageIds.filter { it !in newImages.keys }
-                                            println("Upload images: $newImagesToUpload")
-                                            println("Removing old images with ids: $idsToDelete")
+                                            Logger.log(LogLevel.DEBUG, "Upload images: $newImagesToUpload")
+                                            Logger.log(LogLevel.DEBUG, "Removing old images with ids: $idsToDelete")
 
                                             withContext(Dispatchers.Default) {
                                                 idsToDelete.forEach { imageId ->

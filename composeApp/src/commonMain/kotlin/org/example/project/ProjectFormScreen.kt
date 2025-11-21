@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -84,11 +85,15 @@ fun ProjectFormScreen(
     var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
 
 
+    val scope = rememberCoroutineScope()
+
     val imagePicker = rememberImagePickerLauncher { newImageBytes ->
         newImageBytes.forEach { bytes ->
             val newId = nextTempId++
             images[newId] = bytes
-            println("Image added with id: $newId")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
+            }
         }
     }
 
@@ -96,11 +101,11 @@ fun ProjectFormScreen(
         result?.let {
             val newId = nextTempId++
             images[newId] = it
-            println("Image added with id: $newId")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
+            }
         }
     }
-
-    val scope = rememberCoroutineScope()
     val pdfExporter = remember { getProjectPdfExporter() }
     val pdfSaver = rememberPdfSaver()
 
@@ -207,7 +212,9 @@ fun ProjectFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
-            println("INFO: ProjectFormScreen has changes: ${changes.joinToString(", ")}")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "ProjectFormScreen has changes: ${changes.joinToString(", ")}")
+            }
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {
@@ -343,7 +350,9 @@ fun ProjectFormScreen(
                             IconButton(
                                 onClick = {
                                     images.remove(id)
-                                    println("Image removed with id: $id")
+                                    scope.launch {
+                                        Logger.log(LogLevel.DEBUG, "Image removed with id: $id")
+                                    }
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
                             ) {

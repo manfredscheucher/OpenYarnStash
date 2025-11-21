@@ -37,7 +37,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -114,6 +116,8 @@ fun PatternFormScreen(
         onSave(pattern, pdf)
     }
 
+    val scope = rememberCoroutineScope()
+
     val saveAndBackAction = {
         saveAction()
         onBack()
@@ -121,7 +125,9 @@ fun PatternFormScreen(
 
     val confirmDiscardChanges = { onConfirm: () -> Unit ->
         if (hasChanges) {
-            println("INFO: PatternFormScreen has changes: ${changes.joinToString(", ")}")
+            scope.launch {
+                Logger.log(LogLevel.DEBUG, "PatternFormScreen has changes: ${changes.joinToString(", ")}")
+            }
             showUnsavedDialog = true
             onConfirmUnsaved = onConfirm
         } else {
