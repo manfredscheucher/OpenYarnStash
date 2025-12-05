@@ -3,6 +3,8 @@ package org.example.project
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.awt.FileDialog
 import java.awt.Frame
 import java.io.ByteArrayOutputStream
@@ -22,26 +24,28 @@ actual class ImagePickerLauncher(
         fileDialog.isVisible = true
         val files = fileDialog.files
         if (files != null && files.isNotEmpty()) {
-            val imageBytes = files.mapNotNull { file ->
-                val image = ImageIO.read(file)
-                if (image != null) {
-                    val baos = ByteArrayOutputStream()
-                    val formatName = file.extension.lowercase().let {
-                        if (it == "jpeg") "jpg" else it
-                    }
-                    
-                    if (formatName == "jpg" || formatName == "png") {
-                        ImageIO.write(image, formatName, baos)
-                        resizeImage(baos.toByteArray(), 400, 400)
+            GlobalScope.launch {
+                val imageBytes = files.mapNotNull { file ->
+                    val image = ImageIO.read(file)
+                    if (image != null) {
+                        val baos = ByteArrayOutputStream()
+                        val formatName = file.extension.lowercase().let {
+                            if (it == "jpeg") "jpg" else it
+                        }
+                        
+                        if (formatName == "jpg" || formatName == "png") {
+                            ImageIO.write(image, formatName, baos)
+                            resizeImage(baos.toByteArray(), 400, 400)
+                        } else {
+                            // Unsupported format, do not process
+                            null
+                        }
                     } else {
-                        // Unsupported format, do not process
                         null
                     }
-                } else {
-                    null
                 }
+                onImagesSelected(imageBytes)
             }
-            onImagesSelected(imageBytes)
         }
     }
 }

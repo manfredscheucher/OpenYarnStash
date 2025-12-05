@@ -1,85 +1,107 @@
 package org.example.project
 
-import org.w3c.files.File
-import org.w3c.files.FileReader
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.browser.localStorage
+import org.w3c.dom.get
+import org.w3c.dom.set
+
+@JsModule("js-base64")
+@JsNonModule
+external object Base64 {
+    fun encode(data: String): String
+    fun decode(data: String): String
+}
 
 class JsFileHandler : FileHandler {
+
     override suspend fun readText(path: String): String {
-        // Not implemented for JS
-        return ""
+        return localStorage[path] ?: ""
     }
 
     override suspend fun writeText(path: String, content: String) {
-        // Not implemented for JS
+        localStorage[path] = content
     }
 
     override suspend fun appendText(path: String, content: String) {
-        // Not implemented for JS
+        val existingContent = localStorage[path] ?: ""
+        localStorage[path] = existingContent + content
     }
 
     override suspend fun backupFile(path: String): String? {
-        // Not implemented for JS
+        val content = localStorage[path]
+        if (content != null) {
+            val backupKey = createTimestampedFileName(path.substringBeforeLast('.'), path.substringAfterLast('.'))
+            localStorage[backupKey] = content
+            return backupKey
+        }
         return null
-    }
-
-    override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        // Not implemented for JS
-    }
-
-    override suspend fun readBytes(path: String): ByteArray? {
-        // Not implemented for JS
-        return null
-    }
-
-    override fun openInputStream(path: String): FileInputSource? {
-        // Not implemented for JS
-        return null
-    }
-
-    override suspend fun deleteFile(path: String) {
-        // Not implemented for JS
-    }
-
-    override suspend fun zipFiles(): ByteArray {
-        throw UnsupportedOperationException("zipFiles is not supported on JS")
-    }
-
-    override suspend fun renameFilesDirectory(newName: String) {
-        // Not implemented for JS
-    }
-
-    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
-        // Not implemented for JS
     }
 
     override fun createTimestampedFileName(baseName: String, extension: String): String {
-        // Not implemented for JS
-        return ""
+        return "$baseName-${getCurrentTimestamp()}.$extension"
     }
 
-    override fun openFileExternally(path: String) {
-        // Not implemented for JS
+    override suspend fun writeBytes(path: String, bytes: ByteArray) {
+        val base64 = Base64.encode(bytes.decodeToString())
+        localStorage[path] = "data:image/jpeg;base64,$base64"
+    }
+
+    override suspend fun readBytes(path: String): ByteArray? {
+        val dataUrl = localStorage[path] ?: return null
+        val base64 = dataUrl.substringAfter("base64,")
+        return Base64.decode(base64).encodeToByteArray()
+    }
+
+    override suspend fun deleteFile(path: String) {
+        localStorage.removeItem(path)
+    }
+
+    override suspend fun zipFiles(): ByteArray {
+        throw NotImplementedError("ZIP export is not supported for JS target.")
+    }
+
+    override suspend fun deleteFilesDirectory() {
+        val keysToRemove = mutableListOf<String>()
+        for (i in 0 until localStorage.length) {
+            localStorage.key(i)?.let { key ->
+                if (key.startsWith("files/") || key.startsWith("images/") || key.startsWith("pdf/")) {
+                    keysToRemove.add(key)
+                }
+            }
+        }
+        keysToRemove.forEach { key ->
+            localStorage.removeItem(key)
+        }
+    }
+
+    override suspend fun renameFilesDirectory(newName: String) {
+        throw UnsupportedOperationException("renameFilesDirectory is not supported on JS")
+    }
+
+    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
+        throw UnsupportedOperationException("unzipAndReplaceFiles is not supported on JS")
+    }
+
+    override fun openInputStream(path: String): FileInputSource? {
+        throw UnsupportedOperationException("openInputStream is not supported on JS")
     }
 
     override suspend fun listFilesRecursively(path: String): List<String> {
-        // This functionality is not available in the browser environment.
-        return emptyList()
+        return emptyList() // Not really supported in browser
     }
 
     override suspend fun getFileHash(path: String): String? {
-        // This functionality is not available in the browser environment.
         return null
     }
 
     override suspend fun getDirectorySize(path: String): Long {
-        // Not implemented for JS
         return 0L
     }
 
     override suspend fun getFileSize(path: String): Long {
-        // Not implemented for JS
-        return 0L
+        return (localStorage[path]?.length ?: 0).toLong()
+    }
+
+    override fun openFileExternally(path: String) {
+        // Not applicable in browser
     }
 }

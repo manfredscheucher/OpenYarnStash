@@ -39,7 +39,7 @@ sealed class Screen {
 }
 
 @Composable
-fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager: PdfManager, settingsManager: JsonSettingsManager, fileDownloader: FileDownloader, fileHandler: FileHandler) {
+fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownloader: FileDownloader, fileHandler: FileHandler, settingsManager: JsonSettingsManager) {
     var navStack by remember { mutableStateOf(listOf<Screen>(Screen.Home)) }
     val screen = navStack.last()
     var settings by remember { mutableStateOf(Settings()) }
@@ -52,6 +52,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val pdfManager = createPdfManager(fileHandler)
 
     fun navigateTo(newScreen: Screen) {
         navStack = navStack + newScreen
@@ -615,7 +616,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, pdfManager
                                 onExportZip = {
                                     scope.launch {
                                         val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
-                                        fileDownloader.download(exportFileName, fileHandler.zipFiles())
+                                        fileDownloader.download(exportFileName, fileHandler.zipFiles(), getContext())
                                     }
                                 },
                                 onImport = { fileContent ->

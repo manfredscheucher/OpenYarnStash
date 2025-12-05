@@ -16,10 +16,10 @@ actual fun initializeLogger(fileHandler: FileHandler, settings: Settings) {
 }
 
 fun main() = application {
-    val fileHandler = JvmFileHandler()
+    val platform = getPlatform()
+    val fileHandler = platform.fileHandler
     val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
     val imageManager = ImageManager(fileHandler)
-    val pdfManager = PdfManager(fileHandler)
     val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     val fileDownloader = FileDownloader()
     val backDispatcher = remember { DesktopBackDispatcher() }
@@ -40,12 +40,11 @@ fun main() = application {
     ) {
         CompositionLocalProvider(LocalDesktopBackDispatcher provides backDispatcher) {
             App(
-                jsonDataManager,
-                imageManager,
-                pdfManager,
-                settingsManager,
-                fileDownloader,
-                fileHandler
+                jsonDataManager = jsonDataManager,
+                imageManager = imageManager,
+                fileDownloader = fileDownloader,
+                fileHandler = fileHandler,
+                settingsManager = settingsManager
             )
         }
     }

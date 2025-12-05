@@ -4,7 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.example.project.pdf.PdfThumbnailGeneratorFactory
 
-class PdfManager(private val fileHandler: FileHandler) {
+open class PdfManager(private val fileHandler: FileHandler) {
 
     private val pdfsDir = "pdf/pattern"
     private val pdfThumbnailsDir = "pdf/pattern/thumbnails"
@@ -26,7 +26,7 @@ class PdfManager(private val fileHandler: FileHandler) {
         return "$pdfThumbnailsDir/${patternId}_${width}x${height}.png"
     }
 
-    suspend fun savePatternPdf(patternId: Int, pdfBytes: ByteArray): Int {
+    open suspend fun savePatternPdf(patternId: Int, pdfBytes: ByteArray): Int {
         val pdfId = 1 // Since we only have one pdf per pattern, the id is always 1
         withContext(Dispatchers.Default) {
             fileHandler.writeBytes(getPatternPdfPath(patternId), pdfBytes)
@@ -37,18 +37,18 @@ class PdfManager(private val fileHandler: FileHandler) {
         return pdfId
     }
 
-    suspend fun getPatternPdf(patternId: Int): ByteArray? {
+    open suspend fun getPatternPdf(patternId: Int): ByteArray? {
         return withContext(Dispatchers.Default) {
             fileHandler.readBytes(getPatternPdfPath(patternId))
         }
     }
 
-    fun openPatternPdfExternally(patternId: Int) {
+    open fun openPatternPdfExternally(patternId: Int) {
         val path = getPatternPdfPath(patternId)
         fileHandler.openFileExternally(path)
     }
 
-    suspend fun getPatternPdfThumbnail(patternId: Int, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
+    open suspend fun getPatternPdfThumbnail(patternId: Int, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
         val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
         var thumbnailBytes = withContext(Dispatchers.Default) {
             fileHandler.readBytes(thumbnailPath)
@@ -78,7 +78,7 @@ class PdfManager(private val fileHandler: FileHandler) {
         }
     }
 
-    suspend fun deletePatternPdf(patternId: Int) {
+    open suspend fun deletePatternPdf(patternId: Int) {
         withContext(Dispatchers.Default) {
             fileHandler.deleteFile(getPatternPdfPath(patternId))
             // Also delete the thumbnails

@@ -14,17 +14,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val fileHandler = AndroidFileHandler(this)
+        val platform = getPlatform(this)
+        val fileHandler = platform.fileHandler
         val jsonDataManager = JsonDataManager(fileHandler, "stash.json")
         val imageManager = ImageManager(fileHandler)
-        val pdfManager = PdfManager(fileHandler)
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
-        val fileDownloader = FileDownloader(this)
+        val fileDownloader = FileDownloader()
 
         initializeLogger(fileHandler, settingsManager.settings)
 
         setContent {
-            App(jsonDataManager, imageManager, pdfManager, settingsManager, fileDownloader, fileHandler)
+            App(jsonDataManager, imageManager, fileDownloader, fileHandler, settingsManager)
         }
     }
 }

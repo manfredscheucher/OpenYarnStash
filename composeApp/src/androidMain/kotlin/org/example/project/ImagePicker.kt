@@ -6,6 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 actual class ImagePickerLauncher(
     private val launcher: androidx.activity.result.ActivityResultLauncher<String>
@@ -21,12 +23,14 @@ actual fun rememberImagePickerLauncher(onImagesSelected: (List<ByteArray>) -> Un
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
     ) { uris ->
-        val imageBytes = uris.mapNotNull { uri ->
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                resizeImage(inputStream.readBytes(), 400, 400)
+        GlobalScope.launch {
+            val imageBytes = uris.mapNotNull { uri ->
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    resizeImage(inputStream.readBytes(), 400, 400)
+                }
             }
+            onImagesSelected(imageBytes)
         }
-        onImagesSelected(imageBytes)
     }
     return remember { ImagePickerLauncher(launcher) }
 }

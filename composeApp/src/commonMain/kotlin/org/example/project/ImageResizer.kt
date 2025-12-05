@@ -1,3 +1,3 @@
 package org.example.project
 
-expect fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArray
+expect suspend fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArray

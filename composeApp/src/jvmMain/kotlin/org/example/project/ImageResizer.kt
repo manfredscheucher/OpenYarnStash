@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 import javax.imageio.stream.MemoryCacheImageInputStream
 
-actual fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArray {
+actual suspend fun resizeImage(bytes: ByteArray, maxWidth: Int, maxHeight: Int): ByteArray {
     val bais = ByteArrayInputStream(bytes)
     val originalImage = ImageIO.read(bais)
     val width = originalImage.width

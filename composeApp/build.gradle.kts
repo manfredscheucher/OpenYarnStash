@@ -51,12 +51,6 @@ kotlin {
 
     jvm()
 
-    js {
-        outputModuleName = "OpenYarnStash"
-        browser()
-        binaries.executable()
-    }
-
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         outputModuleName = "OpenYarnStash"

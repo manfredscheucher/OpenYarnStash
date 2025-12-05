@@ -238,7 +238,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
                 Text(
-                    text = "Log file size: ${formatSize(logFileSize)}",
+                    text = "Log file size: ${commonFormatSize(logFileSize)}",
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
@@ -249,7 +249,7 @@ fun SettingsScreen(
                     Text(stringResource(Res.string.export_zip))
                 }
                 Text(
-                    text = "Total files size: ${formatSize(filesDirSize)}",
+                    text = "Total files size: ${commonFormatSize(filesDirSize)}",
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 4.dp).fillMaxWidth()
@@ -336,13 +336,5 @@ fun SettingsScreen(
                 }
             }
         }
-    }
-}
-
-private fun formatSize(size: Long): String {
-    return when {
-        size < 1024 -> "$size B"
-        size < 1024 * 1024 -> "%.2f KB".format(size / 1024.0)
-        else -> "%.2f MB".format(size / (1024.0 * 1024.0))
     }
 }
