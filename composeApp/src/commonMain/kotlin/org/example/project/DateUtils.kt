@@ -28,6 +28,9 @@ fun getCompactTimestamp(): String {
 
 @OptIn(ExperimentalTime::class)
 fun formatTimestamp(timestamp: String): String {
+    if (timestamp.isBlank()) {
+        return "Never"
+    }
     val instant = Instant.parse(timestamp)
     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
     val date = localDateTime.date
