@@ -15,6 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        setContext(applicationContext)
         val platform = getPlatform(this)
         val fileHandler = platform.fileHandler
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")

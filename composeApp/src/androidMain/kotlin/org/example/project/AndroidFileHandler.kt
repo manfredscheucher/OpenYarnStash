@@ -19,6 +19,20 @@ class AndroidFileHandler(private val context: Context) : BaseJvmAndroidFileHandl
         }
     }
 
+    override suspend fun zipFiles(): ByteArray {
+        val tempFile = File.createTempFile("export", ".zip", context.cacheDir)
+        try {
+            FileOutputStream(tempFile).use { fos ->
+                ZipOutputStream(fos).use { zos ->
+                    addFolderToZip(filesDir, filesDir, zos)
+                }
+            }
+            return tempFile.readBytes()
+        } finally {
+            tempFile.delete()
+        }
+    }
+
     override fun openFileExternally(path: String) {
         val file = getFile(path)
         if (file.exists()) {

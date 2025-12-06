@@ -8,28 +8,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 actual class FileDownloader {
-    actual fun download(fileName: String, data: String, context: Any?) {
-        val androidContext = context as? Context
-        if (androidContext == null) {
-            GlobalScope.launch { Logger.log(LogLevel.ERROR, "FileDownloader: Context is not an Android Context") }
-            return
-        }
-
-        try {
-            val file = File(androidContext.filesDir, fileName)
-            file.writeText(data)
-            val uri = FileProvider.getUriForFile(androidContext, "${androidContext.packageName}.provider", file)
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "application/json"
-                putExtra(Intent.EXTRA_STREAM, uri)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            androidContext.startActivity(Intent.createChooser(intent, "Export JSON"))
-            GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Successfully created intent for JSON file.") }
-        } catch (e: Exception) {
-            GlobalScope.launch { Logger.log(LogLevel.ERROR, "FileDownloader: Error while downloading JSON file: ${e.message}", e) }
-        }
-    }
 
     actual fun download(fileName: String, data: ByteArray, context: Any?) {
         val androidContext = context as? Context
@@ -47,7 +25,9 @@ actual class FileDownloader {
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            androidContext.startActivity(Intent.createChooser(intent, "Export ZIP"))
+            val chooser = Intent.createChooser(intent, "Export ZIP")
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            androidContext.startActivity(chooser)
             GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Successfully created intent for ZIP file.") }
         } catch (e: Exception) {
             GlobalScope.launch { Logger.log(LogLevel.ERROR, "FileDownloader: Error while downloading ZIP file: ${e.message}", e) }

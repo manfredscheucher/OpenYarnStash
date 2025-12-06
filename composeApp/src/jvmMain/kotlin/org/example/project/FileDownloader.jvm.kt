@@ -5,17 +5,6 @@ import javax.swing.JFileChooser
 import javax.swing.SwingUtilities
 
 actual class FileDownloader {
-    actual fun download(fileName: String, data: String, context: Any?) {
-        SwingUtilities.invokeLater {
-            val chooser = JFileChooser()
-            chooser.dialogTitle = "Save JSON File"
-            chooser.selectedFile = File(fileName)
-            if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                chooser.selectedFile.writeText(data)
-            }
-        }
-    }
-
     actual fun download(fileName: String, data: ByteArray, context: Any?) {
         SwingUtilities.invokeLater {
             val chooser = JFileChooser()
