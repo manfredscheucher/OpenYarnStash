@@ -134,7 +134,6 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun readText(path: String): String {
-        Logger.log(LogLevel.INFO, "readText")
         val file = getFile(path)
         return if (file.exists()) {
             file.readText()
@@ -144,14 +143,12 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun writeText(path: String, content: String) {
-        Logger.log(LogLevel.INFO, "writeText")
         val file = getFile(path)
         file.parentFile?.mkdirs()
         file.writeText(content)
     }
 
     override suspend fun appendText(path: String, content: String) {
-        Logger.log(LogLevel.INFO, "appendText")
         val file = getFile(path)
         file.parentFile?.mkdirs()
         file.appendText(content)
@@ -233,7 +230,6 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun getFileHash(path: String): String? {
-        Logger.log(LogLevel.INFO, "getFileHash")
         val file = getFile(path)
         return getFileHash(file)
     }
