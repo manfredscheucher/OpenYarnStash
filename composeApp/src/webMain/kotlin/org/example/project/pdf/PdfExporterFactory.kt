@@ -1,8 +1,6 @@
 package org.example.project.pdf
 
 import org.example.project.ImageManager
-import org.example.project.Project
-import org.example.project.YarnUsage
 
 actual fun getProjectPdfExporter(): ProjectPdfExporter {
     return object : ProjectPdfExporter {

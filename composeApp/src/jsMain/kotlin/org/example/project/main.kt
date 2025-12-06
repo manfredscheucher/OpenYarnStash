@@ -1,8 +1,10 @@
 package org.example.project
 
-import androidx.compose.ui.window.CanvasBasedWindow
-import org.jetbrains.skiko.wasm.onWasmReady
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
+import kotlinx.browser.document
 
+@OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     val platform = getPlatform()
     val fileHandler = platform.fileHandler
@@ -11,15 +13,13 @@ fun main() {
     val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
     val fileDownloader = FileDownloader()
 
-    onWasmReady {
-        CanvasBasedWindow("OpenYarnStash") {
-            App(
-                jsonDataManager = jsonDataManager,
-                imageManager = imageManager,
-                fileDownloader = fileDownloader,
-                fileHandler = fileHandler,
-                settingsManager = settingsManager
-            )
-        }
+    ComposeViewport(document.body!!) {
+        App(
+            jsonDataManager = jsonDataManager,
+            imageManager = imageManager,
+            fileDownloader = fileDownloader,
+            fileHandler = fileHandler,
+            settingsManager = settingsManager
+        )
     }
 }

@@ -51,10 +51,23 @@ kotlin {
 
     jvm()
 
+    js(IR) {
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         outputModuleName = "OpenYarnStash"
-        browser()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
         binaries.executable()
     }
 
@@ -89,8 +102,12 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.pdfbox)
         }
+        jsMain.dependencies {
+            implementation(npm("js-base64", "3.7.5"))
+        }
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)
+            implementation(npm("js-base64", "3.7.5"))
         }
 
         named("commonMain") {
