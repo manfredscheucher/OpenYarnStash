@@ -615,7 +615,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 onBack = { navigateBack() },
                                 onExportZip = {
                                     scope.launch {
-                                        val exportFileName = fileHandler.createTimestampedFileName("files", "zip")
+                                        val exportFileName = createTimestampedFileName("files", "zip")
                                         fileDownloader.download(exportFileName, fileHandler.zipFiles(), getContext())
                                     }
                                 },

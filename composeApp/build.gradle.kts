@@ -72,6 +72,32 @@ kotlin {
     }
 
     sourceSets {
+        // Intermediate source set for JVM + Android shared code
+        val jvmAndroidMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        // Intermediate source set for web targets (js + wasmJs)
+        val webMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        androidMain {
+            dependsOn(jvmAndroidMain)
+        }
+
+        jvmMain {
+            dependsOn(jvmAndroidMain)
+        }
+
+        jsMain {
+            dependsOn(webMain)
+        }
+
+        wasmJsMain {
+            dependsOn(webMain)
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.kotlinx.coroutines.android)

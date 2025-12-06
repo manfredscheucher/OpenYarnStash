@@ -22,7 +22,6 @@ interface FileHandler {
     suspend fun renameFilesDirectory(newName: String)
     suspend fun deleteFilesDirectory()
     suspend fun unzipAndReplaceFiles(zipInputStream: Any)
-    fun createTimestampedFileName(baseName: String, extension: String): String
     suspend fun listFilesRecursively(path: String): List<String>
     suspend fun getFileHash(path: String): String?
 
