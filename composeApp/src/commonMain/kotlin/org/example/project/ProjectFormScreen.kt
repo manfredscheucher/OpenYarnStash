@@ -69,7 +69,7 @@ fun ProjectFormScreen(
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
     var rowCounters by remember { mutableStateOf(initial.rowCounters) }
     var patternId by remember { mutableStateOf(initial.patternId) }
-    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
+    val modifiedState by remember { mutableStateOf(initial.modified ?: "") }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
     var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }

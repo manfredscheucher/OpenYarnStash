@@ -69,7 +69,7 @@ fun PatternFormScreen(
     var creator by remember { mutableStateOf(initial.creator ?: "") }
     var category by remember { mutableStateOf(initial.category ?: "") }
     var gauge by remember { mutableStateOf(initial.gauge ?: "") }
-    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
+    val modifiedState by remember { mutableStateOf(initial.modified ?: "") }
     var pdf by remember { mutableStateOf<ByteArray?>(null) }
     var pdfThumbnail by remember { mutableStateOf<ImageBitmap?>(null) }
 

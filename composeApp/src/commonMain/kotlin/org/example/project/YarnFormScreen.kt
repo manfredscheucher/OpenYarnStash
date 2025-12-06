@@ -74,7 +74,7 @@ fun YarnFormScreen(
     var amountText by remember(initial) { mutableStateOf(initial.amount.toString().takeIf { it != "0" } ?: "") }
     var numberOfBallsText by remember { mutableStateOf("1") }
 
-    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
+    val modifiedState by remember { mutableStateOf(initial.modified ?: "") }
     var added by remember { mutableStateOf(initial.added ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
 

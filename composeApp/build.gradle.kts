@@ -130,10 +130,12 @@ kotlin {
         }
         jsMain.dependencies {
             implementation(npm("js-base64", "3.7.5"))
+            implementation(npm("jszip", "3.10.1"))
         }
         wasmJsMain.dependencies {
             implementation(libs.kotlin.browser)
             implementation(npm("js-base64", "3.7.5"))
+            implementation(npm("jszip", "3.10.1"))
         }
 
         named("commonMain") {

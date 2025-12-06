@@ -47,9 +47,7 @@ abstract class BaseWebFileHandler : FileHandler {
         localStorage.removeItem(path)
     }
 
-    override suspend fun zipFiles(): ByteArray {
-        throw NotImplementedError("ZIP export is not supported for JS target.")
-    }
+    abstract override suspend fun zipFiles(): ByteArray
 
     override suspend fun deleteFilesDirectory() {
         val keysToRemove = mutableListOf<String>()
@@ -69,16 +67,26 @@ abstract class BaseWebFileHandler : FileHandler {
         throw UnsupportedOperationException("renameFilesDirectory is not supported on JS")
     }
 
-    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
-        throw UnsupportedOperationException("unzipAndReplaceFiles is not supported on JS")
-    }
+    abstract override suspend fun unzipAndReplaceFiles(zipInputStream: Any)
 
     override fun openInputStream(path: String): FileInputSource? {
         throw UnsupportedOperationException("openInputStream is not supported on JS")
     }
 
     override suspend fun listFilesRecursively(path: String): List<String> {
-        return emptyList()
+        Logger.log(LogLevel.INFO, "listFilesRecursively: $path")
+        val files = mutableListOf<String>()
+
+        for (i in 0 until localStorage.length) {
+            val key = localStorage.key(i) ?: continue
+            // Filter by path prefix
+            if (key.startsWith(path)) {
+                files.add(key)
+            }
+        }
+
+        Logger.log(LogLevel.INFO, "listFilesRecursively found ${files.size} files")
+        return files
     }
 
     override suspend fun getFileHash(path: String): String? {
@@ -86,11 +94,26 @@ abstract class BaseWebFileHandler : FileHandler {
     }
 
     override suspend fun getDirectorySize(path: String): Long {
-        return 0L
+        Logger.log(LogLevel.INFO, "getDirectorySize: $path")
+        var totalSize = 0L
+
+        for (i in 0 until localStorage.length) {
+            val key = localStorage.key(i) ?: continue
+            if (key.startsWith(path)) {
+                val value = localStorage[key] ?: ""
+                // Approximate size (UTF-16 encoding in JS, so 2 bytes per char)
+                totalSize += (key.length + value.length) * 2
+            }
+        }
+
+        Logger.log(LogLevel.INFO, "getDirectorySize: $totalSize bytes")
+        return totalSize
     }
 
     override suspend fun getFileSize(path: String): Long {
-        return (localStorage[path]?.length ?: 0).toLong()
+        val content = localStorage[path] ?: return 0L
+        // Approximate size (UTF-16 encoding in JS, so 2 bytes per char)
+        return (content.length * 2).toLong()
     }
 
     override fun openFileExternally(path: String) {
