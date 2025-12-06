@@ -20,14 +20,6 @@ class JvmFileHandler : BaseJvmAndroidFileHandler() {
         }
     }
 
-    override suspend fun zipFiles(): ByteArray {
-        val baos = ByteArrayOutputStream()
-        ZipOutputStream(baos).use { zos ->
-            addFolderToZip(filesDir, filesDir, zos)
-        }
-        return baos.toByteArray()
-    }
-
     override fun openFileExternally(path: String) {
         val file = getFile(path)
         if (file.exists() && Desktop.isDesktopSupported()) {

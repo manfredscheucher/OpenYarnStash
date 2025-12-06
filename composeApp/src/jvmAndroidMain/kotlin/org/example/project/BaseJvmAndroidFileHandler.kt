@@ -1,5 +1,6 @@
 package org.example.project
 
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -20,6 +21,17 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
 
     protected fun getFile(path: String) = File(filesDir, path)
 
+
+    override suspend fun zipFiles(): ByteArray {
+        Logger.log(LogLevel.INFO, "zipFiles started")
+        val baos = ByteArrayOutputStream()
+        ZipOutputStream(baos).use { zos ->
+            addFolderToZip(filesDir, filesDir, zos)
+        }
+        Logger.log(LogLevel.INFO,"zipFiles complete")
+        return baos.toByteArray()
+    }
+
     protected fun openFileInputStream(path: String): FileInputStream? {
         val file = getFile(path)
         return if (file.exists()) {
@@ -29,7 +41,9 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
         }
     }
 
-    override fun openInputStream(path: String): FileInputSource? = openFileInputStream(path) as FileInputSource?
+    override fun openInputStream(path: String): FileInputSource? {
+        return openFileInputStream(path) as FileInputSource?
+    }
 
     /**
      * Calculate SHA-256 hash of a file
@@ -120,6 +134,7 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun readText(path: String): String {
+        Logger.log(LogLevel.INFO, "readText")
         val file = getFile(path)
         return if (file.exists()) {
             file.readText()
@@ -129,18 +144,21 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun writeText(path: String, content: String) {
+        Logger.log(LogLevel.INFO, "writeText")
         val file = getFile(path)
         file.parentFile?.mkdirs()
         file.writeText(content)
     }
 
     override suspend fun appendText(path: String, content: String) {
+        Logger.log(LogLevel.INFO, "appendText")
         val file = getFile(path)
         file.parentFile?.mkdirs()
         file.appendText(content)
     }
 
     override suspend fun backupFile(path: String): String? {
+        Logger.log(LogLevel.INFO, "backupFile")
         val file = getFile(path)
         if (file.exists()) {
             val backupFileName = createTimestampedFileName(file.nameWithoutExtension, file.extension)
@@ -152,12 +170,14 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
+        Logger.log(LogLevel.INFO, "writeBytes")
         val imageFile = getFile(path)
         imageFile.parentFile?.mkdirs()
         imageFile.writeBytes(bytes)
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
+        Logger.log(LogLevel.INFO, "readBytes")
         val imageFile = getFile(path)
         return if (imageFile.exists()) {
             imageFile.readBytes()
@@ -167,6 +187,7 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun deleteFile(path: String) {
+        Logger.log(LogLevel.INFO, "deleteFile")
         val fileToDelete = getFile(path)
         if (fileToDelete.exists()) {
             fileToDelete.delete()
@@ -174,10 +195,12 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun deleteFilesDirectory() {
+        Logger.log(LogLevel.INFO, "deleteFilesDirectory")
         deleteDirectoryRecursively(filesDir)
     }
 
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
+        Logger.log(LogLevel.INFO, "unzipAndReplaceFiles")
         val inputStream = zipInputStream as? InputStream ?: return
 
         filesDir.mkdirs()
@@ -201,6 +224,7 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun listFilesRecursively(path: String): List<String> {
+        Logger.log(LogLevel.INFO, "listFilesRecursively")
         val rootDir = getFile(path)
         return listFilesRecursively(rootDir)
             .map { File(it).toURI().path.let { fullPath ->
@@ -209,21 +233,25 @@ abstract class BaseJvmAndroidFileHandler : FileHandler {
     }
 
     override suspend fun getFileHash(path: String): String? {
+        Logger.log(LogLevel.INFO, "getFileHash")
         val file = getFile(path)
         return getFileHash(file)
     }
 
     override suspend fun getDirectorySize(path: String): Long {
+        Logger.log(LogLevel.INFO, "getDirectorySize")
         val directory = getFile(path)
         return getDirectorySize(directory)
     }
 
     override suspend fun getFileSize(path: String): Long {
+        Logger.log(LogLevel.INFO, "getFileSize")
         val file = getFile(path)
         return getFileSize(file)
     }
 
     override suspend fun renameFilesDirectory(newName: String) {
+        Logger.log(LogLevel.INFO, "renameFilesDirectory")
         val newDir = File(filesDir.parentFile, newName)
         filesDir.renameTo(newDir)
     }
