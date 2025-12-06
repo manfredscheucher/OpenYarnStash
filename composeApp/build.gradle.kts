@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
@@ -60,24 +59,13 @@ kotlin {
         binaries.executable()
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        outputModuleName = "OpenYarnStash"
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-            }
-        }
-        binaries.executable()
-    }
-
     sourceSets {
         // Intermediate source set for JVM + Android shared code
         val jvmAndroidMain by creating {
             dependsOn(commonMain.get())
         }
 
-        // Intermediate source set for web targets (js + wasmJs)
+        // Web target source set (currently only JS, but kept for future web targets)
         val webMain by creating {
             dependsOn(commonMain.get())
         }
@@ -91,10 +79,6 @@ kotlin {
         }
 
         jsMain {
-            dependsOn(webMain)
-        }
-
-        wasmJsMain {
             dependsOn(webMain)
         }
 
@@ -129,11 +113,6 @@ kotlin {
             implementation(libs.pdfbox)
         }
         jsMain.dependencies {
-            implementation(npm("js-base64", "3.7.5"))
-            implementation(npm("jszip", "3.10.1"))
-        }
-        wasmJsMain.dependencies {
-            implementation(libs.kotlin.browser)
             implementation(npm("js-base64", "3.7.5"))
             implementation(npm("jszip", "3.10.1"))
         }
