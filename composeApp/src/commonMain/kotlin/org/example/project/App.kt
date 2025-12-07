@@ -42,7 +42,7 @@ sealed class Screen {
 fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownloader: FileDownloader, fileHandler: FileHandler, settingsManager: JsonSettingsManager) {
     var navStack by remember { mutableStateOf(listOf<Screen>(Screen.Home)) }
     val screen = navStack.last()
-    var settings by remember { mutableStateOf(Settings()) }
+    var settings by remember { mutableStateOf<Settings?>(null) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
     var usages by remember { mutableStateOf(emptyList<Usage>()) }
@@ -81,15 +81,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
     }
 
     LaunchedEffect(Unit) {
-        settings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
+        val loadedSettings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
+        setAppLanguage(loadedSettings.language)
+        settings = loadedSettings
+        reloadAllData()
     }
 
     LaunchedEffect(settings) {
-        Logger.log(LogLevel.INFO,"Settings reloaded" )
-        Logger.logImportantFiles(LogLevel.DEBUG)
-        setAppLanguage(settings.language)
-        reloadAllData()
+        settings?.let {
+            Logger.log(LogLevel.INFO,"Settings reloaded" )
+            Logger.logImportantFiles(LogLevel.DEBUG)
+        }
     }
+
+    // Don't render UI until settings are loaded
+    val currentSettings = settings ?: return
 
     LaunchedEffect(screen) {
         val screenName = when (val s = screen) {
@@ -136,14 +142,14 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
         )
     }
 
-    MaterialTheme(
-        colorScheme = LightColorScheme
-    ) {
-        Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        ) { innerPadding ->
-            key(settings.language, settings.lengthUnit, settings.logLevel, settings.backupOldFolderOnImport) {
+    key(currentSettings.language, currentSettings.lengthUnit, currentSettings.logLevel, currentSettings.backupOldFolderOnImport) {
+        MaterialTheme(
+            colorScheme = LightColorScheme
+        ) {
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+            ) { innerPadding ->
                 Box(
                     modifier = Modifier
                         .padding(innerPadding)
@@ -166,7 +172,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 yarns = yarns.sortedByDescending { it.modified },
                                 imageManager = imageManager,
                                 usages = usages,
-                                settings = settings,
+                                settings = currentSettings,
                                 onAddClick = {
                                     scope.launch {
                                         val newYarn = jsonDataManager.createNewYarn(defaultYarnName)
@@ -240,7 +246,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                         }
                                     },
                                     imageManager = imageManager,
-                                    settings = settings,
+                                    settings = currentSettings,
                                     onBack = { navigateBack() },
                                     onDelete = { yarnIdToDelete ->
                                         scope.launch {
@@ -311,7 +317,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             ProjectListScreen(
                                 projects = projects.sortedByDescending { it.modified },
                                 imageManager = imageManager,
-                                settings = settings,
+                                settings = currentSettings,
                                 onAddClick = {
                                     scope.launch {
                                         val newProject =
@@ -601,16 +607,16 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 projects = projects,
                                 usages = usages,
                                 onBack = { navigateBack() },
-                                settings = settings
+                                settings = currentSettings
                             )
                         }
 
                         Screen.Settings -> {
                             SettingsScreen(
-                                currentLocale = settings.language,
-                                currentLengthUnit = settings.lengthUnit,
-                                currentLogLevel = settings.logLevel,
-                                backupOldFolderOnImport = settings.backupOldFolderOnImport,
+                                currentLocale = currentSettings.language,
+                                currentLengthUnit = currentSettings.lengthUnit,
+                                currentLogLevel = currentSettings.logLevel,
+                                backupOldFolderOnImport = currentSettings.backupOldFolderOnImport,
                                 fileHandler = fileHandler,
                                 onBack = { navigateBack() },
                                 onExportZip = {
@@ -639,7 +645,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 onImportZip = { zipInputStream ->
                                     scope.launch {
                                         try {
-                                            if (settings.backupOldFolderOnImport) {
+                                            if (currentSettings.backupOldFolderOnImport) {
                                                 val timestamp = getCurrentTimestamp()
                                                 fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
                                             } else {
@@ -661,7 +667,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onLocaleChange = { newLocale ->
                                     scope.launch {
-                                        val newSettings = settings.copy(language = newLocale)
+                                        val newSettings = currentSettings.copy(language = newLocale)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
@@ -671,7 +677,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onLengthUnitChange = { newLengthUnit ->
                                     scope.launch {
-                                        val newSettings = settings.copy(lengthUnit = newLengthUnit)
+                                        val newSettings = currentSettings.copy(lengthUnit = newLengthUnit)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
@@ -680,7 +686,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onLogLevelChange = { newLogLevel ->
                                     scope.launch {
-                                        val newSettings = settings.copy(logLevel = newLogLevel)
+                                        val newSettings = currentSettings.copy(logLevel = newLogLevel)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
@@ -689,7 +695,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onBackupOldFolderOnImportChange = { newBackupOldFolderOnImport ->
                                     scope.launch {
-                                        val newSettings = settings.copy(backupOldFolderOnImport = newBackupOldFolderOnImport)
+                                        val newSettings = currentSettings.copy(backupOldFolderOnImport = newBackupOldFolderOnImport)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }
