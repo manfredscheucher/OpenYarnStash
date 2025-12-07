@@ -4,12 +4,12 @@ import kotlinx.browser.localStorage
 import org.w3c.dom.get
 import org.w3c.dom.set
 
-@JsModule("js-base64")
-@JsNonModule
-external object Base64 {
-    fun encode(data: String): String
-    fun decode(data: String): String
-}
+// Native browser Base64 functions
+@JsName("btoa")
+private external fun btoa(data: String): String
+
+@JsName("atob")
+private external fun atob(data: String): String
 
 class JsFileHandler : FileHandler {
 
@@ -41,14 +41,18 @@ class JsFileHandler : FileHandler {
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        val base64 = Base64.encode(bytes.decodeToString())
+        // Convert ByteArray to base64 using native btoa
+        val binaryString = bytes.joinToString("") { (it.toInt() and 0xFF).toChar().toString() }
+        val base64 = btoa(binaryString)
         localStorage[path] = "data:image/jpeg;base64,$base64"
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
         val dataUrl = localStorage[path] ?: return null
         val base64 = dataUrl.substringAfter("base64,")
-        return Base64.decode(base64).encodeToByteArray()
+        // Convert base64 to ByteArray using native atob
+        val binaryString = atob(base64)
+        return ByteArray(binaryString.length) { binaryString[it].code.toByte() }
     }
 
     override suspend fun deleteFile(path: String) {
