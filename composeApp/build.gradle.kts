@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
@@ -51,20 +50,27 @@ kotlin {
 
     jvm()
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        outputModuleName = "OpenYarnStash"
+    js {
         browser()
         binaries.executable()
     }
 
     sourceSets {
+        val commonMain = getByName("commonMain")
+        val jvmAndroidMain by creating {
+            dependsOn(commonMain)
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.exifinterface)
         }
+        androidMain {
+            dependsOn(jvmAndroidMain)
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -89,7 +95,11 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.pdfbox)
         }
-        wasmJsMain.dependencies {
+        jvmMain {
+            dependsOn(jvmAndroidMain)
+        }
+
+        jsMain.dependencies {
             implementation(libs.kotlin.browser)
         }
 

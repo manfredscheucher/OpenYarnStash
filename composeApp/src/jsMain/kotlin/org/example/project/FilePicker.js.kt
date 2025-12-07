@@ -20,11 +20,34 @@ actual fun FilePicker(show: Boolean, onFileSelected: (String?) -> Unit) {
                     val reader = FileReader()
                     reader.onload = {
                         onFileSelected(reader.result as? String)
+                        null
                     }
                     reader.readAsText(file)
                 } else {
                     onFileSelected(null)
                 }
+                null
+            }
+            input.click()
+        }
+    }
+}
+
+@Composable
+actual fun FilePickerForZip(show: Boolean, onFileSelected: (Any?) -> Unit) {
+    if (show) {
+        LaunchedEffect(Unit) {
+            val input = document.createElement("input") as HTMLInputElement
+            input.type = "file"
+            input.accept = ".zip"
+            input.onchange = {
+                val file = input.files?.item(0)
+                if (file != null) {
+                    onFileSelected(file)
+                } else {
+                    onFileSelected(null)
+                }
+                null
             }
             input.click()
         }
