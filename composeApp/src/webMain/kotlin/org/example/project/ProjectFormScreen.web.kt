@@ -2,17 +2,13 @@ package org.example.project
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.skia.Image
+import org.khronos.webgl.Uint8Array
+import org.w3c.dom.Image as DomImage
 
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
-    try {
-        val skiaImage = Image.makeFromEncoded(this)
-        if (skiaImage == null) {
-            throw IllegalArgumentException("Failed to decode image")
-        }
-        return skiaImage.toComposeImageBitmap()
-    } catch (e: Exception) {
-        console.error("Failed to decode image: ${e.message}")
-        throw e
-    }
+    return Image.makeFromEncoded(this).toComposeImageBitmap()
 }
