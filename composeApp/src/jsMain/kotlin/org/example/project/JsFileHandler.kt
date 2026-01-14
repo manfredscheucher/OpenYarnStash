@@ -4,12 +4,41 @@ import kotlinx.browser.localStorage
 import org.w3c.dom.get
 import org.w3c.dom.set
 
-// Native browser Base64 functions
+// Use browser's native btoa/atob for base64 encoding
 @JsName("btoa")
 private external fun btoa(data: String): String
 
 @JsName("atob")
 private external fun atob(data: String): String
+
+// Helper to convert between ByteArray and base64 without string corruption
+private fun byteArrayToBase64(bytes: ByteArray): String {
+    // Use Uint8Array to avoid signed/unsigned issues
+    val uint8Array = js("new Uint8Array(bytes.length)").unsafeCast<org.khronos.webgl.Uint8Array>()
+    for (i in bytes.indices) {
+        uint8Array.asDynamic()[i] = bytes[i].toInt() and 0xFF
+    }
+
+    // Convert Uint8Array to binary string for btoa
+    val binaryString = js("String.fromCharCode.apply(null, uint8Array)") as String
+    return btoa(binaryString)
+}
+
+private fun base64ToByteArray(base64: String): ByteArray {
+    // Decode base64 to binary string
+    val binaryString = atob(base64)
+
+    // Convert binary string to Uint8Array first to avoid UTF-8 issues
+    val uint8Array = js("new Uint8Array(binaryString.length)").unsafeCast<org.khronos.webgl.Uint8Array>()
+    for (i in 0 until binaryString.length) {
+        uint8Array.asDynamic()[i] = binaryString.asDynamic().charCodeAt(i)
+    }
+
+    // Convert Uint8Array to ByteArray
+    return ByteArray(uint8Array.length) { i ->
+        (uint8Array.asDynamic()[i] as Int).toByte()
+    }
+}
 
 class JsFileHandler : FileHandler {
 
@@ -41,18 +70,29 @@ class JsFileHandler : FileHandler {
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        // Convert ByteArray to base64 using native btoa
-        val binaryString = bytes.joinToString("") { (it.toInt() and 0xFF).toChar().toString() }
-        val base64 = btoa(binaryString)
+        // Convert ByteArray to base64 without string corruption
+        val base64 = byteArrayToBase64(bytes)
         localStorage[path] = "data:image/jpeg;base64,$base64"
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
         val dataUrl = localStorage[path] ?: return null
+
+        // Check if it's a valid data URL
+        if (!dataUrl.contains("base64,")) {
+            console.log("Invalid data URL for path $path: missing base64 marker")
+            return null
+        }
+
         val base64 = dataUrl.substringAfter("base64,")
-        // Convert base64 to ByteArray using native atob
-        val binaryString = atob(base64)
-        return ByteArray(binaryString.length) { binaryString[it].code.toByte() }
+
+        try {
+            // Convert base64 to ByteArray without string corruption
+            return base64ToByteArray(base64)
+        } catch (e: Exception) {
+            console.log("Failed to decode base64 for path $path", e)
+            return null
+        }
     }
 
     override suspend fun deleteFile(path: String) {
