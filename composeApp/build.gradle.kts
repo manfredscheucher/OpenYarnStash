@@ -12,8 +12,10 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
-import kotlin.system.exitProcess
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -29,24 +31,6 @@ val generateVersionInfo = tasks.register("generateVersionInfo", GenerateVersionI
 
 kotlin {
     androidTarget()
-    /*
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-    
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "OpenYarnStash"
-            isStatic = true
-        }
-    }
-    */
-    
 
     jvm()
 
@@ -55,52 +39,64 @@ kotlin {
         binaries.executable()
     }
 
+    // iOS Targets
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
     sourceSets {
-        val commonMain = getByName("commonMain")
-        val jvmAndroidMain by creating {
+        val commonMain by getting {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(compose.materialIconsExtended)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.koalaplot.core)
+                implementation(libs.kotlinx.io.core)
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.androidx.exifinterface)
+            }
+        }
+
+        val iosMain by creating {
             dependsOn(commonMain)
         }
+        val iosArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
 
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.exifinterface)
-        }
-        androidMain {
-            dependsOn(jvmAndroidMain)
-        }
-
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(compose.materialIconsExtended)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.koalaplot.core)
-            implementation(libs.kotlinx.io.core)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.pdfbox)
-        }
-        jvmMain {
-            dependsOn(jvmAndroidMain)
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(libs.pdfbox)
+            }
         }
 
-        jsMain.dependencies {
-            implementation(libs.kotlin.browser)
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.kotlin.browser)
+            }
         }
 
         named("commonMain") {
@@ -156,81 +152,44 @@ compose.desktop {
 abstract class GenerateVersionInfo @Inject constructor(
     private val execOps: ExecOperations
 ) : DefaultTask() {
-
-    @get:InputDirectory
-    @get:Optional
-    @get:PathSensitive(PathSensitivity.NONE)
+    @get:InputDirectory @get:Optional @get:PathSensitive(PathSensitivity.NONE)
     abstract val gitDir: DirectoryProperty
-
-    @get:Input
-    abstract val versionName: Property<String>
-
-    @get:Input
-    abstract val packageName: Property<String>
-
-    @get:OutputDirectory
-    abstract val outputDir: DirectoryProperty
+    @get:Input abstract val versionName: Property<String>
+    @get:Input abstract val packageName: Property<String>
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
 
     @TaskAction
     fun run() {
         val version = versionName.get()
         val out = ByteArrayOutputStream()
-        val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
-        require(gitDir.asFile.orNull?.exists() == true) { "No .git directory" }
         var sha = "unknown"
-        try {
-            execOps.exec {
-                workingDir = wd
-                commandLine("cat",".git/refs/heads/main")
-                standardOutput = out
-                isIgnoreExitValue = true
-            }
-            sha = out.toString().trim()
+        val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
+        if (gitDir.asFile.orNull?.exists() == true) {
+            try {
+                execOps.exec {
+                    workingDir = wd
+                    commandLine("git", "rev-parse", "--short", "HEAD")
+                    standardOutput = out
+                    isIgnoreExitValue = true
+                }
+                sha = out.toString().trim()
+            } catch (e: Exception) { }
         }
-        catch (e: TaskExecutionException)
-        {
-            println("error running git: ${e.toString()}")
-        }
-        println("git commit: $sha")
 
-        var isDirty = runCatching {
-            val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
-            val result = execOps.exec {
-                workingDir = wd
-                commandLine("git", "diff-index", "--quiet", "HEAD")
-            }
-            if (result.exitValue != 0) "dirty" else "clean"
-        }.getOrDefault("unknown")
-        isDirty = "unknown" // TODO: does not work yet
-        println("isDirty $isDirty")
-
-        val outDate = ByteArrayOutputStream()
-        var date = "unknown"
-        try {
-            execOps.exec {
-                workingDir = wd
-                commandLine("date", "+%Y-%m-%dT%H:%M:%S")
-                standardOutput = outDate
-                isIgnoreExitValue = true
-            }
-            date = outDate.toString().trim()
-        } catch (e: TaskExecutionException) {
-            println("error running date: ${e.toString()}")
-        }
-        println("date: $date")
-
+        // Zeitstempel ISO 8601 UTC
+        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        df.timeZone = TimeZone.getTimeZone("UTC")
+        val timestamp = df.format(Date())
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
             """
-            // Generated – do not edit.
             package ${packageName.get()}
-
             object GeneratedVersionInfo {
                 const val VERSION: String = "$version"
                 const val GIT_SHA: String = "$sha"
-                const val IS_DIRTY: String = "$isDirty"
-                const val BUILD_DATE: String = "$date"
+                const val IS_DIRTY: String = "unknown"
+                const val BUILD_DATE: String = "$timestamp"
             }
             """.trimIndent()
         )

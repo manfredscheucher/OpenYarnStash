@@ -84,11 +84,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
         val loadedSettings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
         setAppLanguage(loadedSettings.language)
         settings = loadedSettings
+        Logger.updateSettings(loadedSettings)
         reloadAllData()
     }
 
     LaunchedEffect(settings) {
         settings?.let {
+            Logger.updateSettings(it)
             Logger.log(LogLevel.INFO,"Settings reloaded" )
             Logger.logImportantFiles(LogLevel.DEBUG)
         }

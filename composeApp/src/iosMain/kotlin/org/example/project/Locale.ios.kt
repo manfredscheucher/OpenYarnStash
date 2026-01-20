@@ -1,12 +1,7 @@
 package org.example.project
 
-import platform.Foundation.NSBundle
 import platform.Foundation.NSLocale
 import platform.Foundation.NSUserDefaults
-import platform.Foundation.NSUserDefaultsDidChangeNotification
-import platform.Foundation.NSObject
-import platform.Foundation.NSNotificationCenter
-import platform.Foundation.NSNotification
 import platform.Foundation.preferredLanguages
 import kotlin.text.substringBefore
 

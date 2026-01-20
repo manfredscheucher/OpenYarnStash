@@ -5,7 +5,9 @@ import org.example.project.ImageManager
 import platform.CoreGraphics.*
 import platform.Foundation.*
 import platform.UIKit.*
+import platform.posix.memcpy
 
+@OptIn(ExperimentalForeignApi::class)
 class ProjectPdfExporterIos : ProjectPdfExporter {
     override suspend fun exportToPdf(project: Project, params: Params, yarns: List<YarnUsage>, imageManager: ImageManager): ByteArray = memScoped {
         val data = NSMutableData()
@@ -21,13 +23,17 @@ class ProjectPdfExporterIos : ProjectPdfExporter {
             return y + font.lineHeight
         }
         fun drawWrapped(text: String, x: Double, yStart: Double, maxWidth: Double, font: UIFont): Double {
-            val attrs = mapOf<Any?, Any?>(NSFontAttributeName to font, NSForegroundColorAttributeName to UIColor.blackColor)
             val paragraph = NSMutableParagraphStyle().apply { setLineBreakMode(NSLineBreakByWordWrapping); setAlignment(NSTextAlignmentLeft) }
-            val att = NSMutableDictionary.dictionaryWithDictionary(attrs).apply { setObject(paragraph, forKey = NSParagraphStyleAttributeName) }
+            val attrs = mutableMapOf<Any?, Any?>(
+                NSFontAttributeName to font,
+                NSForegroundColorAttributeName to UIColor.blackColor,
+                NSParagraphStyleAttributeName to paragraph
+            )
             val ns = text as NSString
-            val bounding = ns.boundingRectWithSize(CGSizeMake(maxWidth, Double.greatestFiniteMagnitude), options = NSStringDrawingUsesLineFragmentOrigin, attributes = att as Map<Any?, *>?, context = null)
-            ns.drawWithRect(CGRectMake(x, yStart, maxWidth, bounding.size.height), options = NSStringDrawingUsesLineFragmentOrigin, attributes = att as Map<Any?, *>?, context = null)
-            return yStart + bounding.size.height + 4.0
+            val bounding = ns.boundingRectWithSize(CGSizeMake(maxWidth, Double.MAX_VALUE), options = NSStringDrawingUsesLineFragmentOrigin, attributes = attrs, context = null)
+            val height = bounding.useContents { size.height }
+            ns.drawWithRect(CGRectMake(x, yStart, maxWidth, height), options = NSStringDrawingUsesLineFragmentOrigin, attributes = attrs, context = null)
+            return yStart + height + 4.0
         }
         fun drawImage(bytes: ByteArray, rect: CValue<CGRect>) { UIImage(data = bytes.toNSData())?.drawInRect(rect) }
         fun drawDivider(y: Double) { CGContextSetStrokeColorWithColor(ctx, UIColor.lightGrayColor.CGColor); CGContextSetLineWidth(ctx, 1.0); CGContextMoveToPoint(ctx, 36.0, y); CGContextAddLineToPoint(ctx, 559.0, y); CGContextStrokePath(ctx) }
@@ -39,11 +45,13 @@ class ProjectPdfExporterIos : ProjectPdfExporter {
             imageManager.getProjectImage(project.id, imageId)?.let { bytes ->
                 val img = UIImage(data = bytes.toNSData())
                 img?.let { im ->
-                    val ratio = kotlin.math.min(240.0 / im.size.width, 180.0 / im.size.height)
-                    val w = im.size.width * ratio
-                    val h = im.size.height * ratio
-                    im.drawInRect(CGRectMake(36.0, y, w, h))
-                    y += h + 12.0
+                    im.size.useContents {
+                        val ratio = kotlin.math.min(240.0 / width, 180.0 / height)
+                        val w = width * ratio
+                        val h = height * ratio
+                        im.drawInRect(CGRectMake(36.0, y, w, h))
+                        y += h + 12.0
+                    }
                 }
             }
         }
@@ -80,5 +88,12 @@ class ProjectPdfExporterIos : ProjectPdfExporter {
     }
 }
 
-private fun ByteArray.toNSData(): NSData = NSData.create(bytes = this.refTo(0), length = size.toULong())
-private fun NSMutableData.toByteArray(): ByteArray = ByteArray(length.toInt()).also { dest -> memScoped { memcpy(dest.refTo(0), bytes, length) } }
+@OptIn(ExperimentalForeignApi::class)
+private fun ByteArray.toNSData(): NSData = usePinned { NSData.create(bytes = it.addressOf(0), length = size.toULong()) }
+
+@OptIn(ExperimentalForeignApi::class)
+private fun NSMutableData.toByteArray(): ByteArray = ByteArray(length.toInt()).also { dest ->
+    dest.usePinned { pinned ->
+        memcpy(pinned.addressOf(0), bytes, length)
+    }
+}

@@ -15,6 +15,10 @@ object Logger {
         this.settings = settings
     }
 
+    fun updateSettings(settings: Settings) {
+        this.settings = settings
+    }
+
     private val logFilePath = "log.txt"
     private val stashFilePath = "stash.json"
     private val settingsFilePath = "settings.json"
