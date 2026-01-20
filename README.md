@@ -6,7 +6,7 @@ As an [open-source software](https://en.wikipedia.org/wiki/Open-source_software)
 
 Built with [Kotlin Multiplatform](https://en.wikipedia.org/wiki/Kotlin_(programming_language)#Multiplatform) and [Compose Multiplatform](https://www.jetbrains.com/compose-multiplatform/), OpenYarnStash targets Android, iOS, Web, and desktop (Windows/macOS/Linux) from a single codebase.
 
-For a general-purpose inventory management system (not yarn-specific), check out our sister project [OpenFridge](https://github.com/manfredscheucher/OpenFridge).
+For a general-purpose inventory management system (not yarn-specific), check out our sister project [MisterManager](https://github.com/manfredscheucher/MisterManager).
 
 <img src="misc/start_android.png" alt="start screen android" width="37%"/><img src="misc/start_ios.png" alt="start screen ios" width="24%"/><img src="misc/start_jvm.png" alt="start screen jvm" width="37%"/>
 
