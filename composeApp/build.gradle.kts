@@ -107,7 +107,7 @@ kotlin {
 }
 
 android {
-    namespace = "org.example.project"
+    namespace = "org.example.OpenYarnStash"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
