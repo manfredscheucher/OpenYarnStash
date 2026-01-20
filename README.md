@@ -6,9 +6,8 @@ As an [open-source software](https://en.wikipedia.org/wiki/Open-source_software)
 
 For a general-purpose inventory management system (not yarn-specific), check out our sister project [OpenFridge](https://github.com/manfredscheucher/OpenFridge).
 
-![Android](misc/start_android.png)
-![iOS](misc/start_ios.png)
-![JVM](misc/start_jvm.png)
+<img src="misc/start_android.png" alt="start screen android" width="33%"/><img src="misc/start_ios.png" alt="start screen ios" width="33%"/><img src="misc/start_jvm.png" alt="start screen jvm" width="33%"/>
+
 
 ## Features
 
