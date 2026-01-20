@@ -6,6 +6,10 @@ As an [open-source software](https://en.wikipedia.org/wiki/Open-source_software)
 
 For a general-purpose inventory management system (not yarn-specific), check out our sister project [OpenFridge](https://github.com/manfredscheucher/OpenFridge).
 
+![Android](start_android.png)
+![iOS](start_ios.png)
+![JVM](start_jvm.png)
+
 ## Features
 
 - **Yarn Management**: Track yarn with details like brand, color, dye lot, weight, and meterage
