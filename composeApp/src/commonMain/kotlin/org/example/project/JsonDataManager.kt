@@ -1,11 +1,13 @@
 package org.example.project
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 /**
- * Repository for managing yarns, projects, and their usages from a JSON file.
+ * Repository for managing yarns, projects, and their assignments from a JSON file.
  */
 class JsonDataManager(private val fileHandler: FileHandler, private val filePath: String = "stash.json") {
 
@@ -21,6 +23,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             try {
                 val appData = Json.decodeFromString<AppData>(content)
                 validateData(appData)
+                Logger.log(LogLevel.INFO, "Loaded data: ${appData.yarns.size} yarns, ${appData.projects.size} projects, ${appData.assignments.size} assignments, ${appData.patterns.size} patterns")
                 appData
             } catch (e: SerializationException) {
                 Logger.log(LogLevel.ERROR, "Failed to decode JSON data in fun load: ${e.message}", e)
@@ -32,6 +35,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
                 throw e
             }
         } else {
+            Logger.log(LogLevel.INFO, "No existing data file found, initialized empty AppData")
             AppData()
         }
         return data
@@ -57,7 +61,13 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
      * @return The name of the backup file, or null if backup failed.
      */
     suspend fun backup(): String? {
-        return fileHandler.backupFile(filePath)
+        return fileHandler.backupFile(filePath).also { backupName ->
+            if (backupName != null) {
+                Logger.log(LogLevel.INFO, "Created backup: $backupName")
+            } else {
+                Logger.log(LogLevel.WARN, "Backup failed")
+            }
+        }
     }
 
 
@@ -69,15 +79,18 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         // First, validate the new content. This will throw if content is corrupt.
         val newData = Json.decodeFromString<AppData>(content)
         validateData(newData)
+        Logger.log(LogLevel.INFO, "Import validation successful: ${newData.yarns.size} yarns, ${newData.projects.size} projects, ${newData.assignments.size} assignments, ${newData.patterns.size} patterns")
 
         // If validation is successful, then backup the existing file.
-        fileHandler.backupFile(filePath)
+        val backupName = fileHandler.backupFile(filePath)
+        Logger.log(LogLevel.INFO, "Created backup before import: $backupName")
 
         // Then, write the new content to the main file.
         fileHandler.writeText(filePath, content)
 
         // Finally, update the in-memory data.
         data = newData
+        Logger.log(LogLevel.INFO, "Import completed successfully")
     }
 
     private fun validateData(appData: AppData) {
@@ -106,12 +119,12 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             }
         }
 
-        for (usage in appData.usages) {
-            if (!yarnIds.contains(usage.yarnId)) {
-                throw SerializationException("Usage refers to a non-existent yarn with id ${usage.yarnId}.")
+        for (assignment in appData.assignments) {
+            if (!yarnIds.contains(assignment.yarnId)) {
+                throw SerializationException("Assignment refers to a non-existent yarn with id ${assignment.yarnId}.")
             }
-            if (!projectIds.contains(usage.projectId)) {
-                throw SerializationException("Usage refers to a non-existent project with id ${usage.projectId}.")
+            if (!projectIds.contains(assignment.projectId)) {
+                throw SerializationException("Assignment refers to a non-existent project with id ${assignment.projectId}.")
             }
         }
     }
@@ -130,22 +143,31 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             id = newId,
             name = yarnName,
             modified = getCurrentTimestamp()
-        )
+        ).also {
+            GlobalScope.launch {
+                Logger.log(LogLevel.INFO, "Created new yarn: id=${it.id}, name=${it.name}")
+            }
+        }
     }
 
     suspend fun addOrUpdateYarn(yarn: Yarn) {
         val index = data.yarns.indexOfFirst { it.id == yarn.id }
         if (index != -1) {
+            Logger.log(LogLevel.INFO, "Updated yarn: id=${yarn.id}, name=${yarn.name}")
             data.yarns[index] = yarn
         } else {
+            Logger.log(LogLevel.INFO, "Added yarn: id=${yarn.id}, name=${yarn.name}")
             data.yarns.add(yarn)
         }
         save()
     }
 
     suspend fun deleteYarn(id: Int) {
+        val yarn = getYarnById(id)
+        val assignmentsCount = data.assignments.count { it.yarnId == id }
         data.yarns.removeAll { it.id == id }
-        data.usages.removeAll { it.yarnId == id }
+        data.assignments.removeAll { it.yarnId == id }
+        Logger.log(LogLevel.INFO, "Deleted yarn: id=$id, name=${yarn?.name}, removed $assignmentsCount assignments")
         save()
     }
 
@@ -162,22 +184,31 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             id = newId,
             name = projectName,
             modified = getCurrentTimestamp()
-        )
+        ).also {
+            GlobalScope.launch {
+                Logger.log(LogLevel.INFO, "Created new project: id=${it.id}, name=${it.name}")
+            }
+        }
     }
 
     suspend fun addOrUpdateProject(project: Project) {
         val index = data.projects.indexOfFirst { it.id == project.id }
         if (index != -1) {
+            Logger.log(LogLevel.INFO, "Updated project: id=${project.id}, name=${project.name}")
             data.projects[index] = project
         } else {
+            Logger.log(LogLevel.INFO, "Added project: id=${project.id}, name=${project.name}")
             data.projects.add(project)
         }
         save()
     }
 
     suspend fun deleteProject(id: Int) {
+        val project = getProjectById(id)
+        val assignmentsCount = data.assignments.count { it.projectId == id }
         data.projects.removeAll { it.id == id }
-        data.usages.removeAll { it.projectId == id }
+        data.assignments.removeAll { it.projectId == id }
+        Logger.log(LogLevel.INFO, "Deleted project: id=$id, name=${project?.name}, removed $assignmentsCount assignments")
         save()
     }
 
@@ -192,26 +223,35 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         return Pattern(
             id = newId,
             name = "Pattern#$newId"
-        )
+        ).also {
+            GlobalScope.launch {
+                Logger.log(LogLevel.INFO, "Created new pattern: id=${it.id}, name=${it.name}")
+            }
+        }
     }
 
     suspend fun addOrUpdatePattern(pattern: Pattern) {
         val index = data.patterns.indexOfFirst { it.id == pattern.id }
         if (index != -1) {
+            Logger.log(LogLevel.INFO, "Updated pattern: id=${pattern.id}, name=${pattern.name}")
             data.patterns[index] = pattern
         } else {
+            Logger.log(LogLevel.INFO, "Added pattern: id=${pattern.id}, name=${pattern.name}")
             data.patterns.add(pattern)
         }
         save()
     }
 
     suspend fun deletePattern(id: Int) {
+        val pattern = getPatternById(id)
+        val affectedProjects = data.projects.count { it.patternId == id }
         data.patterns.removeAll { it.id == id }
         data.projects.forEach { project ->
             if (project.patternId == id) {
                 addOrUpdateProject(project.copy(patternId = null))
             }
         }
+        Logger.log(LogLevel.INFO, "Deleted pattern: id=$id, name=${pattern?.name}, unlinked from $affectedProjects projects")
         save()
     }
 
@@ -219,13 +259,14 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         val index = data.patterns.indexOfFirst { it.id == patternId }
         if (index != -1) {
             data.patterns[index] = data.patterns[index].copy(pdfId = pdfId)
+            Logger.log(LogLevel.INFO, "Updated pattern PDF: patternId=$patternId, pdfId=$pdfId")
         }
         save()
     }
 
     fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
         val yarn = getYarnById(yarnId) ?: return 0
-        val used = data.usages
+        val used = data.assignments
             .filter { it.yarnId == yarnId && it.projectId != forProjectId }
             .sumOf { it.amount }
         return yarn.amount - used
@@ -233,15 +274,33 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
 
     suspend fun setProjectAssignments(projectId: Int, assignments: Map<Int, Int>) {
         // Remove existing assignments for this project
-        data.usages.removeAll { it.projectId == projectId }
+        val removedCount = data.assignments.count { it.projectId == projectId }
+        data.assignments.removeAll { it.projectId == projectId }
+        Logger.log(LogLevel.INFO, "Removed $removedCount existing assignments for projectId=$projectId")
 
-        // Add new assignments
+        // Add new assignments with generated IDs and lastModified timestamp
+        val timestamp = getCurrentTimestamp()
+        val existingIds = data.assignments.map { it.id }.toSet()
+        var addedCount = 0
         for ((yarnId, amount) in assignments) {
             if (amount > 0) {
-                val usage = Usage(yarnId = yarnId, projectId = projectId, amount = amount)
-                data.usages.add(usage)
+                var newId: Int
+                do {
+                    newId = Random.nextInt(1_000_000, 10_000_000)
+                } while (existingIds.contains(newId))
+                val assignment = Assignment(
+                    id = newId,
+                    yarnId = yarnId,
+                    projectId = projectId,
+                    amount = amount,
+                    lastModified = timestamp
+                )
+                data.assignments.add(assignment)
+                Logger.log(LogLevel.INFO, "Updated assignment: id=${assignment.id}, yarnId=$yarnId, projectId=$projectId, amount=$amount")
+                addedCount++
             }
         }
+        Logger.log(LogLevel.INFO, "Added $addedCount assignments for projectId=$projectId")
         save()
     }
 }

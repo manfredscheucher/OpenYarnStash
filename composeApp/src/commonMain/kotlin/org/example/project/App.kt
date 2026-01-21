@@ -45,7 +45,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
     var settings by remember { mutableStateOf<Settings?>(null) }
     var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
     var projects by remember { mutableStateOf(emptyList<Project>()) }
-    var usages by remember { mutableStateOf(emptyList<Usage>()) }
+    var assignments by remember { mutableStateOf(emptyList<Assignment>()) }
     var patterns by remember { mutableStateOf(emptyList<Pattern>()) }
     var showNotImplementedDialog by remember { mutableStateOf(false) }
     var errorDialogMessage by remember { mutableStateOf<String?>(null) }
@@ -69,7 +69,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
             val data = withContext(Dispatchers.Default) { jsonDataManager.load() }
             yarns = data.yarns
             projects = data.projects
-            usages = data.usages
+            assignments = data.assignments
             patterns = data.patterns
         } catch (e: Exception) {
             val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
@@ -173,7 +173,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             YarnListScreen(
                                 yarns = yarns.sortedByDescending { it.modified },
                                 imageManager = imageManager,
-                                usages = usages,
+                                assignments = assignments,
                                 settings = currentSettings,
                                 onAddClick = {
                                     scope.launch {
@@ -233,11 +233,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             if (existingYarn == null) {
                                 LaunchedEffect(s.yarnId) { navigateBack() }
                             } else {
-                                val relatedUsages = usages.filter { it.yarnId == existingYarn.id }
+                                val relatedUsages = assignments.filter { it.yarnId == existingYarn.id }
                                 YarnFormScreen(
                                     initial = existingYarn,
                                     initialImages = yarnImagesMap,
-                                    usagesForYarn = relatedUsages,
+                                    assignmentsForYarn = relatedUsages,
                                     projectById = { pid ->
                                         projects.firstOrNull { it.id == pid }.also {
                                             if (it == null) {
@@ -344,7 +344,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     }
                                 },
                                 yarns = yarns,
-                                usages = usages
+                                assignments = assignments
                             )
                         }
 
@@ -385,12 +385,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             if (existingProject == null) {
                                 LaunchedEffect(s.projectId) { navigateBack() }
                             } else {
-                                val usagesForCurrentProject =
-                                    usages.filter { it.projectId == existingProject.id }
+                                val assignmentsForCurrentProject =
+                                    assignments.filter { it.projectId == existingProject.id }
                                 ProjectFormScreen(
                                     initial = existingProject,
                                     initialImages = projectImagesMap,
-                                    usagesForProject = usagesForCurrentProject,
+                                    assignmentsForProject = assignmentsForCurrentProject,
                                     yarnById = { yarnId ->
                                         yarns.firstOrNull { it.id == yarnId }.also {
                                             if (it == null) {
@@ -463,7 +463,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                         }
 
                         is Screen.ProjectAssignments -> {
-                            val initialAssignmentsForProject = usages
+                            val initialAssignmentsForProject = assignments
                                 .filter { it.projectId == s.projectId }
                                 .associate { it.yarnId to it.amount }
 
@@ -607,7 +607,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             StatisticsScreen(
                                 yarns = yarns,
                                 projects = projects,
-                                usages = usages,
+                                assignments = assignments,
                                 onBack = { navigateBack() },
                                 settings = currentSettings
                             )

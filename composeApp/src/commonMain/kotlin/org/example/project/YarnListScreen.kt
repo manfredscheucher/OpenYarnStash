@@ -31,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 fun YarnListScreen(
     yarns: List<Yarn>,
     imageManager: ImageManager,
-    usages: List<Usage>,
+    assignments: List<Assignment>,
     settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
@@ -45,13 +45,13 @@ fun YarnListScreen(
     var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
     var filter by remember { mutableStateOf("") }
 
-    val usagesByYarnId = remember(usages) {
-        usages.groupBy { it.yarnId }
+    val assignmentsByYarnId = remember(assignments) {
+        assignments.groupBy { it.yarnId }
             .mapValues { entry -> entry.value.sumOf { it.amount } }
     }
 
-    val yarnData = remember(yarns, usagesByYarnId) {
-        yarns.map { it.copy(usedAmount = usagesByYarnId[it.id] ?: 0) }
+    val yarnData = remember(yarns, assignmentsByYarnId) {
+        yarns.map { it.copy(usedAmount = assignmentsByYarnId[it.id] ?: 0) }
     }
 
     Scaffold(

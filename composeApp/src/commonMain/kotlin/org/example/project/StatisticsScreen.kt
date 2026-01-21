@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 fun StatisticsScreen(
     yarns: List<Yarn>,
     projects: List<Project>,
-    usages: List<Usage>,
+    assignments: List<Assignment>,
     settings: Settings,
     onBack: () -> Unit
 ) {
@@ -129,11 +129,11 @@ fun StatisticsScreen(
 
             item {
                 val totalAvailableWeight = yarns.sumOf { yarn ->
-                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
+                    val used = assignments.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                     (yarn.amount - used).coerceAtLeast(0)
                 }
                 val totalAvailableMeterage = yarns.sumOf { yarn ->
-                    val used = usages.filter { it.yarnId == yarn.id }.sumOf { it.amount }
+                    val used = assignments.filter { it.yarnId == yarn.id }.sumOf { it.amount }
                     val available = (yarn.amount - used).coerceAtLeast(0)
                     val meterage = yarn.meteragePerSkein
                     val weight = yarn.weightPerSkein
@@ -199,13 +199,13 @@ fun StatisticsScreen(
                         if (isOverall) {
                             val bought = (yarnsByYear[cat]?.sumOf { it.amount } ?: 0).toFloat()
                             val used = (finishedByYear[cat]?.sumOf { proj ->
-                                usages.filter { it.projectId == proj.id }.sumOf { it.amount }
+                                assignments.filter { it.projectId == proj.id }.sumOf { it.amount }
                             } ?: 0).toFloat()
                             listOf(bought, used)
                         } else {
                             val bought = (yarnsByMonth[cat]?.sumOf { it.amount } ?: 0).toFloat()
                             val used = (finishedByMonth[cat]?.sumOf { proj ->
-                                usages.filter { it.projectId == proj.id }.sumOf { it.amount }
+                                assignments.filter { it.projectId == proj.id }.sumOf { it.amount }
                             } ?: 0).toFloat()
                             listOf(bought, used)
                         }
@@ -261,15 +261,15 @@ fun StatisticsScreen(
 
                 val finishedList = if (isOverall) finishedByYear[cat] else finishedByMonth[cat]
                 val yarnUsedAmount = finishedList?.sumOf { proj ->
-                    usages.filter { it.projectId == proj.id }.sumOf { it.amount }
+                    assignments.filter { it.projectId == proj.id }.sumOf { it.amount }
                 } ?: 0
                 val yarnUsedMeterage = finishedList?.sumOf { proj ->
-                    usages.filter { it.projectId == proj.id }.sumOf { usage ->
-                        val yarn = yarns.find { it.id == usage.yarnId }
+                    assignments.filter { it.projectId == proj.id }.sumOf { assignment ->
+                        val yarn = yarns.find { it.id == assignment.yarnId }
                         if (yarn != null) {
                             val meterage = yarn.meteragePerSkein
                             val weight = yarn.weightPerSkein
-                            if (meterage != null && weight != null && weight > 0) (usage.amount * meterage) / weight else 0
+                            if (meterage != null && weight != null && weight > 0) (assignment.amount * meterage) / weight else 0
                         } else 0
                     }
                 } ?: 0

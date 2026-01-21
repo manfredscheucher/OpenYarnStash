@@ -59,7 +59,7 @@ fun ProjectListScreen(
     projects: List<Project>,
     imageManager: ImageManager,
     yarns: List<Yarn>,
-    usages: List<Usage>,
+    assignments: List<Assignment>,
     settings: Settings,
     onAddClick: () -> Unit,
     onOpen: (Int) -> Unit,
@@ -233,9 +233,9 @@ fun ProjectListScreen(
 
                                         Spacer(Modifier.height(8.dp))
 
-                                        val yarnsForProject = remember(p.id, usages, yarns) {
-                                            usages.filter { it.projectId == p.id }
-                                                .mapNotNull { usage -> yarns.find { it.id == usage.yarnId } }
+                                        val yarnsForProject = remember(p.id, assignments, yarns) {
+                                            assignments.filter { it.projectId == p.id }
+                                                .mapNotNull { assignment -> yarns.find { it.id == assignment.yarnId } }
                                         }
 
                                         if (yarnsForProject.isNotEmpty()) {

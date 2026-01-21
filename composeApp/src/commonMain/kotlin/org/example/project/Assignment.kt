@@ -3,9 +3,10 @@ package org.example.project
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Usage(
-    val projectId: Int,
+data class Assignment(
+    val id: Int,
     val yarnId: Int,
+    val projectId: Int,
     val amount: Int,
-    val modified: String? = null
+    val lastModified: String? = null
 )

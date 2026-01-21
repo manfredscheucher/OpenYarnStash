@@ -49,7 +49,7 @@ fun normalizeIntInput(input: String): String {
 fun YarnFormScreen(
     initial: Yarn,
     initialImages: Map<Int, ByteArray>,
-    usagesForYarn: List<Usage>,
+    assignmentsForYarn: List<Assignment>,
     projectById: (Int) -> Project?,
     imageManager: ImageManager,
     settings: Settings,
@@ -59,7 +59,7 @@ fun YarnFormScreen(
     onAddColor: (Yarn) -> Unit,
     onNavigateToProject: (Int) -> Unit
 ) {
-    val totalUsedAmount = usagesForYarn.sumOf { it.amount }
+    val totalUsedAmount = assignmentsForYarn.sumOf { it.amount }
 
     var name by remember { mutableStateOf(initial.name) }
     var color by remember { mutableStateOf(initial.color ?: "") }
@@ -471,7 +471,7 @@ fun YarnFormScreen(
                                 )
                             )
                         }
-                        if (usagesForYarn.isNotEmpty()) {
+                        if (assignmentsForYarn.isNotEmpty()) {
                             Spacer(Modifier.height(8.dp))
                             Button(onClick = {
                                 amountText = totalUsedAmount.toString()
@@ -503,11 +503,11 @@ fun YarnFormScreen(
                     ) {
                         Text(stringResource(Res.string.usage_projects_title), style = MaterialTheme.typography.bodySmall)
                         Spacer(Modifier.height(8.dp))
-                        if (usagesForYarn.isEmpty()) {
+                        if (assignmentsForYarn.isEmpty()) {
                             Text(stringResource(Res.string.yarn_form_no_projects_assigned), modifier = Modifier.padding(start = 8.dp))
                         } else {
-                            usagesForYarn.forEach { usage ->
-                                val project = projectById(usage.projectId)
+                            assignmentsForYarn.forEach { assignment ->
+                                val project = projectById(assignment.projectId)
                                 if (project != null) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
@@ -540,16 +540,16 @@ fun YarnFormScreen(
 
                                         Spacer(Modifier.width(8.dp))
 
-                                        var usageText = "${project.name}: ${usage.amount} g"
+                                        var assignmentText = "${project.name}: ${assignment.amount} g"
                                         initial.weightPerSkein?.let { weightPerSkein ->
                                             initial.meteragePerSkein?.let { meteragePerSkein ->
                                                 if (weightPerSkein > 0) {
-                                                    val usedMeterage = (usage.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
-                                                    usageText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
+                                                    val usedMeterage = (assignment.amount.toDouble() / weightPerSkein * meteragePerSkein).toInt()
+                                                    assignmentText += " ($usedMeterage ${if (settings.lengthUnit == LengthUnit.METER) "m" else "yd"})"
                                                 }
                                             }
                                         }
-                                        Text(usageText, modifier = Modifier.weight(1f))
+                                        Text(assignmentText, modifier = Modifier.weight(1f))
                                         Button(onClick = { confirmDiscardChanges { onNavigateToProject(project.id) } }) {
                                             Text(stringResource(Res.string.yarn_form_view_project))
                                         }
@@ -570,7 +570,7 @@ fun YarnFormScreen(
                         TextButton(onClick = {
                             confirmDiscardChanges { onAddColor(initial) }
                         }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                        if (usagesForYarn.isEmpty()) {
+                        if (assignmentsForYarn.isEmpty()) {
                             Spacer(Modifier.width(8.dp))
                             TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                         }

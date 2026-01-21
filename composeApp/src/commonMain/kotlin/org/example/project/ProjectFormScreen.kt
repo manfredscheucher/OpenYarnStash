@@ -46,7 +46,7 @@ import org.example.project.pdf.YarnUsage as PdfYarnUsage
 fun ProjectFormScreen(
     initial: Project,
     initialImages: Map<Int, ByteArray>,
-    usagesForProject: List<Usage>,
+    assignmentsForProject: List<Assignment>,
     yarnById: (Int) -> Yarn?,
     patterns: List<Pattern>,
     imageManager: ImageManager,
@@ -156,10 +156,10 @@ fun ProjectFormScreen(
                 yarnWeight = null, // Not available in your model
                 notes = notes.ifBlank { null }
             )
-            val yarnUsagesData = usagesForProject.mapNotNull { usage ->
-                yarnById(usage.yarnId)?.let { yarn ->
+            val yarnUsagesData = assignmentsForProject.mapNotNull { assignment ->
+                yarnById(assignment.yarnId)?.let { yarn ->
                     val metersUsed = if (yarn.weightPerSkein != null && yarn.weightPerSkein > 0 && yarn.meteragePerSkein != null) {
-                        (usage.amount.toDouble() / yarn.weightPerSkein) * yarn.meteragePerSkein
+                        (assignment.amount.toDouble() / yarn.weightPerSkein) * yarn.meteragePerSkein
                     } else {
                         null
                     }
@@ -174,7 +174,7 @@ fun ProjectFormScreen(
                             weightClass = null, // Not available
                             imageIds = yarn.imageIds
                         ),
-                        gramsUsed = usage.amount.toDouble(),
+                        gramsUsed = assignment.amount.toDouble(),
                         metersUsed = metersUsed
                     )
                 }
@@ -527,8 +527,8 @@ fun ProjectFormScreen(
                 Spacer(Modifier.height(16.dp))
                 val yarnHeight = 50
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    val totalHeight = if (usagesForProject.isNotEmpty()) {
-                        (usagesForProject.size * yarnHeight).dp + 75.dp
+                    val totalHeight = if (assignmentsForProject.isNotEmpty()) {
+                        (assignmentsForProject.size * yarnHeight).dp + 75.dp
                     } else {
                         64.dp
                     }
@@ -546,11 +546,11 @@ fun ProjectFormScreen(
                             .fillMaxWidth()
                             .padding(start = 8.dp, top = 16.dp)
                     ) {
-                        if (usagesForProject.isEmpty()) {
+                        if (assignmentsForProject.isEmpty()) {
                             Text(stringResource(Res.string.project_form_no_yarn_assigned))
                         } else {
-                            usagesForProject.forEach { usage ->
-                                val yarn = yarnById(usage.yarnId)
+                            assignmentsForProject.forEach { assignment ->
+                                val yarn = yarnById(assignment.yarnId)
                                 if (yarn != null) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,
@@ -597,7 +597,7 @@ fun ProjectFormScreen(
                                                     append(" ($it)")
                                                 }
                                             })
-                                            Text("${usage.amount} g")
+                                            Text("${assignment.amount} g")
                                         }
                                         Spacer(Modifier.width(8.dp))
 
@@ -606,7 +606,7 @@ fun ProjectFormScreen(
                                         }
                                     }
                                 } else {
-                                    Text("- ERROR: yarnid ${usage.yarnId} does not exist!")
+                                    Text("- ERROR: yarnid ${assignment.yarnId} does not exist!")
                                 }
                             }
                         }
@@ -639,7 +639,7 @@ fun ProjectFormScreen(
                             Spacer(Modifier.width(8.dp))
                         }
                         TextButton(onClick = {
-                            if (usagesForProject.isNotEmpty()) {
+                            if (assignmentsForProject.isNotEmpty()) {
                                 showDeleteRestrictionDialog = true
                             } else {
                                 onDelete(initial.id)
