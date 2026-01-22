@@ -1,3 +1,7 @@
+
+<img src="composeApp/src/commonMain/composeResources/drawable/logo.png" alt="icon" width="50%"/>
+
+
 # OpenYarnStash
 
 **OpenYarnStash** is an open-source app for managing your yarn stash and knitting/crochet projects. It provides a clear overview of your inventory and projects, along with helpful statistics like yarn usage and completed projects over time. All data is stored locally on your device, with manual export/import options.
