@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Garn</string>
+    <string name="home_button_projects">Prosjekter</string>
+    <string name="home_button_patterns">Oppskrifter</string>
+    <string name="home_button_statistics">Statistikk</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Garnlager</string>
+    <string name="yarn_list_empty">Ingen garn ennå. Trykk på + for å legge til nytt.</string>
+    <string name="yarn_list_summary">Nåværende mengde: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Nåværende mengde: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Sist endret: %1$s</string>
+    <string name="yarn_list_hide_used">Brukt garn</string>
+    <string name="yarn_list_filter">Søk</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Prosjekter</string>
+    <string name="project_list_empty">Ingen prosjekter. Trykk på + for å legge til et nytt.</string>
+    <string name="project_list_filter">Søk</string>
+    <string name="item_label_name">Navn: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Oppskrifter</string>
+    <string name="pattern_list_empty">Ingen oppskrifter ennå. Trykk på + for å legge til en ny.</string>
+    <string name="pattern_list_filter">Søk</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Tilbake</string>
+    <string name="common_cancel">Avbryt</string>
+    <string name="common_delete">Slett</string>
+    <string name="common_save">Lagre</string>
+    <string name="common_add">Legg til</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Ja</string>
+    <string name="common_no">Nei</string>
+    <string name="common_stay">Bli værende</string>
+    <string name="common_select_image">Velg bilde</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nytt garn</string>
+    <string name="yarn_form_edit">Rediger garn</string>
+    <string name="yarn_label_name">Navn</string>
+    <string name="yarn_label_color">Farge</string>
+    <string name="yarn_label_color_code">Fargekode</string>
+    <string name="yarn_label_blend">Fiberinnhold</string>
+    <string name="yarn_label_dye_lot">Partinummer</string>
+    <string name="yarn_label_brand">Merke</string>
+    <string name="yarn_label_storage_place">Lagringsplass</string>
+    <string name="yarn_label_amount">Mengde (g)</string>
+    <string name="yarn_label_weight_per_skein">g / nøste</string>
+    <string name="yarn_label_meterage_per_skein">m / nøste</string>
+    <string name="yarn_label_yardage_per_skein">yd / nøste</string>
+    <string name="yarn_label_number_of_skeins">Antall nøster</string>
+    <string name="yarn_label_modified">Endret</string>
+    <string name="date_format_hint_modified">Endret (ÅÅÅÅ, ÅÅÅÅ-MM, ÅÅÅÅ-MM-DD)</string>
+    <string name="yarn_label_added">Lagt til</string>
+    <string name="date_format_hint_added">Lagt til (ÅÅÅÅ, ÅÅÅÅ-MM, ÅÅÅÅ-MM-DD)</string>
+    <string name="yarn_label_notes">Notater</string>
+    <string name="yarn_form_no_projects_assigned">Ikke tildelt noen prosjekter ennå.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Sett resterende garn til 0</string>
+    <string name="yarn_new_default_name">Garn#%1$d</string>
+    <string name="form_unsaved_changes_title">Ulagrede endringer</string>
+    <string name="form_unsaved_changes_message">Vil du lagre endringene?</string>
+    <string name="yarn_form_add_color">Legg til farge</string>
+    <string name="yarn_form_view_project">Se prosjekt</string>
+    <string name="yarn_form_delete_title">Slett garn?</string>
+    <string name="yarn_form_delete_message">Er du sikker på at du vil slette dette garnet? Dette kan ikke angres.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nytt prosjekt</string>
+    <string name="project_form_edit">Rediger prosjekt</string>
+    <string name="project_label_name">Navn</string>
+    <string name="project_label_pattern">Oppskrift</string>
+    <string name="project_label_for">Strikket til</string>
+    <string name="project_label_start_date">Startdato</string>
+    <string name="project_label_end_date">Sluttdato</string>
+    <string name="date_format_hint_project">Dato (ÅÅÅÅ, ÅÅÅÅ-MM, ÅÅÅÅ-MM-DD)</string>
+    <string name="project_label_notes">Notater</string>
+    <string name="project_form_button_assignments">Tildel garn</string>
+    <string name="project_form_button_export_pdf">PDF-eksport</string>
+    <string name="project_form_view_pattern">Se oppskrift</string>
+    <string name="project_form_view_yarn">Se garn</string>
+    <string name="project_form_no_yarn_assigned">Ingen garn tildelt dette prosjektet ennå.</string>
+    <string name="project_form_delete_title">Slett prosjekt?</string>
+    <string name="project_form_delete_message">Er du sikker på at du vil slettet dette prosjektet? Dette kan ikke angres.</string>
+    <string name="delete_project_restricted_title">Sletting ikke mulig</string>
+    <string name="delete_project_restricted_message">Sletting er bare mulig hvis ingen garn er tildelt. Returner tildelt garn til lageret for å fortsette slettingen.</string>
+    <string name="project_status_planning">Planlagt</string>
+    <string name="project_status_in_progress">På pinnene</string>
+    <string name="project_status_finished">Ferdig</string>
+    <string name="project_new_default_name">Prosjekt#%1$d</string>
+    <string name="row_counter_new_default_name">Omgangsteller #%1$d</string>
+    <string name="project_label_needle_size">Pinnestørrelse</string>
+    <string name="project_label_size">Størrelse</string>
+    <string name="project_label_gauge">Strikkefasthet</string>
+    <string name="project_label_row_count">Omgangsteller</string>
+    <string name="project_form_add_counter">Legg til teller</string>
+    <string name="project_form_select_image">Velg bilde</string>
+    <string name="project_form_take_image">Ta bilde</string>
+    <string name="project_form_remove_image">Fjern bilde</string>
+    <string name="project_form_add_counter_dialog_title">Legg til ny teller</string>
+    <string name="project_form_add_counter_dialog_label">Navn på teller</string>
+    <string name="export_as_pdf">Eksporter som PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Ny oppskrift</string>
+    <string name="pattern_form_edit">Rediger oppskrift</string>
+    <string name="pattern_label_name">Navn</string>
+    <string name="pattern_label_creator">Designer</string>
+    <string name="pattern_label_category">Kategori</string>
+    <string name="pattern_label_gauge">Strikkefasthet</string>
+    <string name="pattern_form_select_pdf">Velg PDF</string>
+    <string name="pattern_form_remove_pdf">Fjern PDF</string>
+    <string name="pattern_form_view_pdf">Se PDF</string>
+    <string name="pattern_form_no_projects_assigned">Ikke tildelt noen prosjekter ennå.</string>
+    <string name="pattern_form_assigned_projects">Tildelte prosjekter</string>
+    <string name="pattern_form_view_project">Se prosjekt</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Garntildeling for %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Tildelt garn</string>
+    <string name="usage_amount_label">Mengde (g)</string>
+    <string name="usage_available">Tilgjengelig: %1$d g</string>
+    <string name="usage_available_with_meterage">Tilgjengelig: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Tilgjengelig: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Tilgjengelig: %1$d m</string>
+    <string name="usage_available_yardage">Tilgjengelig: %1$d yd</string>
+    <string name="usage_used">Brukt: %1$d g</string>
+    <string name="usage_used_with_meterage">Brukt: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Brukt: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Prosjekter</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistikk</string>
+    <string name="statistics_option_total">Totalt</string>
+    <string name="statistics_option_year">År</string>
+    <string name="statistics_option_month">Måned</string>
+    <string name="statistics_label_year">År</string>
+    <string name="statistics_label_month">Måned</string>
+    <string name="statistics_total_yarn_available">Totalt garn tilgjengelig: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Totalt garn tilgjengelig: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Garn kjøpt: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Garn kjøpt: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Garn brukt: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Garn brukt: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Prosjekter på pinnene: %1$d</string>
+    <string name="statistics_projects_planned">Planlagte prosjekter: %1$d</string>
+    <string name="statistics_projects_finished_title">Ferdige prosjekter: %1$d</string>
+    <string name="statistics_overall">Totalt</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Garn: Kjøpt vs. brukt (årlig)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Garn: Kjøpt vs. brukt (månedlig)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Ferdige prosjekter (årlig)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Ferdige prosjekter (månedlig)</string>
+    <string name="statistics_series_yarn_bought">Garn kjøpt</string>
+    <string name="statistics_series_yarn_used">Garn brukt</string>
+    <string name="statistics_series_projects_finished">Ferdige prosjekter</string>
+    <string name="statistics_series_projects_in_progress">Prosjekter på pinnene</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">Du kan hjelpe!</string>
+    <string name="info_description">OpenYarnStash er en åpen kildekode-app for å administrere garnlageret og strikkeprosjektene dine. Den gir oversikt, statistikk og fremdriftsindikatorer. Appen er fortsatt under utvikling – tilbakemeldinger mottas med takk!</string>
+    <string name="info_github_button">Besøk GitHub</string>
+    <string name="info_feedback_button">Send tilbakemelding</string>
+    <string name="info_kofi_button">Spander en kaffe</string>
+    <string name="info_copyright_notice">Kildekoden for denne appen er utgitt under MIT-lisensen.
+© 2025 Manfred Scheucher og Helena Bergold
+
+Bruk, endring og videresending er tillatt forutsatt at de originale opphavsretts- og lisensmerknadene forblir intakte.
+Fjerning eller utskifting av den opprinnelige forfatterens navn, feilaktig fremstilling av forfatterskap eller publisering av modifiserte versjoner uten henvisning er ikke tillatt.</string>
+    <string name="you_can_help_button">Du kan hjelpe!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Hvordan du kan hjelpe</string>
+    <string name="ko_fi_button">Spander en kaffe</string>
+    <string name="github_button">Besøk GitHub</string>
+    <string name="github_issues_button">Rapporter en feil</string>
+    <string name="discord_button">Bli med på Discord</string>
+    <string name="email_button">Send en e-post</string>
+    <string name="support_us_on_kofi">Støtt oss på Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Bruk appen og rapporter problemer:</string>
+    <string name="report_bugs_or_translation_mistakes">Rapporter feil eller oversettelsesfeil via GitHub Issues eller e-post.</string>
+    <string name="to_help_us_reproduce_bugs">For å hjelpe oss med å gjenskape feilen, vennligst inkluder:</string>
+    <string name="steps_to_reproduce">• Fremgangsmåte for å gjenskape feilen</string>
+    <string name="screenshots_if_possible">• Skjermbilder (om mulig)</string>
+    <string name="app_version_platform">• App-versjon/plattform (se info-skjerm)</string>
+    <string name="data_export_from_app">• Dataeksport (ZIP) fra appen (Innstillinger → Eksporter data)</string>
+    <string name="privacy_note">Personvernnotat: </string>
+    <string name="only_share_what_you_are_comfortable_with">Del bare det du er komfortabel med. Fjern sensitiv info fra vedlegg/eksportfiler.</string>
+    <string name="suggest_new_features">Foreslå nye funksjoner:</string>
+    <string name="open_a_feature_request_on_github">Opprett et ønske om ny funksjon på GitHub. Beskriv hvorfor denne funksjonen er nyttig, gjerne med et kort eksempel.</string>
+    <string name="join_the_discussion">Bli med i diskusjonen:</string>
+    <string name="participate_in_github_discussions">Del tilbakemeldinger, delta i diskusjoner på Discord og GitHub, og gi oss en stjerne på GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Innstillinger</string>
+    <string name="export_json">Eksporter JSON</string>
+    <string name="export_zip">Eksporter ZIP</string>
+    <string name="import_json">Importer JSON</string>
+    <string name="import_zip">Importer ZIP</string>
+    <string name="import_button_text">Importer</string>
+    <string name="import_dialog_title">Advarsel</string>
+    <string name="import_dialog_message">Den nåværende konfigurasjonen vil bli overskrevet av importen. Er du sikker på at du vil fortsette?</string>
+    <string name="language_label">Språk</string>
+    <string name="length_unit_label">Lengdeenhet</string>
+    <string name="length_unit_meters">Meter</string>
+    <string name="length_unit_yards">Yards</string>
+    <string name="log_level_label">Loggnivå</string>
+    <string name="log_level_description">Loggfilen lagres lokalt på enheten og kan sees via ZIP-eksport.</string>
+    <string name="backup_old_folder_on_import">Sikkerhetskopier gammel mappe ved import</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Ikke implementert</string>
+    <string name="not_implemented_message">Denne funksjonen er ikke implementert ennå.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">År</string>
+    <string name="date_input_month">Måned</string>
+    <string name="date_input_day">Dag</string>
+
+    <!-- Months -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">Mars</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Desember</string>
+</resources>

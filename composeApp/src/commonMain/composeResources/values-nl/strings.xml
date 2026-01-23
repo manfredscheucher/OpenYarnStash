@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Garen</string>
+    <string name="home_button_projects">Projecten</string>
+    <string name="home_button_patterns">Patronen</string>
+    <string name="home_button_statistics">Statistieken</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Garenvoorraad</string>
+    <string name="yarn_list_empty">Nog geen garen. Tik op + om nieuw garen toe te voegen.</string>
+    <string name="yarn_list_summary">Huidige hoeveelheid: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Huidige hoeveelheid: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Laatst gewijzigd: %1$s</string>
+    <string name="yarn_list_hide_used">Gebruikt garen</string>
+    <string name="yarn_list_filter">Zoeken</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projecten</string>
+    <string name="project_list_empty">Geen projecten. Tik op + om een nieuwe toe te voegen.</string>
+    <string name="project_list_filter">Zoeken</string>
+    <string name="item_label_name">Naam: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Patronen</string>
+    <string name="pattern_list_empty">Nog geen patronen. Tik op + om een nieuwe toe te voegen.</string>
+    <string name="pattern_list_filter">Zoeken</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Terug</string>
+    <string name="common_cancel">Annuleren</string>
+    <string name="common_delete">Verwijderen</string>
+    <string name="common_save">Opslaan</string>
+    <string name="common_add">Toevoegen</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Ja</string>
+    <string name="common_no">Nee</string>
+    <string name="common_stay">Blijven</string>
+    <string name="common_select_image">Afbeelding selecteren</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nieuw garen</string>
+    <string name="yarn_form_edit">Garen bewerken</string>
+    <string name="yarn_label_name">Naam</string>
+    <string name="yarn_label_color">Kleur</string>
+    <string name="yarn_label_color_code">Kleurcode</string>
+    <string name="yarn_label_blend">Samenstelling</string>
+    <string name="yarn_label_dye_lot">Verfbad</string>
+    <string name="yarn_label_brand">Merk</string>
+    <string name="yarn_label_storage_place">Opslaglocatie</string>
+    <string name="yarn_label_amount">Hoeveelheid (g)</string>
+    <string name="yarn_label_weight_per_skein">g / bol</string>
+    <string name="yarn_label_meterage_per_skein">m / bol</string>
+    <string name="yarn_label_yardage_per_skein">yd / bol</string>
+    <string name="yarn_label_number_of_skeins">Aantal bollen</string>
+    <string name="yarn_label_modified">Gewijzigd</string>
+    <string name="date_format_hint_modified">Gewijzigd (JJJJ, JJJJ-MM, JJJJ-MM-DD)</string>
+    <string name="yarn_label_added">Toegevoegd</string>
+    <string name="date_format_hint_added">Toegevoegd (JJJJ, JJJJ-MM, JJJJ-MM-DD)</string>
+    <string name="yarn_label_notes">Notities</string>
+    <string name="yarn_form_no_projects_assigned">Nog niet aan projecten toegewezen.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Resterend garen op 0 zetten</string>
+    <string name="yarn_new_default_name">Garen#%1$d</string>
+    <string name="form_unsaved_changes_title">Niet-opgeslagen wijzigingen</string>
+    <string name="form_unsaved_changes_message">Wilt u de wijzigingen opslaan?</string>
+    <string name="yarn_form_add_color">Kleur toevoegen</string>
+    <string name="yarn_form_view_project">Project bekijken</string>
+    <string name="yarn_form_delete_title">Garen verwijderen?</string>
+    <string name="yarn_form_delete_message">Weet u zeker dat u dit garen wilt verwijderen? Dit kan niet ongedaan worden gemaakt.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nieuw project</string>
+    <string name="project_form_edit">Project bewerken</string>
+    <string name="project_label_name">Naam</string>
+    <string name="project_label_pattern">Patroon</string>
+    <string name="project_label_for">Gemaakt voor</string>
+    <string name="project_label_start_date">Startdatum</string>
+    <string name="project_label_end_date">Einddatum</string>
+    <string name="date_format_hint_project">Datum (JJJJ, JJJJ-MM, JJJJ-MM-DD)</string>
+    <string name="project_label_notes">Notities</string>
+    <string name="project_form_button_assignments">Garen toewijzen</string>
+    <string name="project_form_button_export_pdf">PDF-export</string>
+    <string name="project_form_view_pattern">Patroon bekijken</string>
+    <string name="project_form_view_yarn">Garen bekijken</string>
+    <string name="project_form_no_yarn_assigned">Nog geen garen aan dit project toegewezen.</string>
+    <string name="project_form_delete_title">Project verwijderen?</string>
+    <string name="project_form_delete_message">Weet u zeker dat u dit project wilt verwijderen? Dit kan niet ongedaan worden gemaakt.</string>
+    <string name="delete_project_restricted_title">Verwijderen niet mogelijk</string>
+    <string name="delete_project_restricted_message">Verwijderen is alleen mogelijk als er geen garen is toegewezen. Breng het toegewezen garen terug naar de voorraad om door te gaan met verwijderen.</string>
+    <string name="project_status_planning">Gepland</string>
+    <string name="project_status_in_progress">Op de pennen</string>
+    <string name="project_status_finished">Klaar</string>
+    <string name="project_new_default_name">Project#%1$d</string>
+    <string name="row_counter_new_default_name">Toerenteller #%1$d</string>
+    <string name="project_label_needle_size">Naalddikte</string>
+    <string name="project_label_size">Maat</string>
+    <string name="project_label_gauge">Stekenverhouding</string>
+    <string name="project_label_row_count">Toerenteller</string>
+    <string name="project_form_add_counter">Teller toevoegen</string>
+    <string name="project_form_select_image">Afbeelding selecteren</string>
+    <string name="project_form_take_image">Foto maken</string>
+    <string name="project_form_remove_image">Afbeelding verwijderen</string>
+    <string name="project_form_add_counter_dialog_title">Nieuwe teller toevoegen</string>
+    <string name="project_form_add_counter_dialog_label">Naam teller</string>
+    <string name="export_as_pdf">Exporteren als PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Nieuw patroon</string>
+    <string name="pattern_form_edit">Patroon bewerken</string>
+    <string name="pattern_label_name">Naam</string>
+    <string name="pattern_label_creator">Ontwerper</string>
+    <string name="pattern_label_category">Categorie</string>
+    <string name="pattern_label_gauge">Stekenverhouding</string>
+    <string name="pattern_form_select_pdf">PDF selecteren</string>
+    <string name="pattern_form_remove_pdf">PDF verwijderen</string>
+    <string name="pattern_form_view_pdf">PDF bekijken</string>
+    <string name="pattern_form_no_projects_assigned">Nog niet aan projecten toegewezen.</string>
+    <string name="pattern_form_assigned_projects">Toegewezen projecten</string>
+    <string name="pattern_form_view_project">Project bekijken</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Garentoewijzing voor %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Toegewezen garen</string>
+    <string name="usage_amount_label">Hoeveelheid (g)</string>
+    <string name="usage_available">Beschikbaar: %1$d g</string>
+    <string name="usage_available_with_meterage">Beschikbaar: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Beschikbaar: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Beschikbaar: %1$d m</string>
+    <string name="usage_available_yardage">Beschikbaar: %1$d yd</string>
+    <string name="usage_used">Gebruikt: %1$d g</string>
+    <string name="usage_used_with_meterage">Gebruikt: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Gebruikt: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projecten</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistieken</string>
+    <string name="statistics_option_total">Totaal</string>
+    <string name="statistics_option_year">Jaar</string>
+    <string name="statistics_option_month">Maand</string>
+    <string name="statistics_label_year">Jaar</string>
+    <string name="statistics_label_month">Maand</string>
+    <string name="statistics_total_yarn_available">Totaal garen beschikbaar: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Totaal garen beschikbaar: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Garen gekocht: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Garen gekocht: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Garen gebruikt: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Garen gebruikt: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Projecten op de pennen: %1$d</string>
+    <string name="statistics_projects_planned">Geplande projecten: %1$d</string>
+    <string name="statistics_projects_finished_title">Voltooide projecten: %1$d</string>
+    <string name="statistics_overall">Algemeen</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Garen: Gekocht vs. Gebruikt (jaarlijks)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Garen: Gekocht vs. Gebruikt (maandelijks)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Voltooide projecten (jaarlijks)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Voltooide projecten (maandelijks)</string>
+    <string name="statistics_series_yarn_bought">Garen gekocht</string>
+    <string name="statistics_series_yarn_used">Garen gebruikt</string>
+    <string name="statistics_series_projects_finished">Voltooide projecten</string>
+    <string name="statistics_series_projects_in_progress">Projecten op de pennen</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">U kunt helpen!</string>
+    <string name="info_description">OpenYarnStash is een open-source app om uw garenvoorraad en breiprojecten te beheren. Het biedt overzichten, statistieken en voortgangsmeters. De app is nog in ontwikkeling – feedback wordt zeer gewaardeerd!</string>
+    <string name="info_github_button">Bezoek GitHub</string>
+    <string name="info_feedback_button">Feedback verzenden</string>
+    <string name="info_kofi_button">Trakteer op een koffie</string>
+    <string name="info_copyright_notice">De broncode van deze app is vrijgegeven onder de MIT-licentie.
+© 2025 Manfred Scheucher en Helena Bergold
+
+Gebruik, wijziging en herdistributie zijn toegestaan op voorwaarde dat de originele auteursrecht- en licentievermeldingen intact blijven.
+Het verwijderen of vervangen van de naam van de oorspronkelijke auteur, verkeerde voorstelling van het auteurschap of het publiceren van gewijzigde versies zonder bronvermelding is niet toegestaan.</string>
+    <string name="you_can_help_button">U kunt helpen!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Hoe u kunt helpen</string>
+    <string name="ko_fi_button">Trakteer op een koffie</string>
+    <string name="github_button">Bezoek GitHub</string>
+    <string name="github_issues_button">Fout melden</string>
+    <string name="discord_button">Lid worden van Discord</string>
+    <string name="email_button">E-mail sturen</string>
+    <string name="support_us_on_kofi">Steun ons op Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Gebruik de app &amp; meld problemen:</string>
+    <string name="report_bugs_or_translation_mistakes">Meld fouten of vertaalfouten via GitHub Issues of e-mail.</string>
+    <string name="to_help_us_reproduce_bugs">Om ons te helpen de fout te reproduceren, voeg a.u.b. toe:</string>
+    <string name="steps_to_reproduce">• Stappen om te reproduceren</string>
+    <string name="screenshots_if_possible">• Screenshots (indien mogelijk)</string>
+    <string name="app_version_platform">• App-versie/platform (zie info-scherm)</string>
+    <string name="data_export_from_app">• Gegevensexport (ZIP) uit de app (Instellingen → Gegevens exporteren)</string>
+    <string name="privacy_note">Privacyopmerking: </string>
+    <string name="only_share_what_you_are_comfortable_with">Deel alleen waar u zich prettig bij voelt. Verwijder gevoelige info uit bijlagen/exports.</string>
+    <string name="suggest_new_features">Nieuwe functies voorstellen:</string>
+    <string name="open_a_feature_request_on_github">Maak een verzoek voor een nieuwe functie op GitHub. Beschrijf waarom deze functie nuttig is, liefst met een kort voorbeeld.</string>
+    <string name="join_the_discussion">Discussieer mee:</string>
+    <string name="participate_in_github_discussions">Deel feedback, neem deel aan discussies op Discord en GitHub, en geef ons een ster op GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Instellingen</string>
+    <string name="export_json">JSON exporteren</string>
+    <string name="export_zip">ZIP exporteren</string>
+    <string name="import_json">JSON importeren</string>
+    <string name="import_zip">ZIP importeren</string>
+    <string name="import_button_text">Importeren</string>
+    <string name="import_dialog_title">Waarschuwing</string>
+    <string name="import_dialog_message">De huidige configuratie zal worden overschreven door de import. Weet u zeker dat u wilt doorgaan?</string>
+    <string name="language_label">Taal</string>
+    <string name="length_unit_label">Lengte-eenheid</string>
+    <string name="length_unit_meters">Meter</string>
+    <string name="length_unit_yards">Yards</string>
+    <string name="log_level_label">Logniveau</string>
+    <string name="log_level_description">Het logbestand wordt lokaal op het apparaat opgeslagen en kan via de ZIP-export worden bekeken.</string>
+    <string name="backup_old_folder_on_import">Reservekopie van oude map maken bij import</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Niet geïmplementeerd</string>
+    <string name="not_implemented_message">Deze functie is nog niet geïmplementeerd.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Jaar</string>
+    <string name="date_input_month">Maand</string>
+    <string name="date_input_day">Dag</string>
+
+    <!-- Months -->
+    <string name="month_january">Januari</string>
+    <string name="month_february">Februari</string>
+    <string name="month_march">Maart</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mei</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">Augustus</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+</resources>

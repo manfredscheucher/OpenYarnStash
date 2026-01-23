@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Langat</string>
+    <string name="home_button_projects">Projektit</string>
+    <string name="home_button_patterns">Ohjeet</string>
+    <string name="home_button_statistics">Tilastot</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Lankavarasto</string>
+    <string name="yarn_list_empty">Ei vielä lankoja. Napauta + lisätäksesi uuden.</string>
+    <string name="yarn_list_summary">Nykyinen määrä: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Nykyinen määrä: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Viimeksi muokattu: %1$s</string>
+    <string name="yarn_list_hide_used">Käytetyt langat</string>
+    <string name="yarn_list_filter">Haku</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projektit</string>
+    <string name="project_list_empty">Ei projekteja. Napauta + lisätäksesi uuden.</string>
+    <string name="project_list_filter">Haku</string>
+    <string name="item_label_name">Nimi: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Ohjeet</string>
+    <string name="pattern_list_empty">Ei vielä ohjeita. Napauta + lisätäksesi uuden.</string>
+    <string name="pattern_list_filter">Haku</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Takaisin</string>
+    <string name="common_cancel">Peruuta</string>
+    <string name="common_delete">Poista</string>
+    <string name="common_save">Tallenna</string>
+    <string name="common_add">Lisää</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Kyllä</string>
+    <string name="common_no">Ei</string>
+    <string name="common_stay">Pysy</string>
+    <string name="common_select_image">Valitse kuva</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Uusi lanka</string>
+    <string name="yarn_form_edit">Muokkaa lankaa</string>
+    <string name="yarn_label_name">Nimi</string>
+    <string name="yarn_label_color">Väri</string>
+    <string name="yarn_label_color_code">Värikoodi</string>
+    <string name="yarn_label_blend">Kuitusisältö</string>
+    <string name="yarn_label_dye_lot">Värierä</string>
+    <string name="yarn_label_brand">Merkki</string>
+    <string name="yarn_label_storage_place">Säilytyspaikka</string>
+    <string name="yarn_label_amount">Määrä (g)</string>
+    <string name="yarn_label_weight_per_skein">g / kerä</string>
+    <string name="yarn_label_meterage_per_skein">m / kerä</string>
+    <string name="yarn_label_yardage_per_skein">yd / kerä</string>
+    <string name="yarn_label_number_of_skeins">Kerien määrä</string>
+    <string name="yarn_label_modified">Muokattu</string>
+    <string name="date_format_hint_modified">Muokattu (VVVV, VVVV-KK, VVVV-KK-PP)</string>
+    <string name="yarn_label_added">Lisätty</string>
+    <string name="date_format_hint_added">Lisätty (VVVV, VVVV-KK, VVVV-KK-PP)</string>
+    <string name="yarn_label_notes">Muistiinpanot</string>
+    <string name="yarn_form_no_projects_assigned">Ei vielä liitetty projekteihin.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Aseta jäljellä oleva lanka nollaan</string>
+    <string name="yarn_new_default_name">Lanka#%1$d</string>
+    <string name="form_unsaved_changes_title">Tallentamattomia muutoksia</string>
+    <string name="form_unsaved_changes_message">Haluatko tallentaa muutokset?</string>
+    <string name="yarn_form_add_color">Lisää väri</string>
+    <string name="yarn_form_view_project">Näytä projekti</string>
+    <string name="yarn_form_delete_title">Poistetaanko lanka?</string>
+    <string name="yarn_form_delete_message">Haluatko varmasti poistaa tämän langan? Tätä ei voi peruuttaa.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Uusi projekti</string>
+    <string name="project_form_edit">Muokkaa projektia</string>
+    <string name="project_label_name">Nimi</string>
+    <string name="project_label_pattern">Ohje</string>
+    <string name="project_label_for">Kenelle</string>
+    <string name="project_label_start_date">Aloituspäivä</string>
+    <string name="project_label_end_date">Lopetuspäivä</string>
+    <string name="date_format_hint_project">Päivämäärä (VVVV, VVVV-KK, VVVV-KK-PP)</string>
+    <string name="project_label_notes">Muistiinpanot</string>
+    <string name="project_form_button_assignments">Liitä lanka</string>
+    <string name="project_form_button_export_pdf">PDF-vienti</string>
+    <string name="project_form_view_pattern">Näytä ohje</string>
+    <string name="project_form_view_yarn">Näytä lanka</string>
+    <string name="project_form_no_yarn_assigned">Projektiin ei ole vielä liitetty lankaa.</string>
+    <string name="project_form_delete_title">Poistetaanko projekti?</string>
+    <string name="project_form_delete_message">Haluatko varmasti poistaa tämän projektin? Tätä ei voi peruuttaa.</string>
+    <string name="delete_project_restricted_title">Poistaminen ei onnistu</string>
+    <string name="delete_project_restricted_message">Poistaminen on mahdollista vain, jos lankaa ei ole liitettynä. Palauta liitetty lanka varastoon jatkaaksesi poistamista.</string>
+    <string name="project_status_planning">Suunnitteilla</string>
+    <string name="project_status_in_progress">Työn alla</string>
+    <string name="project_status_finished">Valmis</string>
+    <string name="project_new_default_name">Projekti#%1$d</string>
+    <string name="row_counter_new_default_name">Kerroslaskin #%1$d</string>
+    <string name="project_label_needle_size">Puikkokoko</string>
+    <string name="project_label_size">Koko</string>
+    <string name="project_label_gauge">Neuletiheys</string>
+    <string name="project_label_row_count">Kerroslaskin</string>
+    <string name="project_form_add_counter">Lisää laskin</string>
+    <string name="project_form_select_image">Valitse kuva</string>
+    <string name="project_form_take_image">Ota kuva</string>
+    <string name="project_form_remove_image">Poista kuva</string>
+    <string name="project_form_add_counter_dialog_title">Lisää uusi laskin</string>
+    <string name="project_form_add_counter_dialog_label">Laskimen nimi</string>
+    <string name="export_as_pdf">Vie PDF-muodossa</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Uusi ohje</string>
+    <string name="pattern_form_edit">Muokkaa ohjetta</string>
+    <string name="pattern_label_name">Nimi</string>
+    <string name="pattern_label_creator">Suunnittelija</string>
+    <string name="pattern_label_category">Kategoria</string>
+    <string name="pattern_label_gauge">Neuletiheys</string>
+    <string name="pattern_form_select_pdf">Valitse PDF</string>
+    <string name="pattern_form_remove_pdf">Poista PDF</string>
+    <string name="pattern_form_view_pdf">Näytä PDF</string>
+    <string name="pattern_form_no_projects_assigned">Ei vielä liitetty projekteihin.</string>
+    <string name="pattern_form_assigned_projects">Liitetyt projektit</string>
+    <string name="pattern_form_view_project">Näytä projekti</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Lankojen liitokset: %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Liitetty lanka</string>
+    <string name="usage_amount_label">Määrä (g)</string>
+    <string name="usage_available">Käytettävissä: %1$d g</string>
+    <string name="usage_available_with_meterage">Käytettävissä: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Käytettävissä: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Käytettävissä: %1$d m</string>
+    <string name="usage_available_yardage">Käytettävissä: %1$d yd</string>
+    <string name="usage_used">Käytetty: %1$d g</string>
+    <string name="usage_used_with_meterage">Käytetty: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Käytetty: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projektit</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Tilastot</string>
+    <string name="statistics_option_total">Yhteensä</string>
+    <string name="statistics_option_year">Vuosi</string>
+    <string name="statistics_option_month">Kuukausi</string>
+    <string name="statistics_label_year">Vuosi</string>
+    <string name="statistics_label_month">Kuukausi</string>
+    <string name="statistics_total_yarn_available">Lankaa yhteensä varastossa: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Lankaa yhteensä varastossa: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Lankaa ostettu: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Lankaa ostettu: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Lankaa käytetty: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Lankaa käytetty: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Keskeneräiset työt: %1$d</string>
+    <string name="statistics_projects_planned">Suunnitellut projektit: %1$d</string>
+    <string name="statistics_projects_finished_title">Valmiit projektit: %1$d</string>
+    <string name="statistics_overall">Yleisnäkymä</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Lanka: Ostettu vs. Käytetty (Vuosittain)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Lanka: Ostettu vs. Käytetty (Kuukausittain)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Valmiit työt (Vuosittain)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Valmiit työt (Kuukausittain)</string>
+    <string name="statistics_series_yarn_bought">Lankaa ostettu</string>
+    <string name="statistics_series_yarn_used">Lankaa käytetty</string>
+    <string name="statistics_series_projects_finished">Valmiit työt</string>
+    <string name="statistics_series_projects_in_progress">Keskeneräiset työt</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">Voit auttaa!</string>
+    <string name="info_description">OpenYarnStash on avoimen lähdekoodin sovellus lankavarastosi ja neuletöidesi hallintaan. Se tarjoaa yleiskatsauksen, tilastoja ja edistymismittareita. Sovellus on vielä kehitysvaiheessa – palaute on erittäin tervetullutta!</string>
+    <string name="info_github_button">Siirry GitHubiin</string>
+    <string name="info_feedback_button">Lähetä palautetta</string>
+    <string name="info_kofi_button">Tarjoa meille kahvit</string>
+    <string name="info_copyright_notice">Tämän sovelluksen lähdekoodi on julkaistu MIT-lisenssillä.
+© 2025 Manfred Scheucher ja Helena Bergold
+
+Käyttö, muokkaus ja uudelleenjakelu on sallittua edellyttäen, että alkuperäiset tekijänoikeus- ja lisenssi-ilmoitukset säilyvät muuttumattomina.
+Alkuperäisen tekijän nimen poistaminen tai korvaaminen, tekijyyden vääristely tai muokattujen versioiden julkaiseminen ilman mainintaa ei ole sallittua.</string>
+    <string name="you_can_help_button">Voit auttaa!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Kuinka voit auttaa</string>
+    <string name="ko_fi_button">Tarjoa meille kahvit</string>
+    <string name="github_button">Siirry GitHubiin</string>
+    <string name="github_issues_button">Ilmoita virheestä</string>
+    <string name="discord_button">Liity Discordiin</string>
+    <string name="email_button">Lähetä sähköpostia</string>
+    <string name="support_us_on_kofi">Tue meitä Ko-fi-palvelussa:</string>
+    <string name="use_the_app_and_report_issues">Käytä sovellusta &amp; ilmoita ongelmista:</string>
+    <string name="report_bugs_or_translation_mistakes">Ilmoita virheistä tai käännösvirheistä GitHub Issuesin tai sähköpostin kautta.</string>
+    <string name="to_help_us_reproduce_bugs">Jotta voimme toistaa virheen, liitäthän mukaan:</string>
+    <string name="steps_to_reproduce">• Vaiheet virheen toistamiseksi</string>
+    <string name="screenshots_if_possible">• Kuvakaappaukset (jos mahdollista)</string>
+    <string name="app_version_platform">• Sovelluksen versio/alusta (katso info-näyttö)</string>
+    <string name="data_export_from_app">• Tietojen vienti (ZIP) sovelluksesta (Asetukset → Vie tiedot)</string>
+    <string name="privacy_note">Tietosuojahuomautus: </string>
+    <string name="only_share_what_you_are_comfortable_with">Jaa vain asioita, jotka haluat jakaa. Poista arkaluonteiset tiedot liitteistä/vienneistä.</string>
+    <string name="suggest_new_features">Ehdotat uusia ominaisuuksia:</string>
+    <string name="open_a_feature_request_on_github">Luo ominaisuuspyyntö GitHubiin. Kuvaile, miksi ominaisuus on hyödyllinen, mahdollisesti lyhyen esimerkin kera.</string>
+    <string name="join_the_discussion">Liity keskusteluun:</string>
+    <string name="participate_in_github_discussions">Anna palautetta, osallistu Discord- ja GitHub-keskusteluihin ja anna tähti GitHubissa.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Asetukset</string>
+    <string name="export_json">Vie JSON</string>
+    <string name="export_zip">Vie ZIP</string>
+    <string name="import_json">Tuo JSON</string>
+    <string name="import_zip">Tuo ZIP</string>
+    <string name="import_button_text">Tuo</string>
+    <string name="import_dialog_title">Varoitus</string>
+    <string name="import_dialog_message">Tuonti korvaa nykyiset asetukset. Haluatko varmasti jatkaa?</string>
+    <string name="language_label">Kieli</string>
+    <string name="length_unit_label">Pituusyksikkö</string>
+    <string name="length_unit_meters">Metrit</string>
+    <string name="length_unit_yards">Jaardit</string>
+    <string name="log_level_label">Lokitaso</string>
+    <string name="log_level_description">Lokitiedosto tallennetaan paikallisesti laitteelle ja se voidaan tarkistaa ZIP-viennin kautta.</string>
+    <string name="backup_old_folder_on_import">Varmuuskopioi vanha kansio tuonnin yhteydessä</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Ei toteutettu</string>
+    <string name="not_implemented_message">Tätä ominaisuutta ei ole vielä toteutettu.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Vuosi</string>
+    <string name="date_input_month">Kuukausi</string>
+    <string name="date_input_day">Päivä</string>
+
+    <!-- Months -->
+    <string name="month_january">Tammikuu</string>
+    <string name="month_february">Helmikuu</string>
+    <string name="month_march">Maaliskuu</string>
+    <string name="month_april">Huhtikuu</string>
+    <string name="month_may">Toukokuu</string>
+    <string name="month_june">Kesäkuu</string>
+    <string name="month_july">Heinäkuu</string>
+    <string name="month_august">Elokuu</string>
+    <string name="month_september">Syyskuu</string>
+    <string name="month_october">Lokakuu</string>
+    <string name="month_november">Marraskuu</string>
+    <string name="month_december">Joulukuu</string>
+</resources>

@@ -60,6 +60,21 @@ import openyarnstash.composeapp.generated.resources.settings_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+val languageMap = mapOf(
+    "da" to "Dansk (untested)",
+    "de" to "Deutsch",
+    "en" to "English",
+    "es" to "Español (untested)",
+    "fi" to "Suomi (untested)",
+    "fr" to "Français (untested)",
+    "it" to "Italiano (untested)",
+    "nl" to "Nederlands (untested)",
+    "no" to "Norsk (untested)",
+    "pl" to "Polski (untested)",
+    "pt" to "Português (untested)",
+    "sv" to "Svenska (untested)"
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -134,7 +149,7 @@ fun SettingsScreen(
                     onExpandedChange = { languageDropdownExpanded = it }
                 ) {
                     OutlinedTextField(
-                        value = if (currentLocale == "de") "Deutsch" else "English",
+                        value = languageMap.getOrElse(currentLocale) { "English" },
                         onValueChange = {},
                         label = { Text(stringResource(Res.string.language_label)) },
                         readOnly = true,
@@ -147,20 +162,15 @@ fun SettingsScreen(
                         expanded = languageDropdownExpanded,
                         onDismissRequest = { languageDropdownExpanded = false }
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("Deutsch") },
-                            onClick = {
-                                onLocaleChange("de")
-                                languageDropdownExpanded = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("English") },
-                            onClick = {
-                                onLocaleChange("en")
-                                languageDropdownExpanded = false
-                            }
-                        )
+                        languageMap.forEach { (code, name) ->
+                            DropdownMenuItem(
+                                text = { Text(name) },
+                                onClick = {
+                                    onLocaleChange(code)
+                                    languageDropdownExpanded = false
+                                }
+                            )
+                        }
                     }
                 }
 

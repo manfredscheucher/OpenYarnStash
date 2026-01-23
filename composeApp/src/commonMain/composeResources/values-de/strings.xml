@@ -18,7 +18,6 @@
     <string name="yarn_list_hide_used">Verbrauchte Wolle</string>
     <string name="yarn_list_filter">Suche</string>
 
-
     <!-- Project list -->
     <string name="project_list_title">Projekte</string>
     <string name="project_list_empty">Kein Projekt. Klicke + um ein neues hinzuzufügen.</string>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Lanas</string>
+    <string name="home_button_projects">Proyectos</string>
+    <string name="home_button_patterns">Patrones</string>
+    <string name="home_button_statistics">Estadísticas</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Inventario de lanas</string>
+    <string name="yarn_list_empty">Aún no hay lanas. Pulsa + para añadir una nueva.</string>
+    <string name="yarn_list_summary">Cantidad actual: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Cantidad actual: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Última modificación: %1$s</string>
+    <string name="yarn_list_hide_used">Lanas usadas</string>
+    <string name="yarn_list_filter">Buscar</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Proyectos</string>
+    <string name="project_list_empty">No hay proyectos. Pulsa + para añadir uno nuevo.</string>
+    <string name="project_list_filter">Buscar</string>
+    <string name="item_label_name">Nombre: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Patrones</string>
+    <string name="pattern_list_empty">Aún no hay patrones. Pulsa + para añadir uno nuevo.</string>
+    <string name="pattern_list_filter">Buscar</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Atrás</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_delete">Eliminar</string>
+    <string name="common_save">Guardar</string>
+    <string name="common_add">Añadir</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">Aceptar</string>
+    <string name="common_yes">Sí</string>
+    <string name="common_no">No</string>
+    <string name="common_stay">Permanecer</string>
+    <string name="common_select_image">Seleccionar imagen</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nueva lana</string>
+    <string name="yarn_form_edit">Editar lana</string>
+    <string name="yarn_label_name">Nombre</string>
+    <string name="yarn_label_color">Color</string>
+    <string name="yarn_label_color_code">Código de color</string>
+    <string name="yarn_label_blend">Composición</string>
+    <string name="yarn_label_dye_lot">Lote de tinte</string>
+    <string name="yarn_label_brand">Marca</string>
+    <string name="yarn_label_storage_place">Lugar de almacenamiento</string>
+    <string name="yarn_label_amount">Cantidad (g)</string>
+    <string name="yarn_label_weight_per_skein">g / ovillo</string>
+    <string name="yarn_label_meterage_per_skein">m / ovillo</string>
+    <string name="yarn_label_yardage_per_skein">yd / ovillo</string>
+    <string name="yarn_label_number_of_skeins">Número de ovillos</string>
+    <string name="yarn_label_modified">Modificado</string>
+    <string name="date_format_hint_modified">Modificado (AAAA, AAAA-MM, AAAA-MM-DD)</string>
+    <string name="yarn_label_added">Añadido</string>
+    <string name="date_format_hint_added">Añadido (AAAA, AAAA-MM, AAAA-MM-DD)</string>
+    <string name="yarn_label_notes">Notas</string>
+    <string name="yarn_form_no_projects_assigned">Aún no asignado a ningún proyecto.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Poner lana restante a 0</string>
+    <string name="yarn_new_default_name">Lana#%1$d</string>
+    <string name="form_unsaved_changes_title">Cambios sin guardar</string>
+    <string name="form_unsaved_changes_message">¿Deseas guardar los cambios?</string>
+    <string name="yarn_form_add_color">Añadir color</string>
+    <string name="yarn_form_view_project">Ver proyecto</string>
+    <string name="yarn_form_delete_title">¿Eliminar lana?</string>
+    <string name="yarn_form_delete_message">¿Estás seguro de que quieres eliminar esta lana? Esta acción no se puede deshacer.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nuevo proyecto</string>
+    <string name="project_form_edit">Editar proyecto</string>
+    <string name="project_label_name">Nombre</string>
+    <string name="project_label_pattern">Patrón</string>
+    <string name="project_label_for">Hecho para</string>
+    <string name="project_label_start_date">Fecha de inicio</string>
+    <string name="project_label_end_date">Fecha de finalización</string>
+    <string name="date_format_hint_project">Fecha (AAAA, AAAA-MM, AAAA-MM-DD)</string>
+    <string name="project_label_notes">Notas</string>
+    <string name="project_form_button_assignments">Asignar lana</string>
+    <string name="project_form_button_export_pdf">Exportar PDF</string>
+    <string name="project_form_view_pattern">Ver patrón</string>
+    <string name="project_form_view_yarn">Ver lana</string>
+    <string name="project_form_no_yarn_assigned">Aún no se ha asignado lana a este proyecto.</string>
+    <string name="project_form_delete_title">¿Eliminar proyecto?</string>
+    <string name="project_form_delete_message">¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer.</string>
+    <string name="delete_project_restricted_title">No es posible eliminar</string>
+    <string name="delete_project_restricted_message">Solo se puede eliminar si no hay lana asignada. Devuelve la lana asignada al inventario para continuar con la eliminación.</string>
+    <string name="project_status_planning">Planificado</string>
+    <string name="project_status_in_progress">En las agujas</string>
+    <string name="project_status_finished">Terminado</string>
+    <string name="project_new_default_name">Proyecto#%1$d</string>
+    <string name="row_counter_new_default_name">Contador de vueltas #%1$d</string>
+    <string name="project_label_needle_size">Tamaño de aguja</string>
+    <string name="project_label_size">Talla</string>
+    <string name="project_label_gauge">Tensión/Muestra</string>
+    <string name="project_label_row_count">Contador de vueltas</string>
+    <string name="project_form_add_counter">Añadir contador</string>
+    <string name="project_form_select_image">Seleccionar imagen</string>
+    <string name="project_form_take_image">Hacer foto</string>
+    <string name="project_form_remove_image">Eliminar imagen</string>
+    <string name="project_form_add_counter_dialog_title">Añadir nuevo contador</string>
+    <string name="project_form_add_counter_dialog_label">Nombre del contador</string>
+    <string name="export_as_pdf">Exportar como PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Nuevo patrón</string>
+    <string name="pattern_form_edit">Editar patrón</string>
+    <string name="pattern_label_name">Nombre</string>
+    <string name="pattern_label_creator">Diseñador</string>
+    <string name="pattern_label_category">Categoría</string>
+    <string name="pattern_label_gauge">Tensión/Muestra</string>
+    <string name="pattern_form_select_pdf">Seleccionar PDF</string>
+    <string name="pattern_form_remove_pdf">Eliminar PDF</string>
+    <string name="pattern_form_view_pdf">Ver PDF</string>
+    <string name="pattern_form_no_projects_assigned">Aún no asignado a ningún proyecto.</string>
+    <string name="pattern_form_assigned_projects">Proyectos asignados</string>
+    <string name="pattern_form_view_project">Ver proyecto</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Asignación de lana para %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Lana asignada</string>
+    <string name="usage_amount_label">Cantidad (g)</string>
+    <string name="usage_available">Disponible: %1$d g</string>
+    <string name="usage_available_with_meterage">Disponible: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Disponible: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Disponible: %1$d m</string>
+    <string name="usage_available_yardage">Disponible: %1$d yd</string>
+    <string name="usage_used">Usado: %1$d g</string>
+    <string name="usage_used_with_meterage">Usado: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Usado: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Proyectos</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Estadísticas</string>
+    <string name="statistics_option_total">Total</string>
+    <string name="statistics_option_year">Año</string>
+    <string name="statistics_option_month">Mes</string>
+    <string name="statistics_label_year">Año</string>
+    <string name="statistics_label_month">Mes</string>
+    <string name="statistics_total_yarn_available">Total lana disponible: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Total lana disponible: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Lana comprada: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Lana comprada: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Lana usada: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Lana usada: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Proyectos en las agujas: %1$d</string>
+    <string name="statistics_projects_planned">Proyectos planificados: %1$d</string>
+    <string name="statistics_projects_finished_title">Proyectos terminados: %1$d</string>
+    <string name="statistics_overall">General</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Lana: Comprada vs. Usada (anual)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Lana: Comprada vs. Usada (mensual)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Proyectos terminados (anual)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Proyectos terminados (mensual)</string>
+    <string name="statistics_series_yarn_bought">Lana comprada</string>
+    <string name="statistics_series_yarn_used">Lana usada</string>
+    <string name="statistics_series_projects_finished">Proyectos terminados</string>
+    <string name="statistics_series_projects_in_progress">Proyectos en las agujas</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Información</string>
+    <string name="info_how_to_help">¡Puedes ayudar!</string>
+    <string name="info_description">OpenYarnStash es una aplicación de código abierto para gestionar tu inventario de lanas y tus proyectos de punto. Ofrece vistas generales, estadísticas e indicadores de progreso. ¡La aplicación aún está en desarrollo y agradecemos mucho tus comentarios!</string>
+    <string name="info_github_button">Visitar GitHub</string>
+    <string name="info_feedback_button">Enviar comentarios</string>
+    <string name="info_kofi_button">Invitarnos a un café</string>
+    <string name="info_copyright_notice">El código fuente de esta aplicación se publica bajo la licencia MIT.
+© 2025 Manfred Scheucher y Helena Bergold
+
+El uso, modificación y redistribución están permitidos siempre que los avisos originales de copyright y licencia permanezcan intactos.
+No está permitido eliminar o reemplazar el nombre del autor original, falsear la autoría o publicar versiones modificadas sin atribución.</string>
+    <string name="you_can_help_button">¡Puedes ayudar!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Cómo puedes ayudar</string>
+    <string name="ko_fi_button">Invitarnos a un café</string>
+    <string name="github_button">Visitar GitHub</string>
+    <string name="github_issues_button">Informar de un error</string>
+    <string name="discord_button">Unirse a Discord</string>
+    <string name="email_button">Enviar un correo</string>
+    <string name="support_us_on_kofi">Apóyanos en Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Usa la aplicación e informa de problemas:</string>
+    <string name="report_bugs_or_translation_mistakes">Informa de errores o fallos de traducción vía GitHub Issues o correo electrónico.</string>
+    <string name="to_help_us_reproduce_bugs">Para ayudarnos a reproducir el error, incluye por favor:</string>
+    <string name="steps_to_reproduce">• Pasos para reproducirlo</string>
+    <string name="screenshots_if_possible">• Capturas de pantalla (si es posible)</string>
+    <string name="app_version_platform">• Versión/plataforma de la app (ver pantalla de info)</string>
+    <string name="data_export_from_app">• Exportación de datos (ZIP) desde la aplicación (Ajustes → Exportar datos)</string>
+    <string name="privacy_note">Nota sobre privacidad: </string>
+    <string name="only_share_what_you_are_comfortable_with">Comparte solo aquello con lo que te sientas cómodo. Elimina información sensible de los archivos adjuntos/exportaciones.</string>
+    <string name="suggest_new_features">Sugerir nuevas funciones:</string>
+    <string name="open_a_feature_request_on_github">Crea una solicitud de función en GitHub. Describe por qué es útil, preferiblemente con un ejemplo breve.</string>
+    <string name="join_the_discussion">Únete a la discusión:</string>
+    <string name="participate_in_github_discussions">Comparte tus comentarios, participa en discusiones en Discord y GitHub, y danos una estrella en GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Ajustes</string>
+    <string name="export_json">Exportar JSON</string>
+    <string name="export_zip">Exportar ZIP</string>
+    <string name="import_json">Importar JSON</string>
+    <string name="import_zip">Importar ZIP</string>
+    <string name="import_button_text">Importar</string>
+    <string name="import_dialog_title">Advertencia</string>
+    <string name="import_dialog_message">La configuración actual se sobrescribirá con la importación. ¿Estás seguro de que quieres continuar?</string>
+    <string name="language_label">Idioma</string>
+    <string name="length_unit_label">Unidad de longitud</string>
+    <string name="length_unit_meters">Metros</string>
+    <string name="length_unit_yards">Yardas</string>
+    <string name="log_level_label">Nivel de registro (Log)</string>
+    <string name="log_level_description">El archivo de registro se guarda localmente en el dispositivo y se puede ver mediante la exportación ZIP.</string>
+    <string name="backup_old_folder_on_import">Copia de seguridad de carpeta antigua al importar</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">No implementado</string>
+    <string name="not_implemented_message">Esta función aún no está implementada.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Año</string>
+    <string name="date_input_month">Mes</string>
+    <string name="date_input_day">Día</string>
+
+    <!-- Months -->
+    <string name="month_january">Enero</string>
+    <string name="month_february">Febrero</string>
+    <string name="month_march">Marzo</string>
+    <string name="month_april">Abril</string>
+    <string name="month_may">Mayo</string>
+    <string name="month_june">Junio</string>
+    <string name="month_july">Julio</string>
+    <string name="month_august">Agosto</string>
+    <string name="month_september">Septiembre</string>
+    <string name="month_october">Octubre</string>
+    <string name="month_november">Noviembre</string>
+    <string name="month_december">Diciembre</string>
+</resources>
