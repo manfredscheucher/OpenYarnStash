@@ -67,11 +67,16 @@ val languageMap = mapOf(
     "el" to "Ελληνικά (untested)",
     "en" to "English",
     "es" to "Español (untested)",
+    "et" to "Eesti (untested)",
     "fi" to "Suomi (untested)",
     "fr" to "Français (untested)",
     "hu" to "Magyar (untested)",
     "it" to "Italiano (untested)",
+    "is" to "Íslenska (untested)",
+    "ko" to "한국어 (untested)",
     "ja" to "日本語 (untested)",
+    "lt" to "Lietuvių (untested)",
+    "lv" to "Latviešu (untested)",
     "nl" to "Nederlands (untested)",
     "no" to "Norsk (untested)",
     "pl" to "Polski (untested)",
@@ -79,7 +84,9 @@ val languageMap = mapOf(
     "ru" to "Русский (untested)",
     "si" to "Slovenščina (untested)",
     "sv" to "Svenska (untested)",
+    "tr" to "Türkçe (untested)",
     "uk" to "Українська (untested)",
+    "zh" to "简体中文 (untested)",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

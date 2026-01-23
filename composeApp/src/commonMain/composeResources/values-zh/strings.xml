@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">毛线库存</string>
+    <string name="home_button_projects">编织项目</string>
+    <string name="home_button_patterns">编织图解</string>
+    <string name="home_button_statistics">统计数据</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">毛线库存</string>
+    <string name="yarn_list_empty">暂无毛线。点击 + 按钮添加。</string>
+    <string name="yarn_list_summary">当前总量: %1$d 克 (%2$d 米)</string>
+    <string name="yarn_list_summary_yards">当前总量: %1$d 克 (%2$d 码)</string>
+    <string name="yarn_item_label_modified">最后修改: %1$s</string>
+    <string name="yarn_list_hide_used">隐藏已用完的毛线</string>
+    <string name="yarn_list_filter">搜索</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">项目</string>
+    <string name="project_list_empty">暂无项目。点击 + 按钮新建一个。</string>
+    <string name="project_list_filter">搜索</string>
+    <string name="item_label_name">名称: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">图解</string>
+    <string name="pattern_list_empty">暂无图解。点击 + 按钮添加。</string>
+    <string name="pattern_list_filter">搜索</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">返回</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_delete">删除</string>
+    <string name="common_save">保存</string>
+    <string name="common_add">添加</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">确定</string>
+    <string name="common_yes">是</string>
+    <string name="common_no">否</string>
+    <string name="common_stay">留在本页</string>
+    <string name="common_select_image">选择图片</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">新增毛线</string>
+    <string name="yarn_form_edit">编辑毛线</string>
+    <string name="yarn_label_name">名称</string>
+    <string name="yarn_label_color">颜色</string>
+    <string name="yarn_label_color_code">色号</string>
+    <string name="yarn_label_blend">成分</string>
+    <string name="yarn_label_dye_lot">缸号 (Dye lot)</string>
+    <string name="yarn_label_brand">品牌</string>
+    <string name="yarn_label_storage_place">存放地点</string>
+    <string name="yarn_label_amount">重量 (克)</string>
+    <string name="yarn_label_weight_per_skein">克 / 团</string>
+    <string name="yarn_label_meterage_per_skein">米 / 团</string>
+    <string name="yarn_label_yardage_per_skein">码 / 团</string>
+    <string name="yarn_label_number_of_skeins">团数</string>
+    <string name="yarn_label_modified">修改时间</string>
+    <string name="date_format_hint_modified">修改时间 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_added">添加时间</string>
+    <string name="date_format_hint_added">添加时间 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_notes">备注</string>
+    <string name="yarn_form_no_projects_assigned">尚未关联任何项目。</string>
+    <string name="yarn_form_button_set_remaining_to_zero">将余量设为 0</string>
+    <string name="yarn_new_default_name">毛线#%1$d</string>
+    <string name="form_unsaved_changes_title">未保存的更改</string>
+    <string name="form_unsaved_changes_message">是否保存更改？</string>
+    <string name="yarn_form_add_color">添加颜色</string>
+    <string name="yarn_form_view_project">查看项目</string>
+    <string name="yarn_form_delete_title">删除毛线？</string>
+    <string name="yarn_form_delete_message">确定要删除此毛线吗？此操作无法撤销。</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">新建项目</string>
+    <string name="project_form_edit">编辑项目</string>
+    <string name="project_label_name">名称</string>
+    <string name="project_label_pattern">关联图解</string>
+    <string name="project_label_for">成品对象</string>
+    <string name="project_label_start_date">开始日期</string>
+    <string name="project_label_end_date">结束日期</string>
+    <string name="date_format_hint_project">日期 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="project_label_notes">备注</string>
+    <string name="project_form_button_assignments">分配毛线</string>
+    <string name="project_form_button_export_pdf">导出为 PDF</string>
+    <string name="project_form_view_pattern">查看图解</string>
+    <string name="project_form_view_yarn">查看毛线</string>
+    <string name="project_form_no_yarn_assigned">此项目尚未分配毛线。</string>
+    <string name="project_form_delete_title">删除项目？</string>
+    <string name="project_form_delete_message">确定要删除此项目吗？此操作无法撤销。</string>
+    <string name="delete_project_restricted_title">无法删除</string>
+    <string name="delete_project_restricted_message">只有在未分配毛线的情况下才能删除。请先取消毛线关联。</string>
+    <string name="project_status_planning">计划中</string>
+    <string name="project_status_in_progress">进行中</string>
+    <string name="project_status_finished">已完成</string>
+    <string name="project_new_default_name">项目#%1$d</string>
+    <string name="row_counter_new_default_name">计数器 #%1$d</string>
+    <string name="project_label_needle_size">针号</string>
+    <string name="project_label_size">成品尺寸</string>
+    <string name="project_label_gauge">织片密度 (Gauge)</string>
+    <string name="project_label_row_count">行数计数器</string>
+    <string name="project_form_add_counter">添加计数器</string>
+    <string name="project_form_select_image">选择图片</string>
+    <string name="project_form_take_image">拍照</string>
+    <string name="project_form_remove_image">移除图片</string>
+    <string name="project_form_add_counter_dialog_title">新增计数器</string>
+    <string name="project_form_add_counter_dialog_label">计数器名称</string>
+    <string name="export_as_pdf">导出为 PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">新增图解</string>
+    <string name="pattern_form_edit">编辑图解</string>
+    <string name="pattern_label_name">名称</string>
+    <string name="pattern_label_creator">设计师</string>
+    <string name="pattern_label_category">类别</string>
+    <string name="pattern_label_gauge">织片密度 (Gauge)</string>
+    <string name="pattern_form_select_pdf">选择 PDF 文件</string>
+    <string name="pattern_form_remove_pdf">移除 PDF</string>
+    <string name="pattern_form_view_pdf">查看 PDF</string>
+    <string name="pattern_form_no_projects_assigned">尚未关联任何项目。</string>
+    <string name="pattern_form_assigned_projects">关联的项目</string>
+    <string name="pattern_form_view_project">查看项目</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">为 %1$s 分配毛线</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">已分配毛线</string>
+    <string name="usage_amount_label">使用量 (克)</string>
+    <string name="usage_available">可用: %1$d 克</string>
+    <string name="usage_available_with_meterage">可用: %1$d 克 (%2$d 米)</string>
+    <string name="usage_available_with_yardage">可用: %1$d 克 (%2$d 码)</string>
+    <string name="usage_available_meterage">可用: %1$d 米</string>
+    <string name="usage_available_yardage">可用: %1$d 码</string>
+    <string name="usage_used">已用: %1$d 克</string>
+    <string name="usage_used_with_meterage">已用: %1$d 克 (%2$d 米)</string>
+    <string name="usage_used_with_yardage">已用: %1$d 克 (%2$d 码)</string>
+    <string name="usage_projects_title">所属项目</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">统计</string>
+    <string name="statistics_option_total">总计</string>
+    <string name="statistics_option_year">年度</string>
+    <string name="statistics_option_month">月份</string>
+    <string name="statistics_label_year">年份</string>
+    <string name="statistics_label_month">月份</string>
+    <string name="statistics_total_yarn_available">当前总库存: %1$d 克 (%2$d 米)</string>
+    <string name="statistics_total_yarn_available_yards">当前总库存: %1$d 克 (%2$d 码)</string>
+    <string name="statistics_yarn_bought_title">购入毛线: %1$d 克 (%2$d 米)</string>
+    <string name="statistics_yarn_bought_title_yards">购入毛线: %1$d 克 (%2$d 码)</string>
+    <string name="statistics_yarn_used_title">使用毛线: %1$d 克 (%2$d 米)</string>
+    <string name="statistics_yarn_used_title_yards">使用毛线: %1$d 克 (%2$d 码)</string>
+    <string name="statistics_projects_in_progress_title">进行中项目: %1$d</string>
+    <string name="statistics_projects_planned">计划中项目: %1$d</string>
+    <string name="statistics_projects_finished_title">已完成项目: %1$d</string>
+    <string name="statistics_overall">概览</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">毛线: 购入 vs 使用 (年度)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">毛线: 购入 vs 使用 (月度)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">完成项目 (年度)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">完成项目 (月度)</string>
+    <string name="statistics_series_yarn_bought">购入量</string>
+    <string name="statistics_series_yarn_used">消耗量</string>
+    <string name="statistics_series_projects_finished">已完成项目</string>
+    <string name="statistics_series_projects_in_progress">进行中项目</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">信息</string>
+    <string name="info_how_to_help">你可以提供帮助！</string>
+    <string name="info_description">OpenYarnStash 是一款用于管理毛线库存和项目的开源应用。应用目前仍在开发中，欢迎提出反馈！</string>
+    <string name="info_github_button">访问 GitHub</string>
+    <string name="info_feedback_button">发送反馈</string>
+    <string name="info_kofi_button">请我们喝杯咖啡</string>
+    <string name="info_copyright_notice">源代码基于 MIT 许可证开源。
+© 2025 Manfred Scheucher 与 Helena Bergold</string>
+    <string name="you_can_help_button">欢迎提供帮助！</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">如何提供帮助</string>
+    <string name="ko_fi_button">请我们喝杯咖啡</string>
+    <string name="github_button">访问 GitHub</string>
+    <string name="github_issues_button">报告问题 (Bug)</string>
+    <string name="discord_button">加入 Discord</string>
+    <string name="email_button">发送电子邮件</string>
+    <string name="support_us_on_kofi">通过 Ko-fi 支持我们：</string>
+    <string name="use_the_app_and_report_issues">使用应用并反馈问题：</string>
+    <string name="report_bugs_or_translation_mistakes">通过 GitHub 或邮件报告错误或翻译问题。</string>
+    <string name="to_help_us_reproduce_bugs">为了帮助我们修复错误，请提供：</string>
+    <string name="steps_to_reproduce">• 复现步骤</string>
+    <string name="screenshots_if_possible">• 相关截图</string>
+    <string name="app_version_platform">• 应用版本/平台 (见信息页面)</string>
+    <string name="data_export_from_app">• 导出的数据 (ZIP) (设置 → 导出数据)</string>
+    <string name="privacy_note">隐私声明：</string>
+    <string name="only_share_what_you_are_comfortable_with">仅共享你愿意提供的信息。</string>
+    <string name="suggest_new_features">建议新功能：</string>
+    <string name="open_a_feature_request_on_github">在 GitHub 上提交功能请求。</string>
+    <string name="join_the_discussion">参与讨论：</string>
+    <string name="participate_in_github_discussions">加入 Discord 和 GitHub 的讨论。</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">设置</string>
+    <string name="export_json">导出为 JSON</string>
+    <string name="export_zip">导出为 ZIP</string>
+    <string name="import_json">导入 JSON</string>
+    <string name="import_zip">导入 ZIP</string>
+    <string name="import_button_text">导入</string>
+    <string name="import_dialog_title">警告</string>
+    <string name="import_dialog_message">当前数据将被覆盖。是否继续？</string>
+    <string name="language_label">语言</string>
+    <string name="length_unit_label">长度单位</string>
+    <string name="length_unit_meters">米</string>
+    <string name="length_unit_yards">码</string>
+    <string name="log_level_label">日志级别</string>
+    <string name="log_level_description">日志文件将保存在设备本地。</string>
+    <string name="backup_old_folder_on_import">导入时备份旧文件夹</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">尚未实现</string>
+    <string name="not_implemented_message">此功能目前尚不可用。</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">年</string>
+    <string name="date_input_month">月</string>
+    <string name="date_input_day">日</string>
+
+    <!-- Months -->
+    <string name="month_january">一月</string>
+    <string name="month_february">二月</string>
+    <string name="month_march">三月</string>
+    <string name="month_april">四月</string>
+    <string name="month_may">五月</string>
+    <string name="month_june">六月</string>
+    <string name="month_july">七月</string>
+    <string name="month_august">八月</string>
+    <string name="month_september">九月</string>
+    <string name="month_october">十月</string>
+    <string name="month_november">十一月</string>
+    <string name="month_december">十二月</string>
+</resources>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Garn</string>
+    <string name="home_button_projects">Verkefni</string>
+    <string name="home_button_patterns">Uppskriftir</string>
+    <string name="home_button_statistics">Tölfræði</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Garnlager</string>
+    <string name="yarn_list_empty">Ekkert garn skráð. Ýttu á + til að bæta við.</string>
+    <string name="yarn_list_summary">Magn núna: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Magn núna: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Síðast breytt: %1$s</string>
+    <string name="yarn_list_hide_used">Fela notað garn</string>
+    <string name="yarn_list_filter">Leita</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Verkefni</string>
+    <string name="project_list_empty">Engin verkefni. Ýttu á + til að byrja nýtt.</string>
+    <string name="project_list_filter">Leita</string>
+    <string name="item_label_name">Heiti: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Uppskriftir</string>
+    <string name="pattern_list_empty">Engar uppskriftir. Ýttu á + til að bæta við.</string>
+    <string name="pattern_list_filter">Leita</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Til baka</string>
+    <string name="common_cancel">Hætta við</string>
+    <string name="common_delete">Eyða</string>
+    <string name="common_save">Vista</string>
+    <string name="common_add">Bæta við</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">Í lagi</string>
+    <string name="common_yes">Já</string>
+    <string name="common_no">Nei</string>
+    <string name="common_stay">Halda áfram</string>
+    <string name="common_select_image">Velja mynd</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nýtt garn</string>
+    <string name="yarn_form_edit">Breyta garni</string>
+    <string name="yarn_label_name">Heiti</string>
+    <string name="yarn_label_color">Litur</string>
+    <string name="yarn_label_color_code">Litarnúmer</string>
+    <string name="yarn_label_blend">Innihald</string>
+    <string name="yarn_label_dye_lot">Lotunúmer (Dye lot)</string>
+    <string name="yarn_label_brand">Vörumerki</string>
+    <string name="yarn_label_storage_place">Geymslustaður</string>
+    <string name="yarn_label_amount">Magn (g)</string>
+    <string name="yarn_label_weight_per_skein">g / dokka</string>
+    <string name="yarn_label_meterage_per_skein">m / dokka</string>
+    <string name="yarn_label_yardage_per_skein">yd / dokka</string>
+    <string name="yarn_label_number_of_skeins">Fjöldi dokka</string>
+    <string name="yarn_label_modified">Breytt</string>
+    <string name="date_format_hint_modified">Breytt (ÁÁÁÁ, ÁÁÁÁ-MM, ÁÁÁÁ-MM-DD)</string>
+    <string name="yarn_label_added">Bætt við</string>
+    <string name="date_format_hint_added">Bætt við (ÁÁÁÁ, ÁÁÁÁ-MM, ÁÁÁÁ-MM-DD)</string>
+    <string name="yarn_label_notes">Glósur</string>
+    <string name="yarn_form_no_projects_assigned">Ekki tengt neinu verkefni.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Setja afgang í 0</string>
+    <string name="yarn_new_default_name">Garn#%1$d</string>
+    <string name="form_unsaved_changes_title">Óvistaðar breytingar</string>
+    <string name="form_unsaved_changes_message">Viltu vista breytingarnar?</string>
+    <string name="yarn_form_add_color">Bæta við lit</string>
+    <string name="yarn_form_view_project">Skoða verkefni</string>
+    <string name="yarn_form_delete_title">Eyða garni?</string>
+    <string name="yarn_form_delete_message">Ertu viss um að þú viljir eyða þessu garni? Þessari aðgerð er ekki hægt að snúa við.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nýtt verkefni</string>
+    <string name="project_form_edit">Breyta verkefni</string>
+    <string name="project_label_name">Heiti</string>
+    <string name="project_label_pattern">Uppskrift</string>
+    <string name="project_label_for">Fyrir hvern</string>
+    <string name="project_label_start_date">Upphafsdagur</string>
+    <string name="project_label_end_date">Lokadagur</string>
+    <string name="date_format_hint_project">Dagsetning (ÁÁÁÁ, ÁÁÁÁ-MM, ÁÁÁÁ-MM-DD)</string>
+    <string name="project_label_notes">Glósur</string>
+    <string name="project_form_button_assignments">Tengja garn</string>
+    <string name="project_form_button_export_pdf">Flytja út sem PDF</string>
+    <string name="project_form_view_pattern">Skoða uppskrift</string>
+    <string name="project_form_view_yarn">Skoða garn</string>
+    <string name="project_form_no_yarn_assigned">Ekkert garn hefur verið tengt við þetta verkefni.</string>
+    <string name="project_form_delete_title">Eyða verkefni?</string>
+    <string name="project_form_delete_message">Ertu viss um að þú viljir eyða þessu verkefni? Þessari aðgerð er ekki hægt að snúa við.</string>
+    <string name="delete_project_restricted_title">Ekki hægt að eyða</string>
+    <string name="delete_project_restricted_message">Aðeins er hægt að eyða verkefni ef ekkert garn er tengt við það. Vinsamlegast aftengið garnið fyrst.</string>
+    <string name="project_status_planning">Í skipulagningu</string>
+    <string name="project_status_in_progress">Í vinnslu</string>
+    <string name="project_status_finished">Lokið</string>
+    <string name="project_new_default_name">Verkefni#%1$d</string>
+    <string name="row_counter_new_default_name">Umferðateljari #%1$d</string>
+    <string name="project_label_needle_size">Prjónastærð</string>
+    <string name="project_label_size">Stærð</string>
+    <string name="project_label_gauge">Prjónafesta</string>
+    <string name="project_label_row_count">Umferðateljarar</string>
+    <string name="project_form_add_counter">Bæta við teljara</string>
+    <string name="project_form_select_image">Velja mynd</string>
+    <string name="project_form_take_image">Taka mynd</string>
+    <string name="project_form_remove_image">Fjarlægja mynd</string>
+    <string name="project_form_add_counter_dialog_title">Nýr teljari</string>
+    <string name="project_form_add_counter_dialog_label">Heiti teljara</string>
+    <string name="export_as_pdf">Flytja út sem PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Ný uppskrift</string>
+    <string name="pattern_form_edit">Breyta uppskrift</string>
+    <string name="pattern_label_name">Heiti</string>
+    <string name="pattern_label_creator">Hönnuður</string>
+    <string name="pattern_label_category">Flokkur</string>
+    <string name="pattern_label_gauge">Prjónafesta</string>
+    <string name="pattern_form_select_pdf">Velja PDF</string>
+    <string name="pattern_form_remove_pdf">Fjarlægja PDF</string>
+    <string name="pattern_form_view_pdf">Skoða PDF</string>
+    <string name="pattern_form_no_projects_assigned">Ekki tengt neinu verkefni.</string>
+    <string name="pattern_form_assigned_projects">Tengd verkefni</string>
+    <string name="pattern_form_view_project">Skoða verkefni</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Garn tengt við %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Tengt garn</string>
+    <string name="usage_amount_label">Magn notað (g)</string>
+    <string name="usage_available">Eftir: %1$d g</string>
+    <string name="usage_available_with_meterage">Eftir: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Eftir: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Eftir: %1$d m</string>
+    <string name="usage_available_yardage">Eftir: %1$d yd</string>
+    <string name="usage_used">Notað: %1$d g</string>
+    <string name="usage_used_with_meterage">Notað: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Notað: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Verkefni</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Tölfræði</string>
+    <string name="statistics_option_total">Samtals</string>
+    <string name="statistics_option_year">Ár</string>
+    <string name="statistics_option_month">Mánuður</string>
+    <string name="statistics_label_year">Ár</string>
+    <string name="statistics_label_month">Mánuður</string>
+    <string name="statistics_total_yarn_available">Heildarmagn í lager: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Heildarmagn í lager: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Keypt garn: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Keypt garn: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Notað garn: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Notað garn: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Verkefni í vinnslu: %1$d</string>
+    <string name="statistics_projects_planned">Áætluð verkefni: %1$d</string>
+    <string name="statistics_projects_finished_title">Lokin verkefni: %1$d</string>
+    <string name="statistics_overall">Almennt</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Garn: Keypt vs Notað (árlega)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Garn: Keypt vs Notað (mánaðarlega)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Lokin verkefni (árlega)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Lokin verkefni (mánaðarlega)</string>
+    <string name="statistics_series_yarn_bought">Keypt garn</string>
+    <string name="statistics_series_yarn_used">Notað garn</string>
+    <string name="statistics_series_projects_finished">Lokin verkefni</string>
+    <string name="statistics_series_projects_in_progress">Verkefni í vinnslu</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Upplýsingar</string>
+    <string name="info_how_to_help">Þú getur hjálpað!</string>
+    <string name="info_description">OpenYarnStash er opinn hugbúnaður til að halda utan um garnlager og verkefni. Forritið er enn í þróun – allar ábendingar eru vel þegnar!</string>
+    <string name="info_github_button">Skoða á GitHub</string>
+    <string name="info_feedback_button">Senda endurgjöf</string>
+    <string name="info_kofi_button">Styrkja þróun (Ko-fi)</string>
+    <string name="info_copyright_notice">Kóðinn er gefinn út undir MIT leyfi.
+© 2025 Manfred Scheucher &amp; Helena Bergold</string>
+    <string name="you_can_help_button">Þú getur hjálpað!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Hvernig á að hjálpa</string>
+    <string name="ko_fi_button">Styrkja þróun (Ko-fi)</string>
+    <string name="github_button">Skoða á GitHub</string>
+    <string name="github_issues_button">Tilkynna villu</string>
+    <string name="discord_button">Taka þátt á Discord</string>
+    <string name="email_button">Senda tölvupóst</string>
+    <string name="support_us_on_kofi">Styrkja okkur á Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Notaðu forritið og láttu vita af vandamálum:</string>
+    <string name="report_bugs_or_translation_mistakes">Tilkynntu villur eða þýðingarvillur á GitHub eða með tölvupósti.</string>
+    <string name="to_help_us_reproduce_bugs">Til að hjálpa okkur að laga villur, vinsamlegast látið fylgja:</string>
+    <string name="steps_to_reproduce">• Skref til að endurskapa villuna</string>
+    <string name="screenshots_if_possible">• Skjámyndir</string>
+    <string name="app_version_platform">• Útgáfa forrits / stýrikerfi</string>
+    <string name="data_export_from_app">• Gagnaútflutningur (ZIP)</string>
+    <string name="privacy_note">Persónuvernd: </string>
+    <string name="only_share_what_you_are_comfortable_with">Deildu aðeins því sem þér finnst þægilegt.</string>
+    <string name="suggest_new_features">Stinga upp á nýjum eiginleikum:</string>
+    <string name="open_a_feature_request_on_github">Búa til ósk um eiginleika á GitHub.</string>
+    <string name="join_the_discussion">Taka þátt í umræðunni:</string>
+    <string name="participate_in_github_discussions">Taktu þátt á Discord eða GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Stillingar</string>
+    <string name="export_json">Flytja út JSON</string>
+    <string name="export_zip">Flytja út ZIP</string>
+    <string name="import_json">Flytja inn JSON</string>
+    <string name="import_zip">Flytja inn ZIP</string>
+    <string name="import_button_text">Flytja inn</string>
+    <string name="import_dialog_title">Viðvörun</string>
+    <string name="import_dialog_message">Núverandi gögnum verður eytt. Viltu halda áfram?</string>
+    <string name="language_label">Tungumál</string>
+    <string name="length_unit_label">Lengdareining</string>
+    <string name="length_unit_meters">Metrar</string>
+    <string name="length_unit_yards">Yardar</string>
+    <string name="log_level_label">Skráningarstig (Logs)</string>
+    <string name="log_level_description">Atburðaskrá er vistuð staðvært á tækinu.</string>
+    <string name="backup_old_folder_on_import">Taka öryggisafrit af gamalli möppu við innflutning</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Ekki tilbúið</string>
+    <string name="not_implemented_message">Þessi eiginleiki er ekki í boði ennþá.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Ár</string>
+    <string name="date_input_month">Mánuður</string>
+    <string name="date_input_day">Dagur</string>
+
+    <!-- Months -->
+    <string name="month_january">Janúar</string>
+    <string name="month_february">Febrúar</string>
+    <string name="month_march">Mars</string>
+    <string name="month_april">Apríl</string>
+    <string name="month_may">Maí</string>
+    <string name="month_june">Júní</string>
+    <string name="month_july">Júlí</string>
+    <string name="month_august">Ágúst</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Október</string>
+    <string name="month_november">Nóvember</string>
+    <string name="month_december">Desember</string>
+</resources>

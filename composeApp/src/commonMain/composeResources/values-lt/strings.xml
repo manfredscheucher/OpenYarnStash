@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Siūlai</string>
+    <string name="home_button_projects">Projektai</string>
+    <string name="home_button_patterns">Raštai</string>
+    <string name="home_button_statistics">Statistika</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Siūlų atsargos</string>
+    <string name="yarn_list_empty">Siūlų dar nėra. Palieskite +, kad pridėtumėte naują.</string>
+    <string name="yarn_list_summary">Dabartinis kiekis: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Dabartinis kiekis: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Paskutiniai pakeitimai: %1$s</string>
+    <string name="yarn_list_hide_used">Slėpti sunaudotus siūlus</string>
+    <string name="yarn_list_filter">Ieškoti</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projektai</string>
+    <string name="project_list_empty">Projektų dar nėra. Palieskite +, kad pridėtumėte naują.</string>
+    <string name="project_list_filter">Ieškoti</string>
+    <string name="item_label_name">Pavadinimas: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Raštai</string>
+    <string name="pattern_list_empty">Raštų dar nėra. Palieskite +, kad pridėtumėte naują.</string>
+    <string name="pattern_list_filter">Ieškoti</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Atgal</string>
+    <string name="common_cancel">Atšaukti</string>
+    <string name="common_delete">Ištrinti</string>
+    <string name="common_save">Išsaugoti</string>
+    <string name="common_add">Pridėti</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">Gerai</string>
+    <string name="common_yes">Taip</string>
+    <string name="common_no">Ne</string>
+    <string name="common_stay">Likti</string>
+    <string name="common_select_image">Pasirinkti nuotrauką</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nauji siūlai</string>
+    <string name="yarn_form_edit">Redaguoti siūlus</string>
+    <string name="yarn_label_name">Pavadinimas</string>
+    <string name="yarn_label_color">Spalva</string>
+    <string name="yarn_label_color_code">Spalvos kodas</string>
+    <string name="yarn_label_blend">Sudėtis</string>
+    <string name="yarn_label_dye_lot">Partijos numeris (Dye lot)</string>
+    <string name="yarn_label_brand">Prekės ženklas</string>
+    <string name="yarn_label_storage_place">Laikymo vieta</string>
+    <string name="yarn_label_amount">Kiekis (g)</string>
+    <string name="yarn_label_weight_per_skein">g / kamuoliuke</string>
+    <string name="yarn_label_meterage_per_skein">m / kamuoliuke</string>
+    <string name="yarn_label_yardage_per_skein">yd / kamuoliuke</string>
+    <string name="yarn_label_number_of_skeins">Kamuoliukų skaičius</string>
+    <string name="yarn_label_modified">Pakeista</string>
+    <string name="date_format_hint_modified">Pakeista (MMMM, MMMM-mm, MMMM-mm-dd)</string>
+    <string name="yarn_label_added">Pridėta</string>
+    <string name="date_format_hint_added">Pridėta (MMMM, MMMM-mm, MMMM-mm-dd)</string>
+    <string name="yarn_label_notes">Pastabos</string>
+    <string name="yarn_form_no_projects_assigned">Dar nepriskirta jokiam projektui.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Nustatyti likutį į 0</string>
+    <string name="yarn_new_default_name">Siūlai#%1$d</string>
+    <string name="form_unsaved_changes_title">Neišsaugoti pakeitimai</string>
+    <string name="form_unsaved_changes_message">Ar norite išsaugoti pakeitimus?</string>
+    <string name="yarn_form_add_color">Pridėti spalvą</string>
+    <string name="yarn_form_view_project">Peržiūrėti projektą</string>
+    <string name="yarn_form_delete_title">Ištrinti siūlus?</string>
+    <string name="yarn_form_delete_message">Ar tikrai norite ištrinti šiuos siūlus? Šio veiksmo atšaukti negalėsite.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Naujas projektas</string>
+    <string name="project_form_edit">Redaguoti projektą</string>
+    <string name="project_label_name">Pavadinimas</string>
+    <string name="project_label_pattern">Raštas</string>
+    <string name="project_label_for">Kam skirta</string>
+    <string name="project_label_start_date">Pradžios data</string>
+    <string name="project_label_end_date">Pabaigos data</string>
+    <string name="date_format_hint_project">Data (MMMM, MMMM-mm, MMMM-mm-dd)</string>
+    <string name="project_label_notes">Pastabos</string>
+    <string name="project_form_button_assignments">Priskirti siūlus</string>
+    <string name="project_form_button_export_pdf">Eksportuoti PDF</string>
+    <string name="project_form_view_pattern">Peržiūrėti raštą</string>
+    <string name="project_form_view_yarn">Peržiūrėti siūlus</string>
+    <string name="project_form_no_yarn_assigned">Šiam projektui dar nepriskirta jokių siūlų.</string>
+    <string name="project_form_delete_title">Ištrinti projektą?</string>
+    <string name="project_form_delete_message">Ar tikrai norite ištrinti šį projektą? Šio veiksmo atšaukti negalėsite.</string>
+    <string name="delete_project_restricted_title">Ištrinti negalima</string>
+    <string name="delete_project_restricted_message">Ištrinti galima tik tada, kai nėra priskirtų siūlų. Prašome pirmiausia grąžinti siūlus į atsargas.</string>
+    <string name="project_status_planning">Planuojama</string>
+    <string name="project_status_in_progress">Vykdoma</string>
+    <string name="project_status_finished">Baigta</string>
+    <string name="project_new_default_name">Projektas#%1$d</string>
+    <string name="row_counter_new_default_name">Eilių skaitiklis #%1$d</string>
+    <string name="project_label_needle_size">Viražų dydis</string>
+    <string name="project_label_size">Dydis</string>
+    <string name="project_label_gauge">Mezgimo tankis</string>
+    <string name="project_label_row_count">Eilių skaitikliai</string>
+    <string name="project_form_add_counter">Pridėti skaitiklį</string>
+    <string name="project_form_select_image">Pasirinkti nuotrauką</string>
+    <string name="project_form_take_image">Nufotografuoti</string>
+    <string name="project_form_remove_image">Pašalinti nuotrauką</string>
+    <string name="project_form_add_counter_dialog_title">Pridėti naują skaitiklį</string>
+    <string name="project_form_add_counter_dialog_label">Skaitiklio pavadinimas</string>
+    <string name="export_as_pdf">Eksportuoti kaip PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Naujas raštas</string>
+    <string name="pattern_form_edit">Redaguoti raštą</string>
+    <string name="pattern_label_name">Pavadinimas</string>
+    <string name="pattern_label_creator">Autorius</string>
+    <string name="pattern_label_category">Kategorija</string>
+    <string name="pattern_label_gauge">Mezgimo tankis</string>
+    <string name="pattern_form_select_pdf">Pasirinkti PDF</string>
+    <string name="pattern_form_remove_pdf">Pašalinti PDF</string>
+    <string name="pattern_form_view_pdf">Peržiūrėti PDF</string>
+    <string name="pattern_form_no_projects_assigned">Dar nepriskirta jokiam projektui.</string>
+    <string name="pattern_form_assigned_projects">Priskirti projektai</string>
+    <string name="pattern_form_view_project">Peržiūrėti projektą</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Siūlų priskyrimas projektui: %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Priskirti siūlai</string>
+    <string name="usage_amount_label">Kiekis (g)</string>
+    <string name="usage_available">Turima: %1$d g</string>
+    <string name="usage_available_with_meterage">Turima: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Turima: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Turima: %1$d m</string>
+    <string name="usage_available_yardage">Turima: %1$d yd</string>
+    <string name="usage_used">Sunaudota: %1$d g</string>
+    <string name="usage_used_with_meterage">Sunaudota: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Sunaudota: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projektai</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistika</string>
+    <string name="statistics_option_total">Iš viso</string>
+    <string name="statistics_option_year">Metai</string>
+    <string name="statistics_option_month">Mėnuo</string>
+    <string name="statistics_label_year">Metai</string>
+    <string name="statistics_label_month">Mėnuo</string>
+    <string name="statistics_total_yarn_available">Visos turimos atsargos: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Visos turimos atsargos: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Nupirkta siūlų: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Nupirkta siūlų: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Sunaudota siūlų: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Sunaudota siūlų: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Vykdomi projektai: %1$d</string>
+    <string name="statistics_projects_planned">Planuojami projektai: %1$d</string>
+    <string name="statistics_projects_finished_title">Baigti projektai: %1$d</string>
+    <string name="statistics_overall">Bendra</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Siūlai: nupirkta vs sunaudota (metai)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Siūlai: nupirkta vs sunaudota (mėnuo)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Baigti projektai (metai)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Baigti projektai (mėnuo)</string>
+    <string name="statistics_series_yarn_bought">Nupirkti siūlai</string>
+    <string name="statistics_series_yarn_used">Sunaudoti siūlai</string>
+    <string name="statistics_series_projects_finished">Baigti projektai</string>
+    <string name="statistics_series_projects_in_progress">Vykdomi projektai</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Informacija</string>
+    <string name="info_how_to_help">Jūs galite padėti!</string>
+    <string name="info_description">OpenYarnStash yra atvirojo kodo programėlė siūlų atsargoms ir mezgimo projektams valdyti. Programėlė vis dar tobulinama – jūsų atsiliepimai mums labai svarbūs!</string>
+    <string name="info_github_button">Lankytis GitHub</string>
+    <string name="info_feedback_button">Siųsti atsiliepimą</string>
+    <string name="info_kofi_button">Pavaišinkite mus kava</string>
+    <string name="info_copyright_notice">Išeities kodas platinamas pagal MIT licenciją.
+© 2025 Manfred Scheucher ir Helena Bergold</string>
+    <string name="you_can_help_button">Jūs galite padėti!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Kaip padėti</string>
+    <string name="ko_fi_button">Pavaišinkite mus kava</string>
+    <string name="github_button">Lankytis GitHub</string>
+    <string name="github_issues_button">Pranešti apie klaidą</string>
+    <string name="discord_button">Prisijungti prie Discord</string>
+    <string name="email_button">Siųsti el. laišką</string>
+    <string name="support_us_on_kofi">Paremkite mus per Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Naudokitės programėle ir praneškite apie problemas:</string>
+    <string name="report_bugs_or_translation_mistakes">Apie klaidas ar vertimo netikslumus praneškite per GitHub arba el. paštu.</string>
+    <string name="to_help_us_reproduce_bugs">Kad padėtumėte mums ištaisyti klaidą, nurodykite:</string>
+    <string name="steps_to_reproduce">• Veiksmus klaidai atkurti</string>
+    <string name="screenshots_if_possible">• Ekrano nuotraukas</string>
+    <string name="app_version_platform">• Programėlės versiją / platformą (žiūrėkite Info lange)</string>
+    <string name="data_export_from_app">• Duomenų eksportą (ZIP) (Nustatymai → Eksportuoti duomenis)</string>
+    <string name="privacy_note">Privatumo pastaba: </string>
+    <string name="only_share_what_you_are_comfortable_with">Dalinkitės tik tuo, kuo norite.</string>
+    <string name="suggest_new_features">Siūlykite naujas funkcijas:</string>
+    <string name="open_a_feature_request_on_github">Sukurkite užklausą GitHub platformoje.</string>
+    <string name="join_the_discussion">Prisijunkite prie diskusijos:</string>
+    <string name="participate_in_github_discussions">Dalyvaukite Discord ir GitHub diskusijose.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Nustatymai</string>
+    <string name="export_json">Eksportuoti JSON</string>
+    <string name="export_zip">Eksportuoti ZIP</string>
+    <string name="import_json">Importuoti JSON</string>
+    <string name="import_zip">Importuoti ZIP</string>
+    <string name="import_button_text">Importuoti</string>
+    <string name="import_dialog_title">Įspėjimas</string>
+    <string name="import_dialog_message">Dabartiniai duomenys bus perrašyti. Ar norite tęsti?</string>
+    <string name="language_label">Kalba</string>
+    <string name="length_unit_label">Ilgio vienetas</string>
+    <string name="length_unit_meters">Metrai</string>
+    <string name="length_unit_yards">Jardai</string>
+    <string name="log_level_label">Žurnalo lygis (logging level)</string>
+    <string name="log_level_description">Žurnalo failas saugomas įrenginyje.</string>
+    <string name="backup_old_folder_on_import">Sukurti senojo aplanko atsarginę kopiją importuojant</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Dar neįgyvendinta</string>
+    <string name="not_implemented_message">Ši funkcija dar nepasiekiama.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Metai</string>
+    <string name="date_input_month">Mėnuo</string>
+    <string name="date_input_day">Diena</string>
+
+    <!-- Months -->
+    <string name="month_january">Sausis</string>
+    <string name="month_february">Vasaris</string>
+    <string name="month_march">Kovas</string>
+    <string name="month_april">Balandis</string>
+    <string name="month_may">Gegužė</string>
+    <string name="month_june">Birželis</string>
+    <string name="month_july">Liepa</string>
+    <string name="month_august">Rugpjūtis</string>
+    <string name="month_september">Rugsėjis</string>
+    <string name="month_october">Spalis</string>
+    <string name="month_november">Lapkritis</string>
+    <string name="month_december">Gruodis</string>
+</resources>

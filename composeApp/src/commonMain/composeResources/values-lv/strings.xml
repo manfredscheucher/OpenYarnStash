@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Dzija</string>
+    <string name="home_button_projects">Projekti</string>
+    <string name="home_button_patterns">Paraugi</string>
+    <string name="home_button_statistics">Statistika</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Dziju krājumi</string>
+    <string name="yarn_list_empty">Dziju vēl nav. Pieskarieties +, lai pievienotu jaunu.</string>
+    <string name="yarn_list_summary">Pašreizējais daudzums: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Pašreizējais daudzums: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Pēdējās izmaiņas: %1$s</string>
+    <string name="yarn_list_hide_used">Paslēpt izlietoto dziju</string>
+    <string name="yarn_list_filter">Meklēt</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projekti</string>
+    <string name="project_list_empty">Projektu vēl nav. Pieskarieties +, lai pievienotu jaunu.</string>
+    <string name="project_list_filter">Meklēt</string>
+    <string name="item_label_name">Nosaukums: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Paraugi</string>
+    <string name="pattern_list_empty">Paraugu vēl nav. Pieskarieties +, lai pievienotu jaunu.</string>
+    <string name="pattern_list_filter">Meklēt</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Atpakaļ</string>
+    <string name="common_cancel">Atcelt</string>
+    <string name="common_delete">Dzēst</string>
+    <string name="common_save">Saglabāt</string>
+    <string name="common_add">Pievienot</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">Labi</string>
+    <string name="common_yes">Jā</string>
+    <string name="common_no">Nē</string>
+    <string name="common_stay">Palikt</string>
+    <string name="common_select_image">Izvēlēties attēlu</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Jauna dzija</string>
+    <string name="yarn_form_edit">Labot dziju</string>
+    <string name="yarn_label_name">Nosaukums</string>
+    <string name="yarn_label_color">Krāsa</string>
+    <string name="yarn_label_color_code">Krāsas kods</string>
+    <string name="yarn_label_blend">Sastāvs</string>
+    <string name="yarn_label_dye_lot">Partijas numurs (Dye lot)</string>
+    <string name="yarn_label_brand">Zīmols</string>
+    <string name="yarn_label_storage_place">Glabāšanas vieta</string>
+    <string name="yarn_label_amount">Daudzums (g)</string>
+    <string name="yarn_label_weight_per_skein">g / šķeterē</string>
+    <string name="yarn_label_meterage_per_skein">m / šķeterē</string>
+    <string name="yarn_label_yardage_per_skein">yd / šķeterē</string>
+    <string name="yarn_label_number_of_skeins">Šķeteru skaits</string>
+    <string name="yarn_label_modified">Izmainīts</string>
+    <string name="date_format_hint_modified">Izmainīts (GGGG, GGGG-MM, GGGG-MM-DD)</string>
+    <string name="yarn_label_added">Pievienots</string>
+    <string name="date_format_hint_added">Pievienots (GGGG, GGGG-MM, GGGG-MM-DD)</string>
+    <string name="yarn_label_notes">Piezīmes</string>
+    <string name="yarn_form_no_projects_assigned">Vēl nav piesaistīts nevienam projektam.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Iestatīt atlikumu uz 0</string>
+    <string name="yarn_new_default_name">Dzija#%1$d</string>
+    <string name="form_unsaved_changes_title">Nesaglabātas izmaiņas</string>
+    <string name="form_unsaved_changes_message">Vai vēlaties saglabāt izmaiņas?</string>
+    <string name="yarn_form_add_color">Pievienot krāsu</string>
+    <string name="yarn_form_view_project">Skatīt projektu</string>
+    <string name="yarn_form_delete_title">Dzēst dziju?</string>
+    <string name="yarn_form_delete_message">Vai tiešām vēlaties dzēst šo dziju? Šo darbību nevarēs atcelt.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Jauns projekts</string>
+    <string name="project_form_edit">Labot projektu</string>
+    <string name="project_label_name">Nosaukums</string>
+    <string name="project_label_pattern">Paraugs</string>
+    <string name="project_label_for">Kam paredzēts</string>
+    <string name="project_label_start_date">Sākuma datums</string>
+    <string name="project_label_end_date">Beigu datums</string>
+    <string name="date_format_hint_project">Datums (GGGG, GGGG-MM, GGGG-MM-DD)</string>
+    <string name="project_label_notes">Piezīmes</string>
+    <string name="project_form_button_assignments">Piesaistīt dziju</string>
+    <string name="project_form_button_export_pdf">Eksportēt PDF</string>
+    <string name="project_form_view_pattern">Skatīt paraugu</string>
+    <string name="project_form_view_yarn">Skatīt dziju</string>
+    <string name="project_form_no_yarn_assigned">Šim projektam vēl nav piesaistīta dzija.</string>
+    <string name="project_form_delete_title">Dzēst projektu?</string>
+    <string name="project_form_delete_message">Vai tiešām vēlaties dzēst šo projektu? Šo darbību nevarēs atcelt.</string>
+    <string name="delete_project_restricted_title">Dzēšana nav iespējama</string>
+    <string name="delete_project_restricted_message">Dzēšana ir iespējama tikai tad, ja nav piesaistīta dzija. Lūdzu, vispirms atbrīvojiet piesaistīto dziju.</string>
+    <string name="project_status_planning">Plānots</string>
+    <string name="project_status_in_progress">Procesā</string>
+    <string name="project_status_finished">Pabeigts</string>
+    <string name="project_new_default_name">Projekts#%1$d</string>
+    <string name="row_counter_new_default_name">Rindu skaitītājs #%1$d</string>
+    <string name="project_label_needle_size">Adatu izmērs</string>
+    <string name="project_label_size">Izmērs</string>
+    <string name="project_label_gauge">Adīšanas blīvums</string>
+    <string name="project_label_row_count">Rindu skaitītāji</string>
+    <string name="project_form_add_counter">Pievienot skaitītāju</string>
+    <string name="project_form_select_image">Izvēlēties attēlu</string>
+    <string name="project_form_take_image">Uzņemt fotoattēlu</string>
+    <string name="project_form_remove_image">Noņemt attēlu</string>
+    <string name="project_form_add_counter_dialog_title">Pievienot jaunu skaitītāju</string>
+    <string name="project_form_add_counter_dialog_label">Skaitītāja nosaukums</string>
+    <string name="export_as_pdf">Eksportēt kā PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Jauns paraugs</string>
+    <string name="pattern_form_edit">Labot paraugu</string>
+    <string name="pattern_label_name">Nosaukums</string>
+    <string name="pattern_label_creator">Autors</string>
+    <string name="pattern_label_category">Kategorija</string>
+    <string name="pattern_label_gauge">Adīšanas blīvums</string>
+    <string name="pattern_form_select_pdf">Izvēlēties PDF</string>
+    <string name="pattern_form_remove_pdf">Noņemt PDF</string>
+    <string name="pattern_form_view_pdf">Skatīt PDF</string>
+    <string name="pattern_form_no_projects_assigned">Vēl nav piesaistīts nevienam projektam.</string>
+    <string name="pattern_form_assigned_projects">Piesaistītie projekti</string>
+    <string name="pattern_form_view_project">Skatīt projektu</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Dziju piesaiste projektam: %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Piesaistītā dzija</string>
+    <string name="usage_amount_label">Daudzums (g)</string>
+    <string name="usage_available">Pieejams: %1$d g</string>
+    <string name="usage_available_with_meterage">Pieejams: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Pieejams: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Pieejams: %1$d m</string>
+    <string name="usage_available_yardage">Pieejams: %1$d yd</string>
+    <string name="usage_used">Izlietots: %1$d g</string>
+    <string name="usage_used_with_meterage">Izlietots: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Izlietots: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projekti</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistika</string>
+    <string name="statistics_option_total">Kopā</string>
+    <string name="statistics_option_year">Gads</string>
+    <string name="statistics_option_month">Mēnesis</string>
+    <string name="statistics_label_year">Gads</string>
+    <string name="statistics_label_month">Mēnesis</string>
+    <string name="statistics_total_yarn_available">Kopējie dziju krājumi: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Kopējie dziju krājumi: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Iegādātā dzija: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Iegādātā dzija: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Izlietotā dzija: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Izlietotā dzija: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Aktīvie projekti: %1$d</string>
+    <string name="statistics_projects_planned">Plānotie projekti: %1$d</string>
+    <string name="statistics_projects_finished_title">Pabeigtie projekti: %1$d</string>
+    <string name="statistics_overall">Vispārīgi</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Dzija: Iegādāta pret Izlietota (gadā)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Dzija: Iegādāta pret Izlietota (mēnesī)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Pabeigtie projekti (gadā)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Pabeigtie projekti (mēnesī)</string>
+    <string name="statistics_series_yarn_bought">Iegādātā dzija</string>
+    <string name="statistics_series_yarn_used">Izlietotā dzija</string>
+    <string name="statistics_series_projects_finished">Pabeigtie projekti</string>
+    <string name="statistics_series_projects_in_progress">Aktīvie projekti</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">Tu vari palīdzēt!</string>
+    <string name="info_description">OpenYarnStash ir atvērtā pirmkoda lietotne dziju krājumu un adīšanas projektu pārvaldībai. Lietotne vēl ir izstrādes stadijā – atsauksmes ir laipni gaidītas!</string>
+    <string name="info_github_button">Apmeklēt GitHub</string>
+    <string name="info_feedback_button">Sūtīt atsauksmi</string>
+    <string name="info_kofi_button">Atbalstīt mūs ar kafiju</string>
+    <string name="info_copyright_notice">Pirmkods ir pieejams saskaņā ar MIT licenci.
+© 2025 Manfred Scheucher un Helena Bergold</string>
+    <string name="you_can_help_button">Tu vari palīdzēt!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Kā palīdzēt</string>
+    <string name="ko_fi_button">Atbalstīt mūs ar kafiju</string>
+    <string name="github_button">Apmeklēt GitHub</string>
+    <string name="github_issues_button">Ziņot par kļūdu</string>
+    <string name="discord_button">Pievienoties Discord</string>
+    <string name="email_button">Sūtīt e-pastu</string>
+    <string name="support_us_on_kofi">Atbalstiet mūs caur Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Lietojiet lietotni un ziņojiet par problēmām:</string>
+    <string name="report_bugs_or_translation_mistakes">Ziņojiet par kļūdām vai tulkošanas nepilnībām GitHub vai pa e-pastu.</string>
+    <string name="to_help_us_reproduce_bugs">Lai palīdzētu mums novērst kļūdu, lūdzu, norādiet:</string>
+    <string name="steps_to_reproduce">• Soļi kļūdas atkārtošanai</string>
+    <string name="screenshots_if_possible">• Ekrānuzņēmumi</string>
+    <string name="app_version_platform">• Lietotnes versija un platforma (skat. Info ekrānu)</string>
+    <string name="data_export_from_app">• Datu eksports (ZIP) (Iestatījumi → Eksportēt datus)</string>
+    <string name="privacy_note">Piezīme par privātumu: </string>
+    <string name="only_share_what_you_are_comfortable_with">Kopīgojiet tikai to, ko uzskatāt par piemērotu.</string>
+    <string name="suggest_new_features">Ieteikt jaunas funkcijas:</string>
+    <string name="open_a_feature_request_on_github">Izveidot funkcijas pieprasījumu GitHub.</string>
+    <string name="join_the_discussion">Pievienoties diskusijai:</string>
+    <string name="participate_in_github_discussions">Piedalieties Discord un GitHub diskusijās.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Iestatījumi</string>
+    <string name="export_json">Eksportēt JSON</string>
+    <string name="export_zip">Eksportēt ZIP</string>
+    <string name="import_json">Importēt JSON</string>
+    <string name="import_zip">Importēt ZIP</string>
+    <string name="import_button_text">Importēt</string>
+    <string name="import_dialog_title">Brīdinājums</string>
+    <string name="import_dialog_message">Pašreizējie dati tiks pārrakstīti. Vai vēlaties turpināt?</string>
+    <string name="language_label">Valoda</string>
+    <string name="length_unit_label">Garuma mērvienība</string>
+    <string name="length_unit_meters">Metri</string>
+    <string name="length_unit_yards">Jardi</string>
+    <string name="log_level_label">Žurnālēšanas līmenis</string>
+    <string name="log_level_description">Žurnāla fails tiek saglabāts ierīcē.</string>
+    <string name="backup_old_folder_on_import">Dublēt veco mapi importēšanas laikā</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Vēl nav ieviests</string>
+    <string name="not_implemented_message">Šī funkcija pašlaik nav pieejama.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Gads</string>
+    <string name="date_input_month">Mēnesis</string>
+    <string name="date_input_day">Diena</string>
+
+    <!-- Months -->
+    <string name="month_january">Janvāris</string>
+    <string name="month_february">Februāris</string>
+    <string name="month_march">Marts</string>
+    <string name="month_april">Aprīlis</string>
+    <string name="month_may">Maijs</string>
+    <string name="month_june">Jūnijs</string>
+    <string name="month_july">Jūlijs</string>
+    <string name="month_august">Augusts</string>
+    <string name="month_september">Septembris</string>
+    <string name="month_october">Oktobris</string>
+    <string name="month_november">Novembris</string>
+    <string name="month_december">Decembris</string>
+</resources>

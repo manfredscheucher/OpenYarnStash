@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">İpler</string>
+    <string name="home_button_projects">Projeler</string>
+    <string name="home_button_patterns">Modeller</string>
+    <string name="home_button_statistics">İstatistikler</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">İp Stokları</string>
+    <string name="yarn_list_empty">Henüz ip yok. Eklemek için + düğmesine basın.</string>
+    <string name="yarn_list_summary">Mevcut miktar: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Mevcut miktar: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Son değişiklik: %1$s</string>
+    <string name="yarn_list_hide_used">Kullanılmış ipleri gizle</string>
+    <string name="yarn_list_filter">Ara</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projeler</string>
+    <string name="project_list_empty">Proje yok. Yeni bir tane oluşturmak için + düğmesine basın.</string>
+    <string name="project_list_filter">Ara</string>
+    <string name="item_label_name">Ad: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Modeller</string>
+    <string name="pattern_list_empty">Henüz model yok. Yeni bir tane eklemek için + düğmesine basın.</string>
+    <string name="pattern_list_filter">Ara</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Geri</string>
+    <string name="common_cancel">İptal</string>
+    <string name="common_delete">Sil</string>
+    <string name="common_save">Kaydet</string>
+    <string name="common_add">Ekle</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">Tamam</string>
+    <string name="common_yes">Evet</string>
+    <string name="common_no">Hayır</string>
+    <string name="common_stay">Kal</string>
+    <string name="common_select_image">Görsel Seç</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Yeni İp</string>
+    <string name="yarn_form_edit">İpi Düzenle</string>
+    <string name="yarn_label_name">Ad</string>
+    <string name="yarn_label_color">Renk</string>
+    <string name="yarn_label_color_code">Renk Kodu</string>
+    <string name="yarn_label_blend">İçerik/Karışım</string>
+    <string name="yarn_label_dye_lot">Parti No (Dye lot)</string>
+    <string name="yarn_label_brand">Marka</string>
+    <string name="yarn_label_storage_place">Saklama Yeri</string>
+    <string name="yarn_label_amount">Miktar (g)</string>
+    <string name="yarn_label_weight_per_skein">g / yumak</string>
+    <string name="yarn_label_meterage_per_skein">m / yumak</string>
+    <string name="yarn_label_yardage_per_skein">yd / yumak</string>
+    <string name="yarn_label_number_of_skeins">Yumak Sayısı</string>
+    <string name="yarn_label_modified">Değiştirilme</string>
+    <string name="date_format_hint_modified">Değiştirilme (YYYY, YYYY-AA, YYYY-AA-GG)</string>
+    <string name="yarn_label_added">Eklendi</string>
+    <string name="date_format_hint_added">Eklendi (YYYY, YYYY-AA, YYYY-AA-GG)</string>
+    <string name="yarn_label_notes">Notlar</string>
+    <string name="yarn_form_no_projects_assigned">Henüz bir projeye atanmadı.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Kalanı 0 yap</string>
+    <string name="yarn_new_default_name">İp#%1$d</string>
+    <string name="form_unsaved_changes_title">Kaydedilmemiş Değişiklikler</string>
+    <string name="form_unsaved_changes_message">Değişiklikleri kaydetmek istiyor musunuz?</string>
+    <string name="yarn_form_add_color">Renk Ekle</string>
+    <string name="yarn_form_view_project">Projeyi Görüntüle</string>
+    <string name="yarn_form_delete_title">İpi sil?</string>
+    <string name="yarn_form_delete_message">Bu ipi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Yeni Proje</string>
+    <string name="project_form_edit">Projeyi Düzenle</string>
+    <string name="project_label_name">Ad</string>
+    <string name="project_label_pattern">Model</string>
+    <string name="project_label_for">Kimin İçin</string>
+    <string name="project_label_start_date">Başlangıç Tarihi</string>
+    <string name="project_label_end_date">Bitiş Tarihi</string>
+    <string name="date_format_hint_project">Tarih (YYYY, YYYY-AA, YYYY-AA-GG)</string>
+    <string name="project_label_notes">Notlar</string>
+    <string name="project_form_button_assignments">İp Ata</string>
+    <string name="project_form_button_export_pdf">PDF olarak dışa aktar</string>
+    <string name="project_form_view_pattern">Modeli Görüntüle</string>
+    <string name="project_form_view_yarn">İpi Görüntüle</string>
+    <string name="project_form_no_yarn_assigned">Bu projeye henüz ip atanmadı.</string>
+    <string name="project_form_delete_title">Projeyi sil?</string>
+    <string name="project_form_delete_message">Bu projeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="delete_project_restricted_title">Silme Mümkün Değil</string>
+    <string name="delete_project_restricted_message">Silme işlemi yalnızca atanmış ip yoksa yapılabilir. Lütfen önce ipleri stoğa geri döndürün.</string>
+    <string name="project_status_planning">Planlanıyor</string>
+    <string name="project_status_in_progress">Devam Ediyor</string>
+    <string name="project_status_finished">Tamamlandı</string>
+    <string name="project_new_default_name">Proje#%1$d</string>
+    <string name="row_counter_new_default_name">Sıra Sayacı #%1$d</string>
+    <string name="project_label_needle_size">Şiş/Tığ Numarası</string>
+    <string name="project_label_size">Beden/Boyut</string>
+    <string name="project_label_gauge">İlmek Bilgisi (Gauge)</string>
+    <string name="project_label_row_count">Sıra Sayaçları</string>
+    <string name="project_form_add_counter">Sayaç Ekle</string>
+    <string name="project_form_select_image">Görsel Seç</string>
+    <string name="project_form_take_image">Fotoğraf Çek</string>
+    <string name="project_form_remove_image">Görseli Kaldır</string>
+    <string name="project_form_add_counter_dialog_title">Yeni Sayaç</string>
+    <string name="project_form_add_counter_dialog_label">Sayaç Adı</string>
+    <string name="export_as_pdf">PDF olarak aktar</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Yeni Model</string>
+    <string name="pattern_form_edit">Modeli Düzenle</string>
+    <string name="pattern_label_name">Ad</string>
+    <string name="pattern_label_creator">Tasarımcı</string>
+    <string name="pattern_label_category">Kategori</string>
+    <string name="pattern_label_gauge">İlmek Bilgisi (Gauge)</string>
+    <string name="pattern_form_select_pdf">PDF Seç</string>
+    <string name="pattern_form_remove_pdf">PDF\'i Kaldır</string>
+    <string name="pattern_form_view_pdf">PDF\'i Görüntüle</string>
+    <string name="pattern_form_no_projects_assigned">Henüz bir projeye atanmadı.</string>
+    <string name="pattern_form_assigned_projects">Atanmış Projeler</string>
+    <string name="pattern_form_view_project">Projeyi Görüntüle</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">%1$s için İp Atama</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Atanmış İp</string>
+    <string name="usage_amount_label">Miktar (g)</string>
+    <string name="usage_available">Mevcut: %1$d g</string>
+    <string name="usage_available_with_meterage">Mevcut: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Mevcut: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Mevcut: %1$d m</string>
+    <string name="usage_available_yardage">Mevcut: %1$d yd</string>
+    <string name="usage_used">Kullanılan: %1$d g</string>
+    <string name="usage_used_with_meterage">Kullanılan: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Kullanılan: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projeler</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">İstatistikler</string>
+    <string name="statistics_option_total">Toplam</string>
+    <string name="statistics_option_year">Yıl</string>
+    <string name="statistics_option_month">Ay</string>
+    <string name="statistics_label_year">Yıl</string>
+    <string name="statistics_label_month">Ay</string>
+    <string name="statistics_total_yarn_available">Toplam Mevcut İp: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Toplam Mevcut İp: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Alınan İp: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Alınan İp: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Kullanılan İp: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Kullanılan İp: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Devam Eden Projeler: %1$d</string>
+    <string name="statistics_projects_planned">Planlanan Projeler: %1$d</string>
+    <string name="statistics_projects_finished_title">Tamamlanan Projeler: %1$d</string>
+    <string name="statistics_overall">Genel</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">İp: Alınan vs Kullanılan (Yıllık)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">İp: Alınan vs Kullanılan (Aylık)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Tamamlanan Projeler (Yıllık)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Tamamlanan Projeler (Aylık)</string>
+    <string name="statistics_series_yarn_bought">Alınan İp</string>
+    <string name="statistics_series_yarn_used">Kullanılan İp</string>
+    <string name="statistics_series_projects_finished">Tamamlanan Projeler</string>
+    <string name="statistics_series_projects_in_progress">Devam Eden Projeler</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Bilgi</string>
+    <string name="info_how_to_help">Yardımcı Olabilirsiniz!</string>
+    <string name="info_description">OpenYarnStash, ip stoklarını ve projeleri yönetmek için geliştirilmiş bir açık kaynak uygulamadır. Uygulama geliştirme aşamasındadır, geri bildirimlerinizi bekliyoruz!</string>
+    <string name="info_github_button">GitHub\'da Görüntüle</string>
+    <string name="info_feedback_button">Geri Bildirim Gönder</string>
+    <string name="info_kofi_button">Bize Kahve Ismarla</string>
+    <string name="info_copyright_notice">Kaynak kodu MIT Lisansı altındadır.
+© 2025 Manfred Scheucher ve Helena Bergold</string>
+    <string name="you_can_help_button">Yardımcı olabilirsiniz!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Nasıl Yardım Edilir?</string>
+    <string name="ko_fi_button">Bize Kahve Ismarla</string>
+    <string name="github_button">GitHub\'da Görüntüle</string>
+    <string name="github_issues_button">Hata Bildir</string>
+    <string name="discord_button">Discord\'a Katıl</string>
+    <string name="email_button">E-posta Gönder</string>
+    <string name="support_us_on_kofi">Bizi Ko-fi üzerinden destekleyin:</string>
+    <string name="use_the_app_and_report_issues">Uygulamayı kullanın ve sorunları bildirin:</string>
+    <string name="report_bugs_or_translation_mistakes">Hataları veya çeviri yanlışlarını GitHub veya e-posta yoluyla bildirin.</string>
+    <string name="to_help_us_reproduce_bugs">Hatayı düzeltmemize yardımcı olmak için şunları ekleyin:</string>
+    <string name="steps_to_reproduce">• Hatayı yeniden oluşturma adımları</string>
+    <string name="screenshots_if_possible">• Ekran görüntüleri</string>
+    <string name="app_version_platform">• Uygulama sürümü/platform (Bilgi ekranına bakın)</string>
+    <string name="data_export_from_app">• Uygulama veri aktarımı (ZIP) (Ayarlar → Verileri Dışa Aktar)</string>
+    <string name="privacy_note">Gizlilik Notu: </string>
+    <string name="only_share_what_you_are_comfortable_with">Sadece paylaştığınızda kendinizi rahat hissettiğiniz bilgileri verin.</string>
+    <string name="suggest_new_features">Yeni özellikler önerin:</string>
+    <string name="open_a_feature_request_on_github">GitHub\'da özellik isteği oluşturun.</string>
+    <string name="join_the_discussion">Tartışmaya katılın:</string>
+    <string name="participate_in_github_discussions">Discord ve GitHub tartışmalarına katılın.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="export_json">JSON olarak dışa aktar</string>
+    <string name="export_zip">ZIP olarak dışa aktar</string>
+    <string name="import_json">JSON içeri aktar</string>
+    <string name="import_zip">ZIP içeri aktar</string>
+    <string name="import_button_text">İçeri Aktar</string>
+    <string name="import_dialog_title">Uyarı</string>
+    <string name="import_dialog_message">Mevcut verilerin üzerine yazılacak. Devam etmek istiyor musunuz?</string>
+    <string name="language_label">Dil</string>
+    <string name="length_unit_label">Uzunluk Birimi</string>
+    <string name="length_unit_meters">Metre</string>
+    <string name="length_unit_yards">Yarda</string>
+    <string name="log_level_label">Günlükleme Düzeyi (Log)</string>
+    <string name="log_level_description">Günlük dosyası cihazda yerel olarak saklanır.</string>
+    <string name="backup_old_folder_on_import">İçeri aktarırken eski klasörü yedekle</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Henüz Uygulanmadı</string>
+    <string name="not_implemented_message">Bu özellik henüz mevcut değil.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Yıl</string>
+    <string name="date_input_month">Ay</string>
+    <string name="date_input_day">Gün</string>
+
+    <!-- Months -->
+    <string name="month_january">Ocak</string>
+    <string name="month_february">Şubat</string>
+    <string name="month_march">Mart</string>
+    <string name="month_april">Nisan</string>
+    <string name="month_may">Mayıs</string>
+    <string name="month_june">Haziran</string>
+    <string name="month_july">Temmuz</string>
+    <string name="month_august">Ağustos</string>
+    <string name="month_september">Eylül</string>
+    <string name="month_october">Ekim</string>
+    <string name="month_november">Kasım</string>
+    <string name="month_december">Aralık</string>
+</resources>

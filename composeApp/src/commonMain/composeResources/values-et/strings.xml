@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Lõngad</string>
+    <string name="home_button_projects">Projektid</string>
+    <string name="home_button_patterns">Mustrid</string>
+    <string name="home_button_statistics">Statistika</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Lõngavaru</string>
+    <string name="yarn_list_empty">Lõngu pole veel. Lisa uus, vajutades + nupule.</string>
+    <string name="yarn_list_summary">Praegune kogus: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Praegune kogus: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Viimati muudetud: %1$s</string>
+    <string name="yarn_list_hide_used">Peida kasutatud lõngad</string>
+    <string name="yarn_list_filter">Otsi</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projektid</string>
+    <string name="project_list_empty">Projekte pole. Lisa uus, vajutades + nupule.</string>
+    <string name="project_list_filter">Otsi</string>
+    <string name="item_label_name">Nimi: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Mustrid</string>
+    <string name="pattern_list_empty">Mustreid pole. Lisa uus, vajutades + nupule.</string>
+    <string name="pattern_list_filter">Otsi</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Tagasi</string>
+    <string name="common_cancel">Tühista</string>
+    <string name="common_delete">Kustuta</string>
+    <string name="common_save">Salvesta</string>
+    <string name="common_add">Lisa</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Jah</string>
+    <string name="common_no">Ei</string>
+    <string name="common_stay">Jää</string>
+    <string name="common_select_image">Vali pilt</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Uus lõng</string>
+    <string name="yarn_form_edit">Muuda lõnga</string>
+    <string name="yarn_label_name">Nimi</string>
+    <string name="yarn_label_color">Värv</string>
+    <string name="yarn_label_color_code">Värvikood</string>
+    <string name="yarn_label_blend">Koostis</string>
+    <string name="yarn_label_dye_lot">Värvipartii (Dye lot)</string>
+    <string name="yarn_label_brand">Bränd</string>
+    <string name="yarn_label_storage_place">Hoiukoht</string>
+    <string name="yarn_label_amount">Kogus (g)</string>
+    <string name="yarn_label_weight_per_skein">g / kera</string>
+    <string name="yarn_label_meterage_per_skein">m / kera</string>
+    <string name="yarn_label_yardage_per_skein">yd / kera</string>
+    <string name="yarn_label_number_of_skeins">Kerade arv</string>
+    <string name="yarn_label_modified">Muudetud</string>
+    <string name="date_format_hint_modified">Muudetud (AAAA, AAAA-KK, AAAA-KK-PP)</string>
+    <string name="yarn_label_added">Lisatud</string>
+    <string name="date_format_hint_added">Lisatud (AAAA, AAAA-KK, AAAA-KK-PP)</string>
+    <string name="yarn_label_notes">Märkmed</string>
+    <string name="yarn_form_no_projects_assigned">Pole veel ühegi projektiga seotud.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Määra jääk nulliks</string>
+    <string name="yarn_new_default_name">Lõng#%1$d</string>
+    <string name="form_unsaved_changes_title">Salvestamata muudatused</string>
+    <string name="form_unsaved_changes_message">Kas soovid muudatused salvestada?</string>
+    <string name="yarn_form_add_color">Lisa värv</string>
+    <string name="yarn_form_view_project">Vaata projekti</string>
+    <string name="yarn_form_delete_title">Kustuta lõng?</string>
+    <string name="yarn_form_delete_message">Kas oled kindel, et soovid selle lõnga kustutada? Seda tegevust ei saa tagasi võtta.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Uus projekt</string>
+    <string name="project_form_edit">Muuda projekti</string>
+    <string name="project_label_name">Nimi</string>
+    <string name="project_label_pattern">Muster</string>
+    <string name="project_label_for">Kellele</string>
+    <string name="project_label_start_date">Alguskuupäev</string>
+    <string name="project_label_end_date">Lõppkuupäev</string>
+    <string name="date_format_hint_project">Kuupäev (AAAA, AAAA-KK, AAAA-KK-PP)</string>
+    <string name="project_label_notes">Märkmed</string>
+    <string name="project_form_button_assignments">Määra lõngad</string>
+    <string name="project_form_button_export_pdf">Eksport PDF-ina</string>
+    <string name="project_form_view_pattern">Vaata mustrit</string>
+    <string name="project_form_view_yarn">Vaata lõnga</string>
+    <string name="project_form_no_yarn_assigned">Sellel projektil pole veel määratud lõngu.</string>
+    <string name="project_form_delete_title">Kustuta projekt?</string>
+    <string name="project_form_delete_message">Kas oled kindel, et soovid selle projekti kustutada? Seda tegevust ei saa tagasi võtta.</string>
+    <string name="delete_project_restricted_title">Kustutamine pole võimalik</string>
+    <string name="delete_project_restricted_message">Kustutamine on võimalik vaid siis, kui lõngu pole määratud. Palun eemalda määratud lõngad.</string>
+    <string name="project_status_planning">Planeerimisel</string>
+    <string name="project_status_in_progress">Töös</string>
+    <string name="project_status_finished">Valmis</string>
+    <string name="project_new_default_name">Projekt#%1$d</string>
+    <string name="row_counter_new_default_name">Realoendur #%1$d</string>
+    <string name="project_label_needle_size">Varda suurus</string>
+    <string name="project_label_size">Suurus</string>
+    <string name="project_label_gauge">Kudumistihedus</string>
+    <string name="project_label_row_count">Realoendurid</string>
+    <string name="project_form_add_counter">Lisa loendur</string>
+    <string name="project_form_select_image">Vali pilt</string>
+    <string name="project_form_take_image">Tee pilt</string>
+    <string name="project_form_remove_image">Eemalda pilt</string>
+    <string name="project_form_add_counter_dialog_title">Lisa uus loendur</string>
+    <string name="project_form_add_counter_dialog_label">Loenduri nimi</string>
+    <string name="export_as_pdf">Ekspordi PDF-ina</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Uus muster</string>
+    <string name="pattern_form_edit">Muuda mustrit</string>
+    <string name="pattern_label_name">Nimi</string>
+    <string name="pattern_label_creator">Looja</string>
+    <string name="pattern_label_category">Kategooria</string>
+    <string name="pattern_label_gauge">Kudumistihedus</string>
+    <string name="pattern_form_select_pdf">Vali PDF</string>
+    <string name="pattern_form_remove_pdf">Eemalda PDF</string>
+    <string name="pattern_form_view_pdf">Vaata PDF-i</string>
+    <string name="pattern_form_no_projects_assigned">Pole veel ühegi projektiga seotud.</string>
+    <string name="pattern_form_assigned_projects">Seotud projektid</string>
+    <string name="pattern_form_view_project">Vaata projekti</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Lõngade määramine projektile: %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Määratud lõng</string>
+    <string name="usage_amount_label">Kogus (g)</string>
+    <string name="usage_available">Saadaval: %1$d g</string>
+    <string name="usage_available_with_meterage">Saadaval: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Saadaval: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Saadaval: %1$d m</string>
+    <string name="usage_available_yardage">Saadaval: %1$d yd</string>
+    <string name="usage_used">Kasutatud: %1$d g</string>
+    <string name="usage_used_with_meterage">Kasutatud: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Kasutatud: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projektid</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistika</string>
+    <string name="statistics_option_total">Kokku</string>
+    <string name="statistics_option_year">Aasta</string>
+    <string name="statistics_option_month">Kuu</string>
+    <string name="statistics_label_year">Aasta</string>
+    <string name="statistics_label_month">Kuu</string>
+    <string name="statistics_total_yarn_available">Lõngavaru kokku: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Lõngavaru kokku: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Ostetud: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Ostetud: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Kasutatud: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Kasutatud: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Töös olevad projektid: %1$d</string>
+    <string name="statistics_projects_planned">Planeeritud projektid: %1$d</string>
+    <string name="statistics_projects_finished_title">Lõpetatud projektid: %1$d</string>
+    <string name="statistics_overall">Üldine</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Lõngad: Ostetud vs Kasutatud (aastas)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Lõngad: Ostetud vs Kasutatud (kuus)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Lõpetatud projektid (aastas)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Lõpetatud projektid (kuus)</string>
+    <string name="statistics_series_yarn_bought">Ostetud lõng</string>
+    <string name="statistics_series_yarn_used">Kasutatud lõng</string>
+    <string name="statistics_series_projects_finished">Lõpetatud projektid</string>
+    <string name="statistics_series_projects_in_progress">Töös olevad projektid</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Info</string>
+    <string name="info_how_to_help">Sina saad aidata!</string>
+    <string name="info_description">OpenYarnStash on avatud lähtekoodiga rakendus lõngavarude ja kudumisprojektide haldamiseks. Rakendus on alles arendusjärgus – tagasiside on teretulnud!</string>
+    <string name="info_github_button">Külasta GitHubi</string>
+    <string name="info_feedback_button">Saada tagasisidet</string>
+    <string name="info_kofi_button">Toeta meid kohviga</string>
+    <string name="info_copyright_notice">Lähtekood on saadaval MIT litsentsi alusel.
+© 2025 Manfred Scheucher ja Helena Bergold</string>
+    <string name="you_can_help_button">Sina saad aidata!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Kuidas aidata</string>
+    <string name="ko_fi_button">Toeta meid kohviga</string>
+    <string name="github_button">Külasta GitHubi</string>
+    <string name="github_issues_button">Teata veast</string>
+    <string name="discord_button">Liitu Discordiga</string>
+    <string name="email_button">Saada e-kiri</string>
+    <string name="support_us_on_kofi">Toeta meid Ko-fi kaudu:</string>
+    <string name="use_the_app_and_report_issues">Kasuta rakendust ja teata probleemidest:</string>
+    <string name="report_bugs_or_translation_mistakes">Teata vigadest või tõlkevigadest GitHubis või e-posti teel.</string>
+    <string name="to_help_us_reproduce_bugs">Vigade parandamiseks lisa palun:</string>
+    <string name="steps_to_reproduce">• Sammud vea kordamiseks</string>
+    <string name="screenshots_if_possible">• Ekraanitõmmised</string>
+    <string name="app_version_platform">• Rakenduse versioon ja platvorm (vt Info ekraani)</string>
+    <string name="data_export_from_app">• Andmete eksport (ZIP) (Sätted → Ekspordi andmed)</string>
+    <string name="privacy_note">Märge privaatsuse kohta: </string>
+    <string name="only_share_what_you_are_comfortable_with">Jaga vaid seda, millega oled päri.</string>
+    <string name="suggest_new_features">Soovita uusi funktsioone:</string>
+    <string name="open_a_feature_request_on_github">Loo funktsiooni palve GitHubis.</string>
+    <string name="join_the_discussion">Liitu aruteluga:</string>
+    <string name="participate_in_github_discussions">Võta osa Discordi ja GitHubi aruteludest.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Sätted</string>
+    <string name="export_json">Ekspordi JSON</string>
+    <string name="export_zip">Ekspordi ZIP</string>
+    <string name="import_json">Impordi JSON</string>
+    <string name="import_zip">Impordi ZIP</string>
+    <string name="import_button_text">Impordi</string>
+    <string name="import_dialog_title">Hoiatus</string>
+    <string name="import_dialog_message">Praegused andmed kirjutatakse üle. Kas soovid jätkata?</string>
+    <string name="language_label">Keel</string>
+    <string name="length_unit_label">Pikkusühik</string>
+    <string name="length_unit_meters">Meetrid</string>
+    <string name="length_unit_yards">Jardid</string>
+    <string name="log_level_label">Logimise tase</string>
+    <string name="log_level_description">Logifail salvestatakse seadmesse.</string>
+    <string name="backup_old_folder_on_import">Varunda vana kaust importimisel</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Pole veel lisatud</string>
+    <string name="not_implemented_message">See funktsioon pole veel saadaval.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Aasta</string>
+    <string name="date_input_month">Kuu</string>
+    <string name="date_input_day">Päev</string>
+
+    <!-- Months -->
+    <string name="month_january">Jaanuar</string>
+    <string name="month_february">Veebruar</string>
+    <string name="month_march">Märts</string>
+    <string name="month_april">Aprill</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juuni</string>
+    <string name="month_july">Juuli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktoober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Detsember</string>
+</resources>
