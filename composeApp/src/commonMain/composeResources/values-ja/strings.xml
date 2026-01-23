@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">毛糸</string>
+    <string name="home_button_projects">プロジェクト</string>
+    <string name="home_button_patterns">編み図</string>
+    <string name="home_button_statistics">統計</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">毛糸の在庫</string>
+    <string name="yarn_list_empty">毛糸が登録されていません。「+」をタップして追加してください。</string>
+    <string name="yarn_list_summary">現在の総量: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">現在の総量: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">最終更新日: %1$s</string>
+    <string name="yarn_list_hide_used">使用済みの毛糸を表示</string>
+    <string name="yarn_list_filter">検索</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">プロジェクト</string>
+    <string name="project_list_empty">プロジェクトがありません。「+」をタップして新しく作成してください。</string>
+    <string name="project_list_filter">検索</string>
+    <string name="item_label_name">名前: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">編み図</string>
+    <string name="pattern_list_empty">編み図がありません。「+」をタップして追加してください。</string>
+    <string name="pattern_list_filter">検索</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">戻る</string>
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_delete">削除</string>
+    <string name="common_save">保存</string>
+    <string name="common_add">追加</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">はい</string>
+    <string name="common_no">いいえ</string>
+    <string name="common_stay">そのまま</string>
+    <string name="common_select_image">画像を選択</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">毛糸の新規登録</string>
+    <string name="yarn_form_edit">毛糸の編集</string>
+    <string name="yarn_label_name">名前</string>
+    <string name="yarn_label_color">色</string>
+    <string name="yarn_label_color_code">カラーコード</string>
+    <string name="yarn_label_blend">素材</string>
+    <string name="yarn_label_dye_lot">ロット番号</string>
+    <string name="yarn_label_brand">ブランド</string>
+    <string name="yarn_label_storage_place">保管場所</string>
+    <string name="yarn_label_amount">数量 (g)</string>
+    <string name="yarn_label_weight_per_skein">g / 玉</string>
+    <string name="yarn_label_meterage_per_skein">m / 玉</string>
+    <string name="yarn_label_yardage_per_skein">yd / 玉</string>
+    <string name="yarn_label_number_of_skeins">玉数</string>
+    <string name="yarn_label_modified">更新日</string>
+    <string name="date_format_hint_modified">更新日 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_added">追加日</string>
+    <string name="date_format_hint_added">追加日 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="yarn_label_notes">メモ</string>
+    <string name="yarn_form_no_projects_assigned">割り当てられたプロジェクトはありません。</string>
+    <string name="yarn_form_button_set_remaining_to_zero">残量を0にする</string>
+    <string name="yarn_new_default_name">毛糸#%1$d</string>
+    <string name="form_unsaved_changes_title">未保存の変更</string>
+    <string name="form_unsaved_changes_message">変更を保存しますか？</string>
+    <string name="yarn_form_add_color">色を追加</string>
+    <string name="yarn_form_view_project">プロジェクトを表示</string>
+    <string name="yarn_form_delete_title">毛糸を削除しますか？</string>
+    <string name="yarn_form_delete_message">この毛糸を削除してもよろしいですか？この操作は取り消せません。</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">新規プロジェクト</string>
+    <string name="project_form_edit">プロジェクトの編集</string>
+    <string name="project_label_name">名前</string>
+    <string name="project_label_pattern">編み図</string>
+    <string name="project_label_for">対象者</string>
+    <string name="project_label_start_date">開始日</string>
+    <string name="project_label_end_date">完了日</string>
+    <string name="date_format_hint_project">日付 (YYYY, YYYY-MM, YYYY-MM-DD)</string>
+    <string name="project_label_notes">メモ</string>
+    <string name="project_form_button_assignments">毛糸を割り当てる</string>
+    <string name="project_form_button_export_pdf">PDFを書き出す</string>
+    <string name="project_form_view_pattern">編み図を表示</string>
+    <string name="project_form_view_yarn">毛糸を表示</string>
+    <string name="project_form_no_yarn_assigned">このプロジェクトに割り当てられた毛糸はありません。</string>
+    <string name="project_form_delete_title">プロジェクトを削除しますか？</string>
+    <string name="project_form_delete_message">このプロジェクトを削除してもよろしいですか？この操作は取り消せません。</string>
+    <string name="delete_project_restricted_title">削除できません</string>
+    <string name="delete_project_restricted_message">毛糸が割り当てられている間は削除できません。先に割り当てを解除してください。</string>
+    <string name="project_status_planning">計画中</string>
+    <string name="project_status_in_progress">作成中</string>
+    <string name="project_status_finished">完成</string>
+    <string name="project_new_default_name">プロジェクト#%1$d</string>
+    <string name="row_counter_new_default_name">段数カウンター #%1$d</string>
+    <string name="project_label_needle_size">針のサイズ</string>
+    <string name="project_label_size">サイズ</string>
+    <string name="project_label_gauge">ゲージ</string>
+    <string name="project_label_row_count">段数カウンター</string>
+    <string name="project_form_add_counter">カウンターを追加</string>
+    <string name="project_form_select_image">画像を選択</string>
+    <string name="project_form_take_image">写真を撮る</string>
+    <string name="project_form_remove_image">画像を削除</string>
+    <string name="project_form_add_counter_dialog_title">カウンターの追加</string>
+    <string name="project_form_add_counter_dialog_label">カウンター名</string>
+    <string name="export_as_pdf">PDFとして書き出す</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">新規編み図</string>
+    <string name="pattern_form_edit">編み図の編集</string>
+    <string name="pattern_label_name">名前</string>
+    <string name="pattern_label_creator">デザイナー</string>
+    <string name="pattern_label_category">カテゴリー</string>
+    <string name="pattern_label_gauge">ゲージ</string>
+    <string name="pattern_form_select_pdf">PDFを選択</string>
+    <string name="pattern_form_remove_pdf">PDFを削除</string>
+    <string name="pattern_form_view_pdf">PDFを表示</string>
+    <string name="pattern_form_no_projects_assigned">割り当てられたプロジェクトはありません。</string>
+    <string name="pattern_form_assigned_projects">割り当て済みのプロジェクト</string>
+    <string name="pattern_form_view_project">プロジェクトを表示</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">%1$s への毛糸の割り当て</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">割り当てられた毛糸</string>
+    <string name="usage_amount_label">使用量 (g)</string>
+    <string name="usage_available">利用可能: %1$d g</string>
+    <string name="usage_available_with_meterage">利用可能: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">利用可能: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">利用可能: %1$d m</string>
+    <string name="usage_available_yardage">利用可能: %1$d yd</string>
+    <string name="usage_used">使用済み: %1$d g</string>
+    <string name="usage_used_with_meterage">使用済み: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">使用済み: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">プロジェクト</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">統計</string>
+    <string name="statistics_option_total">合計</string>
+    <string name="statistics_option_year">年</string>
+    <string name="statistics_option_month">月</string>
+    <string name="statistics_label_year">年</string>
+    <string name="statistics_label_month">月</string>
+    <string name="statistics_total_yarn_available">利用可能な毛糸の総量: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">利用可能な毛糸の総量: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">購入した毛糸: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">購入した毛糸: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">使用した毛糸: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">使用した毛糸: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">作成中のプロジェクト: %1$d</string>
+    <string name="statistics_projects_planned">計画中のプロジェクト: %1$d</string>
+    <string name="statistics_projects_finished_title">完成したプロジェクト: %1$d</string>
+    <string name="statistics_overall">全般</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">毛糸: 購入 vs 使用 (年別)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">毛糸: 購入 vs 使用 (月別)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">完成したプロジェクト (年別)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">完成したプロジェクト (月別)</string>
+    <string name="statistics_series_yarn_bought">購入した毛糸</string>
+    <string name="statistics_series_yarn_used">使用した毛糸</string>
+    <string name="statistics_series_projects_finished">完成したプロジェクト</string>
+    <string name="statistics_series_projects_in_progress">作成中のプロジェクト</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">情報</string>
+    <string name="info_how_to_help">開発を支援する</string>
+    <string name="info_description">OpenYarnStashは、毛糸の在庫や編み物のプロジェクトを管理するためのオープンソースアプリです。開発中のため、フィードバックをお待ちしております！</string>
+    <string name="info_github_button">GitHubを見る</string>
+    <string name="info_feedback_button">フィードバックを送信</string>
+    <string name="info_kofi_button">開発者を支援 (Ko-fi)</string>
+    <string name="info_copyright_notice">ソースコードはMITライセンスで公開されています。
+© 2025 Manfred Scheucher &amp; Helena Bergold</string>
+    <string name="you_can_help_button">支援をお願いします！</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">支援方法</string>
+    <string name="ko_fi_button">開発者を支援 (Ko-fi)</string>
+    <string name="github_button">GitHubを見る</string>
+    <string name="github_issues_button">バグを報告</string>
+    <string name="discord_button">Discordに参加</string>
+    <string name="email_button">メールを送信</string>
+    <string name="support_us_on_kofi">Ko-fiでサポートする:</string>
+    <string name="use_the_app_and_report_issues">アプリを使用して問題を報告する:</string>
+    <string name="report_bugs_or_translation_mistakes">バグや翻訳ミスがあれば、GitHubまたはメールで報告してください。</string>
+    <string name="to_help_us_reproduce_bugs">再現調査のため、以下の情報を含めてください:</string>
+    <string name="steps_to_reproduce">• 再現手順</string>
+    <string name="screenshots_if_possible">• スクリーンショット</string>
+    <string name="app_version_platform">• アプリのバージョン/プラットフォーム</string>
+    <string name="data_export_from_app">• アプリからのデータエクスポート (ZIP)</string>
+    <string name="privacy_note">プライバシーについて: </string>
+    <string name="only_share_what_you_are_comfortable_with">共有しても差し支えない範囲で提供をお願いします。</string>
+    <string name="suggest_new_features">新機能を提案する:</string>
+    <string name="open_a_feature_request_on_github">GitHubで機能要望を作成してください。</string>
+    <string name="join_the_discussion">ディスカッションに参加する:</string>
+    <string name="participate_in_github_discussions">DiscordやGitHubでの会話に参加したり、GitHubでスターを付けたりして支援してください。</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">設定</string>
+    <string name="export_json">JSONをエクスポート</string>
+    <string name="export_zip">ZIPをエクスポート</string>
+    <string name="import_json">JSONをインポート</string>
+    <string name="import_zip">ZIPをインポート</string>
+    <string name="import_button_text">インポート</string>
+    <string name="import_dialog_title">警告</string>
+    <string name="import_dialog_message">現在のデータが上書きされます。続行してもよろしいですか？</string>
+    <string name="language_label">言語</string>
+    <string name="length_unit_label">長さの単位</string>
+    <string name="length_unit_meters">メートル</string>
+    <string name="length_unit_yards">ヤード</string>
+    <string name="log_level_label">ログレベル</string>
+    <string name="log_level_description">ログはデバイス内に保存され、ZIP書き出しで確認できます。</string>
+    <string name="backup_old_folder_on_import">インポート時に古いフォルダをバックアップする</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">未実装</string>
+    <string name="not_implemented_message">この機能は現在利用できません。</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">年</string>
+    <string name="date_input_month">月</string>
+    <string name="date_input_day">日</string>
+
+    <!-- Months -->
+    <string name="month_january">1月</string>
+    <string name="month_february">2月</string>
+    <string name="month_march">3月</string>
+    <string name="month_april">4月</string>
+    <string name="month_may">5月</string>
+    <string name="month_june">6月</string>
+    <string name="month_july">7月</string>
+    <string name="month_august">8月</string>
+    <string name="month_september">9月</string>
+    <string name="month_october">10月</string>
+    <string name="month_november">11月</string>
+    <string name="month_december">12月</string>
+</resources>

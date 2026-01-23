@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Νήματα</string>
+    <string name="home_button_projects">Έργα</string>
+    <string name="home_button_patterns">Σχέδια</string>
+    <string name="home_button_statistics">Στατιστικά</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Απόθεμα Νημάτων</string>
+    <string name="yarn_list_empty">Δεν υπάρχουν νήματα ακόμα. Πατήστε + για προσθήκη.</string>
+    <string name="yarn_list_summary">Τρέχουσα ποσότητα: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Τρέχουσα ποσότητα: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Τελευταία τροποποίηση: %1$s</string>
+    <string name="yarn_list_hide_used">Χρησιμοποιημένα νήματα</string>
+    <string name="yarn_list_filter">Αναζήτηση</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Έργα</string>
+    <string name="project_list_empty">Δεν υπάρχουν έργα. Πατήστε + για προσθήκη.</string>
+    <string name="project_list_filter">Αναζήτηση</string>
+    <string name="item_label_name">Όνομα: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Σχέδια</string>
+    <string name="pattern_list_empty">Δεν υπάρχουν σχέδια ακόμα. Πατήστε + για προσθήκη.</string>
+    <string name="pattern_list_filter">Αναζήτηση</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Πίσω</string>
+    <string name="common_cancel">Ακύρωση</string>
+    <string name="common_delete">Διαγραφή</string>
+    <string name="common_save">Αποθήκευση</string>
+    <string name="common_add">Προσθήκη</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Ναι</string>
+    <string name="common_no">Όχι</string>
+    <string name="common_stay">Παραμονή</string>
+    <string name="common_select_image">Επιλογή εικόνας</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Νέο νήμα</string>
+    <string name="yarn_form_edit">Επεξεργασία νήματος</string>
+    <string name="yarn_label_name">Όνομα</string>
+    <string name="yarn_label_color">Χρώμα</string>
+    <string name="yarn_label_color_code">Κωδικός χρώματος</string>
+    <string name="yarn_label_blend">Σύνθεση</string>
+    <string name="yarn_label_dye_lot">Παρτίδα βαφής</string>
+    <string name="yarn_label_brand">Μάρκα</string>
+    <string name="yarn_label_storage_place">Χώρος αποθήκευσης</string>
+    <string name="yarn_label_amount">Ποσότητα (g)</string>
+    <string name="yarn_label_weight_per_skein">g / κουβάρι</string>
+    <string name="yarn_label_meterage_per_skein">m / κουβάρι</string>
+    <string name="yarn_label_yardage_per_skein">yd / κουβάρι</string>
+    <string name="yarn_label_number_of_skeins">Αριθμός κουβαριών</string>
+    <string name="yarn_label_modified">Τροποποιήθηκε</string>
+    <string name="date_format_hint_modified">Τροποποιήθηκε (ΕΕΕΕ, ΕΕΕΕ-ΜΜ, ΕΕΕΕ-ΜΜ-ΗΗ)</string>
+    <string name="yarn_label_added">Προστέθηκε</string>
+    <string name="date_format_hint_added">Προστέθηκε (ΕΕΕΕ, ΕΕΕΕ-ΜΜ, ΕΕΕΕ-ΜΜ-ΗΗ)</string>
+    <string name="yarn_label_notes">Σημειώσεις</string>
+    <string name="yarn_form_no_projects_assigned">Δεν έχει ανατεθεί σε έργο ακόμα.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Ορισμός υπολοίπου σε 0</string>
+    <string name="yarn_new_default_name">Νήμα#%1$d</string>
+    <string name="form_unsaved_changes_title">Μη αποθηκευμένες αλλαγές</string>
+    <string name="form_unsaved_changes_message">Θέλετε να αποθηκεύσετε τις αλλαγές;</string>
+    <string name="yarn_form_add_color">Προσθήκη χρώματος</string>
+    <string name="yarn_form_view_project">Προβολή έργου</string>
+    <string name="yarn_form_delete_title">Διαγραφή νήματος;</string>
+    <string name="yarn_form_delete_message">Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το νήμα; Αυτή η ενέργεια δεν αναιρείται.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Νέο έργο</string>
+    <string name="project_form_edit">Επεξεργασία έργου</string>
+    <string name="project_label_name">Όνομα</string>
+    <string name="project_label_pattern">Σχέδιο</string>
+    <string name="project_label_for">Για τον/την</string>
+    <string name="project_label_start_date">Ημερομηνία έναρξης</string>
+    <string name="project_label_end_date">Ημερομηνία ολοκλήρωσης</string>
+    <string name="date_format_hint_project">Ημερομηνία (ΕΕΕΕ, ΕΕΕΕ-ΜΜ, ΕΕΕΕ-ΜΜ-ΗΗ)</string>
+    <string name="project_label_notes">Σημειώσεις</string>
+    <string name="project_form_button_assignments">Ανάθεση νήματος</string>
+    <string name="project_form_button_export_pdf">Εξαγωγή PDF</string>
+    <string name="project_form_view_pattern">Προβολή σχεδίου</string>
+    <string name="project_form_view_yarn">Προβολή νήματος</string>
+    <string name="project_form_no_yarn_assigned">Δεν έχει ανατεθεί νήμα σε αυτό το έργο ακόμα.</string>
+    <string name="project_form_delete_title">Διαγραφή έργου;</string>
+    <string name="project_form_delete_message">Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το έργο; Αυτή η ενέργεια δεν αναιρείται.</string>
+    <string name="delete_project_restricted_title">Αδύνατη η διαγραφή</string>
+    <string name="delete_project_restricted_message">Η διαγραφή είναι δυνατή μόνο εάν δεν έχει ανατεθεί νήμα. Επιστρέψτε το νήμα στο απόθεμα για να συνεχίσετε.</string>
+    <string name="project_status_planning">Σχεδιασμός</string>
+    <string name="project_status_in_progress">Σε εξέλιξη</string>
+    <string name="project_status_finished">Ολοκληρώθηκε</string>
+    <string name="project_new_default_name">Έργο#%1$d</string>
+    <string name="row_counter_new_default_name">Μετρητής σειρών #%1$d</string>
+    <string name="project_label_needle_size">Μέγεθος βελόνας</string>
+    <string name="project_label_size">Μέγεθος</string>
+    <string name="project_label_gauge">Δείγμα</string>
+    <string name="project_label_row_count">Μετρητής σειρών</string>
+    <string name="project_form_add_counter">Προσθήκη μετρητή</string>
+    <string name="project_form_select_image">Επιλογή εικόνας</string>
+    <string name="project_form_take_image">Λήψη φωτογραφίας</string>
+    <string name="project_form_remove_image">Αφαίρεση εικόνας</string>
+    <string name="project_form_add_counter_dialog_title">Προσθήκη νέου μετρητή</string>
+    <string name="project_form_add_counter_dialog_label">Όνομα μετρητή</string>
+    <string name="export_as_pdf">Εξαγωγή ως PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Νέο σχέδιο</string>
+    <string name="pattern_form_edit">Επεξεργασία σχεδίου</string>
+    <string name="pattern_label_name">Όνομα</string>
+    <string name="pattern_label_creator">Σχεδιαστής</string>
+    <string name="pattern_label_category">Κατηγορία</string>
+    <string name="pattern_label_gauge">Δείγμα</string>
+    <string name="pattern_form_select_pdf">Επιλογή PDF</string>
+    <string name="pattern_form_remove_pdf">Αφαίρεση PDF</string>
+    <string name="pattern_form_view_pdf">Προβολή PDF</string>
+    <string name="pattern_form_no_projects_assigned">Δεν έχει ανατεθεί σε έργο ακόμα.</string>
+    <string name="pattern_form_assigned_projects">Ανατεθειμένα έργα</string>
+    <string name="pattern_form_view_project">Προβολή έργου</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Ανάθεση νήματος για %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Ανατεθειμένο νήμα</string>
+    <string name="usage_amount_label">Ποσότητα (g)</string>
+    <string name="usage_available">Διαθέσιμο: %1$d g</string>
+    <string name="usage_available_with_meterage">Διαθέσιμο: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Διαθέσιμο: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Διαθέσιμο: %1$d m</string>
+    <string name="usage_available_yardage">Διαθέσιμο: %1$d yd</string>
+    <string name="usage_used">Χρησιμοποιήθηκε: %1$d g</string>
+    <string name="usage_used_with_meterage">Χρησιμοποιήθηκε: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Χρησιμοποιήθηκε: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Έργα</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Στατιστικά</string>
+    <string name="statistics_option_total">Σύνολο</string>
+    <string name="statistics_option_year">Έτος</string>
+    <string name="statistics_option_month">Μήνας</string>
+    <string name="statistics_label_year">Έτος</string>
+    <string name="statistics_label_month">Μήνας</string>
+    <string name="statistics_total_yarn_available">Συνολικό διαθέσιμο νήμα: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Συνολικό διαθέσιμο νήμα: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Νήμα που αγοράστηκε: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Νήμα που αγοράστηκε: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Νήμα που χρησιμοποιήθηκε: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Νήμα που χρησιμοποιήθηκε: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Έργα σε εξέλιξη: %1$d</string>
+    <string name="statistics_projects_planned">Προγραμματισμένα έργα: %1$d</string>
+    <string name="statistics_projects_finished_title">Ολοκληρωμένα έργα: %1$d</string>
+    <string name="statistics_overall">Γενικά</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Νήμα: Αγορά vs Χρήση (ετήσια)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Νήμα: Αγορά vs Χρήση (μηνιαία)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Ολοκληρωμένα έργα (ετήσια)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Ολοκληρωμένα έργα (μηνιαία)</string>
+    <string name="statistics_series_yarn_bought">Νήμα που αγοράστηκε</string>
+    <string name="statistics_series_yarn_used">Νήμα που χρησιμοποιήθηκε</string>
+    <string name="statistics_series_projects_finished">Ολοκληρωμένα έργα</string>
+    <string name="statistics_series_projects_in_progress">Έργα σε εξέλιξη</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Πληροφορίες</string>
+    <string name="info_how_to_help">Μπορείτε να βοηθήσετε!</string>
+    <string name="info_description">Το OpenYarnStash είναι μια εφαρμογή ανοιχτού κώδικα για τη διαχείριση αποθεμάτων νημάτων και έργων πλεξίματος. Προσφέρει επισκοπήσεις, στατιστικά και δείκτες προόδου. Η εφαρμογή είναι ακόμα υπό ανάπτυξη – τα σχόλιά σας είναι ευπρόσδεκτα!</string>
+    <string name="info_github_button">Επίσκεψη στο GitHub</string>
+    <string name="info_feedback_button">Αποστολή σχολίων</string>
+    <string name="info_kofi_button">Κεράστε μας έναν καφέ</string>
+    <string name="info_copyright_notice">Ο κώδικας αυτής της εφαρμογής διατίθεται υπό την άδεια MIT.
+© 2025 Manfred Scheucher και Helena Bergold
+
+Η χρήση, τροποποίηση και αναδιανομή επιτρέπονται υπό την προϋπόθεση ότι οι αρχικές πληροφορίες πνευματικών δικαιωμάτων και άδειας παραμένουν άθικτες.
+Η αφαίρεση ή αντικατάσταση του ονόματος του αρχικού δημιουργού, η ψευδής παρουσίαση της πατρότητας ή η δημοσίευση τροποποιημένων εκδόσεων χωρίς αναφορά δεν επιτρέπεται.</string>
+    <string name="you_can_help_button">Μπορείτε να βοηθήσετε!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Πώς μπορείτε να βοηθήσετε</string>
+    <string name="ko_fi_button">Κεράστε μας έναν καφέ</string>
+    <string name="github_button">Επίσκεψη στο GitHub</string>
+    <string name="github_issues_button">Αναφορά σφάλματος</string>
+    <string name="discord_button">Σύνδεση στο Discord</string>
+    <string name="email_button">Αποστολή e-mail</string>
+    <string name="support_us_on_kofi">Υποστηρίξτε μας στο Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Χρησιμοποιήστε την εφαρμογή και αναφέρετε προβλήματα:</string>
+    <string name="report_bugs_or_translation_mistakes">Αναφέρετε σφάλματα ή λάθη μετάφρασης μέσω GitHub Issues ή e-mail.</string>
+    <string name="to_help_us_reproduce_bugs">Για να μας βοηθήσετε να αναπαράγουμε το σφάλμα, συμπεριλάβετε:</string>
+    <string name="steps_to_reproduce">• Βήματα για την αναπαραγωγή</string>
+    <string name="screenshots_if_possible">• Στιγμιότυπα οθόνης (αν είναι δυνατόν)</string>
+    <string name="app_version_platform">• Έκδοση εφαρμογής/πλατφόρμα (δείτε την οθόνη πληροφοριών)</string>
+    <string name="data_export_from_app">• Εξαγωγή δεδομένων (ZIP) από την εφαρμογή (Ρυθμίσεις → Εξαγωγή δεδομένων)</string>
+    <string name="privacy_note">Σημείωση απορρήτου: </string>
+    <string name="only_share_what_you_are_comfortable_with">Μοιραστείτε μόνο ό,τι αισθάνεστε άνετα. Αφαιρέστε ευαίσθητες πληροφορίες από συνημμένα/εξαγωγές.</string>
+    <string name="suggest_new_features">Προτείνετε νέα χαρακτηριστικά:</string>
+    <string name="open_a_feature_request_on_github">Δημιουργήστε ένα αίτημα χαρακτηριστικού στο GitHub. Περιγράψτε γιατί είναι χρήσιμο, κατά προτίμηση με ένα σύντομο παράδειγμα.</string>
+    <string name="join_the_discussion">Συμμετέχετε στη συζήτηση:</string>
+    <string name="participate_in_github_discussions">Μοιραστείτε σχόλια, συμμετάσχετε σε συζητήσεις στο Discord και το GitHub και δώστε μας ένα αστέρι στο GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Ρυθμίσεις</string>
+    <string name="export_json">Εξαγωγή JSON</string>
+    <string name="export_zip">Εξαγωγή ZIP</string>
+    <string name="import_json">Εισαγωγή JSON</string>
+    <string name="import_zip">Εισαγωγή ZIP</string>
+    <string name="import_button_text">Εισαγωγή</string>
+    <string name="import_dialog_title">Προειδοποίηση</string>
+    <string name="import_dialog_message">Η τρέχουσα διαμόρφωση θα αντικατασταθεί από την εισαγωγή. Είστε βέβαιοι ότι θέλετε να συνεχίσετε;</string>
+    <string name="language_label">Γλώσσα</string>
+    <string name="length_unit_label">Μονάδα μήκους</string>
+    <string name="length_unit_meters">Μέτρα</string>
+    <string name="length_unit_yards">Γιάρδες</string>
+    <string name="log_level_label">Επίπεδο καταγραφής</string>
+    <string name="log_level_description">Το αρχείο καταγραφής αποθηκεύεται τοπικά στη συσκευή και μπορείτε να το δείτε μέσω εξαγωγής ZIP.</string>
+    <string name="backup_old_folder_on_import">Δημιουργία αντιγράφου ασφαλείας παλιού φακέλου κατά την εισαγωγή</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Δεν έχει υλοποιηθεί</string>
+    <string name="not_implemented_message">Αυτή η λειτουργία δεν είναι ακόμα διαθέσιμη.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Έτος</string>
+    <string name="date_input_month">Μήνας</string>
+    <string name="date_input_day">Ημέρα</string>
+
+    <!-- Months -->
+    <string name="month_january">Ιανουάριος</string>
+    <string name="month_february">Φεβρουάριος</string>
+    <string name="month_march">Μάρτιος</string>
+    <string name="month_april">Απρίλιος</string>
+    <string name="month_may">Μάιος</string>
+    <string name="month_june">Ιούνιος</string>
+    <string name="month_july">Ιούλιος</string>
+    <string name="month_august">Αύγουστος</string>
+    <string name="month_september">Σεπτέμβριος</string>
+    <string name="month_october">Οκτώβριος</string>
+    <string name="month_november">Νοέμβριος</string>
+    <string name="month_december">Δεκέμβριος</string>
+</resources>

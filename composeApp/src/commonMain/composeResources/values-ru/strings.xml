@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Пряжа</string>
+    <string name="home_button_projects">Проекты</string>
+    <string name="home_button_patterns">Схемы</string>
+    <string name="home_button_statistics">Статистика</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Запасы пряжи</string>
+    <string name="yarn_list_empty">Пряжи пока нет. Нажмите +, чтобы добавить.</string>
+    <string name="yarn_list_summary">Текущее количество: %1$d г (%2$d м)</string>
+    <string name="yarn_list_summary_yards">Текущее количество: %1$d г (%2$d ярд)</string>
+    <string name="yarn_item_label_modified">Последнее изменение: %1$s</string>
+    <string name="yarn_list_hide_used">Использованная пряжа</string>
+    <string name="yarn_list_filter">Поиск</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Проекты</string>
+    <string name="project_list_empty">Проектов нет. Нажмите +, чтобы создать новый.</string>
+    <string name="project_list_filter">Поиск</string>
+    <string name="item_label_name">Название: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Схемы</string>
+    <string name="pattern_list_empty">Схем пока нет. Нажмите +, чтобы добавить новую.</string>
+    <string name="pattern_list_filter">Поиск</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Назад</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="common_delete">Удалить</string>
+    <string name="common_save">Сохранить</string>
+    <string name="common_add">Добавить</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Да</string>
+    <string name="common_no">Нет</string>
+    <string name="common_stay">Остаться</string>
+    <string name="common_select_image">Выбрать изображение</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Новая пряжа</string>
+    <string name="yarn_form_edit">Редактировать пряжу</string>
+    <string name="yarn_label_name">Название</string>
+    <string name="yarn_label_color">Цвет</string>
+    <string name="yarn_label_color_code">Код цвета</string>
+    <string name="yarn_label_blend">Состав</string>
+    <string name="yarn_label_dye_lot">Партия (Dye lot)</string>
+    <string name="yarn_label_brand">Бренд</string>
+    <string name="yarn_label_storage_place">Место хранения</string>
+    <string name="yarn_label_amount">Количество (г)</string>
+    <string name="yarn_label_weight_per_skein">г / моток</string>
+    <string name="yarn_label_meterage_per_skein">м / моток</string>
+    <string name="yarn_label_yardage_per_skein">ярд / моток</string>
+    <string name="yarn_label_number_of_skeins">Количество мотков</string>
+    <string name="yarn_label_modified">Изменено</string>
+    <string name="date_format_hint_modified">Изменено (ГГГГ, ГГГГ-ММ, ГГГГ-ММ-ДД)</string>
+    <string name="yarn_label_added">Добавлено</string>
+    <string name="date_format_hint_added">Добавлено (ГГГГ, ГГГГ-ММ, ГГГГ-ММ-ДД)</string>
+    <string name="yarn_label_notes">Заметки</string>
+    <string name="yarn_form_no_projects_assigned">Еще не назначено ни одному проекту.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Установить остаток на 0</string>
+    <string name="yarn_new_default_name">Пряжа#%1$d</string>
+    <string name="form_unsaved_changes_title">Несохраненные изменения</string>
+    <string name="form_unsaved_changes_message">Хотите сохранить изменения?</string>
+    <string name="yarn_form_add_color">Добавить цвет</string>
+    <string name="yarn_form_view_project">Посмотреть проект</string>
+    <string name="yarn_form_delete_title">Удалить пряжу?</string>
+    <string name="yarn_form_delete_message">Вы уверены, что хотите удалить эту пряжу? Это действие нельзя отменить.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Новый проект</string>
+    <string name="project_form_edit">Редактировать проект</string>
+    <string name="project_label_name">Название</string>
+    <string name="project_label_pattern">Схема</string>
+    <string name="project_label_for">Для кого</string>
+    <string name="project_label_start_date">Дата начала</string>
+    <string name="project_label_end_date">Дата окончания</string>
+    <string name="date_format_hint_project">Дата (ГГГГ, ГГГГ-ММ, ГГГГ-ММ-ДД)</string>
+    <string name="project_label_notes">Заметки</string>
+    <string name="project_form_button_assignments">Назначить пряжу</string>
+    <string name="project_form_button_export_pdf">Экспорт в PDF</string>
+    <string name="project_form_view_pattern">Посмотреть схему</string>
+    <string name="project_form_view_yarn">Посмотреть пряжу</string>
+    <string name="project_form_no_yarn_assigned">К этому проекту еще не назначена пряжа.</string>
+    <string name="project_form_delete_title">Удалить проект?</string>
+    <string name="project_form_delete_message">Вы уверены, что хотите удалить этот проект? Это действие нельзя отменить.</string>
+    <string name="delete_project_restricted_title">Удаление невозможно</string>
+    <string name="delete_project_restricted_message">Удаление возможно только если не назначена пряжа. Пожалуйста, верните пряжу в запасы.</string>
+    <string name="project_status_planning">В планах</string>
+    <string name="project_status_in_progress">В процессе</string>
+    <string name="project_status_finished">Готово</string>
+    <string name="project_new_default_name">Проект#%1$d</string>
+    <string name="row_counter_new_default_name">Счетчик рядов #%1$d</string>
+    <string name="project_label_needle_size">Размер спиц/крючка</string>
+    <string name="project_label_size">Размер изделия</string>
+    <string name="project_label_gauge">Плотность вязания</string>
+    <string name="project_label_row_count">Количество рядов</string>
+    <string name="project_form_add_counter">Добавить счетчик</string>
+    <string name="project_form_select_image">Выбрать изображение</string>
+    <string name="project_form_take_image">Сделать фото</string>
+    <string name="project_form_remove_image">Удалить изображение</string>
+    <string name="project_form_add_counter_dialog_title">Новый счетчик</string>
+    <string name="project_form_add_counter_dialog_label">Название счетчика</string>
+    <string name="export_as_pdf">Экспорт в PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Новая схема</string>
+    <string name="pattern_form_edit">Редактировать схему</string>
+    <string name="pattern_label_name">Название</string>
+    <string name="pattern_label_creator">Дизайнер</string>
+    <string name="pattern_label_category">Категория</string>
+    <string name="pattern_label_gauge">Плотность вязания</string>
+    <string name="pattern_form_select_pdf">Выбрать PDF</string>
+    <string name="pattern_form_remove_pdf">Удалить PDF</string>
+    <string name="pattern_form_view_pdf">Посмотреть PDF</string>
+    <string name="pattern_form_no_projects_assigned">Еще не назначено ни одному проекту.</string>
+    <string name="pattern_form_assigned_projects">Назначенные проекты</string>
+    <string name="pattern_form_view_project">Посмотреть проект</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Назначение пряжи для %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Назначенная пряжа</string>
+    <string name="usage_amount_label">Количество (г)</string>
+    <string name="usage_available">Доступно: %1$d г</string>
+    <string name="usage_available_with_meterage">Доступно: %1$d г (%2$d м)</string>
+    <string name="usage_available_with_yardage">Доступно: %1$d г (%2$d ярд)</string>
+    <string name="usage_available_meterage">Доступно: %1$d м</string>
+    <string name="usage_available_yardage">Доступно: %1$d ярд</string>
+    <string name="usage_used">Использовано: %1$d г</string>
+    <string name="usage_used_with_meterage">Использовано: %1$d г (%2$d м)</string>
+    <string name="usage_used_with_yardage">Использовано: %1$d г (%2$d ярд)</string>
+    <string name="usage_projects_title">Проекты</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Статистика</string>
+    <string name="statistics_option_total">Всего</string>
+    <string name="statistics_option_year">Год</string>
+    <string name="statistics_option_month">Месяц</string>
+    <string name="statistics_label_year">Год</string>
+    <string name="statistics_label_month">Месяц</string>
+    <string name="statistics_total_yarn_available">Всего пряжи в наличии: %1$d г (%2$d м)</string>
+    <string name="statistics_total_yarn_available_yards">Всего пряжи в наличии: %1$d г (%2$d ярд)</string>
+    <string name="statistics_yarn_bought_title">Куплено пряжи: %1$d г (%2$d м)</string>
+    <string name="statistics_yarn_bought_title_yards">Куплено пряжи: %1$d г (%2$d ярд)</string>
+    <string name="statistics_yarn_used_title">Использовано пряжи: %1$d г (%2$d м)</string>
+    <string name="statistics_yarn_used_title_yards">Использовано пряжи: %1$d г (%2$d ярд)</string>
+    <string name="statistics_projects_in_progress_title">Проектов в процессе: %1$d</string>
+    <string name="statistics_projects_planned">Запланировано проектов: %1$d</string>
+    <string name="statistics_projects_finished_title">Завершено проектов: %1$d</string>
+    <string name="statistics_overall">Общая</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Пряжа: Куплено vs Использовано (за год)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Пряжа: Куплено vs Использовано (за месяц)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Завершенные проекты (за год)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Завершенные проекты (за месяц)</string>
+    <string name="statistics_series_yarn_bought">Купленная пряжа</string>
+    <string name="statistics_series_yarn_used">Использованная пряжа</string>
+    <string name="statistics_series_projects_finished">Завершенные проекты</string>
+    <string name="statistics_series_projects_in_progress">Проекты в процессе</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Инфо</string>
+    <string name="info_how_to_help">Вы можете помочь!</string>
+    <string name="info_description">OpenYarnStash — это приложение с открытым исходным кодом для управления запасами пряжи и проектами. Приложение находится в разработке, мы будем рады отзывам!</string>
+    <string name="info_github_button">Перейти на GitHub</string>
+    <string name="info_feedback_button">Оставить отзыв</string>
+    <string name="info_kofi_button">Угостить нас кофе</string>
+    <string name="info_copyright_notice">Исходный код доступен под лицензией MIT.
+© 2025 Manfred Scheucher и Helena Bergold</string>
+    <string name="you_can_help_button">Вы можете помочь!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Как помочь</string>
+    <string name="ko_fi_button">Угостить нас кофе</string>
+    <string name="github_button">Перейти на GitHub</string>
+    <string name="github_issues_button">Сообщить об ошибке</string>
+    <string name="discord_button">Присоединиться к Discord</string>
+    <string name="email_button">Написать e-mail</string>
+    <string name="support_us_on_kofi">Поддержите нас на Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Используйте приложение и сообщайте о проблемах:</string>
+    <string name="report_bugs_or_translation_mistakes">Сообщайте об ошибках или неточностях перевода через GitHub или e-mail.</string>
+    <string name="to_help_us_reproduce_bugs">Чтобы помочь нам исправить ошибку, укажите:</string>
+    <string name="steps_to_reproduce">• Шаги для воспроизведения</string>
+    <string name="screenshots_if_possible">• Скриншоты</string>
+    <string name="app_version_platform">• Версия приложения/платформа (см. экран Инфо)</string>
+    <string name="data_export_from_app">• Экспорт данных (ZIP) (Настройки → Экспорт данных)</string>
+    <string name="privacy_note">Заметка о конфиденциальности: </string>
+    <string name="only_share_what_you_are_comfortable_with">Делитесь только тем, чем считаете нужным.</string>
+    <string name="suggest_new_features">Предложите новые функции:</string>
+    <string name="open_a_feature_request_on_github">Создайте запрос на GitHub.</string>
+    <string name="join_the_discussion">Присоединяйтесь к обсуждению:</string>
+    <string name="participate_in_github_discussions">Участвуйте в обсуждениях в Discord и GitHub.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Настройки</string>
+    <string name="export_json">Экспорт JSON</string>
+    <string name="export_zip">Экспорт ZIP</string>
+    <string name="import_json">Импорт JSON</string>
+    <string name="import_zip">Импорт ZIP</string>
+    <string name="import_button_text">Импорт</string>
+    <string name="import_dialog_title">Внимание</string>
+    <string name="import_dialog_message">Текущие данные будут перезаписаны. Продолжить?</string>
+    <string name="language_label">Язык</string>
+    <string name="length_unit_label">Единицы длины</string>
+    <string name="length_unit_meters">Метры</string>
+    <string name="length_unit_yards">Ярды</string>
+    <string name="log_level_label">Уровень логирования</string>
+    <string name="log_level_description">Лог-файл сохраняется локально.</string>
+    <string name="backup_old_folder_on_import">Бэкап старой папки при импорте</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Не реализовано</string>
+    <string name="not_implemented_message">Эта функция еще недоступна.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Год</string>
+    <string name="date_input_month">Месяц</string>
+    <string name="date_input_day">День</string>
+
+    <!-- Months -->
+    <string name="month_january">Январь</string>
+    <string name="month_february">Февраль</string>
+    <string name="month_march">Март</string>
+    <string name="month_april">Апрель</string>
+    <string name="month_may">Май</string>
+    <string name="month_june">Июнь</string>
+    <string name="month_july">Июль</string>
+    <string name="month_august">Август</string>
+    <string name="month_september">Сентябрь</string>
+    <string name="month_october">Октябрь</string>
+    <string name="month_november">Ноябрь</string>
+    <string name="month_december">Декабрь</string>
+</resources>

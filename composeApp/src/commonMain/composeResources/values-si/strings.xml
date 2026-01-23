@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Preja</string>
+    <string name="home_button_projects">Projekti</string>
+    <string name="home_button_patterns">Vzorci</string>
+    <string name="home_button_statistics">Statistika</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Zaloga preje</string>
+    <string name="yarn_list_empty">Ni preje. Dotaknite se +, da dodate novo.</string>
+    <string name="yarn_list_summary">Trenutna količina: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Trenutna količina: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Zadnja sprememba: %1$s</string>
+    <string name="yarn_list_hide_used">Porabljena preja</string>
+    <string name="yarn_list_filter">Išči</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projekti</string>
+    <string name="project_list_empty">Ni projektov. Dotaknite se +, da dodate novega.</string>
+    <string name="project_list_filter">Išči</string>
+    <string name="item_label_name">Ime: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Vzorci</string>
+    <string name="pattern_list_empty">Ni vzorcev. Dotaknite se +, da dodate novega.</string>
+    <string name="pattern_list_filter">Išči</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Nazaj</string>
+    <string name="common_cancel">Prekliči</string>
+    <string name="common_delete">Izbriši</string>
+    <string name="common_save">Shrani</string>
+    <string name="common_add">Dodaj</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">V redu</string>
+    <string name="common_yes">Da</string>
+    <string name="common_no">Ne</string>
+    <string name="common_stay">Ostani</string>
+    <string name="common_select_image">Izberi sliko</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nova preja</string>
+    <string name="yarn_form_edit">Uredi prejo</string>
+    <string name="yarn_label_name">Ime</string>
+    <string name="yarn_label_color">Barva</string>
+    <string name="yarn_label_color_code">Koda barve</string>
+    <string name="yarn_label_blend">Sestava</string>
+    <string name="yarn_label_dye_lot">Serija barvanja (Dye lot)</string>
+    <string name="yarn_label_brand">Znamka</string>
+    <string name="yarn_label_storage_place">Mesto shranjevanja</string>
+    <string name="yarn_label_amount">Količina (g)</string>
+    <string name="yarn_label_weight_per_skein">g / klobčič</string>
+    <string name="yarn_label_meterage_per_skein">m / klobčič</string>
+    <string name="yarn_label_yardage_per_skein">yd / klobčič</string>
+    <string name="yarn_label_number_of_skeins">Število klobčičev</string>
+    <string name="yarn_label_modified">Spremenjeno</string>
+    <string name="date_format_hint_modified">Spremenjeno (LLLL, LLLL-MM, LLLL-MM-DD)</string>
+    <string name="yarn_label_added">Dodano</string>
+    <string name="date_format_hint_added">Dodano (LLLL, LLLL-MM, LLLL-MM-DD)</string>
+    <string name="yarn_label_notes">Opombe</string>
+    <string name="yarn_form_no_projects_assigned">Ni še dodeljeno projektu.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Nastavi ostanek na 0</string>
+    <string name="yarn_new_default_name">Preja#%1$d</string>
+    <string name="form_unsaved_changes_title">Neshranjene spremembe</string>
+    <string name="form_unsaved_changes_message">Ali želite shraniti spremembe?</string>
+    <string name="yarn_form_add_color">Dodaj barvo</string>
+    <string name="yarn_form_view_project">Poglej projekt</string>
+    <string name="yarn_form_delete_title">Izbrišem prejo?</string>
+    <string name="yarn_form_delete_message">Ali ste prepričani, da želite izbrisati to prejo? Tega dejanja ni mogoče razveljaviti.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nov projekt</string>
+    <string name="project_form_edit">Uredi projekt</string>
+    <string name="project_label_name">Ime</string>
+    <string name="project_label_pattern">Vzorec</string>
+    <string name="project_label_for">Za koga</string>
+    <string name="project_label_start_date">Datum začetka</string>
+    <string name="project_label_end_date">Datum konca</string>
+    <string name="date_format_hint_project">Datum (LLLL, LLLL-MM, LLLL-MM-DD)</string>
+    <string name="project_label_notes">Opombe</string>
+    <string name="project_form_button_assignments">Dodeli prejo</string>
+    <string name="project_form_button_export_pdf">Izvozi PDF</string>
+    <string name="project_form_view_pattern">Poglej vzorec</string>
+    <string name="project_form_view_yarn">Poglej prejo</string>
+    <string name="project_form_no_yarn_assigned">Temu projektu še ni dodeljena nobena preja.</string>
+    <string name="project_form_delete_title">Izbrišem projekt?</string>
+    <string name="project_form_delete_message">Ali ste prepričani, da želite izbrisati ta projekt? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="delete_project_restricted_title">Izbris ni mogoč</string>
+    <string name="delete_project_restricted_message">Izbris je mogoč le, če ni dodeljena nobena preja. Prosimo, vrnite dodeljeno prejo v zalogo.</string>
+    <string name="project_status_planning">Načrtovano</string>
+    <string name="project_status_in_progress">V izdelavi</string>
+    <string name="project_status_finished">Zaključeno</string>
+    <string name="project_new_default_name">Projekt#%1$d</string>
+    <string name="row_counter_new_default_name">Števec vrst #%1$d</string>
+    <string name="project_label_needle_size">Velikost igel</string>
+    <string name="project_label_size">Velikost</string>
+    <string name="project_label_gauge">Gostota pletenja</string>
+    <string name="project_label_row_count">Število vrst</string>
+    <string name="project_form_add_counter">Dodaj števec</string>
+    <string name="project_form_select_image">Izberi sliko</string>
+    <string name="project_form_take_image">Posnemi fotografijo</string>
+    <string name="project_form_remove_image">Odstrani sliko</string>
+    <string name="project_form_add_counter_dialog_title">Dodaj nov števec</string>
+    <string name="project_form_add_counter_dialog_label">Ime števca</string>
+    <string name="export_as_pdf">Izvozi kot PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Nov vzorec</string>
+    <string name="pattern_form_edit">Uredi vzorec</string>
+    <string name="pattern_label_name">Ime</string>
+    <string name="pattern_label_creator">Oblikovalec</string>
+    <string name="pattern_label_category">Kategorija</string>
+    <string name="pattern_label_gauge">Gostota pletenja</string>
+    <string name="pattern_form_select_pdf">Izberi PDF</string>
+    <string name="pattern_form_remove_pdf">Odstrani PDF</string>
+    <string name="pattern_form_view_pdf">Poglej PDF</string>
+    <string name="pattern_form_no_projects_assigned">Ni še dodeljeno projektu.</string>
+    <string name="pattern_form_assigned_projects">Dodeljeni projekti</string>
+    <string name="pattern_form_view_project">Poglej projekt</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Dodelitev preje za %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Dodeljena preja</string>
+    <string name="usage_amount_label">Količina (g)</string>
+    <string name="usage_available">Na voljo: %1$d g</string>
+    <string name="usage_available_with_meterage">Na voljo: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Na voljo: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Na voljo: %1$d m</string>
+    <string name="usage_available_yardage">Na voljo: %1$d yd</string>
+    <string name="usage_used">Porabljeno: %1$d g</string>
+    <string name="usage_used_with_meterage">Porabljeno: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Porabljeno: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projekti</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistika</string>
+    <string name="statistics_option_total">Skupaj</string>
+    <string name="statistics_option_year">Leto</string>
+    <string name="statistics_option_month">Mesec</string>
+    <string name="statistics_label_year">Leto</string>
+    <string name="statistics_label_month">Mesec</string>
+    <string name="statistics_total_yarn_available">Skupaj preje na voljo: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Skupaj preje na voljo: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Kupljena preja: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Kupljena preja: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Porabljena preja: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Porabljena preja: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Projekti v izdelavi: %1$d</string>
+    <string name="statistics_projects_planned">Načrtovani projekti: %1$d</string>
+    <string name="statistics_projects_finished_title">Zaključeni projekti: %1$d</string>
+    <string name="statistics_overall">Splošno</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Preja: Kupljena vs Porabljena (letno)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Preja: Kupljena vs Porabljena (mesečno)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Zaključeni projekti (letno)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Zaključeni projekti (mesečno)</string>
+    <string name="statistics_series_yarn_bought">Kupljena preja</string>
+    <string name="statistics_series_yarn_used">Porabljena preja</string>
+    <string name="statistics_series_projects_finished">Zaključeni projekti</string>
+    <string name="statistics_series_projects_in_progress">Projekti v izdelavi</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Informacije</string>
+    <string name="info_how_to_help">Lahko pomagate!</string>
+    <string name="info_description">OpenYarnStash je odprtokodna aplikacija za upravljanje zaloge preje in pletilskih projektov. Aplikacija je še v razvoju – vaše povratne informacije so dobrodošle!</string>
+    <string name="info_github_button">Obišči GitHub</string>
+    <string name="info_feedback_button">Pošlji povratne informacije</string>
+    <string name="info_kofi_button">Povabite nas na kavo</string>
+    <string name="info_copyright_notice">Izvorna koda je objavljena pod licenco MIT.
+© 2025 Manfred Scheucher in Helena Bergold</string>
+    <string name="you_can_help_button">Lahko pomagate!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Kako pomagati</string>
+    <string name="ko_fi_button">Povabite nas na kavo</string>
+    <string name="github_button">Obišči GitHub</string>
+    <string name="github_issues_button">Prijavi napako</string>
+    <string name="discord_button">Pridruži se Discordu</string>
+    <string name="email_button">Pošlji e-pošto</string>
+    <string name="support_us_on_kofi">Podprite nas na Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Uporabljajte aplikacijo in poročajte o težavah:</string>
+    <string name="report_bugs_or_translation_mistakes">Prijavite napake ali pomanjkljivosti v prevodu preko GitHuba ali e-pošte.</string>
+    <string name="to_help_us_reproduce_bugs">Da nam pomagate odpraviti napako, prosimo vključite:</string>
+    <string name="steps_to_reproduce">• Korake za ponovitev napake</string>
+    <string name="screenshots_if_possible">• Posnetke zaslona</string>
+    <string name="app_version_platform">• Verzija aplikacije/platforma (glej info zaslon)</string>
+    <string name="data_export_from_app">• Izvoz podatkov (ZIP) (Nastavitve → Izvozi podatke)</string>
+    <string name="privacy_note">Opomba o zasebnosti: </string>
+    <string name="only_share_what_you_are_comfortable_with">Delite le tisto, kar vam ustreza.</string>
+    <string name="suggest_new_features">Predlagajte nove funkcije:</string>
+    <string name="open_a_feature_request_on_github">Ustvarite zahtevek na GitHubu.</string>
+    <string name="join_the_discussion">Pridružite se razpravi:</string>
+    <string name="participate_in_github_discussions">Sodelujte v razpravah na Discordu in GitHubu.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Nastavitve</string>
+    <string name="export_json">Izvozi JSON</string>
+    <string name="export_zip">Izvozi ZIP</string>
+    <string name="import_json">Uvozi JSON</string>
+    <string name="import_zip">Uvozi ZIP</string>
+    <string name="import_button_text">Uvozi</string>
+    <string name="import_dialog_title">Opozorilo</string>
+    <string name="import_dialog_message">Trenutni podatki bodo prepisani. Želite nadaljevati?</string>
+    <string name="language_label">Jezik</string>
+    <string name="length_unit_label">Enota za dolžino</string>
+    <string name="length_unit_meters">Metri</string>
+    <string name="length_unit_yards">Yardi</string>
+    <string name="log_level_label">Raven beleženja (log level)</string>
+    <string name="log_level_description">Dnevnik se shranjuje lokalno.</string>
+    <string name="backup_old_folder_on_import">Varnostno kopiraj staro mapo ob uvozu</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Ni implementirano</string>
+    <string name="not_implemented_message">Ta funkcija še ni na voljo.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Leto</string>
+    <string name="date_input_month">Mesec</string>
+    <string name="date_input_day">Dan</string>
+
+    <!-- Months -->
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">Marec</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Maj</string>
+    <string name="month_june">Junij</string>
+    <string name="month_july">Julij</string>
+    <string name="month_august">Avgust</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+</resources>

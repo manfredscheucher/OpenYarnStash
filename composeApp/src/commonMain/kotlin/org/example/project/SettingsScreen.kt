@@ -61,18 +61,25 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 val languageMap = mapOf(
+    "cs" to "Čeština (untested)",
     "da" to "Dansk (untested)",
     "de" to "Deutsch",
+    "el" to "Ελληνικά (untested)",
     "en" to "English",
     "es" to "Español (untested)",
     "fi" to "Suomi (untested)",
     "fr" to "Français (untested)",
+    "hu" to "Magyar (untested)",
     "it" to "Italiano (untested)",
+    "ja" to "日本語 (untested)",
     "nl" to "Nederlands (untested)",
     "no" to "Norsk (untested)",
     "pl" to "Polski (untested)",
     "pt" to "Português (untested)",
-    "sv" to "Svenska (untested)"
+    "ru" to "Русский (untested)",
+    "si" to "Slovenščina (untested)",
+    "sv" to "Svenska (untested)",
+    "uk" to "Українська (untested)",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

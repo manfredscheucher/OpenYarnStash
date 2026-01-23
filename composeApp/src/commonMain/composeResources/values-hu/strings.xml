@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Fonalak</string>
+    <string name="home_button_projects">Projektek</string>
+    <string name="home_button_patterns">Minták</string>
+    <string name="home_button_statistics">Statisztika</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Fonalkészlet</string>
+    <string name="yarn_list_empty">Még nincs fonal. Koppints a + gombra a hozzáadáshoz.</string>
+    <string name="yarn_list_summary">Jelenlegi mennyiség: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Jelenlegi mennyiség: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Utoljára módosítva: %1$s</string>
+    <string name="yarn_list_hide_used">Felhasznált fonalak</string>
+    <string name="yarn_list_filter">Keresés</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projektek</string>
+    <string name="project_list_empty">Nincsenek projektek. Koppints a + gombra egy újhoz.</string>
+    <string name="project_list_filter">Keresés</string>
+    <string name="item_label_name">Név: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Minták</string>
+    <string name="pattern_list_empty">Még nincsenek minták. Koppints a + gombra egy újhoz.</string>
+    <string name="pattern_list_filter">Keresés</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Vissza</string>
+    <string name="common_cancel">Mégse</string>
+    <string name="common_delete">Törlés</string>
+    <string name="common_save">Mentés</string>
+    <string name="common_add">Hozzáadás</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Igen</string>
+    <string name="common_no">Nem</string>
+    <string name="common_stay">Maradás</string>
+    <string name="common_select_image">Kép kiválasztása</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Új fonal</string>
+    <string name="yarn_form_edit">Fonal szerkesztése</string>
+    <string name="yarn_label_name">Név</string>
+    <string name="yarn_label_color">Szín</string>
+    <string name="yarn_label_color_code">Színkód</string>
+    <string name="yarn_label_blend">Összetétel</string>
+    <string name="yarn_label_dye_lot">Festési tétel</string>
+    <string name="yarn_label_brand">Márka</string>
+    <string name="yarn_label_storage_place">Tárolási hely</string>
+    <string name="yarn_label_amount">Mennyiség (g)</string>
+    <string name="yarn_label_weight_per_skein">g / gombolyag</string>
+    <string name="yarn_label_meterage_per_skein">m / gombolyag</string>
+    <string name="yarn_label_yardage_per_skein">yd / gombolyag</string>
+    <string name="yarn_label_number_of_skeins">Gombolyagok száma</string>
+    <string name="yarn_label_modified">Módosítva</string>
+    <string name="date_format_hint_modified">Módosítva (ÉÉÉÉ, ÉÉÉÉ-HH, ÉÉÉÉ-HH-NN)</string>
+    <string name="yarn_label_added">Hozzáadva</string>
+    <string name="date_format_hint_added">Hozzáadva (ÉÉÉÉ, ÉÉÉÉ-HH, ÉÉÉÉ-HH-NN)</string>
+    <string name="yarn_label_notes">Jegyzetek</string>
+    <string name="yarn_form_no_projects_assigned">Még nincs projekthez rendelve.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Maradék fonal beállítása 0-ra</string>
+    <string name="yarn_new_default_name">Fonal#%1$d</string>
+    <string name="form_unsaved_changes_title">Nem mentett módosítások</string>
+    <string name="form_unsaved_changes_message">Szeretné menteni a módosításokat?</string>
+    <string name="yarn_form_add_color">Szín hozzáadása</string>
+    <string name="yarn_form_view_project">Projekt megtekintése</string>
+    <string name="yarn_form_delete_title">Fonal törlése?</string>
+    <string name="yarn_form_delete_message">Biztosan törölni szeretné ezt a fonalat? Ez a művelet nem vonható vissza.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Új projekt</string>
+    <string name="project_form_edit">Projekt szerkesztése</string>
+    <string name="project_label_name">Név</string>
+    <string name="project_label_pattern">Minta</string>
+    <string name="project_label_for">Kinek készül</string>
+    <string name="project_label_start_date">Kezdés dátuma</string>
+    <string name="project_label_end_date">Befejezés dátuma</string>
+    <string name="date_format_hint_project">Dátum (ÉÉÉÉ, ÉÉÉÉ-HH, ÉÉÉÉ-HH-NN)</string>
+    <string name="project_label_notes">Jegyzetek</string>
+    <string name="project_form_button_assignments">Fonal hozzárendelése</string>
+    <string name="project_form_button_export_pdf">PDF exportálás</string>
+    <string name="project_form_view_pattern">Minta megtekintése</string>
+    <string name="project_form_view_yarn">Fonal megtekintése</string>
+    <string name="project_form_no_yarn_assigned">Ehhez a projekthez még nincs fonal rendelve.</string>
+    <string name="project_form_delete_title">Projekt törlése?</string>
+    <string name="project_form_delete_message">Biztosan törölni szeretné ezt a projektet? Ez a művelet nem vonható vissza.</string>
+    <string name="delete_project_restricted_title">Törlés nem lehetséges</string>
+    <string name="delete_project_restricted_message">A törlés csak akkor lehetséges, ha nincs fonal hozzárendelve. Kérjük, távolítsa el a hozzárendelt fonalat.</string>
+    <string name="project_status_planning">Tervezett</string>
+    <string name="project_status_in_progress">Folyamatban</string>
+    <string name="project_status_finished">Kész</string>
+    <string name="project_new_default_name">Projekt#%1$d</string>
+    <string name="row_counter_new_default_name">Sorszámláló #%1$d</string>
+    <string name="project_label_needle_size">Tűméret</string>
+    <string name="project_label_size">Méret</string>
+    <string name="project_label_gauge">Kötéspróba</string>
+    <string name="project_label_row_count">Sorszámláló</string>
+    <string name="project_form_add_counter">Számláló hozzáadása</string>
+    <string name="project_form_select_image">Kép kiválasztása</string>
+    <string name="project_form_take_image">Fénykép készítése</string>
+    <string name="project_form_remove_image">Kép eltávolítása</string>
+    <string name="project_form_add_counter_dialog_title">Új számláló hozzáadása</string>
+    <string name="project_form_add_counter_dialog_label">Számláló neve</string>
+    <string name="export_as_pdf">Exportálás PDF-ként</string>
+
+    <!-- Pattern form -->
+<string name="pattern_label_creator">Tervező</string>
+    <string name="pattern_label_category">Kategória</string>
+    <string name="pattern_label_gauge">Kötéspróba</string>
+    <string name="pattern_form_select_pdf">PDF kiválasztása</string>
+    <string name="pattern_form_remove_pdf">PDF eltávolítása</string>
+    <string name="pattern_form_view_pdf">PDF megtekintése</string>
+    <string name="pattern_form_no_projects_assigned">Még nincs projekthez rendelve.</string>
+    <string name="pattern_form_assigned_projects">Hozzárendelt projektek</string>
+    <string name="pattern_form_view_project">Projekt megtekintése</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Fonal hozzárendelése a következőhöz: %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Hozzárendelt fonal</string>
+    <string name="usage_amount_label">Mennyiség (g)</string>
+    <string name="usage_available">Elérhető: %1$d g</string>
+    <string name="usage_available_with_meterage">Elérhető: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">Elérhető: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">Elérhető: %1$d m</string>
+    <string name="usage_available_yardage">Elérhető: %1$d yd</string>
+    <string name="usage_used">Felhasznált: %1$d g</string>
+    <string name="usage_used_with_meterage">Felhasznált: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Felhasznált: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projektek</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statisztika</string>
+    <string name="statistics_option_total">Összesen</string>
+    <string name="statistics_option_year">Év</string>
+    <string name="statistics_option_month">Hónap</string>
+    <string name="statistics_label_year">Év</string>
+    <string name="statistics_label_month">Hónap</string>
+    <string name="statistics_total_yarn_available">Összes elérhető fonal: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Összes elérhető fonal: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Vásárolt fonal: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Vásárolt fonal: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Felhasznált fonal: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Felhasznált fonal: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Folyamatban lévő projektek: %1$d</string>
+    <string name="statistics_projects_planned">Tervezett projektek: %1$d</string>
+    <string name="statistics_projects_finished_title">Befejezett projektek: %1$d</string>
+    <string name="statistics_overall">Általános</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Fonal: Vásárolt vs. Felhasznált (éves)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Fonal: Vásárolt vs. Felhasznált (havi)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Befejezett projektek (éves)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Befejezett projektek (havi)</string>
+    <string name="statistics_series_yarn_bought">Vásárolt fonal</string>
+    <string name="statistics_series_yarn_used">Felhasznált fonal</string>
+    <string name="statistics_series_projects_finished">Befejezett projektek</string>
+    <string name="statistics_series_projects_in_progress">Folyamatban lévő projektek</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Infó</string>
+    <string name="info_how_to_help">Te is segíthetsz!</string>
+    <string name="info_description">Az OpenYarnStash egy nyílt forráskódú alkalmazás a fonalkészletek és kötési projektek kezeléséhez. Áttekintést, statisztikákat és haladási mutatókat kínál. Az alkalmazás még fejlesztés alatt áll – a visszajelzéseket szívesen fogadjuk!</string>
+    <string name="info_github_button">GitHub felkeresése</string>
+    <string name="info_feedback_button">Visszajelzés küldése</string>
+    <string name="info_kofi_button">Hívj meg minket egy kávéra</string>
+    <string name="info_copyright_notice">Az alkalmazás forráskódja MIT licenc alatt érhető el.
+© 2025 Manfred Scheucher és Helena Bergold
+
+A felhasználás, módosítás és terjesztés megengedett, feltéve, hogy az eredeti szerzői jogi és licencinformációk érintetlenek maradnak.
+Az eredeti szerző nevének eltávolítása vagy helyettesítése, a szerzőség hamis feltüntetése vagy a módosított változatok forrásmegjelölés nélküli közzététele nem megengedett.</string>
+    <string name="you_can_help_button">Te is segíthetsz!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Hogyan segíthetsz</string>
+    <string name="ko_fi_button">Hívj meg minket egy kávéra</string>
+    <string name="github_button">GitHub felkeresése</string>
+    <string name="github_issues_button">Hiba jelentése</string>
+    <string name="discord_button">Csatlakozás Discordhoz</string>
+    <string name="email_button">E-mail küldése</string>
+    <string name="support_us_on_kofi">Támogass minket Ko-fi-n:</string>
+    <string name="use_the_app_and_report_issues">Használd az alkalmazást és jelentsd a problémákat:</string>
+    <string name="report_bugs_or_translation_mistakes">Jelentsd a hibákat vagy fordítási tévedéseket GitHub Issues-on vagy e-mailben.</string>
+    <string name="to_help_us_reproduce_bugs">A hiba reprodukálásához kérjük, mellékeld a következőket:</string>
+    <string name="steps_to_reproduce">• A hiba előidézésének lépései</string>
+    <string name="screenshots_if_possible">• Képernyőképek (ha lehetséges)</string>
+    <string name="app_version_platform">• Alkalmazás verziója/platform (lásd az infó képernyőt)</string>
+    <string name="data_export_from_app">• Adatexport (ZIP) az alkalmazásból (Beállítások → Adatok exportálása)</string>
+    <string name="privacy_note">Adatvédelmi megjegyzés: </string>
+    <string name="only_share_what_you_are_comfortable_with">Csak olyasmit ossz meg, amit jónak látsz. Távolítsd el az érzékeny adatokat a mellékletekből/exportokból.</string>
+    <string name="suggest_new_features">Javasolj új funkciókat:</string>
+    <string name="open_a_feature_request_on_github">Hozz létre egy funkcióigényt GitHubon. Írd le, miért lenne hasznos, lehetőleg egy rövid példával.</string>
+    <string name="join_the_discussion">Csatlakozz a beszélgetéshez:</string>
+    <string name="participate_in_github_discussions">Oszd meg véleményed, vegyél részt a Discord és GitHub beszélgetésekben, és adj nekünk egy csillagot GitHubon.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Beállítások</string>
+    <string name="export_json">JSON exportálása</string>
+    <string name="export_zip">ZIP exportálása</string>
+    <string name="import_json">JSON importálása</string>
+    <string name="import_zip">ZIP importálása</string>
+    <string name="import_button_text">Importálás</string>
+    <string name="import_dialog_title">Figyelmeztetés</string>
+    <string name="import_dialog_message">Az aktuális konfiguráció felülíródik az importálással. Biztosan folytatni szeretné?</string>
+    <string name="language_label">Nyelv</string>
+    <string name="length_unit_label">Hosszmértékegység</string>
+    <string name="length_unit_meters">Méter</string>
+    <string name="length_unit_yards">Yard</string>
+    <string name="log_level_label">Naplózási szint</string>
+    <string name="log_level_description">A naplófájl helyileg mentődik az eszközre, és a ZIP exportálással tekinthető meg.</string>
+    <string name="backup_old_folder_on_import">Régi mappa mentése importáláskor</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Nincs implementálva</string>
+    <string name="not_implemented_message">Ez a funkció még nem érhető el.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Év</string>
+    <string name="date_input_month">Hónap</string>
+    <string name="date_input_day">Nap</string>
+
+    <!-- Months -->
+    <string name="month_january">Január</string>
+    <string name="month_february">Február</string>
+    <string name="month_march">Március</string>
+    <string name="month_april">Április</string>
+    <string name="month_may">Május</string>
+    <string name="month_june">Június</string>
+    <string name="month_july">Július</string>
+    <string name="month_august">Augusztus</string>
+    <string name="month_september">Szeptember</string>
+    <string name="month_october">Október</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+</resources>

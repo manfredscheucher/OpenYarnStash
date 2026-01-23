@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">OpenYarnStash</string>
+
+    <!-- Home -->
+    <string name="home_title">OpenYarnStash</string>
+    <string name="home_button_yarns">Příze</string>
+    <string name="home_button_projects">Projekty</string>
+    <string name="home_button_patterns">Vzory</string>
+    <string name="home_button_statistics">Statistiky</string>
+
+    <!-- Yarn list -->
+    <string name="yarn_list_title">Zásoby příze</string>
+    <string name="yarn_list_empty">Zatím žádná příze. Klepnutím na + přidáte novou.</string>
+    <string name="yarn_list_summary">Aktuální množství: %1$d g (%2$d m)</string>
+    <string name="yarn_list_summary_yards">Aktuální množství: %1$d g (%2$d yd)</string>
+    <string name="yarn_item_label_modified">Poslední změna: %1$s</string>
+    <string name="yarn_list_hide_used">Spotřebované příze</string>
+    <string name="yarn_list_filter">Hledat</string>
+
+    <!-- Project list -->
+    <string name="project_list_title">Projekty</string>
+    <string name="project_list_empty">Žádné projekty. Klepnutím na + přidáte nový.</string>
+    <string name="project_list_filter">Hledat</string>
+    <string name="item_label_name">Název: %1$s</string>
+
+    <!-- Pattern list -->
+    <string name="pattern_list_title">Vzory</string>
+    <string name="pattern_list_empty">Zatím žádné vzory. Klepnutím na + přidáte nový.</string>
+    <string name="pattern_list_filter">Hledat</string>
+
+    <!-- Common labels/actions -->
+    <string name="common_back">Zpět</string>
+    <string name="common_cancel">Zrušit</string>
+    <string name="common_delete">Smazat</string>
+    <string name="common_save">Uložit</string>
+    <string name="common_add">Přidat</string>
+    <string name="common_plus_symbol">+</string>
+    <string name="common_ok">OK</string>
+    <string name="common_yes">Ano</string>
+    <string name="common_no">Ne</string>
+    <string name="common_stay">Zůstat</string>
+    <string name="common_select_image">Vybrat obrázek</string>
+
+    <!-- Yarn form -->
+    <string name="yarn_form_new">Nová příze</string>
+    <string name="yarn_form_edit">Upravit přízi</string>
+    <string name="yarn_label_name">Název</string>
+    <string name="yarn_label_color">Barva</string>
+    <string name="yarn_label_color_code">Kód barvy</string>
+    <string name="yarn_label_blend">Složení</string>
+    <string name="yarn_label_dye_lot">Šarže (Dye lot)</string>
+    <string name="yarn_label_brand">Značka</string>
+    <string name="yarn_label_storage_place">Místo uložení</string>
+    <string name="yarn_label_amount">Množství (g)</string>
+    <string name="yarn_label_weight_per_skein">g / klubko</string>
+    <string name="yarn_label_meterage_per_skein">m / klubko</string>
+    <string name="yarn_label_yardage_per_skein">yd / klubko</string>
+    <string name="yarn_label_number_of_skeins">Počet klubek</string>
+    <string name="yarn_label_modified">Změněno</string>
+    <string name="date_format_hint_modified">Změněno (RRRR, RRRR-MM, RRRR-MM-DD)</string>
+    <string name="yarn_label_added">Přidáno</string>
+    <string name="date_format_hint_added">Přidáno (RRRR, RRRR-MM, RRRR-MM-DD)</string>
+    <string name="yarn_label_notes">Poznámky</string>
+    <string name="yarn_form_no_projects_assigned">Zatím nepřiřazeno k žádnému projektu.</string>
+    <string name="yarn_form_button_set_remaining_to_zero">Nastavit zbytek na 0</string>
+    <string name="yarn_new_default_name">Příze#%1$d</string>
+    <string name="form_unsaved_changes_title">Neuložené změny</string>
+    <string name="form_unsaved_changes_message">Chcete změny uložit?</string>
+    <string name="yarn_form_add_color">Přidat barvu</string>
+    <string name="yarn_form_view_project">Zobrazit projekt</string>
+    <string name="yarn_form_delete_title">Smazat přízi?</string>
+    <string name="yarn_form_delete_message">Opravdu chcete tuto přízi smazat? Tuto akci nelze vrátit zpět.</string>
+
+    <!-- Project form -->
+    <string name="project_form_new">Nový projekt</string>
+    <string name="project_form_edit">Upravit projekt</string>
+    <string name="project_label_name">Název</string>
+    <string name="project_label_pattern">Vzor</string>
+    <string name="project_label_for">Pro koho</string>
+    <string name="project_label_start_date">Datum zahájení</string>
+    <string name="project_label_end_date">Datum dokončení</string>
+    <string name="date_format_hint_project">Datum (RRRR, RRRR-MM, RRRR-MM-DD)</string>
+    <string name="project_label_notes">Poznámky</string>
+    <string name="project_form_button_assignments">Přiřadit přízi</string>
+    <string name="project_form_button_export_pdf">Exportovat PDF</string>
+    <string name="project_form_view_pattern">Zobrazit vzor</string>
+    <string name="project_form_view_yarn">Zobrazit přízi</string>
+    <string name="project_form_no_yarn_assigned">K tomuto projektu zatím není přiřazena žádná příze.</string>
+    <string name="project_form_delete_title">Smazat projekt?</string>
+    <string name="project_form_delete_message">Opravdu chcete tento projekt smazat? Tuto akci nelze vrátit zpět.</string>
+    <string name="delete_project_restricted_title">Nelze smazat</string>
+    <string name="delete_project_restricted_message">Smazání je možné pouze v případě, že není přiřazena žádná příze. Před pokračováním vraťte přiřazenou přízi do zásob.</string>
+    <string name="project_status_planning">Plánováno</string>
+    <string name="project_status_in_progress">Na jehlicích</string>
+    <string name="project_status_finished">Hotovo</string>
+    <string name="project_new_default_name">Projekt#%1$d</string>
+    <string name="row_counter_new_default_name">Počítadlo řad #%1$d</string>
+    <string name="project_label_needle_size">Velikost jehlic</string>
+    <string name="project_label_size">Velikost</string>
+    <string name="project_label_gauge">Zkušební vzorek</string>
+    <string name="project_label_row_count">Počítadlo řad</string>
+    <string name="project_form_add_counter">Přidat počítadlo</string>
+    <string name="project_form_select_image">Vybrat obrázek</string>
+    <string name="project_form_take_image">Pořídit fotografii</string>
+    <string name="project_form_remove_image">Odstranit obrázek</string>
+    <string name="project_form_add_counter_dialog_title">Přidat nové počítadlo</string>
+    <string name="project_form_add_counter_dialog_label">Název počítadla</string>
+    <string name="export_as_pdf">Exportovat jako PDF</string>
+
+    <!-- Pattern form -->
+    <string name="pattern_form_new">Nový vzor</string>
+    <string name="pattern_form_edit">Upravit vzor</string>
+    <string name="pattern_label_name">Název</string>
+    <string name="pattern_label_creator">Autor</string>
+    <string name="pattern_label_category">Kategorie</string>
+    <string name="pattern_label_gauge">Zkušební vzorek</string>
+    <string name="pattern_form_select_pdf">Vybrat PDF</string>
+    <string name="pattern_form_remove_pdf">Odstranit PDF</string>
+    <string name="pattern_form_view_pdf">Zobrazit PDF</string>
+    <string name="pattern_form_no_projects_assigned">Zatím nepřiřazeno k žádnému projektu.</string>
+    <string name="pattern_form_assigned_projects">Přiřazené projekty</string>
+    <string name="pattern_form_view_project">Zobrazit projekt</string>
+
+    <!-- Project Assignments -->
+    <string name="project_assignments_title">Přiřazení příze pro %1$s</string>
+
+    <!-- Usage -->
+    <string name="usage_section_title">Přiřazená příze</string>
+    <string name="usage_amount_label">Množství (g)</string>
+    <string name="usage_available">K dispozici: %1$d g</string>
+    <string name="usage_available_with_meterage">K dispozici: %1$d g (%2$d m)</string>
+    <string name="usage_available_with_yardage">K dispozici: %1$d g (%2$d yd)</string>
+    <string name="usage_available_meterage">K dispozici: %1$d m</string>
+    <string name="usage_available_yardage">K dispozici: %1$d yd</string>
+    <string name="usage_used">Spotřebováno: %1$d g</string>
+    <string name="usage_used_with_meterage">Spotřebováno: %1$d g (%2$d m)</string>
+    <string name="usage_used_with_yardage">Spotřebováno: %1$d g (%2$d yd)</string>
+    <string name="usage_projects_title">Projekty</string>
+
+    <!-- Statistics Screen -->
+    <string name="statistics_title">Statistiky</string>
+    <string name="statistics_option_total">Celkem</string>
+    <string name="statistics_option_year">Rok</string>
+    <string name="statistics_option_month">Měsíc</string>
+    <string name="statistics_label_year">Rok</string>
+    <string name="statistics_label_month">Měsíc</string>
+    <string name="statistics_total_yarn_available">Příze celkem k dispozici: %1$d g (%2$d m)</string>
+    <string name="statistics_total_yarn_available_yards">Příze celkem k dispozici: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_bought_title">Nakoupená příze: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_bought_title_yards">Nakoupená příze: %1$d g (%2$d yd)</string>
+    <string name="statistics_yarn_used_title">Spotřebovaná příze: %1$d g (%2$d m)</string>
+    <string name="statistics_yarn_used_title_yards">Spotřebovaná příze: %1$d g (%2$d yd)</string>
+    <string name="statistics_projects_in_progress_title">Rozpracované projekty: %1$d</string>
+    <string name="statistics_projects_planned">Plánované projekty: %1$d</string>
+    <string name="statistics_projects_finished_title">Dokončené projekty: %1$d</string>
+    <string name="statistics_overall">Celkový přehled</string>
+    <string name="statistics_yarn_bought_vs_used_yearly">Příze: Koupená vs Spotřebovaná (ročně)</string>
+    <string name="statistics_yarn_bought_vs_used_monthly">Příze: Koupená vs Spotřebovaná (měsíčně)</string>
+    <string name="statistics_projects_finished_vs_in_progress_yearly">Dokončené projekty (ročně)</string>
+    <string name="statistics_projects_finished_vs_in_progress_monthly">Dokončené projekty (měsíčně)</string>
+    <string name="statistics_series_yarn_bought">Nakoupená příze</string>
+    <string name="statistics_series_yarn_used">Spotřebovaná příze</string>
+    <string name="statistics_series_projects_finished">Dokončené projekty</string>
+    <string name="statistics_series_projects_in_progress">Rozpracované projekty</string>
+
+    <!-- Info Screen -->
+    <string name="info_screen_title">Informace</string>
+    <string name="info_how_to_help">Můžete pomoci!</string>
+    <string name="info_description">OpenYarnStash je open-source aplikace pro správu zásob příze a pletacích projektů. Aplikace je stále ve vývoji – vaše zpětná vazba je vítána!</string>
+    <string name="info_github_button">Navštívit GitHub</string>
+    <string name="info_feedback_button">Poslat zpětnou vazbu</string>
+    <string name="info_kofi_button">Pozvěte nás na kávu</string>
+    <string name="info_copyright_notice">Zdrojový kód je zveřejněn pod licencí MIT.
+© 2025 Manfred Scheucher a Helena Bergold</string>
+    <string name="you_can_help_button">Můžete pomoci!</string>
+
+    <!-- Help Screen -->
+    <string name="help_screen_title">Jak pomoci</string>
+    <string name="ko_fi_button">Pozvěte nás na kávu</string>
+    <string name="github_button">Navštívit GitHub</string>
+    <string name="github_issues_button">Nahlásit chybu</string>
+    <string name="discord_button">Připojit se k Discordu</string>
+    <string name="email_button">Poslat e-mail</string>
+    <string name="support_us_on_kofi">Podpořte nás na Ko-fi:</string>
+    <string name="use_the_app_and_report_issues">Používejte aplikaci a hlaste problémy:</string>
+    <string name="report_bugs_or_translation_mistakes">Chyby nebo nedostatky v překladu hlaste přes GitHub nebo e-mailem.</string>
+    <string name="to_help_us_reproduce_bugs">Abychom mohli chybu opravit, uveďte prosím:</string>
+    <string name="steps_to_reproduce">• Kroky k reprodukci chyby</string>
+    <string name="screenshots_if_possible">• Snímky obrazovky</string>
+    <string name="app_version_platform">• Verze aplikace/platforma (viz obrazovka Info)</string>
+    <string name="data_export_from_app">• Export dat (ZIP) (Nastavení → Exportovat data)</string>
+    <string name="privacy_note">Poznámka k soukromí: </string>
+    <string name="only_share_what_you_are_comfortable_with">Sdílejte pouze to, co uznáte za vhodné.</string>
+    <string name="suggest_new_features">Navrhněte nové funkce:</string>
+    <string name="open_a_feature_request_on_github">Vytvořte požadavek na GitHubu.</string>
+    <string name="join_the_discussion">Zapojte se do diskuse:</string>
+    <string name="participate_in_github_discussions">Sdílejte názory na Discordu a GitHubu.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Nastavení</string>
+    <string name="export_json">Exportovat JSON</string>
+    <string name="export_zip">Exportovat ZIP</string>
+    <string name="import_json">Importovat JSON</string>
+    <string name="import_zip">Importovat ZIP</string>
+    <string name="import_button_text">Importovat</string>
+    <string name="import_dialog_title">Varování</string>
+    <string name="import_dialog_message">Aktuální data budou přepsána. Chcete pokračovat?</string>
+    <string name="language_label">Jazyk</string>
+    <string name="length_unit_label">Jednotka délky</string>
+    <string name="length_unit_meters">Metry</string>
+    <string name="length_unit_yards">Yardy</string>
+    <string name="log_level_label">Úroveň protokolování</string>
+    <string name="log_level_description">Protokol se ukládá lokálně.</string>
+    <string name="backup_old_folder_on_import">Při importu zálohovat původní složku</string>
+
+    <!-- Not Implemented Dialog -->
+    <string name="not_implemented_title">Není implementováno</string>
+    <string name="not_implemented_message">Tato funkce zatím není k dispozici.</string>
+
+    <!-- Date Input -->
+    <string name="date_input_year">Rok</string>
+    <string name="date_input_month">Měsíc</string>
+    <string name="date_input_day">Den</string>
+
+    <!-- Months -->
+    <string name="month_january">Leden</string>
+    <string name="month_february">Únor</string>
+    <string name="month_march">Březen</string>
+    <string name="month_april">Duben</string>
+    <string name="month_may">Květen</string>
+    <string name="month_june">Červen</string>
+    <string name="month_july">Červenec</string>
+    <string name="month_august">Srpen</string>
+    <string name="month_september">Září</string>
+    <string name="month_october">Říjen</string>
+    <string name="month_november">Listopad</string>
+    <string name="month_december">Prosinec</string>
+</resources>
