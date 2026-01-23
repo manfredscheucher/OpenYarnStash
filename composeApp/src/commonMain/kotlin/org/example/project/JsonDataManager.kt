@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 /**
  * Repository for managing yarns, projects, and their assignments from a JSON file.
@@ -145,7 +146,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         val existingIds = data.yarns.map { it.id }.toSet()
         var newId: Int
         do {
-            newId = Random.nextInt(1_000_000, 10_000_000)
+            newId = Random.nextInt(until = 2_000_000_000)
         } while (existingIds.contains(newId))
         val yarnName = defaultName.replace("%1\$d", newId.toString())
         return Yarn(
@@ -202,7 +203,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         val existingIds = data.projects.map { it.id }.toSet()
         var newId: Int
         do {
-            newId = Random.nextInt(1_000_000, 10_000_000)
+            newId = Random.nextInt(until = 2_000_000_000)
         } while (existingIds.contains(newId))
         val projectName = defaultName.replace("%1\$d", newId.toString())
         return Project(
@@ -338,7 +339,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             if (amount > 0) {
                 var newId: Int
                 do {
-                    newId = Random.nextInt(1_000_000, 10_000_000)
+                    newId = Random.nextInt(until = 2_000_000_000)
                 } while (existingIds.contains(newId))
                 val assignment = Assignment(
                     id = newId,
