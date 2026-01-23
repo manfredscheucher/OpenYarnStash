@@ -10,5 +10,6 @@ data class Pattern(
     val category: String? = null,
     val gauge: String? = null,
     val pdfId: Int? = null,
-    val modified: String? = null
+    val modified: String? = null,
+    val deleted: Boolean? = null
 )

@@ -8,5 +8,6 @@ data class Assignment(
     val yarnId: Int,
     val projectId: Int,
     val amount: Int,
-    val lastModified: String? = null
+    val lastModified: String? = null,
+    val deleted: Boolean? = null
 )

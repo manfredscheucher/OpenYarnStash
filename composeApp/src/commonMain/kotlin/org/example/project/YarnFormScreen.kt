@@ -184,30 +184,25 @@ fun YarnFormScreen(
         onSave(yarn, images.toMap())
     }
 
-    val saveAndBackAction = {
-        saveAction()
-        onBack()
-    }
-
-    val confirmDiscardChanges = { onConfirm: () -> Unit ->
+    fun confirmDiscardChanges(action: () -> Unit) {
         if (hasChanges) {
             scope.launch {
                 Logger.log(LogLevel.DEBUG, "YarnFormScreen has changes: ${changes.joinToString(", ")}")
             }
+            onConfirmUnsaved = action
             showUnsavedDialog = true
-            onConfirmUnsaved = onConfirm
         } else {
-            onConfirm()
+            action()
         }
     }
 
     val backAction = {
-        confirmDiscardChanges(onBack)
+        confirmDiscardChanges { onBack() }
     }
 
-    BackButtonHandler {
-        backAction()
-    }
+    BackButtonHandler { backAction() }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showUnsavedDialog) {
         AlertDialog(
@@ -215,31 +210,43 @@ fun YarnFormScreen(
             title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
             text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
             confirmButton = {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = { showUnsavedDialog = false }) {
-                        Text(stringResource(Res.string.common_stay))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        showUnsavedDialog = false
-                        onConfirmUnsaved()
-                    }) {
-                        Text(stringResource(Res.string.common_no))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        saveAction()
-                        showUnsavedDialog = false
-                        onConfirmUnsaved()
-                    }) {
-                        Text(stringResource(Res.string.common_yes))
-                    }
+                TextButton(onClick = {
+                    saveAction()
+                    showUnsavedDialog = false
+                    onConfirmUnsaved?.invoke()
+                }) {
+                    Text(stringResource(Res.string.common_save))
                 }
             },
-            dismissButton = null
+            dismissButton = {
+                TextButton(onClick = {
+                    showUnsavedDialog = false
+                    onConfirmUnsaved?.invoke()
+                }) {
+                    Text(stringResource(Res.string.common_no))
+                }
+            }
+        )
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(Res.string.yarn_form_delete_title)) },
+            text = { Text(stringResource(Res.string.yarn_form_delete_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    onDelete(initial.id)
+                }) {
+                    Text(stringResource(Res.string.common_delete))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(Res.string.common_cancel))
+                }
+            }
         )
     }
 
@@ -266,11 +273,18 @@ fun YarnFormScreen(
                     IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
+                },
+                actions = {
+                    TextButton(
+                        onClick = { saveAction() },
+                        enabled = name.isNotBlank()
+                    ) {
+                        Text(stringResource(Res.string.common_save))
+                    }
                 }
             )
         },
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+    ) { padding ->        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
@@ -563,19 +577,15 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(24.dp))
                 Row(
                     Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                    Row {
-                        TextButton(onClick = {
-                            confirmDiscardChanges { onAddColor(initial) }
-                        }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                        if (assignmentsForYarn.isEmpty()) {
-                            Spacer(Modifier.width(8.dp))
-                            TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
+                    TextButton(onClick = {
+                        confirmDiscardChanges { onAddColor(initial) }
+                    }) { Text(stringResource(Res.string.yarn_form_add_color)) }
+                    if (assignmentsForYarn.isEmpty()) {
+                        TextButton(onClick = { showDeleteDialog = true }) {
+                            Text(stringResource(Res.string.common_delete))
                         }
-                        Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAndBackAction) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

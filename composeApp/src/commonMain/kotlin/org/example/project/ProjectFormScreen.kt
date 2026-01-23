@@ -205,29 +205,29 @@ fun ProjectFormScreen(
         onSave(project, images.toMap())
     }
 
-    val saveAndBackAction = {
-        saveAction()
-        onBack()
-    }
-
-    val confirmDiscardChanges = { onConfirm: () -> Unit ->
+    fun confirmDiscardChanges(action: () -> Unit) {
         if (hasChanges) {
             scope.launch {
                 Logger.log(LogLevel.DEBUG, "ProjectFormScreen has changes: ${changes.joinToString(", ")}")
             }
+            onConfirmUnsaved = action
             showUnsavedDialog = true
-            onConfirmUnsaved = onConfirm
         } else {
-            onConfirm()
+            action()
         }
     }
 
-    val backAction = { confirmDiscardChanges(onBack) }
-    val assignAction = { confirmDiscardChanges(onNavigateToAssignments) }
-
-    BackButtonHandler {
-        backAction()
+    val backAction = {
+        confirmDiscardChanges { onBack() }
     }
+
+    val assignAction = {
+        confirmDiscardChanges { onNavigateToAssignments() }
+    }
+
+    BackButtonHandler { backAction() }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showUnsavedDialog) {
         AlertDialog(
@@ -235,31 +235,43 @@ fun ProjectFormScreen(
             title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
             text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
             confirmButton = {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = { showUnsavedDialog = false }) {
-                        Text(stringResource(Res.string.common_stay))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        showUnsavedDialog = false
-                        onConfirmUnsaved()
-                    }) {
-                        Text(stringResource(Res.string.common_no))
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = {
-                        saveAction()
-                        showUnsavedDialog = false
-                        onConfirmUnsaved()
-                    }) {
-                        Text(stringResource(Res.string.common_yes))
-                    }
+                TextButton(onClick = {
+                    saveAction()
+                    showUnsavedDialog = false
+                    onConfirmUnsaved?.invoke()
+                }) {
+                    Text(stringResource(Res.string.common_save))
                 }
             },
-            dismissButton = null
+            dismissButton = {
+                TextButton(onClick = {
+                    showUnsavedDialog = false
+                    onConfirmUnsaved?.invoke()
+                }) {
+                    Text(stringResource(Res.string.common_no))
+                }
+            }
+        )
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(Res.string.project_form_delete_title)) },
+            text = { Text(stringResource(Res.string.project_form_delete_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    onDelete(initial.id)
+                }) {
+                    Text(stringResource(Res.string.common_delete))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(Res.string.common_cancel))
+                }
+            }
         )
     }
 
@@ -292,7 +304,19 @@ fun ProjectFormScreen(
             val titleRes = if (isNewProject) Res.string.project_form_new else Res.string.project_form_edit
             TopAppBar(
                 title = { Text(stringResource(titleRes)) },
-                navigationIcon = { IconButton(onClick = backAction) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back)) } }
+                navigationIcon = {
+                    IconButton(onClick = backAction) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.common_back))
+                    }
+                },
+                actions = {
+                    TextButton(
+                        onClick = { saveAction() },
+                        enabled = name.isNotBlank()
+                    ) {
+                        Text(stringResource(Res.string.common_save))
+                    }
+                }
             )
         }
     ) { padding ->
@@ -626,28 +650,20 @@ fun ProjectFormScreen(
             }
 
             Spacer(Modifier.height(24.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                Row {
-                    if (!isNewProject) {
-                        if(false) // disable pdf export
-                        {
-                            TextButton(onClick = exportPdf) { Text(stringResource(Res.string.project_form_button_export_pdf)) }
-                            Spacer(Modifier.width(8.dp))
+            if (!isNewProject) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TextButton(onClick = {
+                        if (assignmentsForProject.isNotEmpty()) {
+                            showDeleteRestrictionDialog = true
+                        } else {
+                            showDeleteDialog = true
                         }
-                        TextButton(onClick = {
-                            if (assignmentsForProject.isNotEmpty()) {
-                                showDeleteRestrictionDialog = true
-                            } else {
-                                onDelete(initial.id)
-                            }
-                        }) { Text(stringResource(Res.string.common_delete)) }
-                        Spacer(Modifier.width(8.dp))
+                    }) {
+                        Text(stringResource(Res.string.common_delete))
                     }
-                    Button(onClick = saveAndBackAction) { Text(stringResource(Res.string.common_save)) }
                 }
             }
         }

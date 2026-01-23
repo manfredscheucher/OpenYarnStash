@@ -23,8 +23,17 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
             try {
                 val appData = Json.decodeFromString<AppData>(content)
                 validateData(appData)
-                Logger.log(LogLevel.INFO, "Loaded data: ${appData.yarns.size} yarns, ${appData.projects.size} projects, ${appData.assignments.size} assignments, ${appData.patterns.size} patterns")
-                appData
+
+                // Filter out deleted items
+                val filteredData = appData.copy(
+                    yarns = appData.yarns.filter { it.deleted != true }.toMutableList(),
+                    projects = appData.projects.filter { it.deleted != true }.toMutableList(),
+                    patterns = appData.patterns.filter { it.deleted != true }.toMutableList(),
+                    assignments = appData.assignments.filter { it.deleted != true }.toMutableList()
+                )
+
+                Logger.log(LogLevel.INFO, "Loaded data: ${filteredData.yarns.size} yarns, ${filteredData.projects.size} projects, ${filteredData.assignments.size} assignments, ${filteredData.patterns.size} patterns (filtered out deleted items)")
+                filteredData
             } catch (e: SerializationException) {
                 Logger.log(LogLevel.ERROR, "Failed to decode JSON data in fun load: ${e.message}", e)
                 // Re-throw the exception to be handled by the caller
@@ -130,7 +139,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     }
 
     // ... (rest of the functions for yarn, project, and usage management)
-    fun getYarnById(id: Int): Yarn? = data.yarns.firstOrNull { it.id == id }
+    fun getYarnById(id: Int): Yarn? = data.yarns.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewYarn(defaultName: String): Yarn {
         val existingIds = data.yarns.map { it.id }.toSet()
@@ -163,15 +172,31 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     }
 
     suspend fun deleteYarn(id: Int) {
-        val yarn = getYarnById(id)
-        val assignmentsCount = data.assignments.count { it.yarnId == id }
-        data.yarns.removeAll { it.id == id }
-        data.assignments.removeAll { it.yarnId == id }
-        Logger.log(LogLevel.INFO, "Deleted yarn: id=$id, name=${yarn?.name}, removed $assignmentsCount assignments")
-        save()
+        val index = data.yarns.indexOfFirst { it.id == id }
+        if (index != -1) {
+            val yarn = data.yarns[index]
+            data.yarns[index] = yarn.copy(
+                deleted = true,
+                modified = getCurrentTimestamp()
+            )
+
+            // Also mark related assignments as deleted
+            val timestamp = getCurrentTimestamp()
+            val assignmentsCount = data.assignments.count { it.yarnId == id && it.deleted != true }
+            data.assignments.forEachIndexed { idx, assignment ->
+                if (assignment.yarnId == id && assignment.deleted != true) {
+                    data.assignments[idx] = assignment.copy(
+                        deleted = true,
+                        lastModified = timestamp
+                    )
+                }
+            }
+            Logger.log(LogLevel.INFO, "Marked yarn as deleted: id=$id, name=${yarn.name}, marked $assignmentsCount assignments as deleted")
+            save()
+        }
     }
 
-    fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id }
+    fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewProject(defaultName: String): Project {
         val existingIds = data.projects.map { it.id }.toSet()
@@ -204,15 +229,31 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     }
 
     suspend fun deleteProject(id: Int) {
-        val project = getProjectById(id)
-        val assignmentsCount = data.assignments.count { it.projectId == id }
-        data.projects.removeAll { it.id == id }
-        data.assignments.removeAll { it.projectId == id }
-        Logger.log(LogLevel.INFO, "Deleted project: id=$id, name=${project?.name}, removed $assignmentsCount assignments")
-        save()
+        val index = data.projects.indexOfFirst { it.id == id }
+        if (index != -1) {
+            val project = data.projects[index]
+            data.projects[index] = project.copy(
+                deleted = true,
+                modified = getCurrentTimestamp()
+            )
+
+            // Also mark related assignments as deleted
+            val timestamp = getCurrentTimestamp()
+            val assignmentsCount = data.assignments.count { it.projectId == id && it.deleted != true }
+            data.assignments.forEachIndexed { idx, assignment ->
+                if (assignment.projectId == id && assignment.deleted != true) {
+                    data.assignments[idx] = assignment.copy(
+                        deleted = true,
+                        lastModified = timestamp
+                    )
+                }
+            }
+            Logger.log(LogLevel.INFO, "Marked project as deleted: id=$id, name=${project.name}, marked $assignmentsCount assignments as deleted")
+            save()
+        }
     }
 
-    fun getPatternById(id: Int): Pattern? = data.patterns.firstOrNull { it.id == id }
+    fun getPatternById(id: Int): Pattern? = data.patterns.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewPattern(): Pattern {
         val existingIds = data.patterns.map { it.id }.toSet()
@@ -243,16 +284,27 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     }
 
     suspend fun deletePattern(id: Int) {
-        val pattern = getPatternById(id)
-        val affectedProjects = data.projects.count { it.patternId == id }
-        data.patterns.removeAll { it.id == id }
-        data.projects.forEach { project ->
-            if (project.patternId == id) {
-                addOrUpdateProject(project.copy(patternId = null))
+        val index = data.patterns.indexOfFirst { it.id == id }
+        if (index != -1) {
+            val pattern = data.patterns[index]
+            data.patterns[index] = pattern.copy(
+                deleted = true,
+                modified = getCurrentTimestamp()
+            )
+
+            // Unlink pattern from projects (but don't delete projects)
+            val affectedProjects = data.projects.count { it.patternId == id && it.deleted != true }
+            data.projects.forEachIndexed { idx, project ->
+                if (project.patternId == id && project.deleted != true) {
+                    data.projects[idx] = project.copy(
+                        patternId = null,
+                        modified = getCurrentTimestamp()
+                    )
+                }
             }
+            Logger.log(LogLevel.INFO, "Marked pattern as deleted: id=$id, name=${pattern.name}, unlinked from $affectedProjects projects")
+            save()
         }
-        Logger.log(LogLevel.INFO, "Deleted pattern: id=$id, name=${pattern?.name}, unlinked from $affectedProjects projects")
-        save()
     }
 
     suspend fun updatePatternPdfId(patternId: Int, pdfId: Int?) {

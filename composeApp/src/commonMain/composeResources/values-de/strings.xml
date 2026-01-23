@@ -69,6 +69,9 @@
     <string name="form_unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="form_unsaved_changes_message">Möchten Sie die Änderungen speichern?</string>
     <string name="yarn_form_add_color">Farbe hinzufügen</string>
+    <string name="yarn_form_view_project">Projekt ansehen</string>
+    <string name="yarn_form_delete_title">Wolle löschen?</string>
+    <string name="yarn_form_delete_message">Sind Sie sicher, dass Sie diese Wolle löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>
@@ -83,7 +86,10 @@
     <string name="project_form_button_assignments">Wolle zuordnen</string>
     <string name="project_form_button_export_pdf">PDF Export</string>
     <string name="project_form_view_pattern">Anleitung ansehen</string>
+    <string name="project_form_view_yarn">Wolle ansehen</string>
     <string name="project_form_no_yarn_assigned">Diesem Projekt ist noch keine Wolle zugeordnet.</string>
+    <string name="project_form_delete_title">Projekt löschen?</string>
+    <string name="project_form_delete_message">Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
     <string name="delete_project_restricted_title">Löschen nicht möglich</string>
     <string name="delete_project_restricted_message">Löschen ist nur möglich, wenn keine Wolle zugeordnet ist. Um mit dem Löschen fortzufahren, geben Sie die zugewiesene Wolle in den Vorrat zurück.</string>
     <string name="project_status_planning">In Planung</string>

@@ -70,6 +70,8 @@
     <string name="form_unsaved_changes_message">Do you want to save the changes?</string>
     <string name="yarn_form_add_color">Add Color</string>
     <string name="yarn_form_view_project">View Project</string>
+    <string name="yarn_form_delete_title">Delete Yarn?</string>
+    <string name="yarn_form_delete_message">Are you sure you want to delete this yarn? This cannot be undone.</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>
@@ -86,6 +88,8 @@
     <string name="project_form_view_pattern">View Pattern</string>
     <string name="project_form_view_yarn">View Yarn</string>
     <string name="project_form_no_yarn_assigned">No yarn assigned to this project yet.</string>
+    <string name="project_form_delete_title">Delete Project?</string>
+    <string name="project_form_delete_message">Are you sure you want to delete this project? This cannot be undone.</string>
     <string name="delete_project_restricted_title">Deletion Not Possible</string>
     <string name="delete_project_restricted_message">Deletion is only possible if no yarn is assigned. Return assigned yarn to the stash to proceed with deletion.</string>
     <string name="project_status_planning">Planned</string>

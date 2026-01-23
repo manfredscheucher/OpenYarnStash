@@ -27,6 +27,7 @@ data class Project(
     val gauge: String? = null,
     val madeFor: String? = null,
     val modified: String? = null,
+    val deleted: Boolean? = null,
     val rowCounters: List<RowCounter> = emptyList(),
     val patternId: Int? = null,
     val imageIds: List<Int> = emptyList(),
