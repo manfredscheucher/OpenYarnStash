@@ -60,10 +60,10 @@ fun PatternFormScreen(
     pdfManager: PdfManager,
     imageManager: ImageManager,
     onBack: () -> Unit,
-    onDelete: (Int) -> Unit,
+    onDelete: (UInt) -> Unit,
     onSave: (Pattern, ByteArray?) -> Unit,
     onViewPdfExternally: () -> Unit,
-    onNavigateToProject: (Int) -> Unit
+    onNavigateToProject: (UInt) -> Unit
 ) {
     var name by remember { mutableStateOf(initial.name) }
     var creator by remember { mutableStateOf(initial.creator ?: "") }
@@ -118,7 +118,7 @@ fun PatternFormScreen(
 
     val scope = rememberCoroutineScope()
 
-    val saveAndBackAction = {
+    val saveAndGoBack = {
         saveAction()
         onBack()
     }
@@ -332,7 +332,7 @@ fun PatternFormScreen(
                     Row {
                         TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAndBackAction) { Text(stringResource(Res.string.common_save)) }
+                        Button(onClick = saveAndGoBack) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

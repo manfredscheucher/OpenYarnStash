@@ -45,19 +45,19 @@ import org.example.project.pdf.YarnUsage as PdfYarnUsage
 @Composable
 fun ProjectFormScreen(
     initial: Project,
-    initialImages: Map<Int, ByteArray>,
+    initialImages: Map<UInt, ByteArray>,
     assignmentsForProject: List<Assignment>,
-    yarnById: (Int) -> Yarn?,
+    yarnById: (UInt) -> Yarn?,
     patterns: List<Pattern>,
     imageManager: ImageManager,
     onBack: () -> Unit,
-    onDelete: (Int) -> Unit,
-    onSave: (Project, Map<Int, ByteArray>) -> Unit,
+    onDelete: (UInt) -> Unit,
+    onSave: (Project, Map<UInt, ByteArray>) -> Unit,
     onNavigateToAssignments: () -> Unit,
-    onNavigateToPattern: (Int) -> Unit,
-    onNavigateToYarn: (Int) -> Unit
+    onNavigateToPattern: (UInt) -> Unit,
+    onNavigateToYarn: (UInt) -> Unit
 ) {
-    val isNewProject = initial.id == -1
+    val isNewProject = initial.id == 0u
 
     var name by remember { mutableStateOf(initial.name) }
     var forWho by remember { mutableStateOf(initial.madeFor ?: "") }
@@ -76,13 +76,13 @@ fun ProjectFormScreen(
     var showAddCounterDialog by remember { mutableStateOf(false) }
     var patternDropdownExpanded by remember { mutableStateOf(false) }
 
-    val images = remember { mutableStateMapOf<Int, ByteArray>() }
+    val images = remember { mutableStateMapOf<UInt, ByteArray>() }
     LaunchedEffect(initialImages) {
         images.clear()
         images.putAll(initialImages)
     }
-    var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
-    var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
+    var nextTempId by remember(initial.id) { mutableStateOf<UInt>((initial.imageIds.maxOrNull() ?: 0u) + 1u) }
+    var selectedImageId by remember(initial.id) { mutableStateOf<UInt?>(initial.imageIds.firstOrNull()) }
 
 
     val scope = rememberCoroutineScope()
@@ -205,6 +205,11 @@ fun ProjectFormScreen(
         onSave(project, images.toMap())
     }
 
+    val saveAndGoBack = {
+        saveAction()
+        onBack()
+    }
+
     fun confirmDiscardChanges(action: () -> Unit) {
         if (hasChanges) {
             scope.launch {
@@ -229,30 +234,19 @@ fun ProjectFormScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    if (showUnsavedDialog) {
-        AlertDialog(
-            onDismissRequest = { showUnsavedDialog = false },
-            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
-            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    saveAction()
-                    showUnsavedDialog = false
-                    onConfirmUnsaved?.invoke()
-                }) {
-                    Text(stringResource(Res.string.common_save))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showUnsavedDialog = false
-                    onConfirmUnsaved?.invoke()
-                }) {
-                    Text(stringResource(Res.string.common_no))
-                }
-            }
-        )
-    }
+    UnsavedChangesDialog(
+        showDialog = showUnsavedDialog,
+        onDismiss = { showUnsavedDialog = false },
+        onSaveAndProceed = {
+            saveAction()
+            showUnsavedDialog = false
+            onConfirmUnsaved?.invoke()
+        },
+        onDiscardAndProceed = {
+            showUnsavedDialog = false
+            onConfirmUnsaved?.invoke()
+        }
+    )
 
     if (showDeleteDialog) {
         AlertDialog(
@@ -311,7 +305,7 @@ fun ProjectFormScreen(
                 },
                 actions = {
                     TextButton(
-                        onClick = { saveAction() },
+                        onClick = { saveAndGoBack() },
                         enabled = name.isNotBlank()
                     ) {
                         Text(stringResource(Res.string.common_save))

@@ -21,9 +21,9 @@ import openyarnstash.composeapp.generated.resources.*
 fun ProjectAssignmentsScreen(
     projectName: String,
     allYarns: List<Yarn>,
-    initialAssignments: Map<Int, Int>,
-    getAvailableAmountForYarn: (yarnId: Int) -> Int, // This is the max that can be assigned from the yarn's total
-    onSave: (updatedAssignments: Map<Int, Int>) -> Unit,
+    initialAssignments: Map<UInt, Int>,
+    getAvailableAmountForYarn: (yarnId: UInt) -> Int, // This is the max that can be assigned from the yarn's total
+    onSave: (updatedAssignments: Map<UInt, Int>) -> Unit,
     onBack: () -> Unit
 ) {
     var currentAssignments by remember { mutableStateOf(initialAssignments.toMutableMap()) }

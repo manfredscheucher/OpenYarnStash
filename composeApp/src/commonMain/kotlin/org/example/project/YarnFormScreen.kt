@@ -48,16 +48,16 @@ fun normalizeIntInput(input: String): String {
 @Composable
 fun YarnFormScreen(
     initial: Yarn,
-    initialImages: Map<Int, ByteArray>,
+    initialImages: Map<UInt, ByteArray>,
     assignmentsForYarn: List<Assignment>,
-    projectById: (Int) -> Project?,
+    projectById: (UInt) -> Project?,
     imageManager: ImageManager,
     settings: Settings,
     onBack: () -> Unit,
-    onDelete: (Int) -> Unit,
-    onSave: (Yarn, Map<Int, ByteArray>) -> Unit,
+    onDelete: (UInt) -> Unit,
+    onSave: (Yarn, Map<UInt, ByteArray>) -> Unit,
     onAddColor: (Yarn) -> Unit,
-    onNavigateToProject: (Int) -> Unit
+    onNavigateToProject: (UInt) -> Unit
 ) {
     val totalUsedAmount = assignmentsForYarn.sumOf { it.amount }
 
@@ -78,13 +78,13 @@ fun YarnFormScreen(
     var added by remember { mutableStateOf(initial.added ?: "") }
     var notes by remember { mutableStateOf(initial.notes ?: "") }
 
-    val images = remember { mutableStateMapOf<Int, ByteArray>() }
+    val images = remember { mutableStateMapOf<UInt, ByteArray>() }
     LaunchedEffect(initialImages) {
         images.clear()
         images.putAll(initialImages)
     }
-    var nextTempId by remember(initial.id) { mutableStateOf((initial.imageIds.maxOrNull() ?: 0) + 1) }
-    var selectedImageId by remember(initial.id) { mutableStateOf(initial.imageIds.firstOrNull()) }
+    var nextTempId by remember(initial.id) { mutableStateOf<UInt>((initial.imageIds.maxOrNull() ?: 0u) + 1u) }
+    var selectedImageId by remember(initial.id) { mutableStateOf<UInt?>(initial.imageIds.firstOrNull()) }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
     var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
@@ -184,6 +184,11 @@ fun YarnFormScreen(
         onSave(yarn, images.toMap())
     }
 
+    val saveAndGoBack = {
+        saveAction()
+        onBack()
+    }
+
     fun confirmDiscardChanges(action: () -> Unit) {
         if (hasChanges) {
             scope.launch {
@@ -204,30 +209,19 @@ fun YarnFormScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    if (showUnsavedDialog) {
-        AlertDialog(
-            onDismissRequest = { showUnsavedDialog = false },
-            title = { Text(stringResource(Res.string.form_unsaved_changes_title)) },
-            text = { Text(stringResource(Res.string.form_unsaved_changes_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    saveAction()
-                    showUnsavedDialog = false
-                    onConfirmUnsaved?.invoke()
-                }) {
-                    Text(stringResource(Res.string.common_save))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showUnsavedDialog = false
-                    onConfirmUnsaved?.invoke()
-                }) {
-                    Text(stringResource(Res.string.common_no))
-                }
-            }
-        )
-    }
+    UnsavedChangesDialog(
+        showDialog = showUnsavedDialog,
+        onDismiss = { showUnsavedDialog = false },
+        onSaveAndProceed = {
+            saveAction()
+            showUnsavedDialog = false
+            onConfirmUnsaved?.invoke()
+        },
+        onDiscardAndProceed = {
+            showUnsavedDialog = false
+            onConfirmUnsaved?.invoke()
+        }
+    )
 
     if (showDeleteDialog) {
         AlertDialog(
@@ -276,7 +270,7 @@ fun YarnFormScreen(
                 },
                 actions = {
                     TextButton(
-                        onClick = { saveAction() },
+                        onClick = { saveAndGoBack() },
                         enabled = name.isNotBlank()
                     ) {
                         Text(stringResource(Res.string.common_save))
@@ -508,7 +502,7 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(8.dp))
                 Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
 
-                if (initial.id != -1) {
+                if (initial.id != 0u) {
                     Spacer(Modifier.height(16.dp))
                     Column(
                         modifier = Modifier.fillMaxWidth()

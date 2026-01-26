@@ -18,16 +18,16 @@ open class PdfManager(private val fileHandler: FileHandler) {
         const val LARGE_THUMBNAIL_HEIGHT = 2048
     }
 
-    private fun getPatternPdfPath(patternId: Int): String {
+    private fun getPatternPdfPath(patternId: UInt): String {
         return "$pdfsDir/$patternId.pdf"
     }
 
-    private fun getPatternPdfThumbnailPath(patternId: Int, width: Int, height: Int): String {
+    private fun getPatternPdfThumbnailPath(patternId: UInt, width: Int, height: Int): String {
         return "$pdfThumbnailsDir/${patternId}_${width}x${height}.png"
     }
 
-    open suspend fun savePatternPdf(patternId: Int, pdfBytes: ByteArray): Int {
-        val pdfId = 1 // Since we only have one pdf per pattern, the id is always 1
+    open suspend fun savePatternPdf(patternId: UInt, pdfBytes: ByteArray): UInt {
+        val pdfId = 1u // Since we only have one pdf per pattern, the id is always 1
         withContext(Dispatchers.Default) {
             fileHandler.writeBytes(getPatternPdfPath(patternId), pdfBytes)
         }
@@ -37,18 +37,18 @@ open class PdfManager(private val fileHandler: FileHandler) {
         return pdfId
     }
 
-    open suspend fun getPatternPdf(patternId: Int): ByteArray? {
+    open suspend fun getPatternPdf(patternId: UInt): ByteArray? {
         return withContext(Dispatchers.Default) {
             fileHandler.readBytes(getPatternPdfPath(patternId))
         }
     }
 
-    open fun openPatternPdfExternally(patternId: Int) {
+    open fun openPatternPdfExternally(patternId: UInt) {
         val path = getPatternPdfPath(patternId)
         fileHandler.openFileExternally(path)
     }
 
-    open suspend fun getPatternPdfThumbnail(patternId: Int, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
+    open suspend fun getPatternPdfThumbnail(patternId: UInt, width: Int = THUMBNAIL_WIDTH, height: Int = THUMBNAIL_HEIGHT): ByteArray? {
         val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
         var thumbnailBytes = withContext(Dispatchers.Default) {
             fileHandler.readBytes(thumbnailPath)
@@ -68,7 +68,7 @@ open class PdfManager(private val fileHandler: FileHandler) {
         return thumbnailBytes
     }
 
-    private suspend fun generateAndSaveThumbnail(patternId: Int, pdfBytes: ByteArray, width: Int, height: Int) {
+    private suspend fun generateAndSaveThumbnail(patternId: UInt, pdfBytes: ByteArray, width: Int, height: Int) {
         val thumbnailBytes = thumbnailGenerator.generateThumbnail(pdfBytes, width, height)
         if (thumbnailBytes != null) {
             val thumbnailPath = getPatternPdfThumbnailPath(patternId, width, height)
@@ -78,7 +78,7 @@ open class PdfManager(private val fileHandler: FileHandler) {
         }
     }
 
-    open suspend fun deletePatternPdf(patternId: Int) {
+    open suspend fun deletePatternPdf(patternId: UInt) {
         withContext(Dispatchers.Default) {
             fileHandler.deleteFile(getPatternPdfPath(patternId))
             // Also delete the thumbnails

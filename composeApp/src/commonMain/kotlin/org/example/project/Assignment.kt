@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Assignment(
-    val id: Int,
-    val yarnId: Int,
-    val projectId: Int,
+    val id: UInt,
+    val yarnId: UInt,
+    val projectId: UInt,
     val amount: Int,
     val lastModified: String? = null,
     val deleted: Boolean? = null

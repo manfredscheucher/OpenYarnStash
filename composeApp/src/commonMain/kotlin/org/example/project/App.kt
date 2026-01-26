@@ -26,16 +26,16 @@ import kotlin.NoSuchElementException // Ensure this import is present
 sealed class Screen {
     data object Home : Screen()
     data object YarnList : Screen()
-    data class YarnForm(val yarnId: Int) : Screen()
+    data class YarnForm(val yarnId: UInt) : Screen()
     data object ProjectList : Screen()
-    data class ProjectForm(val projectId: Int) : Screen()
-    data class ProjectAssignments(val projectId: Int, val projectName: String) : Screen()
+    data class ProjectForm(val projectId: UInt) : Screen()
+    data class ProjectAssignments(val projectId: UInt, val projectName: String) : Screen()
     data object Info : Screen()
     data object HowToHelp : Screen()
     data object Statistics : Screen()
     data object Settings : Screen()
     data object PatternList : Screen()
-    data class PatternForm(val patternId: Int) : Screen()
+    data class PatternForm(val patternId: UInt) : Screen()
 }
 
 @Composable
@@ -207,10 +207,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     null
                                 }
                             }
-                            var yarnImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
+                            var yarnImagesMap by remember { mutableStateOf<Map<UInt, ByteArray>>(emptyMap()) }
 
                             LaunchedEffect(s.yarnId, existingYarn) {
-                                val imageMap = mutableMapOf<Int, ByteArray>()
+                                val imageMap = mutableMapOf<UInt, ByteArray>()
                                 existingYarn?.imageIds?.forEach { imageId ->
                                     try {
                                         withContext(Dispatchers.Default) {
@@ -359,10 +359,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     null
                                 }
                             }
-                            var projectImagesMap by remember { mutableStateOf<Map<Int, ByteArray>>(emptyMap()) }
+                            var projectImagesMap by remember { mutableStateOf<Map<UInt, ByteArray>>(emptyMap()) }
 
                             LaunchedEffect(s.projectId, existingProject) {
-                                val imageMap = mutableMapOf<Int, ByteArray>()
+                                val imageMap = mutableMapOf<UInt, ByteArray>()
                                 existingProject?.imageIds?.forEach { imageId ->
                                     try {
                                         withContext(Dispatchers.Default) {

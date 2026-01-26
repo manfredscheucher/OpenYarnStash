@@ -34,7 +34,7 @@ fun YarnListScreen(
     assignments: List<Assignment>,
     settings: Settings,
     onAddClick: () -> Unit,
-    onOpen: (Int) -> Unit,
+    onOpen: (UInt) -> Unit,
     onBack: () -> Unit,
     onSettingsChange: (Settings) -> Unit
 ) {

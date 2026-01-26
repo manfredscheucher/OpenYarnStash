@@ -11,26 +11,26 @@ class ImageManager(private val fileHandler: FileHandler) {
     private val yarnImagesDir = "img/yarn"
     private val yarnImageThumbnailsDir = "img/yarn/thumbnails"
 
-    private fun getProjectImagePath(projectId: Int, imageId: Int) = "$projectImagesDir/${projectId}_$imageId.jpg"
-    private fun getProjectImageThumbnailPath(projectId: Int, imageId: Int) = "$projectImageThumbnailsDir/${projectId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
+    private fun getProjectImagePath(projectId: UInt, imageId: UInt) = "$projectImagesDir/${projectId}_$imageId.jpg"
+    private fun getProjectImageThumbnailPath(projectId: UInt, imageId: UInt) = "$projectImageThumbnailsDir/${projectId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
 
-    private fun getYarnImagePath(yarnId: Int, imageId: Int) = "$yarnImagesDir/${yarnId}_$imageId.jpg"
-    private fun getYarnImageThumbnailPath(yarnId: Int, imageId: Int) = "$yarnImageThumbnailsDir/${yarnId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
+    private fun getYarnImagePath(yarnId: UInt, imageId: UInt) = "$yarnImagesDir/${yarnId}_$imageId.jpg"
+    private fun getYarnImageThumbnailPath(yarnId: UInt, imageId: UInt) = "$yarnImageThumbnailsDir/${yarnId}_${imageId}_${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}.jpg"
 
 
-    suspend fun saveProjectImage(projectId: Int, imageId: Int, image: ByteArray) {
+    suspend fun saveProjectImage(projectId: UInt, imageId: UInt, image: ByteArray) {
         fileHandler.writeBytes(getProjectImagePath(projectId, imageId), image)
     }
 
-    suspend fun getProjectImage(projectId: Int, imageId: Int): ByteArray? {
+    suspend fun getProjectImage(projectId: UInt, imageId: UInt): ByteArray? {
         return fileHandler.readBytes(getProjectImagePath(projectId, imageId))
     }
 
-    fun getProjectImageInputStream(projectId: Int, imageId: Int): FileInputSource? {
+    fun getProjectImageInputStream(projectId: UInt, imageId: UInt): FileInputSource? {
         return fileHandler.openInputStream(getProjectImagePath(projectId, imageId))
     }
 
-    suspend fun getProjectImageThumbnail(projectId: Int, imageId: Int): ByteArray? {
+    suspend fun getProjectImageThumbnail(projectId: UInt, imageId: UInt): ByteArray? {
         val thumbnailPath = getProjectImageThumbnailPath(projectId, imageId)
         val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
         if (cachedThumbnail != null) {
@@ -47,24 +47,24 @@ class ImageManager(private val fileHandler: FileHandler) {
         }
     }
 
-    suspend fun deleteProjectImage(projectId: Int, imageId: Int) {
+    suspend fun deleteProjectImage(projectId: UInt, imageId: UInt) {
         fileHandler.deleteFile(getProjectImagePath(projectId, imageId))
         fileHandler.deleteFile(getProjectImageThumbnailPath(projectId, imageId))
     }
 
-    suspend fun saveYarnImage(yarnId: Int, imageId: Int, image: ByteArray) {
+    suspend fun saveYarnImage(yarnId: UInt, imageId: UInt, image: ByteArray) {
         fileHandler.writeBytes(getYarnImagePath(yarnId, imageId), image)
     }
 
-    suspend fun getYarnImage(yarnId: Int, imageId: Int): ByteArray? {
+    suspend fun getYarnImage(yarnId: UInt, imageId: UInt): ByteArray? {
         return fileHandler.readBytes(getYarnImagePath(yarnId, imageId))
     }
 
-    fun getYarnImageInputStream(yarnId: Int, imageId: Int): FileInputSource? {
+    fun getYarnImageInputStream(yarnId: UInt, imageId: UInt): FileInputSource? {
         return fileHandler.openInputStream(getYarnImagePath(yarnId, imageId))
     }
 
-    suspend fun getYarnImageThumbnail(yarnId: Int, imageId: Int): ByteArray? {
+    suspend fun getYarnImageThumbnail(yarnId: UInt, imageId: UInt): ByteArray? {
         val thumbnailPath = getYarnImageThumbnailPath(yarnId, imageId)
         val cachedThumbnail = fileHandler.readBytes(thumbnailPath)
         if (cachedThumbnail != null) {
@@ -81,7 +81,7 @@ class ImageManager(private val fileHandler: FileHandler) {
         }
     }
 
-    suspend fun deleteYarnImage(yarnId: Int, imageId: Int) {
+    suspend fun deleteYarnImage(yarnId: UInt, imageId: UInt) {
         fileHandler.deleteFile(getYarnImagePath(yarnId, imageId))
         fileHandler.deleteFile(getYarnImageThumbnailPath(yarnId, imageId))
     }

@@ -17,7 +17,7 @@ data class RowCounter(
 
 @Serializable
 data class Project(
-    val id: Int,
+    val id: UInt,
     val name: String,
     val startDate: String? = null,
     val endDate: String? = null,
@@ -29,8 +29,8 @@ data class Project(
     val modified: String? = null,
     val deleted: Boolean? = null,
     val rowCounters: List<RowCounter> = emptyList(),
-    val patternId: Int? = null,
-    val imageIds: List<Int> = emptyList(),
+    val patternId: UInt? = null,
+    val imageIds: List<UInt> = emptyList(),
     @Transient val imagesChanged: Boolean = false
 ) {
     @Transient

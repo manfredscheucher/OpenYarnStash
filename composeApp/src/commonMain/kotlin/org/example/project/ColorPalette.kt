@@ -27,11 +27,11 @@ object ColorPalette {
         "#98c3a6"
     ).map { Color((it.removePrefix("#").toLong(16) or 0xE6000000L).toInt()) }
 
-    fun idToColor(id: Int): Color {
+    fun idToColor(id: UInt): Color {
         if (colors.isEmpty()) {
             return Color.Transparent
         }
-        val index = id % colors.size
+        val index = (id % colors.size.toUInt()).toInt()
         return colors[index]
     }
 }

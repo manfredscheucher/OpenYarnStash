@@ -5,7 +5,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class Yarn(
-    val id: Int,
+    val id: UInt,
     val name: String,
     val color: String? = null,
     val colorCode: String? = null,
@@ -20,7 +20,7 @@ data class Yarn(
     val modified: String? = null,
     val deleted: Boolean? = null,
     val storagePlace: String? = null,
-    val imageIds: List<Int> = emptyList(),
+    val imageIds: List<UInt> = emptyList(),
     @Transient val usedAmount: Int = 0,
     @Transient val imagesChanged: Boolean = false
 ) {
@@ -50,7 +50,7 @@ data class Yarn(
 
     fun copyForColor(): Yarn {
         return Yarn(
-            id = -1,
+            id = 0u,
             name = this.name,
             brand = this.brand,
             blend = this.blend,

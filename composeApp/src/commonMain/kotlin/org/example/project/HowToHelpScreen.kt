@@ -78,7 +78,7 @@ fun HowToHelpScreen(
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(1))
+                        colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(1u))
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -102,7 +102,7 @@ fun HowToHelpScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(2))
+                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(2u))
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
@@ -153,7 +153,7 @@ fun HowToHelpScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(3))
+                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(3u))
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
@@ -172,7 +172,7 @@ fun HowToHelpScreen(
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(4))
+                    colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(4u))
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(

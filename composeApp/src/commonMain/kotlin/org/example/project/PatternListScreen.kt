@@ -51,7 +51,7 @@ fun PatternListScreen(
     patterns: List<Pattern>,
     pdfManager: PdfManager,
     onAddClick: () -> Unit,
-    onOpen: (Int) -> Unit,
+    onOpen: (UInt) -> Unit,
     onBack: () -> Unit
 ) {
     BackButtonHandler {

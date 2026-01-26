@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
-import kotlin.random.nextInt
+import kotlin.random.nextUInt
 
 /**
  * Repository for managing yarns, projects, and their assignments from a JSON file.
@@ -140,13 +140,13 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
     }
 
     // ... (rest of the functions for yarn, project, and usage management)
-    fun getYarnById(id: Int): Yarn? = data.yarns.firstOrNull { it.id == id && it.deleted != true }
+    fun getYarnById(id: UInt): Yarn? = data.yarns.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewYarn(defaultName: String): Yarn {
         val existingIds = data.yarns.map { it.id }.toSet()
-        var newId: Int
+        var newId: UInt
         do {
-            newId = Random.nextInt(until = 2_000_000_000)
+            newId = Random.nextUInt()
         } while (existingIds.contains(newId))
         val yarnName = defaultName.replace("%1\$d", newId.toString())
         return Yarn(
@@ -172,7 +172,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         save()
     }
 
-    suspend fun deleteYarn(id: Int) {
+    suspend fun deleteYarn(id: UInt) {
         val index = data.yarns.indexOfFirst { it.id == id }
         if (index != -1) {
             val yarn = data.yarns[index]
@@ -197,13 +197,13 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         }
     }
 
-    fun getProjectById(id: Int): Project? = data.projects.firstOrNull { it.id == id && it.deleted != true }
+    fun getProjectById(id: UInt): Project? = data.projects.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewProject(defaultName: String): Project {
         val existingIds = data.projects.map { it.id }.toSet()
-        var newId: Int
+        var newId: UInt
         do {
-            newId = Random.nextInt(until = 2_000_000_000)
+            newId = Random.nextUInt()
         } while (existingIds.contains(newId))
         val projectName = defaultName.replace("%1\$d", newId.toString())
         return Project(
@@ -229,7 +229,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         save()
     }
 
-    suspend fun deleteProject(id: Int) {
+    suspend fun deleteProject(id: UInt) {
         val index = data.projects.indexOfFirst { it.id == id }
         if (index != -1) {
             val project = data.projects[index]
@@ -254,13 +254,13 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         }
     }
 
-    fun getPatternById(id: Int): Pattern? = data.patterns.firstOrNull { it.id == id && it.deleted != true }
+    fun getPatternById(id: UInt): Pattern? = data.patterns.firstOrNull { it.id == id && it.deleted != true }
 
     fun createNewPattern(): Pattern {
         val existingIds = data.patterns.map { it.id }.toSet()
-        var newId: Int
+        var newId: UInt
         do {
-            newId = Random.nextInt(1_000_000, 10_000_000)
+            newId = Random.nextUInt()
         } while (existingIds.contains(newId))
         return Pattern(
             id = newId,
@@ -284,7 +284,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         save()
     }
 
-    suspend fun deletePattern(id: Int) {
+    suspend fun deletePattern(id: UInt) {
         val index = data.patterns.indexOfFirst { it.id == id }
         if (index != -1) {
             val pattern = data.patterns[index]
@@ -308,7 +308,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         }
     }
 
-    suspend fun updatePatternPdfId(patternId: Int, pdfId: Int?) {
+    suspend fun updatePatternPdfId(patternId: UInt, pdfId: UInt?) {
         val index = data.patterns.indexOfFirst { it.id == patternId }
         if (index != -1) {
             data.patterns[index] = data.patterns[index].copy(pdfId = pdfId)
@@ -317,7 +317,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         save()
     }
 
-    fun availableForYarn(yarnId: Int, forProjectId: Int? = null): Int {
+    fun availableForYarn(yarnId: UInt, forProjectId: UInt? = null): Int {
         val yarn = getYarnById(yarnId) ?: return 0
         val used = data.assignments
             .filter { it.yarnId == yarnId && it.projectId != forProjectId }
@@ -325,7 +325,7 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         return yarn.amount - used
     }
 
-    suspend fun setProjectAssignments(projectId: Int, assignments: Map<Int, Int>) {
+    suspend fun setProjectAssignments(projectId: UInt, assignments: Map<UInt, Int>) {
         // Remove existing assignments for this project
         val removedCount = data.assignments.count { it.projectId == projectId }
         data.assignments.removeAll { it.projectId == projectId }
@@ -337,9 +337,9 @@ class JsonDataManager(private val fileHandler: FileHandler, private val filePath
         var addedCount = 0
         for ((yarnId, amount) in assignments) {
             if (amount > 0) {
-                var newId: Int
+                var newId: UInt
                 do {
-                    newId = Random.nextInt(until = 2_000_000_000)
+                    newId = Random.nextUInt()
                 } while (existingIds.contains(newId))
                 val assignment = Assignment(
                     id = newId,
