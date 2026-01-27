@@ -55,7 +55,7 @@ fun YarnFormScreen(
     settings: Settings,
     onBack: () -> Unit,
     onDelete: (UInt) -> Unit,
-    onSave: (Yarn, Map<UInt, ByteArray>) -> Unit,
+    onSave: (Yarn, Map<UInt, ByteArray>, (() -> Unit)?) -> Unit,
     onAddColor: (Yarn) -> Unit,
     onNavigateToProject: (UInt) -> Unit
 ) {
@@ -159,7 +159,7 @@ fun YarnFormScreen(
     }
     val hasChanges by derivedStateOf { changes.isNotEmpty() }
 
-    val saveAction = {
+    val saveAction: ((() -> Unit)?) -> Unit = { callback ->
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
@@ -181,12 +181,11 @@ fun YarnFormScreen(
             imageIds = finalImageIds,
             imagesChanged = initialImages.keys != images.keys // TODO: not used anywhere
         )
-        onSave(yarn, images.toMap())
+        onSave(yarn, images.toMap(), callback)
     }
 
     val saveAndGoBack = {
-        saveAction()
-        onBack()
+        saveAction { onBack() }
     }
 
     fun confirmDiscardChanges(action: () -> Unit) {
@@ -213,9 +212,8 @@ fun YarnFormScreen(
         showDialog = showUnsavedDialog,
         onDismiss = { showUnsavedDialog = false },
         onSaveAndProceed = {
-            saveAction()
             showUnsavedDialog = false
-            onConfirmUnsaved?.invoke()
+            saveAction { onConfirmUnsaved?.invoke() }
         },
         onDiscardAndProceed = {
             showUnsavedDialog = false
@@ -321,7 +319,7 @@ fun YarnFormScreen(
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(displayedImages, key = { it.key }) { (id, bytes) ->
+                        items(displayedImages, key = { it.key.toLong() }) { (id, bytes) ->
                             Box {
                                 val bitmap = remember(bytes) { bytes.toImageBitmap() }
                                 Image(

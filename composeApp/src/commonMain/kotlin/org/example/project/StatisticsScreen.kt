@@ -230,7 +230,7 @@ fun StatisticsScreen(
                 Spacer(Modifier.height(24.dp))
             }
 
-            items(categories) { cat ->
+            items(categories.reversed()) { cat ->
                 val header = if (isOverall) cat else {
                     val year = cat.take(4)
                     val month = cat.drop(5).take(2).toIntOrNull()

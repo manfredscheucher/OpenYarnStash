@@ -7,12 +7,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import openyarnstash.composeapp.generated.resources.*
 
@@ -28,14 +30,25 @@ fun ProjectAssignmentsScreen(
 ) {
     var currentAssignments by remember { mutableStateOf(initialAssignments.toMutableMap()) }
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    var filter by remember { mutableStateOf("") }
 
     val hasChanges by remember(currentAssignments) {
         derivedStateOf { currentAssignments != initialAssignments }
     }
 
-    val sortedYarns = remember(allYarns, currentAssignments) {
-        allYarns.sortedByDescending { yarn ->
-            (currentAssignments[yarn.id] ?: 0) > 0
+    val filteredYarns = remember(allYarns, filter) {
+        if (filter.isBlank()) {
+            allYarns
+        } else {
+            allYarns.filter { yarn ->
+                Json.encodeToString(yarn).contains(filter, ignoreCase = true)
+            }
+        }
+    }
+
+    val sortedYarns = remember(filteredYarns, initialAssignments) {
+        filteredYarns.sortedByDescending { yarn ->
+            (initialAssignments[yarn.id] ?: 0) > 0
         }
     }
 
@@ -111,7 +124,16 @@ fun ProjectAssignmentsScreen(
                 Text(stringResource(Res.string.yarn_list_empty)) // Re-using for now, consider a specific string
             }
         } else {
-            Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
+            Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
+                OutlinedTextField(
+                    value = filter,
+                    onValueChange = { filter = it },
+                    label = { Text("Filter") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    singleLine = true
+                )
+
                 val state = rememberLazyListState()
                 LazyColumn(
                     modifier = Modifier
@@ -121,7 +143,7 @@ fun ProjectAssignmentsScreen(
                     state = state,
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    items(sortedYarns, key = { it.id }) { yarn ->
+                    items(sortedYarns, key = { it.id.toLong() }) { yarn ->
                         val assignedAmount = currentAssignments[yarn.id]
                         val maxAmountThisProjectCanTake = getAvailableAmountForYarn(yarn.id)
 

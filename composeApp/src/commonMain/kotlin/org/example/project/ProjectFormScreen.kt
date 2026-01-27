@@ -52,7 +52,7 @@ fun ProjectFormScreen(
     imageManager: ImageManager,
     onBack: () -> Unit,
     onDelete: (UInt) -> Unit,
-    onSave: (Project, Map<UInt, ByteArray>) -> Unit,
+    onSave: (Project, Map<UInt, ByteArray>, (() -> Unit)?) -> Unit,
     onNavigateToAssignments: () -> Unit,
     onNavigateToPattern: (UInt) -> Unit,
     onNavigateToYarn: (UInt) -> Unit
@@ -185,7 +185,7 @@ fun ProjectFormScreen(
         }
     }
 
-    val saveAction = {
+    val saveAction: ((() -> Unit)?) -> Unit = { callback ->
         val finalImageIds = images.keys.toList()
         val project = initial.copy(
             name = name,
@@ -202,12 +202,11 @@ fun ProjectFormScreen(
             imageIds = finalImageIds,
             imagesChanged = initialImages.keys != images.keys // TODO: not used anywhere
         )
-        onSave(project, images.toMap())
+        onSave(project, images.toMap(), callback)
     }
 
     val saveAndGoBack = {
-        saveAction()
-        onBack()
+        saveAction { onBack() }
     }
 
     fun confirmDiscardChanges(action: () -> Unit) {
@@ -238,9 +237,8 @@ fun ProjectFormScreen(
         showDialog = showUnsavedDialog,
         onDismiss = { showUnsavedDialog = false },
         onSaveAndProceed = {
-            saveAction()
             showUnsavedDialog = false
-            onConfirmUnsaved?.invoke()
+            saveAction { onConfirmUnsaved?.invoke() }
         },
         onDiscardAndProceed = {
             showUnsavedDialog = false
@@ -356,7 +354,7 @@ fun ProjectFormScreen(
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(displayedImages, key = { it.key }) { (id, bytes) ->
+                    items(displayedImages, key = { it.key.toLong() }) { (id, bytes) ->
                         Box {
                             val bitmap = remember(bytes) { bytes.toImageBitmap() }
                             Image(

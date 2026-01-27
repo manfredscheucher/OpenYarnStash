@@ -2,6 +2,7 @@ package org.example.project.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -277,6 +279,21 @@ fun DateInput(
                         )
                     }
                 }
+            }
+
+            Spacer(Modifier.width(8.dp))
+
+            // Today button
+            IconButton(
+                onClick = {
+                    val today = getCurrentTimestamp().substring(0, 10) // YYYY-MM-DD
+                    val parts = today.split("-")
+                    selectedYear = parts[0].toIntOrNull()
+                    selectedMonth = parts[1].toIntOrNull()
+                    selectedDay = parts[2].toIntOrNull()
+                }
+            ) {
+                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Today")
             }
         }
     }

@@ -1,6 +1,7 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -27,7 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +49,7 @@ import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import
 import openyarnstash.composeapp.generated.resources.common_cancel
+import openyarnstash.composeapp.generated.resources.common_ok
 import openyarnstash.composeapp.generated.resources.common_yes
 import openyarnstash.composeapp.generated.resources.export_zip
 import openyarnstash.composeapp.generated.resources.import_dialog_message
@@ -104,7 +110,13 @@ fun SettingsScreen(
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit,
     onLogLevelChange: (LogLevel) -> Unit,
-    onBackupOldFolderOnImportChange: (Boolean) -> Unit
+    onBackupOldFolderOnImportChange: (Boolean) -> Unit,
+    isExporting: Boolean = false,
+    isImporting: Boolean = false,
+    showExportSuccessDialog: Boolean = false,
+    showImportSuccessDialog: Boolean = false,
+    onDismissExportSuccess: () -> Unit = {},
+    onDismissImportSuccess: () -> Unit = {}
 ) {
     var showJsonFilePicker by remember { mutableStateOf(false) }
     var showZipFilePicker by remember { mutableStateOf(false) }
@@ -359,6 +371,61 @@ fun SettingsScreen(
                     }
                 }
             }
+
+            // Loading overlay
+            if (isExporting || isImporting) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        modifier = Modifier.padding(32.dp),
+                        shape = MaterialTheme.shapes.large,
+                        tonalElevation = 8.dp
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(32.dp)
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(64.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = if (isExporting) "Exporting..." else "Importing...",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Success dialogs
+        if (showExportSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = onDismissExportSuccess,
+                title = { Text("Export Successful") },
+                text = { Text("The ZIP file has been exported successfully.") },
+                confirmButton = {
+                    TextButton(onClick = onDismissExportSuccess) {
+                        Text(stringResource(Res.string.common_ok))
+                    }
+                }
+            )
+        }
+
+        if (showImportSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = onDismissImportSuccess,
+                title = { Text("Import Successful") },
+                text = { Text("The ZIP file has been imported successfully.") },
+                confirmButton = {
+                    TextButton(onClick = onDismissImportSuccess) {
+                        Text(stringResource(Res.string.common_ok))
+                    }
+                }
+            )
         }
     }
 }
