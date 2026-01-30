@@ -79,6 +79,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
             val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
             errorDialogMessage = errorMessage
             Logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData: ${e.message}", e)
+            throw e  // Re-throw so caller can handle the failure
         }
         Logger.log(LogLevel.INFO,"Data reloaded" )
         Logger.logImportantFiles(LogLevel.TRACE)
@@ -631,18 +632,29 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     scope.launch {
                                         try {
                                             isExporting = true
+                                            Logger.log(LogLevel.INFO, "Starting ZIP export")
+
                                             val exportFileName = fileHandler.createTimestampedFileName("openyarnstash", "zip")
-                                            withContext(Dispatchers.Default) {
-                                                fileDownloader.download(exportFileName, fileHandler.zipFiles(), getContext())
+                                            Logger.log(LogLevel.INFO, "Export filename: $exportFileName")
+
+                                            Logger.log(LogLevel.INFO, "Creating ZIP file")
+                                            val zipBytes = withContext(Dispatchers.Default) {
+                                                fileHandler.zipFiles()
                                             }
+                                            Logger.log(LogLevel.INFO, "ZIP file created (${zipBytes.size} bytes)")
+
+                                            Logger.log(LogLevel.INFO, "Downloading ZIP file")
+                                            withContext(Dispatchers.Default) {
+                                                fileDownloader.download(exportFileName, zipBytes, getContext())
+                                            }
+
                                             isExporting = false
                                             showExportSuccessDialog = true
+                                            Logger.log(LogLevel.INFO, "ZIP export successful")
                                         } catch (e: Exception) {
                                             isExporting = false
                                             errorDialogMessage = "Failed to export: ${e.message}"
-                                            scope.launch {
-                                                Logger.log(LogLevel.ERROR, "Failed to export ZIP: ${e.message}", e)
-                                            }
+                                            Logger.log(LogLevel.ERROR, "ZIP export failed: ${e.message}", e)
                                         }
                                     }
                                 },
@@ -671,26 +683,69 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onImportZip = { zipInputStream ->
                                     scope.launch {
+                                        var backupFolderName: String? = null
+                                        var importSuccessful = false
                                         try {
                                             isImporting = true
+                                            Logger.log(LogLevel.INFO, "Starting ZIP import")
+
                                             if (currentSettings.backupOldFolderOnImport) {
                                                 val timestamp = getCurrentTimestamp()
-                                                fileHandler.renameFilesDirectory("files_$timestamp") // backup for debugging in case of error
+                                                backupFolderName = "files_$timestamp"
+                                                Logger.log(LogLevel.INFO, "Creating backup: $backupFolderName")
+                                                fileHandler.renameFilesDirectory(backupFolderName)
                                             } else {
+                                                Logger.log(LogLevel.INFO, "Deleting old files directory (no backup)")
                                                 fileHandler.deleteFilesDirectory()
                                             }
+
+                                            Logger.log(LogLevel.INFO, "Unzipping files")
                                             withContext(Dispatchers.Default) {
                                                 fileHandler.unzipAndReplaceFiles(zipInputStream)
                                             }
-                                            reloadAllData()
-                                            isImporting = false
-                                            showImportSuccessDialog = true
+
+                                            importSuccessful = true
+                                            Logger.log(LogLevel.INFO, "ZIP import successful")
                                         } catch (e: Exception) {
-                                            isImporting = false
-                                            val errorMessage = "Failed to import ZIP: ${e.message}"
+                                            Logger.log(LogLevel.ERROR, "ZIP import failed: ${e.message}", e)
+
+                                            var rollbackSuccessful = false
+                                            // Rollback: delete corrupted files and restore backup if exists
+                                            try {
+                                                Logger.log(LogLevel.INFO, "Starting rollback: deleting corrupted files")
+                                                fileHandler.deleteFilesDirectory()
+
+                                                if (backupFolderName != null) {
+                                                    Logger.log(LogLevel.INFO, "Restoring backup from: $backupFolderName")
+                                                    fileHandler.restoreBackupDirectory(backupFolderName)
+                                                    Logger.log(LogLevel.INFO, "Rollback completed successfully")
+                                                    rollbackSuccessful = true
+                                                } else {
+                                                    Logger.log(LogLevel.INFO, "No backup to restore (backup was disabled)")
+                                                }
+                                            } catch (rollbackException: Exception) {
+                                                Logger.log(LogLevel.ERROR, "CRITICAL: Rollback failed: ${rollbackException.message}", rollbackException)
+                                            }
+
+                                            val errorMessage = if (rollbackSuccessful) {
+                                                "Failed to import ZIP: ${e.message}\n\nYour previous data has been restored."
+                                            } else if (backupFolderName != null) {
+                                                "Failed to import ZIP: ${e.message}\n\nWarning: Could not restore previous data."
+                                            } else {
+                                                "Failed to import ZIP: ${e.message}\n\nNote: No backup was available (backup was disabled in settings)."
+                                            }
                                             errorDialogMessage = errorMessage
-                                            scope.launch {
-                                                Logger.log(LogLevel.ERROR, "Failed to import ZIP in onImportZip: ${e.message}", e)
+                                        } finally {
+                                            Logger.log(LogLevel.INFO, "Reloading data from disk")
+                                            try {
+                                                reloadAllData()
+                                            } catch (e: Exception) {
+                                                Logger.log(LogLevel.ERROR, "Failed to reload data after import: ${e.message}", e)
+                                            }
+
+                                            isImporting = false
+                                            if (importSuccessful) {
+                                                showImportSuccessDialog = true
                                             }
                                         }
                                     }

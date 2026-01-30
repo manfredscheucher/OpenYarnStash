@@ -53,6 +53,8 @@ class IosFileHandler : FileHandler {
 
     override suspend fun renameFilesDirectory(newName: String) { }
 
+    override suspend fun restoreBackupDirectory(backupName: String) { }
+
     override suspend fun deleteFilesDirectory() { }
 
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) { }

@@ -125,13 +125,27 @@ class JvmFileHandler : FileHandler {
     override suspend fun renameFilesDirectory(newName: String) {
         val newDir = File(baseDir, newName)
         if (filesDir.renameTo(newDir)) {
-            // No need to update baseDir, as it's the parent of filesDir
+            Logger.log(LogLevel.INFO, "Renamed files directory to: $newName")
+        } else {
+            Logger.log(LogLevel.ERROR, "Failed to rename files directory to: $newName")
+        }
+    }
+
+    override suspend fun restoreBackupDirectory(backupName: String) {
+        val backupDir = File(baseDir, backupName)
+        if (backupDir.exists() && backupDir.renameTo(filesDir)) {
+            Logger.log(LogLevel.INFO, "Restored backup directory from: $backupName")
+        } else {
+            Logger.log(LogLevel.ERROR, "Failed to restore backup directory from: $backupName (exists: ${backupDir.exists()})")
         }
     }
 
     override suspend fun deleteFilesDirectory() {
         if (filesDir.exists()) {
             filesDir.deleteRecursively()
+            Logger.log(LogLevel.INFO, "Deleted files directory")
+        } else {
+            Logger.log(LogLevel.DEBUG, "Files directory does not exist, nothing to delete")
         }
     }
 
