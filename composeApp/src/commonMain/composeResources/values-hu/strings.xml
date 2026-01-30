@@ -212,7 +212,8 @@ Az eredeti szerző nevének eltávolítása vagy helyettesítése, a szerzőség
     <string name="length_unit_yards">Yard</string>
     <string name="log_level_label">Naplózási szint</string>
     <string name="log_level_description">A naplófájl helyileg mentődik az eszközre, és a ZIP exportálással tekinthető meg.</string>
-    <string name="backup_old_folder_on_import">Régi mappa mentése importáláskor</string>
+    <string name="backup_old_folder_on_import">Állandó biztonsági mentés megőrzése importálás után</string>
+    <string name="backup_old_folder_on_import_description">Időbélyeggel ellátott biztonsági mentéseket hoz létre, amelyek örökre megmaradnak. Hasznos a hibákból vagy véletlen importálásokból való helyreállításhoz. Növeli a lemezhasználatot. Kikapcsolva továbbra is létrejön egy ideiglenes biztonsági mentés az importálás során a biztonság érdekében, de utána törlődik.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nincs implementálva</string>

@@ -48,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import
+import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import_description
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_ok
 import openyarnstash.composeapp.generated.resources.common_yes
@@ -101,7 +102,7 @@ fun SettingsScreen(
     currentLocale: String,
     currentLengthUnit: LengthUnit,
     currentLogLevel: LogLevel,
-    backupOldFolderOnImport: Boolean,
+    keepPermanentBackup: Boolean,
     fileHandler: FileHandler,
     onBack: () -> Unit,
     onExportZip: () -> Unit,
@@ -110,7 +111,7 @@ fun SettingsScreen(
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit,
     onLogLevelChange: (LogLevel) -> Unit,
-    onBackupOldFolderOnImportChange: (Boolean) -> Unit,
+    onKeepPermanentBackupChange: (Boolean) -> Unit,
     isExporting: Boolean = false,
     isImporting: Boolean = false,
     showExportSuccessDialog: Boolean = false,
@@ -298,9 +299,22 @@ fun SettingsScreen(
                     Text(stringResource(Res.string.import_zip))
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = backupOldFolderOnImport, onCheckedChange = onBackupOldFolderOnImportChange)
-                    Text(stringResource(Res.string.backup_old_folder_on_import))
+                    Checkbox(checked = keepPermanentBackup, onCheckedChange = onKeepPermanentBackupChange)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column {
+                        Text(
+                            text = stringResource(Res.string.backup_old_folder_on_import),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = stringResource(Res.string.backup_old_folder_on_import_description),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
 
                 if (showImportJsonConfirmDialog) {

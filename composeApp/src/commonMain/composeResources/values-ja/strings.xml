@@ -212,7 +212,8 @@
     <string name="length_unit_yards">ヤード</string>
     <string name="log_level_label">ログレベル</string>
     <string name="log_level_description">ログはデバイス内に保存され、ZIP書き出しで確認できます。</string>
-    <string name="backup_old_folder_on_import">インポート時に古いフォルダをバックアップする</string>
+    <string name="backup_old_folder_on_import">インポート後に永続的なバックアップを保持</string>
+    <string name="backup_old_folder_on_import_description">タイムスタンプ付きのバックアップを作成し、永続的に保存します。バグや誤ったインポートからの復旧に便利です。ディスク使用量が増加します。無効にすると、安全のためインポート中に一時バックアップが作成されますが、その後削除されます。</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">未実装</string>

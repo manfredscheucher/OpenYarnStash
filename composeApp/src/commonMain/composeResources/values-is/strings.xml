@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Yardar</string>
     <string name="log_level_label">Skráningarstig (Logs)</string>
     <string name="log_level_description">Atburðaskrá er vistuð staðvært á tækinu.</string>
-    <string name="backup_old_folder_on_import">Taka öryggisafrit af gamalli möppu við innflutning</string>
+    <string name="backup_old_folder_on_import">Halda varanlegri öryggisafrit eftir innflutning</string>
+    <string name="backup_old_folder_on_import_description">Býr til öryggisafrit með tímastimpli sem eru geymd að eilífu. Gagnlegt til að endurheimta frá villum eða óviljandi innflutningum. Eykur disknotkun. Þegar óvirkt er enn búið til tímabundið öryggisafrit við innflutning fyrir öryggi, en það er eytt síðar.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ekki tilbúið</string>

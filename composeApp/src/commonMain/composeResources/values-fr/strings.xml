@@ -215,7 +215,8 @@ Supprimer ou remplacer le nom de l'auteur original, déformer la paternité du p
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Niveau de log</string>
     <string name="log_level_description">Le fichier de log est stocké localement et peut être consulté via l'export ZIP.</string>
-    <string name="backup_old_folder_on_import">Sauvegarder l'ancien dossier lors de l'import</string>
+    <string name="backup_old_folder_on_import">Conserver une sauvegarde permanente après l'import</string>
+    <string name="backup_old_folder_on_import_description">Crée des sauvegardes horodatées conservées indéfiniment. Utile pour récupérer après des bugs ou des imports accidentels. Augmente l'utilisation du disque. Si désactivé, une sauvegarde temporaire est créée pendant l'import pour la sécurité, mais supprimée ensuite.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Non implémenté</string>

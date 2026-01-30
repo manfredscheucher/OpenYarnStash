@@ -215,7 +215,8 @@ Det er ikke tilladt at fjerne eller erstatte den oprindelige forfatters navn, gi
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Logniveau</string>
     <string name="log_level_description">Logfilen gemmes lokalt på enheden og kan ses via ZIP-eksport.</string>
-    <string name="backup_old_folder_on_import">Sikkerhedskopier gammel mappe ved import</string>
+    <string name="backup_old_folder_on_import">Behold permanent sikkerhedskopi efter import</string>
+    <string name="backup_old_folder_on_import_description">Opretter tidsstemplede sikkerhedskopier, der beholdes for evigt. Nyttig til at gendanne fra fejl eller utilsigtede importer. Øger diskforbrug. Når deaktiveret, oprettes der stadig en midlertidig sikkerhedskopi under import af sikkerhedsmæssige årsager, men slettes bagefter.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ikke implementeret</string>

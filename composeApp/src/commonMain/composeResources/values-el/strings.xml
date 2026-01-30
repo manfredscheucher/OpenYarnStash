@@ -215,7 +215,8 @@
     <string name="length_unit_yards">Γιάρδες</string>
     <string name="log_level_label">Επίπεδο καταγραφής</string>
     <string name="log_level_description">Το αρχείο καταγραφής αποθηκεύεται τοπικά στη συσκευή και μπορείτε να το δείτε μέσω εξαγωγής ZIP.</string>
-    <string name="backup_old_folder_on_import">Δημιουργία αντιγράφου ασφαλείας παλιού φακέλου κατά την εισαγωγή</string>
+    <string name="backup_old_folder_on_import">Διατήρηση μόνιμου αντιγράφου ασφαλείας μετά την εισαγωγή</string>
+    <string name="backup_old_folder_on_import_description">Δημιουργεί αντίγραφα ασφαλείας με χρονική σήμανση που διατηρούνται για πάντα. Χρήσιμο για ανάκτηση από σφάλματα ή τυχαίες εισαγωγές. Αυξάνει τη χρήση δίσκου. Όταν απενεργοποιηθεί, εξακολουθεί να δημιουργείται ένα προσωρινό αντίγραφο ασφαλείας κατά την εισαγωγή για ασφάλεια, αλλά διαγράφεται μετά.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Δεν έχει υλοποιηθεί</string>

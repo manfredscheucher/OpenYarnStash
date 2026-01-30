@@ -213,7 +213,8 @@ Non è consentito rimuovere o sostituire il nome dell\'autore originale, falsare
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Livello di log</string>
     <string name="log_level_description">Il file di log viene salvato localmente sul dispositivo e può essere visualizzato tramite l\'esportazione ZIP.</string>
-    <string name="backup_old_folder_on_import">Backup vecchia cartella durante l\'import</string>
+    <string name="backup_old_folder_on_import">Mantieni backup permanente dopo l\'importazione</string>
+    <string name="backup_old_folder_on_import_description">Crea backup con timestamp conservati per sempre. Utile per recuperare da bug o importazioni accidentali. Aumenta l\'uso del disco. Se disabilitato, viene comunque creato un backup temporaneo durante l\'importazione per sicurezza, ma viene eliminato dopo.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Non implementato</string>

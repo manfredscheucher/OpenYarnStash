@@ -154,6 +154,16 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
         }
     }
 
+    override suspend fun deleteBackupDirectory(backupName: String) {
+        val backupDir = File(filesDir.parentFile, backupName)
+        if (backupDir.exists()) {
+            backupDir.deleteRecursively()
+            Logger.log(LogLevel.INFO, "Deleted backup directory: $backupName")
+        } else {
+            Logger.log(LogLevel.DEBUG, "Backup directory does not exist: $backupName")
+        }
+    }
+
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
         val inputStream = zipInputStream as? InputStream ?: return
 

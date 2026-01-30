@@ -215,7 +215,8 @@ Att ta bort eller ersätta den ursprungliga författarens namn, felaktigt framst
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Loggnivå</string>
     <string name="log_level_description">Loggfilen lagras lokalt på enheten och kan ses via ZIP-export.</string>
-    <string name="backup_old_folder_on_import">Säkerhetskopiera gammal mapp vid import</string>
+    <string name="backup_old_folder_on_import">Behåll permanent säkerhetskopia efter import</string>
+    <string name="backup_old_folder_on_import_description">Skapar tidsstämplade säkerhetskopior som behålls för alltid. Användbart för att återställa från buggar eller oavsiktliga importer. Ökar diskanvändningen. När inaktiverad skapas fortfarande en tillfällig säkerhetskopia under importen för säkerhet, men raderas efteråt.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Inte implementerat</string>

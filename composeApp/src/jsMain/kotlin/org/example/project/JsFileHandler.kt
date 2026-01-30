@@ -125,6 +125,10 @@ class JsFileHandler : FileHandler {
         throw UnsupportedOperationException("restoreBackupDirectory is not supported on JS")
     }
 
+    override suspend fun deleteBackupDirectory(backupName: String) {
+        throw UnsupportedOperationException("deleteBackupDirectory is not supported on JS")
+    }
+
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
         throw UnsupportedOperationException("unzipAndReplaceFiles is not supported on JS")
     }

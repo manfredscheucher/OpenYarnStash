@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Jardi</string>
     <string name="log_level_label">Žurnālēšanas līmenis</string>
     <string name="log_level_description">Žurnāla fails tiek saglabāts ierīcē.</string>
-    <string name="backup_old_folder_on_import">Dublēt veco mapi importēšanas laikā</string>
+    <string name="backup_old_folder_on_import">Saglabāt pastāvīgu dublējumu pēc importēšanas</string>
+    <string name="backup_old_folder_on_import_description">Izveido dublējumus ar laika zīmogu, kas tiek saglabāti uz visiem laikiem. Noderīgi atjaunošanai pēc kļūdām vai nejaušām importēšanām. Palielina diska lietojumu. Kad atspējots, importēšanas laikā tik un tā tiek izveidots pagaidu dublējums drošības nolūkos, bet pēc tam tas tiek dzēsts.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Vēl nav ieviests</string>

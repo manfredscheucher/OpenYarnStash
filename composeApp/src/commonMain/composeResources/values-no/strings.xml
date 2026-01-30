@@ -215,7 +215,8 @@ Fjerning eller utskifting av den opprinnelige forfatterens navn, feilaktig frems
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Loggnivå</string>
     <string name="log_level_description">Loggfilen lagres lokalt på enheten og kan sees via ZIP-eksport.</string>
-    <string name="backup_old_folder_on_import">Sikkerhetskopier gammel mappe ved import</string>
+    <string name="backup_old_folder_on_import">Behold permanent sikkerhetskopi etter import</string>
+    <string name="backup_old_folder_on_import_description">Oppretter tidsstemplede sikkerhetskopier som beholdes for alltid. Nyttig for å gjenopprette fra feil eller utilsiktede importer. Øker diskbruk. Når deaktivert, opprettes fortsatt en midlertidig sikkerhetskopi under import for sikkerhet, men slettes etterpå.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ikke implementert</string>

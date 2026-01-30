@@ -215,7 +215,8 @@ Remover ou substituir o nome do autor original, deturpar a autoria ou publicar v
     <string name="length_unit_yards">Jardas</string>
     <string name="log_level_label">Nível de log</string>
     <string name="log_level_description">O arquivo de log é armazenado localmente no dispositivo e pode ser visto através da exportação ZIP.</string>
-    <string name="backup_old_folder_on_import">Cópia de segurança da pasta antiga na importação</string>
+    <string name="backup_old_folder_on_import">Manter cópia de segurança permanente após importação</string>
+    <string name="backup_old_folder_on_import_description">Cria cópias de segurança com carimbo de data/hora que são mantidas para sempre. Útil para recuperar de bugs ou importações acidentais. Aumenta o uso do disco. Quando desativado, uma cópia de segurança temporária ainda é criada durante a importação para segurança, mas é excluída depois.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Não implementado</string>

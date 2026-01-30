@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Yarda</string>
     <string name="log_level_label">Günlükleme Düzeyi (Log)</string>
     <string name="log_level_description">Günlük dosyası cihazda yerel olarak saklanır.</string>
-    <string name="backup_old_folder_on_import">İçeri aktarırken eski klasörü yedekle</string>
+    <string name="backup_old_folder_on_import">İçe aktarma sonrası kalıcı yedek tut</string>
+    <string name="backup_old_folder_on_import_description">Sonsuza kadar saklanan zaman damgalı yedekler oluşturur. Hatalardan veya yanlışlıkla yapılan içe aktarmalardan kurtarmak için yararlıdır. Disk kullanımını artırır. Devre dışı bırakıldığında, güvenlik için içe aktarma sırasında geçici bir yedek oluşturulur ancak sonrasında silinir.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Henüz Uygulanmadı</string>

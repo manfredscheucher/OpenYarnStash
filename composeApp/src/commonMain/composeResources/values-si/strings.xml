@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Yardi</string>
     <string name="log_level_label">Raven beleženja (log level)</string>
     <string name="log_level_description">Dnevnik se shranjuje lokalno.</string>
-    <string name="backup_old_folder_on_import">Varnostno kopiraj staro mapo ob uvozu</string>
+    <string name="backup_old_folder_on_import">Ohrani trajno varnostno kopijo po uvozu</string>
+    <string name="backup_old_folder_on_import_description">Ustvari varnostne kopije s časovnim žigom, ki se hranijo za vedno. Uporabno za obnovitev po napakah ali nenamernih uvozih. Poveča uporabo diska. Ko je onemogočeno, se med uvozom še vedno ustvari začasna varnostna kopija za varnost, vendar se nato izbriše.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ni implementirano</string>

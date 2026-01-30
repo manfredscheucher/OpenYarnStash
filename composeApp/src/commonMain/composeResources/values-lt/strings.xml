@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Jardai</string>
     <string name="log_level_label">Žurnalo lygis (logging level)</string>
     <string name="log_level_description">Žurnalo failas saugomas įrenginyje.</string>
-    <string name="backup_old_folder_on_import">Sukurti senojo aplanko atsarginę kopiją importuojant</string>
+    <string name="backup_old_folder_on_import">Išsaugoti nuolatinę atsarginę kopiją po importavimo</string>
+    <string name="backup_old_folder_on_import_description">Sukuria atsargines kopijas su laiko žyma, kurios saugomos amžinai. Naudinga atsigaunant po klaidų ar netyčinių importavimų. Padidina disko naudojimą. Kai išjungta, importavimo metu vis tiek sukuriama laikina atsarginė kopija saugumo tikslais, bet vėliau ji ištrinama.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Dar neįgyvendinta</string>

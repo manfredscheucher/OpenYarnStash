@@ -57,6 +57,8 @@ class IosFileHandler : FileHandler {
 
     override suspend fun deleteFilesDirectory() { }
 
+    override suspend fun deleteBackupDirectory(backupName: String) { }
+
     override suspend fun unzipAndReplaceFiles(zipInputStream: Any) { }
 
     override fun createTimestampedFileName(baseName: String, extension: String): String {

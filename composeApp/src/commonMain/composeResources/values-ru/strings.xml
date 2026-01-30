@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Ярды</string>
     <string name="log_level_label">Уровень логирования</string>
     <string name="log_level_description">Лог-файл сохраняется локально.</string>
-    <string name="backup_old_folder_on_import">Бэкап старой папки при импорте</string>
+    <string name="backup_old_folder_on_import">Сохранять постоянную резервную копию после импорта</string>
+    <string name="backup_old_folder_on_import_description">Создает резервные копии с временными метками, которые хранятся навсегда. Полезно для восстановления после ошибок или случайных импортов. Увеличивает использование диска. При отключении временная резервная копия все равно создается во время импорта для безопасности, но удаляется после.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Не реализовано</string>

@@ -625,7 +625,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 currentLocale = currentSettings.language,
                                 currentLengthUnit = currentSettings.lengthUnit,
                                 currentLogLevel = currentSettings.logLevel,
-                                backupOldFolderOnImport = currentSettings.backupOldFolderOnImport,
+                                keepPermanentBackup = currentSettings.backupOldFolderOnImport,
                                 fileHandler = fileHandler,
                                 onBack = { navigateBack() },
                                 onExportZip = {
@@ -683,20 +683,34 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 },
                                 onImportZip = { zipInputStream ->
                                     scope.launch {
-                                        var backupFolderName: String? = null
                                         var importSuccessful = false
+                                        var backupFolderName: String? = null
+                                        var isTemporaryBackup = false
+
                                         try {
                                             isImporting = true
                                             Logger.log(LogLevel.INFO, "Starting ZIP import")
 
                                             if (currentSettings.backupOldFolderOnImport) {
+                                                // Permanent backup with timestamp
                                                 val timestamp = getCurrentTimestamp()
                                                 backupFolderName = "files_$timestamp"
-                                                Logger.log(LogLevel.INFO, "Creating backup: $backupFolderName")
+                                                isTemporaryBackup = false
+                                                Logger.log(LogLevel.INFO, "Creating permanent backup: $backupFolderName")
                                                 fileHandler.renameFilesDirectory(backupFolderName)
                                             } else {
-                                                Logger.log(LogLevel.INFO, "Deleting old files directory (no backup)")
-                                                fileHandler.deleteFilesDirectory()
+                                                // Temporary backup
+                                                backupFolderName = "backup"
+                                                isTemporaryBackup = true
+                                                Logger.log(LogLevel.INFO, "Creating temporary backup: $backupFolderName")
+                                                // Delete old temporary backup if exists
+                                                try {
+                                                    fileHandler.deleteBackupDirectory(backupFolderName)
+                                                    Logger.log(LogLevel.DEBUG, "Old temporary backup deleted")
+                                                } catch (e: Exception) {
+                                                    Logger.log(LogLevel.DEBUG, "No old temporary backup to delete")
+                                                }
+                                                fileHandler.renameFilesDirectory(backupFolderName)
                                             }
 
                                             Logger.log(LogLevel.INFO, "Unzipping files")
@@ -710,7 +724,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                             Logger.log(LogLevel.ERROR, "ZIP import failed: ${e.message}", e)
 
                                             var rollbackSuccessful = false
-                                            // Rollback: delete corrupted files and restore backup if exists
+                                            // Rollback: delete corrupted files and restore backup
                                             try {
                                                 Logger.log(LogLevel.INFO, "Starting rollback: deleting corrupted files")
                                                 fileHandler.deleteFilesDirectory()
@@ -729,10 +743,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
 
                                             val errorMessage = if (rollbackSuccessful) {
                                                 "Failed to import ZIP: ${e.message}\n\nYour previous data has been restored."
-                                            } else if (backupFolderName != null) {
-                                                "Failed to import ZIP: ${e.message}\n\nWarning: Could not restore previous data."
                                             } else {
-                                                "Failed to import ZIP: ${e.message}\n\nNote: No backup was available (backup was disabled in settings)."
+                                                "Failed to import ZIP: ${e.message}\n\nWarning: Could not restore previous data."
                                             }
                                             errorDialogMessage = errorMessage
                                         } finally {
@@ -741,6 +753,46 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                                 reloadAllData()
                                             } catch (e: Exception) {
                                                 Logger.log(LogLevel.ERROR, "Failed to reload data after import: ${e.message}", e)
+                                                // If reload fails, the import was not successful even if unzipping worked
+                                                importSuccessful = false
+
+                                                // Perform rollback: delete corrupted files and restore backup
+                                                var rollbackSuccessful = false
+                                                try {
+                                                    Logger.log(LogLevel.INFO, "Starting rollback after reload failure: deleting corrupted files")
+                                                    fileHandler.deleteFilesDirectory()
+
+                                                    if (backupFolderName != null) {
+                                                        Logger.log(LogLevel.INFO, "Restoring backup from: $backupFolderName")
+                                                        fileHandler.restoreBackupDirectory(backupFolderName)
+                                                        Logger.log(LogLevel.INFO, "Rollback completed successfully")
+                                                        rollbackSuccessful = true
+                                                    } else {
+                                                        Logger.log(LogLevel.INFO, "No backup to restore (first start or backup disabled)")
+                                                    }
+                                                } catch (rollbackException: Exception) {
+                                                    Logger.log(LogLevel.ERROR, "CRITICAL: Rollback failed: ${rollbackException.message}", rollbackException)
+                                                }
+
+                                                if (errorDialogMessage == null) {
+                                                    errorDialogMessage = if (rollbackSuccessful) {
+                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nYour previous data has been restored."
+                                                    } else if (backupFolderName != null) {
+                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nWarning: Could not restore previous data."
+                                                    } else {
+                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nNote: No previous data existed to restore."
+                                                    }
+                                                }
+                                            }
+
+                                            // Delete temporary backup after successful import
+                                            if (importSuccessful && isTemporaryBackup && backupFolderName != null) {
+                                                try {
+                                                    Logger.log(LogLevel.INFO, "Deleting temporary backup: $backupFolderName")
+                                                    fileHandler.deleteBackupDirectory(backupFolderName)
+                                                } catch (e: Exception) {
+                                                    Logger.log(LogLevel.WARN, "Failed to delete temporary backup: ${e.message}", e)
+                                                }
                                             }
 
                                             isImporting = false
@@ -778,9 +830,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                         settings = newSettings
                                     }
                                 },
-                                onBackupOldFolderOnImportChange = { newBackupOldFolderOnImport ->
+                                onKeepPermanentBackupChange = { newKeepPermanentBackup ->
                                     scope.launch {
-                                        val newSettings = currentSettings.copy(backupOldFolderOnImport = newBackupOldFolderOnImport)
+                                        val newSettings = currentSettings.copy(backupOldFolderOnImport = newKeepPermanentBackup)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }

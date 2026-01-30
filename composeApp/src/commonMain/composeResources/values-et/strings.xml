@@ -212,7 +212,8 @@
     <string name="length_unit_yards">Jardid</string>
     <string name="log_level_label">Logimise tase</string>
     <string name="log_level_description">Logifail salvestatakse seadmesse.</string>
-    <string name="backup_old_folder_on_import">Varunda vana kaust importimisel</string>
+    <string name="backup_old_folder_on_import">Säilita püsiv varukoopia pärast importimist</string>
+    <string name="backup_old_folder_on_import_description">Loob ajatempliga varukoopiad, mida hoitakse igavesti. Kasulik taastamiseks vigade või kogemata tehtud importide korral. Suurendab ketta kasutust. Kui keelatud, luuakse importimise ajal siiski ajutine varukoopia turvalisuse tagamiseks, kuid see kustutatakse hiljem.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Pole veel lisatud</string>

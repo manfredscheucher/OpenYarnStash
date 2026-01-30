@@ -215,7 +215,8 @@ Alkuperäisen tekijän nimen poistaminen tai korvaaminen, tekijyyden vääristel
     <string name="length_unit_yards">Jaardit</string>
     <string name="log_level_label">Lokitaso</string>
     <string name="log_level_description">Lokitiedosto tallennetaan paikallisesti laitteelle ja se voidaan tarkistaa ZIP-viennin kautta.</string>
-    <string name="backup_old_folder_on_import">Varmuuskopioi vanha kansio tuonnin yhteydessä</string>
+    <string name="backup_old_folder_on_import">Säilytä pysyvä varmuuskopio tuonnin jälkeen</string>
+    <string name="backup_old_folder_on_import_description">Luo aikaleimallisia varmuuskopioita, jotka säilytetään ikuisesti. Hyödyllinen palautumiseen virheistä tai vahingossa tehdyistä tuonneista. Lisää levynkäyttöä. Kun poistettu käytöstä, tuonnin aikana luodaan silti väliaikainen varmuuskopio turvallisuuden vuoksi, mutta se poistetaan jälkeenpäin.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ei toteutettu</string>

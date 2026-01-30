@@ -215,7 +215,8 @@ No está permitido eliminar o reemplazar el nombre del autor original, falsear l
     <string name="length_unit_yards">Yardas</string>
     <string name="log_level_label">Nivel de registro (Log)</string>
     <string name="log_level_description">El archivo de registro se guarda localmente en el dispositivo y se puede ver mediante la exportación ZIP.</string>
-    <string name="backup_old_folder_on_import">Copia de seguridad de carpeta antigua al importar</string>
+    <string name="backup_old_folder_on_import">Mantener copia de seguridad permanente después de importar</string>
+    <string name="backup_old_folder_on_import_description">Crea copias de seguridad con marca de tiempo que se conservan para siempre. Útil para recuperar de errores o importaciones accidentales. Aumenta el uso del disco. Si está desactivado, se crea una copia de seguridad temporal durante la importación para seguridad, pero se elimina después.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">No implementado</string>
