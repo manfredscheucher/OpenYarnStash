@@ -28,9 +28,28 @@ def process(filename):
         print(f"Error: '{backup_path}' is not a valid JSON file.")
         return
 
-    yarns = data.get("yarns", [])
-    projects = data.get("projects", [])
-    assignments = data.get("assignments", [])
+    # Validate required attributes
+    if "yarns" not in data:
+        print("Error: Required attribute 'yarns' not found in JSON.")
+        return
+    if "projects" not in data:
+        print("Error: Required attribute 'projects' not found in JSON.")
+        return
+
+    # Handle assignments (with backward compatibility for 'usages')
+    if "assignments" in data:
+        assignments = data["assignments"]
+    elif "usages" in data:
+        print("Info: Old attribute name 'usages' found, renaming to 'assignments'.")
+        assignments = data["usages"]
+        data["assignments"] = assignments
+        del data["usages"]
+    else:
+        print("Error: Required attribute 'assignments' (or old name 'usages') not found in JSON.")
+        return
+
+    yarns = data["yarns"]
+    projects = data["projects"]
     
     used_ids = set()
     new_id_count = 0
