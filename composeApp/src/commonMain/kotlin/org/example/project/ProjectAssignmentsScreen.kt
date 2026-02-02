@@ -64,9 +64,14 @@ fun ProjectAssignmentsScreen(
         backAction()
     }
 
-    val saveAction = {
+    val saveAction = { callback: (() -> Unit)? ->
         val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
         onSave(finalAssignments)
+        callback?.invoke()
+    }
+
+    val saveAndGoBack = {
+        saveAction { onBack() }
     }
 
     if (showUnsavedDialog) {
@@ -91,8 +96,8 @@ fun ProjectAssignmentsScreen(
                     }
                     Spacer(Modifier.width(8.dp))
                     TextButton(onClick = {
-                        saveAction()
                         showUnsavedDialog = false
+                        saveAction { onBack() }
                     }) {
                         Text(stringResource(Res.string.common_yes))
                     }
@@ -184,7 +189,7 @@ fun ProjectAssignmentsScreen(
                         ) {
                             TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                             Spacer(Modifier.width(8.dp))
-                            Button(onClick = saveAction) { Text(stringResource(Res.string.common_save)) }
+                            Button(onClick = saveAndGoBack) { Text(stringResource(Res.string.common_save)) }
                         }
                     }
                 }
