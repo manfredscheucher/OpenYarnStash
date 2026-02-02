@@ -115,6 +115,11 @@ fun ProjectAssignmentsScreen(
                     IconButton(onClick = backAction) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
                     }
+                },
+                actions = {
+                    TextButton(onClick = { saveAndGoBack() }) {
+                        Text(stringResource(Res.string.common_save))
+                    }
                 }
             )
         }
@@ -182,15 +187,7 @@ fun ProjectAssignmentsScreen(
                     }
 
                     item {
-                        Spacer(Modifier.height(24.dp))
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End // Save button to the right
-                        ) {
-                            TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
-                            Spacer(Modifier.width(8.dp))
-                            Button(onClick = saveAndGoBack) { Text(stringResource(Res.string.common_save)) }
-                        }
+                        Spacer(Modifier.height(80.dp))
                     }
                 }
             }
