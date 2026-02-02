@@ -64,7 +64,7 @@ fun ProjectAssignmentsScreen(
         backAction()
     }
 
-    val saveAction = { callback: (() -> Unit)? ->
+    val saveAction: ((() -> Unit)?) -> Unit = { callback ->
         val finalAssignments = currentAssignments.filterValues { it > 0 } // Remove zero amounts
         onSave(finalAssignments)
         callback?.invoke()
