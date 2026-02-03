@@ -1,0 +1,4 @@
+headers = zlib.h
+headerFilter = zlib.h
+compilerOpts = -I/usr/include
+linkerOpts = -lz

@@ -207,6 +207,7 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="settings_title">Settings</string>
     <string name="export_json">Export JSON</string>
     <string name="export_zip">Export ZIP</string>
+    <string name="data_export_warning">Note: This app is currently in early development. We recommend exporting your valuable data from time to time via the ZIP export function to avoid data loss from accidental imports or bugs. Importing will overwrite all current data.</string>
     <string name="import_json">Import JSON</string>
     <string name="import_zip">Import ZIP</string>
     <string name="import_button_text">Import</string>
@@ -218,8 +219,6 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Logging Level</string>
     <string name="log_level_description">The log file is stored locally on the device and can be viewed via ZIP export.</string>
-    <string name="backup_old_folder_on_import">Keep permanent backup after import</string>
-    <string name="backup_old_folder_on_import_description">Creates timestamped backups that are kept forever. Useful to recover from bugs or accidental imports. Increases disk usage over time. When disabled, a temporary backup is still created during import for safety, but deleted afterwards.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>

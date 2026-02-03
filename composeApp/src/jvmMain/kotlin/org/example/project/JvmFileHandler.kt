@@ -13,14 +13,16 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-class JvmFileHandler : FileHandler {
+class JvmFileHandler(testBaseDir: File? = null) : FileHandler {
 
     private var baseDir: File
     private val filesDir: File
 
     init {
-        val home = System.getProperty("user.home")
-        baseDir = File(home, ".openyarnstash")
+        baseDir = testBaseDir ?: run {
+            val home = System.getProperty("user.home")
+            File(home, ".openyarnstash")
+        }
         filesDir = File(baseDir, "files")
         if (!filesDir.exists()) {
             filesDir.mkdirs()

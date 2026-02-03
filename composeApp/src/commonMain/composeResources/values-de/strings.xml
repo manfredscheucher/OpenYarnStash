@@ -202,6 +202,7 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="settings_title">Einstellungen</string>
     <string name="export_json">JSON exportieren</string>
     <string name="export_zip">ZIP exportieren</string>
+    <string name="data_export_warning">Hinweis: Diese App befindet sich derzeit in früher Entwicklung. Wir empfehlen, wertvolle Daten von Zeit zu Zeit über die ZIP-Export-Funktion zu exportieren, um Datenverlust durch versehentliche Importe oder Bugs zu vermeiden. Beim Import werden alle aktuellen Daten überschrieben.</string>
     <string name="import_json">JSON importieren</string>
     <string name="import_zip">ZIP importieren</string>
     <string name="import_button_text">Importieren</string>
@@ -213,8 +214,6 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Log-Level</string>
     <string name="log_level_description">Die Log-Datei wird lokal auf dem Gerät gespeichert und kann über den ZIP-Export eingesehen werden.</string>
-    <string name="backup_old_folder_on_import">Permanentes Backup nach Import behalten</string>
-    <string name="backup_old_folder_on_import_description">Erstellt Backups mit Zeitstempel, die für immer gespeichert bleiben. Nützlich zur Wiederherstellung nach Bugs oder versehentlichen Importen. Erhöht Speicherverbrauch über Zeit. Wenn deaktiviert, wird trotzdem ein temporäres Backup während des Imports erstellt, aber danach gelöscht.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nicht implementiert</string>

@@ -102,7 +102,6 @@ fun SettingsScreen(
     currentLocale: String,
     currentLengthUnit: LengthUnit,
     currentLogLevel: LogLevel,
-    keepPermanentBackup: Boolean,
     fileHandler: FileHandler,
     onBack: () -> Unit,
     onExportZip: () -> Unit,
@@ -111,7 +110,6 @@ fun SettingsScreen(
     onLocaleChange: (String) -> Unit,
     onLengthUnitChange: (LengthUnit) -> Unit,
     onLogLevelChange: (LogLevel) -> Unit,
-    onKeepPermanentBackupChange: (Boolean) -> Unit,
     isExporting: Boolean = false,
     isImporting: Boolean = false,
     showExportSuccessDialog: Boolean = false,
@@ -292,29 +290,22 @@ fun SettingsScreen(
                     modifier = Modifier.padding(top = 4.dp).fillMaxWidth()
                 )
 
+                Text(
+                    text = if (currentLocale == "de") {
+                        "Hinweis: Diese App befindet sich derzeit in früher Entwicklung. Wir empfehlen, wertvolle Daten von Zeit zu Zeit über die ZIP-Export-Funktion zu exportieren, um Datenverlust durch versehentliche Importe oder Bugs zu vermeiden. Beim Import werden alle aktuellen Daten überschrieben."
+                    } else {
+                        "Note: This app is currently in early development. We recommend exporting your valuable data from time to time via the ZIP export function to avoid data loss from accidental imports or bugs. Importing will overwrite all current data."
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 8.dp).fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = { showImportZipConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(Res.string.import_zip))
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Checkbox(checked = keepPermanentBackup, onCheckedChange = onKeepPermanentBackupChange)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Column {
-                        Text(
-                            text = stringResource(Res.string.backup_old_folder_on_import),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = stringResource(Res.string.backup_old_folder_on_import_description),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
                 }
 
                 if (showImportJsonConfirmDialog) {

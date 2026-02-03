@@ -149,7 +149,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
         )
     }
 
-    key(currentSettings.language, currentSettings.lengthUnit, currentSettings.logLevel, currentSettings.backupOldFolderOnImport) {
+    key(currentSettings.language, currentSettings.lengthUnit, currentSettings.logLevel) {
         MaterialTheme(
             colorScheme = LightColorScheme
         ) {
@@ -625,7 +625,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 currentLocale = currentSettings.language,
                                 currentLengthUnit = currentSettings.lengthUnit,
                                 currentLogLevel = currentSettings.logLevel,
-                                keepPermanentBackup = currentSettings.backupOldFolderOnImport,
                                 fileHandler = fileHandler,
                                 onBack = { navigateBack() },
                                 onExportZip = {
@@ -691,27 +690,18 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                             isImporting = true
                                             Logger.log(LogLevel.INFO, "Starting ZIP import")
 
-                                            if (currentSettings.backupOldFolderOnImport) {
-                                                // Permanent backup with timestamp
-                                                val timestamp = getCurrentTimestamp()
-                                                backupFolderName = "files_$timestamp"
-                                                isTemporaryBackup = false
-                                                Logger.log(LogLevel.INFO, "Creating permanent backup: $backupFolderName")
-                                                fileHandler.renameFilesDirectory(backupFolderName)
-                                            } else {
-                                                // Temporary backup
-                                                backupFolderName = "backup"
-                                                isTemporaryBackup = true
-                                                Logger.log(LogLevel.INFO, "Creating temporary backup: $backupFolderName")
-                                                // Delete old temporary backup if exists
-                                                try {
-                                                    fileHandler.deleteBackupDirectory(backupFolderName)
-                                                    Logger.log(LogLevel.DEBUG, "Old temporary backup deleted")
-                                                } catch (e: Exception) {
-                                                    Logger.log(LogLevel.DEBUG, "No old temporary backup to delete")
-                                                }
-                                                fileHandler.renameFilesDirectory(backupFolderName)
+                                            // Temporary backup
+                                            backupFolderName = "backup"
+                                            isTemporaryBackup = true
+                                            Logger.log(LogLevel.INFO, "Creating temporary backup: $backupFolderName")
+                                            // Delete old temporary backup if exists
+                                            try {
+                                                fileHandler.deleteBackupDirectory(backupFolderName)
+                                                Logger.log(LogLevel.DEBUG, "Old temporary backup deleted")
+                                            } catch (e: Exception) {
+                                                Logger.log(LogLevel.DEBUG, "No old temporary backup to delete")
                                             }
+                                            fileHandler.renameFilesDirectory(backupFolderName)
 
                                             Logger.log(LogLevel.INFO, "Unzipping files")
                                             withContext(Dispatchers.Default) {
@@ -824,15 +814,6 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 onLogLevelChange = { newLogLevel ->
                                     scope.launch {
                                         val newSettings = currentSettings.copy(logLevel = newLogLevel)
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                },
-                                onKeepPermanentBackupChange = { newKeepPermanentBackup ->
-                                    scope.launch {
-                                        val newSettings = currentSettings.copy(backupOldFolderOnImport = newKeepPermanentBackup)
                                         withContext(Dispatchers.Default) {
                                             settingsManager.saveSettings(newSettings)
                                         }

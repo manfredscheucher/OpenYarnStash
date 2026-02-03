@@ -4,12 +4,30 @@ import platform.Foundation.*
 import kotlinx.cinterop.*
 import platform.posix.*
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
 class IosFileHandler : FileHandler {
     private val fileManager = NSFileManager.defaultManager
     private val documentsDir = fileManager.URLsForDirectory(NSDocumentDirectory, NSUserDomainMask).first() as NSURL
+    private val filesDir = documentsDir.URLByAppendingPathComponent("files")!!
 
-    private fun getURL(path: String): NSURL = documentsDir.URLByAppendingPathComponent(path)!!
+    init {
+        // Create files directory if it doesn't exist
+        if (!fileManager.fileExistsAtPath(filesDir.path ?: "")) {
+            fileManager.createDirectoryAtURL(filesDir, true, null, null)
+        }
+    }
+
+    private fun getURL(path: String): NSURL = filesDir.URLByAppendingPathComponent(path)!!
+
+    private fun ensureParentDirectoryExists(url: NSURL) {
+        val parentURL = url.URLByDeletingLastPathComponent
+        if (parentURL != null) {
+            val parentPath = parentURL.path
+            if (parentPath != null && !fileManager.fileExistsAtPath(parentPath)) {
+                fileManager.createDirectoryAtURL(parentURL, true, null, null)
+            }
+        }
+    }
 
     override suspend fun readText(path: String): String {
         val url = getURL(path)
@@ -20,7 +38,9 @@ class IosFileHandler : FileHandler {
     }
 
     override suspend fun writeText(path: String, content: String) {
-        (content as NSString).writeToURL(getURL(path), true, NSUTF8StringEncoding, null)
+        val url = getURL(path)
+        ensureParentDirectoryExists(url)
+        (content as NSString).writeToURL(url, true, NSUTF8StringEncoding, null)
     }
 
     override suspend fun appendText(path: String, content: String) {
@@ -36,30 +56,122 @@ class IosFileHandler : FileHandler {
     }
 
     override suspend fun writeBytes(path: String, bytes: ByteArray) {
-        bytes.toNSData().writeToURL(getURL(path), true)
+        val url = getURL(path)
+        ensureParentDirectoryExists(url)
+        bytes.toNSData().writeToURL(url, true)
     }
 
     override suspend fun readBytes(path: String): ByteArray? {
         return NSData.dataWithContentsOfURL(getURL(path))?.toByteArray()
     }
 
-    override fun openInputStream(path: String): FileInputSource? = null
+    override fun openInputStream(path: String): FileInputSource? {
+        val url = getURL(path)
+        if (!fileManager.fileExistsAtPath(url.path ?: "")) {
+            return null
+        }
+        return NSInputStream.inputStreamWithURL(url)
+    }
 
     override suspend fun deleteFile(path: String) {
         fileManager.removeItemAtURL(getURL(path), null)
     }
 
-    override suspend fun zipFiles(): ByteArray = ByteArray(0)
+    override suspend fun zipFiles(): ByteArray {
+        val tempZipURL = documentsDir.URLByAppendingPathComponent("temp_export.zip")!!
+
+        // Delete temp file if exists
+        if (fileManager.fileExistsAtPath(tempZipURL.path ?: "")) {
+            fileManager.removeItemAtURL(tempZipURL, null)
+        }
+
+        return try {
+            val success = NativeZipSupport.createZipFromDirectory(filesDir, tempZipURL)
+            if (!success) {
+                return ByteArray(0)
+            }
+
+            // Read the archive file into ByteArray
+            val archiveData = NSData.dataWithContentsOfURL(tempZipURL)
+            val result = archiveData?.toByteArray() ?: ByteArray(0)
+
+            // Clean up temp file
+            fileManager.removeItemAtURL(tempZipURL, null)
+
+            result
+        } catch (e: Exception) {
+            ByteArray(0)
+        }
+    }
 
     override suspend fun renameFilesDirectory(newName: String) { }
 
     override suspend fun restoreBackupDirectory(backupName: String) { }
 
-    override suspend fun deleteFilesDirectory() { }
+    override suspend fun deleteFilesDirectory() {
+        // Delete the files directory and recreate it
+        if (fileManager.fileExistsAtPath(filesDir.path ?: "")) {
+            fileManager.removeItemAtURL(filesDir, null)
+        }
+        fileManager.createDirectoryAtURL(filesDir, true, null, null)
+    }
 
     override suspend fun deleteBackupDirectory(backupName: String) { }
 
-    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) { }
+    override suspend fun unzipAndReplaceFiles(zipInputStream: Any) {
+        val tempZipURL = documentsDir.URLByAppendingPathComponent("temp_import.zip")!!
+
+        when (zipInputStream) {
+            is NSInputStream -> {
+                try {
+                    // Write stream to temp file
+                    val outputStream = NSOutputStream.outputStreamToFileAtPath(tempZipURL.path!!, false)
+                    if (outputStream == null) return
+
+                    outputStream.open()
+                    zipInputStream.open()
+
+                    val buffer = ByteArray(8192)
+                    buffer.usePinned { pinned ->
+                        while (zipInputStream.hasBytesAvailable) {
+                            val bytesRead = zipInputStream.read(pinned.addressOf(0).reinterpret(), 8192u)
+                            if (bytesRead > 0) {
+                                outputStream.write(pinned.addressOf(0).reinterpret(), bytesRead.toULong())
+                            } else {
+                                break
+                            }
+                        }
+                    }
+
+                    zipInputStream.close()
+                    outputStream.close()
+
+                    // Extract the archive
+                    // First, clear existing files directory
+                    if (fileManager.fileExistsAtPath(filesDir.path ?: "")) {
+                        fileManager.removeItemAtURL(filesDir, null)
+                        fileManager.createDirectoryAtURL(filesDir, true, null, null)
+                    }
+
+                    val success = NativeZipSupport.extractArchiveToDirectory(tempZipURL, filesDir)
+                    if (!success) {
+                        throw Exception("Archive extraction failed")
+                    }
+
+                    // Clean up temp file
+                    fileManager.removeItemAtURL(tempZipURL, null)
+
+                } catch (e: Exception) {
+                    // Clean up temp file on error
+                    if (fileManager.fileExistsAtPath(tempZipURL.path ?: "")) {
+                        fileManager.removeItemAtURL(tempZipURL, null)
+                    }
+                    throw e
+                }
+            }
+            else -> throw IllegalArgumentException("Unsupported input stream type: ${zipInputStream::class}")
+        }
+    }
 
     override fun createTimestampedFileName(baseName: String, extension: String): String {
         val df = NSDateFormatter().apply { dateFormat = "yyyyMMdd_HHmmss" }
@@ -99,7 +211,7 @@ class IosFileHandler : FileHandler {
     }
 }
 
-actual class FileInputSource
+actual typealias FileInputSource = NSInputStream
 actual abstract class OutputStream {
     actual abstract fun write(b: Int)
     actual open fun write(b: ByteArray, off: Int, len: Int) {}
