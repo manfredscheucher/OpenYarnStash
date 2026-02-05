@@ -204,6 +204,7 @@ Het verwijderen of vervangen van de naam van de oorspronkelijke auteur, verkeerd
     <string name="settings_title">Instellingen</string>
     <string name="export_json">JSON exporteren</string>
     <string name="export_zip">ZIP exporteren</string>
+    <string name="data_export_warning">Let op: Deze app is momenteel in een vroeg ontwikkelingsstadium. We raden aan om uw waardevolle gegevens van tijd tot tijd te exporteren via de ZIP-exportfunctie om gegevensverlies door onbedoelde imports of bugs te voorkomen. Importeren zal alle huidige gegevens overschrijven.</string>
     <string name="import_json">JSON importeren</string>
     <string name="import_zip">ZIP importeren</string>
     <string name="import_button_text">Importeren</string>
@@ -215,8 +216,6 @@ Het verwijderen of vervangen van de naam van de oorspronkelijke auteur, verkeerd
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Logniveau</string>
     <string name="log_level_description">Het logbestand wordt lokaal op het apparaat opgeslagen en kan via de ZIP-export worden bekeken.</string>
-    <string name="backup_old_folder_on_import">Permanente back-up behouden na import</string>
-    <string name="backup_old_folder_on_import_description">Maakt back-ups met tijdstempel die voor altijd bewaard blijven. Nuttig om te herstellen van bugs of onbedoelde imports. Verhoogt schijfgebruik. Wanneer uitgeschakeld, wordt nog steeds een tijdelijke back-up gemaakt tijdens import voor veiligheid, maar daarna verwijderd.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Niet geïmplementeerd</string>

@@ -204,6 +204,7 @@ Att ta bort eller ersätta den ursprungliga författarens namn, felaktigt framst
     <string name="settings_title">Inställningar</string>
     <string name="export_json">Exportera JSON</string>
     <string name="export_zip">Exportera ZIP</string>
+    <string name="data_export_warning">Obs: Denna app är för närvarande i tidig utveckling. Vi rekommenderar att du exporterar dina värdefulla data då och då via ZIP-exportfunktionen för att undvika dataförlust från oavsiktlig import eller buggar. Import kommer att skriva över alla nuvarande data.</string>
     <string name="import_json">Importera JSON</string>
     <string name="import_zip">Importera ZIP</string>
     <string name="import_button_text">Importera</string>
@@ -215,8 +216,6 @@ Att ta bort eller ersätta den ursprungliga författarens namn, felaktigt framst
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Loggnivå</string>
     <string name="log_level_description">Loggfilen lagras lokalt på enheten och kan ses via ZIP-export.</string>
-    <string name="backup_old_folder_on_import">Behåll permanent säkerhetskopia efter import</string>
-    <string name="backup_old_folder_on_import_description">Skapar tidsstämplade säkerhetskopior som behålls för alltid. Användbart för att återställa från buggar eller oavsiktliga importer. Ökar diskanvändningen. När inaktiverad skapas fortfarande en tillfällig säkerhetskopia under importen för säkerhet, men raderas efteråt.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Inte implementerat</string>

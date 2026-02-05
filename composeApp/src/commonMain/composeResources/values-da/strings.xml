@@ -204,6 +204,7 @@ Det er ikke tilladt at fjerne eller erstatte den oprindelige forfatters navn, gi
     <string name="settings_title">Indstillinger</string>
     <string name="export_json">Eksporter JSON</string>
     <string name="export_zip">Eksporter ZIP</string>
+    <string name="data_export_warning">Bemærk: Denne app er i øjeblikket under udvikling. Vi anbefaler at eksportere dine værdifulde data fra tid til anden via ZIP-eksportfunktionen for at undgå datatab fra utilsigtede importer eller fejl. Import vil overskrive alle nuværende data.</string>
     <string name="import_json">Importer JSON</string>
     <string name="import_zip">Importer ZIP</string>
     <string name="import_button_text">Importer</string>
@@ -215,8 +216,6 @@ Det er ikke tilladt at fjerne eller erstatte den oprindelige forfatters navn, gi
     <string name="length_unit_yards">Yards</string>
     <string name="log_level_label">Logniveau</string>
     <string name="log_level_description">Logfilen gemmes lokalt på enheden og kan ses via ZIP-eksport.</string>
-    <string name="backup_old_folder_on_import">Behold permanent sikkerhedskopi efter import</string>
-    <string name="backup_old_folder_on_import_description">Opretter tidsstemplede sikkerhedskopier, der beholdes for evigt. Nyttig til at gendanne fra fejl eller utilsigtede importer. Øger diskforbrug. Når deaktiveret, oprettes der stadig en midlertidig sikkerhedskopi under import af sikkerhedsmæssige årsager, men slettes bagefter.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ikke implementeret</string>

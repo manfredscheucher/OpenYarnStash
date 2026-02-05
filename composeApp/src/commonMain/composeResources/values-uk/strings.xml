@@ -201,6 +201,7 @@
     <string name="settings_title">Налаштування</string>
     <string name="export_json">Експорт JSON</string>
     <string name="export_zip">Експорт ZIP</string>
+    <string name="data_export_warning">Примітка: Цей додаток зараз перебуває на ранній стадії розробки. Ми рекомендуємо періодично експортувати цінні дані за допомогою функції експорту ZIP, щоб уникнути втрати даних через випадковий імпорт або помилки. Імпорт перезапише всі поточні дані.</string>
     <string name="import_json">Імпорт JSON</string>
     <string name="import_zip">Імпорт ZIP</string>
     <string name="import_button_text">Імпорт</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Ярди</string>
     <string name="log_level_label">Рівень логування</string>
     <string name="log_level_description">Лог-файл зберігається локально.</string>
-    <string name="backup_old_folder_on_import">Зберігати постійну резервну копію після імпорту</string>
-    <string name="backup_old_folder_on_import_description">Створює резервні копії з часовими мітками, які зберігаються назавжди. Корисно для відновлення після помилок або випадкових імпортів. Збільшує використання диска. При вимкненні тимчасова резервна копія все одно створюється під час імпорту для безпеки, але видаляється після.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Не реалізовано</string>

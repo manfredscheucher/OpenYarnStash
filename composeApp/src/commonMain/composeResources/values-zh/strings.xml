@@ -201,6 +201,7 @@
     <string name="settings_title">设置</string>
     <string name="export_json">导出为 JSON</string>
     <string name="export_zip">导出为 ZIP</string>
+    <string name="data_export_warning">注意：此应用程序目前处于早期开发阶段。我们建议您不时通过ZIP导出功能导出重要数据，以避免因意外导入或错误而导致数据丢失。导入操作将覆盖所有当前数据。</string>
     <string name="import_json">导入 JSON</string>
     <string name="import_zip">导入 ZIP</string>
     <string name="import_button_text">导入</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">码</string>
     <string name="log_level_label">日志级别</string>
     <string name="log_level_description">日志文件将保存在设备本地。</string>
-    <string name="backup_old_folder_on_import">导入后保留永久备份</string>
-    <string name="backup_old_folder_on_import_description">创建带时间戳的备份并永久保存。有助于从错误或意外导入中恢复。会增加磁盘使用量。禁用后，导入期间仍会为安全创建临时备份，但之后会删除。</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">尚未实现</string>

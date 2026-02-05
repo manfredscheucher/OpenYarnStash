@@ -201,6 +201,7 @@
     <string name="settings_title">Iestatījumi</string>
     <string name="export_json">Eksportēt JSON</string>
     <string name="export_zip">Eksportēt ZIP</string>
+    <string name="data_export_warning">Piezīme: Šī lietotne pašlaik atrodas agrīnā attīstības stadijā. Iesakām periodiski eksportēt savus vērtīgos datus, izmantojot ZIP eksporta funkciju, lai izvairītos no datu zuduma nejauša importa vai kļūdu dēļ. Importēšana pārrakstīs visus pašreizējos datus.</string>
     <string name="import_json">Importēt JSON</string>
     <string name="import_zip">Importēt ZIP</string>
     <string name="import_button_text">Importēt</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Jardi</string>
     <string name="log_level_label">Žurnālēšanas līmenis</string>
     <string name="log_level_description">Žurnāla fails tiek saglabāts ierīcē.</string>
-    <string name="backup_old_folder_on_import">Saglabāt pastāvīgu dublējumu pēc importēšanas</string>
-    <string name="backup_old_folder_on_import_description">Izveido dublējumus ar laika zīmogu, kas tiek saglabāti uz visiem laikiem. Noderīgi atjaunošanai pēc kļūdām vai nejaušām importēšanām. Palielina diska lietojumu. Kad atspējots, importēšanas laikā tik un tā tiek izveidots pagaidu dublējums drošības nolūkos, bet pēc tam tas tiek dzēsts.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Vēl nav ieviests</string>

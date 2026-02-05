@@ -201,6 +201,7 @@
     <string name="settings_title">Ayarlar</string>
     <string name="export_json">JSON olarak dışa aktar</string>
     <string name="export_zip">ZIP olarak dışa aktar</string>
+    <string name="data_export_warning">Not: Bu uygulama şu anda erken geliştirme aşamasındadır. Kazara içe aktarma veya hatalardan kaynaklanan veri kaybını önlemek için değerli verilerinizi zaman zaman ZIP dışa aktarma işlevi aracılığıyla dışa aktarmanızı öneririz. İçe aktarma işlemi tüm mevcut verilerin üzerine yazacaktır.</string>
     <string name="import_json">JSON içeri aktar</string>
     <string name="import_zip">ZIP içeri aktar</string>
     <string name="import_button_text">İçeri Aktar</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Yarda</string>
     <string name="log_level_label">Günlükleme Düzeyi (Log)</string>
     <string name="log_level_description">Günlük dosyası cihazda yerel olarak saklanır.</string>
-    <string name="backup_old_folder_on_import">İçe aktarma sonrası kalıcı yedek tut</string>
-    <string name="backup_old_folder_on_import_description">Sonsuza kadar saklanan zaman damgalı yedekler oluşturur. Hatalardan veya yanlışlıkla yapılan içe aktarmalardan kurtarmak için yararlıdır. Disk kullanımını artırır. Devre dışı bırakıldığında, güvenlik için içe aktarma sırasında geçici bir yedek oluşturulur ancak sonrasında silinir.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Henüz Uygulanmadı</string>

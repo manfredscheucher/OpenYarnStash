@@ -201,6 +201,7 @@
     <string name="settings_title">Stillingar</string>
     <string name="export_json">Flytja út JSON</string>
     <string name="export_zip">Flytja út ZIP</string>
+    <string name="data_export_warning">Athugið: Þetta forrit er í fyrstu þróun. Við mælum með að þú flytjir út mikilvæg gögn af og til með ZIP útflutningsaðgerðinni til að forðast gagnatap vegna óvæntrar innflutnings eða villna. Innflutningur mun yfirskrifa öll núverandi gögn.</string>
     <string name="import_json">Flytja inn JSON</string>
     <string name="import_zip">Flytja inn ZIP</string>
     <string name="import_button_text">Flytja inn</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Yardar</string>
     <string name="log_level_label">Skráningarstig (Logs)</string>
     <string name="log_level_description">Atburðaskrá er vistuð staðvært á tækinu.</string>
-    <string name="backup_old_folder_on_import">Halda varanlegri öryggisafrit eftir innflutning</string>
-    <string name="backup_old_folder_on_import_description">Býr til öryggisafrit með tímastimpli sem eru geymd að eilífu. Gagnlegt til að endurheimta frá villum eða óviljandi innflutningum. Eykur disknotkun. Þegar óvirkt er enn búið til tímabundið öryggisafrit við innflutning fyrir öryggi, en það er eytt síðar.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ekki tilbúið</string>

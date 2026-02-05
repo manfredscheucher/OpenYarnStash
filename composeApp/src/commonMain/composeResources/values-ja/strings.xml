@@ -201,6 +201,7 @@
     <string name="settings_title">設定</string>
     <string name="export_json">JSONをエクスポート</string>
     <string name="export_zip">ZIPをエクスポート</string>
+    <string name="data_export_warning">注意：このアプリは現在、初期開発段階です。不意のインポートやバグによるデータ損失を避けるため、定期的にZIPエクスポート機能で大切なデータをエクスポートすることをお勧めします。インポートすると、現在のすべてのデータが上書きされます。</string>
     <string name="import_json">JSONをインポート</string>
     <string name="import_zip">ZIPをインポート</string>
     <string name="import_button_text">インポート</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">ヤード</string>
     <string name="log_level_label">ログレベル</string>
     <string name="log_level_description">ログはデバイス内に保存され、ZIP書き出しで確認できます。</string>
-    <string name="backup_old_folder_on_import">インポート後に永続的なバックアップを保持</string>
-    <string name="backup_old_folder_on_import_description">タイムスタンプ付きのバックアップを作成し、永続的に保存します。バグや誤ったインポートからの復旧に便利です。ディスク使用量が増加します。無効にすると、安全のためインポート中に一時バックアップが作成されますが、その後削除されます。</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">未実装</string>

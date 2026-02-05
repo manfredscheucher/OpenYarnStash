@@ -201,6 +201,7 @@
     <string name="settings_title">Nastavitve</string>
     <string name="export_json">Izvozi JSON</string>
     <string name="export_zip">Izvozi ZIP</string>
+    <string name="data_export_warning">Opomba: Ta aplikacija je trenutno v začetni fazi razvoja. Priporočamo, da občasno izvozite pomembne podatke prek funkcije izvoza ZIP, da preprečite izgubo podatkov zaradi nenamernega uvoza ali napak. Uvoz bo prepisal vse trenutne podatke.</string>
     <string name="import_json">Uvozi JSON</string>
     <string name="import_zip">Uvozi ZIP</string>
     <string name="import_button_text">Uvozi</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Yardi</string>
     <string name="log_level_label">Raven beleženja (log level)</string>
     <string name="log_level_description">Dnevnik se shranjuje lokalno.</string>
-    <string name="backup_old_folder_on_import">Ohrani trajno varnostno kopijo po uvozu</string>
-    <string name="backup_old_folder_on_import_description">Ustvari varnostne kopije s časovnim žigom, ki se hranijo za vedno. Uporabno za obnovitev po napakah ali nenamernih uvozih. Poveča uporabo diska. Ko je onemogočeno, se med uvozom še vedno ustvari začasna varnostna kopija za varnost, vendar se nato izbriše.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Ni implementirano</string>

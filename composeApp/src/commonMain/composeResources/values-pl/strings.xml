@@ -204,6 +204,7 @@ Usuwanie lub zastępowanie nazwiska oryginalnego autora, fałszywe przedstawiani
     <string name="settings_title">Ustawienia</string>
     <string name="export_json">Eksportuj JSON</string>
     <string name="export_zip">Eksportuj ZIP</string>
+    <string name="data_export_warning">Uwaga: Ta aplikacja jest obecnie we wczesnej fazie rozwoju. Zalecamy okresowe eksportowanie cennych danych za pomocą funkcji eksportu ZIP, aby uniknąć utraty danych w wyniku przypadkowego importu lub błędów. Import nadpisze wszystkie bieżące dane.</string>
     <string name="import_json">Importuj JSON</string>
     <string name="import_zip">Importuj ZIP</string>
     <string name="import_button_text">Importuj</string>
@@ -215,8 +216,6 @@ Usuwanie lub zastępowanie nazwiska oryginalnego autora, fałszywe przedstawiani
     <string name="length_unit_yards">Jardy</string>
     <string name="log_level_label">Poziom logowania</string>
     <string name="log_level_description">Plik dziennika jest zapisywany lokalnie na urządzeniu i można go wyświetlić poprzez eksport ZIP.</string>
-    <string name="backup_old_folder_on_import">Zachowaj stałą kopię zapasową po imporcie</string>
-    <string name="backup_old_folder_on_import_description">Tworzy kopie zapasowe z znacznikiem czasu, które są przechowywane na zawsze. Przydatne do odzyskiwania po błędach lub przypadkowych importach. Zwiększa użycie dysku. Gdy wyłączone, podczas importu nadal tworzona jest tymczasowa kopia zapasowa dla bezpieczeństwa, ale jest usuwana później.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Niezaimplementowane</string>

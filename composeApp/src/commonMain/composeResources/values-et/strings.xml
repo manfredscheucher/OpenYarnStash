@@ -201,6 +201,7 @@
     <string name="settings_title">Sätted</string>
     <string name="export_json">Ekspordi JSON</string>
     <string name="export_zip">Ekspordi ZIP</string>
+    <string name="data_export_warning">Märkus: See rakendus on hetkel varajases arendusjärgus. Soovitame väärtuslikke andmeid aeg-ajalt ZIP-ekspordi funktsiooniga eksportida, et vältida andmekadu juhusliku importimise või vigade tõttu. Importimine kirjutab üle kõik praegused andmed.</string>
     <string name="import_json">Impordi JSON</string>
     <string name="import_zip">Impordi ZIP</string>
     <string name="import_button_text">Impordi</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Jardid</string>
     <string name="log_level_label">Logimise tase</string>
     <string name="log_level_description">Logifail salvestatakse seadmesse.</string>
-    <string name="backup_old_folder_on_import">Säilita püsiv varukoopia pärast importimist</string>
-    <string name="backup_old_folder_on_import_description">Loob ajatempliga varukoopiad, mida hoitakse igavesti. Kasulik taastamiseks vigade või kogemata tehtud importide korral. Suurendab ketta kasutust. Kui keelatud, luuakse importimise ajal siiski ajutine varukoopia turvalisuse tagamiseks, kuid see kustutatakse hiljem.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Pole veel lisatud</string>

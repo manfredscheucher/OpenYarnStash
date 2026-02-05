@@ -201,6 +201,7 @@ Az eredeti szerző nevének eltávolítása vagy helyettesítése, a szerzőség
     <string name="settings_title">Beállítások</string>
     <string name="export_json">JSON exportálása</string>
     <string name="export_zip">ZIP exportálása</string>
+    <string name="data_export_warning">Megjegyzés: Ez az alkalmazás jelenleg korai fejlesztési szakaszban van. Javasoljuk, hogy időről időre exportálja értékes adatait a ZIP exportálási funkció segítségével, hogy elkerülje az adatvesztést véletlen importok vagy hibák miatt. Az importálás felülírja az összes jelenlegi adatot.</string>
     <string name="import_json">JSON importálása</string>
     <string name="import_zip">ZIP importálása</string>
     <string name="import_button_text">Importálás</string>
@@ -212,8 +213,6 @@ Az eredeti szerző nevének eltávolítása vagy helyettesítése, a szerzőség
     <string name="length_unit_yards">Yard</string>
     <string name="log_level_label">Naplózási szint</string>
     <string name="log_level_description">A naplófájl helyileg mentődik az eszközre, és a ZIP exportálással tekinthető meg.</string>
-    <string name="backup_old_folder_on_import">Állandó biztonsági mentés megőrzése importálás után</string>
-    <string name="backup_old_folder_on_import_description">Időbélyeggel ellátott biztonsági mentéseket hoz létre, amelyek örökre megmaradnak. Hasznos a hibákból vagy véletlen importálásokból való helyreállításhoz. Növeli a lemezhasználatot. Kikapcsolva továbbra is létrejön egy ideiglenes biztonsági mentés az importálás során a biztonság érdekében, de utána törlődik.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nincs implementálva</string>

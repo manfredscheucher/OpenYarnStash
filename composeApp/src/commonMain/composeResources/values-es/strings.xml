@@ -204,6 +204,7 @@ No está permitido eliminar o reemplazar el nombre del autor original, falsear l
     <string name="settings_title">Ajustes</string>
     <string name="export_json">Exportar JSON</string>
     <string name="export_zip">Exportar ZIP</string>
+    <string name="data_export_warning">Nota: Esta aplicación se encuentra actualmente en desarrollo temprano. Recomendamos exportar tus datos valiosos de vez en cuando mediante la función de exportación ZIP para evitar la pérdida de datos por importaciones accidentales o errores. La importación sobrescribirá todos los datos actuales.</string>
     <string name="import_json">Importar JSON</string>
     <string name="import_zip">Importar ZIP</string>
     <string name="import_button_text">Importar</string>
@@ -215,8 +216,6 @@ No está permitido eliminar o reemplazar el nombre del autor original, falsear l
     <string name="length_unit_yards">Yardas</string>
     <string name="log_level_label">Nivel de registro (Log)</string>
     <string name="log_level_description">El archivo de registro se guarda localmente en el dispositivo y se puede ver mediante la exportación ZIP.</string>
-    <string name="backup_old_folder_on_import">Mantener copia de seguridad permanente después de importar</string>
-    <string name="backup_old_folder_on_import_description">Crea copias de seguridad con marca de tiempo que se conservan para siempre. Útil para recuperar de errores o importaciones accidentales. Aumenta el uso del disco. Si está desactivado, se crea una copia de seguridad temporal durante la importación para seguridad, pero se elimina después.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">No implementado</string>

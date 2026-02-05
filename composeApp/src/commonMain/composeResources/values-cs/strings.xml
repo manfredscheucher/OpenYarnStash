@@ -201,6 +201,7 @@
     <string name="settings_title">Nastavení</string>
     <string name="export_json">Exportovat JSON</string>
     <string name="export_zip">Exportovat ZIP</string>
+    <string name="data_export_warning">Poznámka: Tato aplikace je v rané fázi vývoje. Doporučujeme pravidelně exportovat cenná data pomocí funkce exportu ZIP, abyste předešli ztrátě dat při nechtěném importu nebo chybách. Import přepíše všechna aktuální data.</string>
     <string name="import_json">Importovat JSON</string>
     <string name="import_zip">Importovat ZIP</string>
     <string name="import_button_text">Importovat</string>
@@ -212,8 +213,6 @@
     <string name="length_unit_yards">Yardy</string>
     <string name="log_level_label">Úroveň protokolování</string>
     <string name="log_level_description">Protokol se ukládá lokálně.</string>
-    <string name="backup_old_folder_on_import">Zachovat trvalou zálohu po importu</string>
-    <string name="backup_old_folder_on_import_description">Vytváří zálohy s časovým razítkem, které jsou uchovávány navždy. Užitečné pro obnovení po chybách nebo nechtěných importech. Zvyšuje využití disku. Pokud je vypnuto, během importu je stále vytvořena dočasná záloha pro bezpečnost, ale je následně smazána.</string>
 
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Není implementováno</string>

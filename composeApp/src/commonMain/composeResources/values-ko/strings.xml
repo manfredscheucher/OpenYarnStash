@@ -190,6 +190,7 @@
     <string name="settings_title">설정</string>
     <string name="export_json">JSON 내보내기</string>
     <string name="export_zip">ZIP 내보내기</string>
+    <string name="data_export_warning">참고: 이 앱은 현재 초기 개발 단계입니다. 실수로 데이터를 가져오거나 버그로 인한 데이터 손실을 방지하기 위해 ZIP 내보내기 기능을 통해 중요한 데이터를 정기적으로 내보내는 것을 권장합니다. 가져오기를 하면 현재의 모든 데이터가 덮어씌워집니다.</string>
     <string name="import_json">JSON 가져오기</string>
     <string name="import_zip">ZIP 가져오기</string>
     <string name="import_button_text">가져오기</string>
@@ -201,8 +202,6 @@
     <string name="length_unit_yards">야드(Yards)</string>
     <string name="log_level_label">로그 레벨</string>
     <string name="log_level_description">로그 파일은 기기에 로컬로 저장되며 ZIP 내보내기를 통해 확인할 수 있습니다.</string>
-    <string name="backup_old_folder_on_import">가져오기 후 영구 백업 보관</string>
-    <string name="backup_old_folder_on_import_description">타임스탬프가 찍힌 백업본을 영구적으로 보관합니다. 버그 발생 시 복구나 실수로 데이터를 덮어쓴 경우 유용하지만, 시간이 지남에 따라 저장 용량이 늘어날 수 있습니다. 비활성화하더라도 가져오기 중 안전을 위한 임시 백업은 생성되나 작업 후 삭제됩니다.</string>
 
     <string name="not_implemented_title">미구현 기능</string>
     <string name="not_implemented_message">이 기능은 아직 구현되지 않았습니다.</string>
