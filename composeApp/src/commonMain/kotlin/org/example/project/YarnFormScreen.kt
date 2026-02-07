@@ -504,13 +504,17 @@ fun YarnFormScreen(
                     Spacer(Modifier.height(16.dp))
                     Column(
                         modifier = Modifier.fillMaxWidth()
-                            .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f), RoundedCornerShape(4.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
                             .padding(8.dp)
                     ) {
-                        Text(stringResource(Res.string.usage_projects_title), style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            stringResource(Res.string.usage_projects_title),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                         Spacer(Modifier.height(8.dp))
                         if (assignmentsForYarn.isEmpty()) {
-                            Text(stringResource(Res.string.yarn_form_no_projects_assigned), modifier = Modifier.padding(start = 8.dp))
+                            Text(stringResource(Res.string.yarn_form_no_projects_assigned))
                         } else {
                             assignmentsForYarn.forEach { assignment ->
                                 val project = projectById(assignment.projectId)
