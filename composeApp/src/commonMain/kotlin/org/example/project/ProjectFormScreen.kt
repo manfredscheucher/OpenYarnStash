@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -463,59 +465,51 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.fillMaxWidth()) {
-                val rowHeight = 50
-                val totalHeight = if (rowCounters.isNotEmpty()) {
-                    (rowCounters.size * rowHeight).dp + 60.dp
-                } else {
-                    64.dp
-                }
-                OutlinedTextField(
-                    value = " ",
-                    onValueChange = { },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(totalHeight),
-                    readOnly = true,
-                    label = { Text(stringResource(Res.string.project_label_row_count)) }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
+                    .padding(8.dp)
+            ) {
+                Text(
+                    stringResource(Res.string.project_label_row_count),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, top = 8.dp)
-                ) {
-                    rowCounters.forEachIndexed { index, counter ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth().padding(end = 20.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(counter.name, style = MaterialTheme.typography.bodyLarge)
-                            Spacer(Modifier.weight(0.6f))
-                            IconButton(onClick = {
-                                rowCounters = rowCounters.toMutableList().also {
-                                    it[index] = it[index].copy(value = it[index].value - 1)
-                                }
-                            }) {
-                                Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                Spacer(Modifier.height(8.dp))
+                rowCounters.forEachIndexed { index, counter ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(counter.name, style = MaterialTheme.typography.bodyLarge)
+                        Spacer(Modifier.weight(1f))
+                        IconButton(onClick = {
+                            rowCounters = rowCounters.toMutableList().also {
+                                it[index] = it[index].copy(value = it[index].value - 1)
                             }
-                            Text(text = counter.value.toString(), style = MaterialTheme.typography.bodyLarge)
-                            IconButton(onClick = {
-                                rowCounters = rowCounters.toMutableList().also {
-                                    it[index] = it[index].copy(value = it[index].value + 1)
-                                }
-                            }) {
-                                Icon(Icons.Default.Add, contentDescription = "Increase row count")
+                        }) {
+                            Icon(Icons.Default.Remove, contentDescription = "Decrease row count")
+                        }
+                        Text(text = counter.value.toString(), style = MaterialTheme.typography.bodyLarge)
+                        IconButton(onClick = {
+                            rowCounters = rowCounters.toMutableList().also {
+                                it[index] = it[index].copy(value = it[index].value + 1)
                             }
+                        }) {
+                            Icon(Icons.Default.Add, contentDescription = "Increase row count")
                         }
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Button(onClick = { showAddCounterDialog = true }) {
-                            Text(stringResource(Res.string.project_form_add_counter))
-                        }
+                }
+                Spacer(Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(onClick = { showAddCounterDialog = true }) {
+                        Text(stringResource(Res.string.project_form_add_counter))
                     }
                 }
             }
@@ -541,30 +535,21 @@ fun ProjectFormScreen(
 
             if (!isNewProject) {
                 Spacer(Modifier.height(16.dp))
-                val yarnHeight = 50
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    val totalHeight = if (assignmentsForProject.isNotEmpty()) {
-                        (assignmentsForProject.size * yarnHeight).dp + 75.dp
-                    } else {
-                        64.dp
-                    }
-                    OutlinedTextField(
-                        value = " ",
-                        onValueChange = { },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(totalHeight),
-                        readOnly = true,
-                        label = { Text(stringResource(Res.string.usage_section_title)) }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        stringResource(Res.string.usage_section_title),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp, top = 16.dp)
-                    ) {
-                        if (assignmentsForProject.isEmpty()) {
-                            Text(stringResource(Res.string.project_form_no_yarn_assigned))
-                        } else {
+                    Spacer(Modifier.height(8.dp))
+                    if (assignmentsForProject.isEmpty()) {
+                        Text(stringResource(Res.string.project_form_no_yarn_assigned))
+                    } else {
                             assignmentsForProject.forEach { assignment ->
                                 val yarn = yarnById(assignment.yarnId)
                                 if (yarn != null) {
@@ -625,17 +610,16 @@ fun ProjectFormScreen(
                                     Text("- ERROR: yarnid ${assignment.yarnId} does not exist!")
                                 }
                             }
-                        }
-                        Spacer(Modifier.height(4.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(end = 16.dp),
-                            horizontalArrangement = Arrangement.End
+                    }
+                    Spacer(Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Button(
+                            onClick = assignAction
                         ) {
-                            Button(
-                                onClick = assignAction
-                            ) {
-                                Text(stringResource(Res.string.project_form_button_assignments))
-                            }
+                            Text(stringResource(Res.string.project_form_button_assignments))
                         }
                     }
                 }
