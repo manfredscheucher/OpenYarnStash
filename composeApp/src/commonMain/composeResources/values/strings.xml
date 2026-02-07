@@ -228,6 +228,11 @@ Removing or replacing the original author’s name, misrepresenting authorship, 
     <string name="date_input_year">Year</string>
     <string name="date_input_month">Month</string>
     <string name="date_input_day">Day</string>
+    <string name="date_input_year_placeholder">YYYY</string>
+    <string name="date_input_month_placeholder">MM</string>
+    <string name="date_input_day_placeholder">DD</string>
+    <string name="date_input_today">Today</string>
+    <string name="date_input_clear">Clear</string>
 
     <!-- Months -->
     <string name="month_january">January</string>

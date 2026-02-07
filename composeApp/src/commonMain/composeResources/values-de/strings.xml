@@ -223,6 +223,11 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="date_input_year">Jahr</string>
     <string name="date_input_month">Monat</string>
     <string name="date_input_day">Tag</string>
+    <string name="date_input_year_placeholder">JJJJ</string>
+    <string name="date_input_month_placeholder">MM</string>
+    <string name="date_input_day_placeholder">TT</string>
+    <string name="date_input_today">Heute</string>
+    <string name="date_input_clear">Löschen</string>
     
     <!-- Months -->
     <string name="month_january">Januar</string>

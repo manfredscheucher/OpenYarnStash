@@ -1,6 +1,8 @@
 package org.example.project.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -38,9 +41,14 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.plus
 import openyarnstash.composeapp.generated.resources.Res
+import openyarnstash.composeapp.generated.resources.date_input_clear
 import openyarnstash.composeapp.generated.resources.date_input_day
+import openyarnstash.composeapp.generated.resources.date_input_day_placeholder
 import openyarnstash.composeapp.generated.resources.date_input_month
+import openyarnstash.composeapp.generated.resources.date_input_month_placeholder
+import openyarnstash.composeapp.generated.resources.date_input_today
 import openyarnstash.composeapp.generated.resources.date_input_year
+import openyarnstash.composeapp.generated.resources.date_input_year_placeholder
 import org.example.project.LogLevel
 import org.example.project.Logger
 import org.example.project.getCurrentTimestamp
@@ -153,10 +161,10 @@ fun DateInput(
         )
         Row(
             modifier = Modifier
-                //.matchParentSize()
+                .fillMaxWidth()
                 .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            //horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             val textFieldColors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -171,20 +179,22 @@ fun DateInput(
             ExposedDropdownMenuBox(
                 expanded = expandedYear,
                 onExpandedChange = { expandedYear = !expandedYear },
-                modifier = Modifier.width(120.dp)
+                modifier = Modifier.width(110.dp)
             ) {
                 TextField(
                     value = selectedYear?.toString() ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text(stringResource(Res.string.date_input_year)) },
+                    placeholder = { Text(stringResource(Res.string.date_input_year_placeholder)) },
                     suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
-                    colors = textFieldColors
+                    colors = textFieldColors,
+                    singleLine = true
                 )
                 ExposedDropdownMenu(
                     expanded = expandedYear,
-                    onDismissRequest = { expandedYear = false }
+                    onDismissRequest = { expandedYear = false },
+                    modifier = Modifier.width(110.dp)
                 ) {
                     DropdownMenuItem(
                         text = { Text("-") },
@@ -209,20 +219,22 @@ fun DateInput(
             ExposedDropdownMenuBox(
                 expanded = expandedMonth,
                 onExpandedChange = { expandedMonth = !expandedMonth },
-                modifier = Modifier.width(120.dp)
+                modifier = Modifier.width(90.dp)
             ) {
                 TextField(
                     value = selectedMonth?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text(stringResource(Res.string.date_input_month)) },
+                    placeholder = { Text(stringResource(Res.string.date_input_month_placeholder)) },
                     suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
-                    colors = textFieldColors
+                    colors = textFieldColors,
+                    singleLine = true
                 )
                 ExposedDropdownMenu(
                     expanded = expandedMonth,
-                    onDismissRequest = { expandedMonth = false }
+                    onDismissRequest = { expandedMonth = false },
+                    modifier = Modifier.width(90.dp)
                 ) {
                     DropdownMenuItem(
                         text = { Text("-") },
@@ -247,20 +259,22 @@ fun DateInput(
             ExposedDropdownMenuBox(
                 expanded = expandedDay,
                 onExpandedChange = { expandedDay = !expandedDay },
-                modifier = Modifier.width(120.dp)
+                modifier = Modifier.width(90.dp)
             ) {
                 TextField(
                     value = selectedDay?.toString()?.padStart(2, '0') ?: "",
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text(stringResource(Res.string.date_input_day)) },
+                    placeholder = { Text(stringResource(Res.string.date_input_day_placeholder)) },
                     suffix = { DropdownArrowIcon() },
                     modifier = Modifier.menuAnchor(),
-                    colors = textFieldColors
+                    colors = textFieldColors,
+                    singleLine = true
                 )
                 ExposedDropdownMenu(
                     expanded = expandedDay,
-                    onDismissRequest = { expandedDay = false }
+                    onDismissRequest = { expandedDay = false },
+                    modifier = Modifier.width(90.dp)
                 ) {
                     DropdownMenuItem(
                         text = { Text("-") },
@@ -281,10 +295,8 @@ fun DateInput(
                 }
             }
 
-            Spacer(Modifier.width(8.dp))
-
             // Today button
-            IconButton(
+            Button(
                 onClick = {
                     val today = getCurrentTimestamp().substring(0, 10) // YYYY-MM-DD
                     val parts = today.split("-")
@@ -293,7 +305,18 @@ fun DateInput(
                     selectedDay = parts[2].toIntOrNull()
                 }
             ) {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Today")
+                Text(stringResource(Res.string.date_input_today))
+            }
+
+            // Clear button
+            IconButton(
+                onClick = {
+                    selectedYear = null
+                    selectedMonth = null
+                    selectedDay = null
+                }
+            ) {
+                Icon(imageVector = Icons.Default.Clear, contentDescription = stringResource(Res.string.date_input_clear))
             }
         }
     }

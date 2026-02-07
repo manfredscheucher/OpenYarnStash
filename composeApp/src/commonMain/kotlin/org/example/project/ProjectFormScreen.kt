@@ -463,8 +463,8 @@ fun ProjectFormScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
-            val rowHeight = 50
             Box(modifier = Modifier.fillMaxWidth()) {
+                val rowHeight = 50
                 val totalHeight = if (rowCounters.isNotEmpty()) {
                     (rowCounters.size * rowHeight).dp + 60.dp
                 } else {

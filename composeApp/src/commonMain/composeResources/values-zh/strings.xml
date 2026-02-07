@@ -222,6 +222,8 @@
     <string name="date_input_year">年</string>
     <string name="date_input_month">月</string>
     <string name="date_input_day">日</string>
+    <string name="date_input_today">今天</string>
+    <string name="date_input_clear">清除</string>
 
     <!-- Months -->
     <string name="month_january">一月</string>
