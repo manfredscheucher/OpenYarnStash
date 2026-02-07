@@ -47,8 +47,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import openyarnstash.composeapp.generated.resources.Res
-import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import
-import openyarnstash.composeapp.generated.resources.backup_old_folder_on_import_description
 import openyarnstash.composeapp.generated.resources.common_cancel
 import openyarnstash.composeapp.generated.resources.common_ok
 import openyarnstash.composeapp.generated.resources.common_yes
