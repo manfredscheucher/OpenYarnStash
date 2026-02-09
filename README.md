@@ -30,9 +30,17 @@ For a general-purpose inventory management system (not yarn-specific), check out
 
 This project was developed as an experiment in AI-assisted coding ("vibe coding"), comparing different AI models. Parts of the code were generated with **Claude Code** (Anthropic) and **Gemini** (Google). UI icons were created using **ChatGPT** prompts.
 
+## Project Resources
+
+- **[LICENSE](LICENSE)** - MIT License for this project
+- **[BUILDING.md](BUILDING.md)** - Instructions for building and running the app
+- **[TESTING.md](TESTING.md)** - Guide for running and writing tests
+- **[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)** - Third-party library licenses and attributions
+- **[PRIVACY.md](PRIVACY.md)** - Privacy policy and data handling information
+
 ## How you can help
 
-The project is in early development and any feedback is very welcome! 
+The project is in early development and any feedback is very welcome!
 We encourage you to report any issues so we can address them.
 Also let us know if you like the app!
 
