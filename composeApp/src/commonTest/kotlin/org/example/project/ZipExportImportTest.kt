@@ -1,14 +1,12 @@
 package org.example.project
 
-import kotlinx.coroutines.runBlocking
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.collections.shouldNotBeEmpty
 
-class ZipExportImportTest {
+class ZipExportImportTest : FunSpec({
 
-    @Test
-    fun testZipExportAndImport() = runBlocking {
+    test("ZIP export and import should preserve all files") {
         val fileHandler = createPlatformFileHandler()
 
         // 1. Setup: Create test files
@@ -19,15 +17,15 @@ class ZipExportImportTest {
 
         // Verify files were created
         val content1 = fileHandler.readText("hello.txt")
-        assertEquals("hello world", content1, "Initial hello.txt should contain 'hello world'")
+        content1 shouldBe "hello world"
 
         val content2 = fileHandler.readText("sub/test.txt")
-        assertEquals("test content", content2, "Initial sub/test.txt should contain 'test content'")
+        content2 shouldBe "test content"
 
         // 2. Export to ZIP
         println("Exporting to ZIP...")
         val zipBytes = fileHandler.zipFiles()
-        assertTrue(zipBytes.isNotEmpty(), "ZIP export should produce non-empty byte array")
+        zipBytes.shouldNotBeEmpty()
         println("ZIP created: ${zipBytes.size} bytes")
 
         // 3. Clear all files
@@ -36,7 +34,7 @@ class ZipExportImportTest {
 
         // Verify files are gone
         val afterDelete = fileHandler.readText("hello.txt")
-        assertEquals("", afterDelete, "Files should be deleted after deleteFilesDirectory()")
+        afterDelete shouldBe ""
 
         // 4. Import from ZIP
         println("Importing from ZIP...")
@@ -46,13 +44,13 @@ class ZipExportImportTest {
         // 5. Verify imported files
         println("Verifying imported files...")
         val imported1 = fileHandler.readText("hello.txt")
-        assertEquals("hello world", imported1, "Imported hello.txt should contain 'hello world'")
+        imported1 shouldBe "hello world"
 
         val imported2 = fileHandler.readText("sub/test.txt")
-        assertEquals("test content", imported2, "Imported sub/test.txt should contain 'test content'")
+        imported2 shouldBe "test content"
 
         val imported3 = fileHandler.readText("sub/data.txt")
-        assertEquals("some data\nline 2\nline 3", imported3, "Imported sub/data.txt should match original")
+        imported3 shouldBe "some data\nline 2\nline 3"
 
         // Cleanup
         println("Test passed! Cleaning up...")
@@ -61,8 +59,7 @@ class ZipExportImportTest {
         println("✓ ZIP Export/Import test completed successfully!")
     }
 
-    @Test
-    fun testEmptyZipExport() = runBlocking {
+    test("empty ZIP export should succeed") {
         val fileHandler = createPlatformFileHandler()
 
         // Clear everything first
@@ -77,8 +74,7 @@ class ZipExportImportTest {
         println("✓ Empty ZIP export test completed!")
     }
 
-    @Test
-    fun testBinaryDataInZip() = runBlocking {
+    test("binary data should survive ZIP export/import") {
         val fileHandler = createPlatformFileHandler()
 
         // Create binary test data
@@ -87,7 +83,7 @@ class ZipExportImportTest {
 
         // Export
         val zipBytes = fileHandler.zipFiles()
-        assertTrue(zipBytes.isNotEmpty(), "ZIP should contain binary data")
+        zipBytes.shouldNotBeEmpty()
 
         // Clear and import
         fileHandler.deleteFilesDirectory()
@@ -96,19 +92,14 @@ class ZipExportImportTest {
 
         // Verify binary data
         val imported = fileHandler.readBytes("binary.dat")
-        assertTrue(imported != null, "Binary file should be imported")
-        assertEquals(256, imported!!.size, "Binary data size should match")
-
-        for (i in binaryData.indices) {
-            assertEquals(binaryData[i], imported[i], "Binary data at index $i should match")
-        }
+        imported shouldBe binaryData
 
         // Cleanup
         fileHandler.deleteFilesDirectory()
 
         println("✓ Binary data ZIP test completed!")
     }
-}
+})
 
 // Platform-specific FileHandler creation
 expect fun createPlatformFileHandler(): FileHandler

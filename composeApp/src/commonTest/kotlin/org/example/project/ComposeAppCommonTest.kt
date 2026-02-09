@@ -1,12 +1,10 @@
 package org.example.project
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-class ComposeAppCommonTest {
-
-    @Test
-    fun example() {
-        assertEquals(3, 1 + 2)
+class ComposeAppCommonTest : FunSpec({
+    test("basic arithmetic should work") {
+        (1 + 2) shouldBe 3
     }
-}
+})
