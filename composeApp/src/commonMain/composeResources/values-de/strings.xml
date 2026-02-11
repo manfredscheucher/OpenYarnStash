@@ -175,6 +175,15 @@
 Nutzung, Änderung und Weiterverbreitung sind gestattet, sofern die ursprünglichen Urheberrechts- und Lizenzhinweise erhalten bleiben.
 Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche Darstellung der Urheberschaft oder die Veröffentlichung modifizierter Versionen ohne Namensnennung ist nicht gestattet.</string>
     <string name="you_can_help_button">Du kannst helfen!</string>
+    <string name="info_third_party_licenses_title">Lizenzen von Drittanbietern</string>
+    <string name="info_third_party_licenses_description">Diese App verwendet Open-Source-Komponenten:</string>
+    <string name="info_license_apache2_libraries">• AndroidX, Jetpack Compose, Kotlin, Kotlinx-Bibliotheken, Apache PDFBox, Material Design, Kotest (Apache 2.0)</string>
+    <string name="info_license_mit_libraries">• Koalaplot (MIT)</string>
+    <string name="info_license_zlib_libraries">• Minizip (zlib)</string>
+    <string name="info_license_view_details">Tippe, um vollständige Lizenztexte anzuzeigen:</string>
+    <string name="info_license_apache2_button">Apache License 2.0</string>
+    <string name="info_license_mit_button">MIT-Lizenz</string>
+    <string name="info_license_zlib_button">zlib-Lizenz</string>
 
     <!-- Help Screen -->
     <string name="help_screen_title">Wie du helfen kannst</string>

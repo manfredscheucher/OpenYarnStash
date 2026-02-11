@@ -176,8 +176,17 @@
 © 2025 Manfred Scheucher and Helena Bergold
 
 Use, modification, and redistribution are permitted provided the original copyright and license notices remain intact.
-Removing or replacing the original author’s name, misrepresenting authorship, or publishing modified versions without attribution is not permitted.</string>
+Removing or replacing the original author's name, misrepresenting authorship, or publishing modified versions without attribution is not permitted.</string>
     <string name="you_can_help_button">You can help!</string>
+    <string name="info_third_party_licenses_title">Third-Party Licenses</string>
+    <string name="info_third_party_licenses_description">This app uses open-source components:</string>
+    <string name="info_license_apache2_libraries">• AndroidX, Jetpack Compose, Kotlin, Kotlinx libraries, Apache PDFBox, Material Design, Kotest (Apache 2.0)</string>
+    <string name="info_license_mit_libraries">• Koalaplot (MIT)</string>
+    <string name="info_license_zlib_libraries">• Minizip (zlib)</string>
+    <string name="info_license_view_details">Tap to view full license texts:</string>
+    <string name="info_license_apache2_button">Apache License 2.0</string>
+    <string name="info_license_mit_button">MIT License</string>
+    <string name="info_license_zlib_button">zlib License</string>
 
 
     <!-- Help Screen -->

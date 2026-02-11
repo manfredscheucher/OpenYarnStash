@@ -4,11 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -30,14 +33,27 @@ import openyarnstash.composeapp.generated.resources.info
 import openyarnstash.composeapp.generated.resources.info_copyright_notice
 import openyarnstash.composeapp.generated.resources.info_description
 import openyarnstash.composeapp.generated.resources.info_github_button
+import openyarnstash.composeapp.generated.resources.info_license_apache2_libraries
+import openyarnstash.composeapp.generated.resources.info_license_mit_libraries
+import openyarnstash.composeapp.generated.resources.info_license_zlib_libraries
+import openyarnstash.composeapp.generated.resources.info_license_view_details
+import openyarnstash.composeapp.generated.resources.info_license_apache2_button
+import openyarnstash.composeapp.generated.resources.info_license_mit_button
+import openyarnstash.composeapp.generated.resources.info_license_zlib_button
 import openyarnstash.composeapp.generated.resources.info_screen_title
+import openyarnstash.composeapp.generated.resources.info_third_party_licenses_description
+import openyarnstash.composeapp.generated.resources.info_third_party_licenses_title
 import openyarnstash.composeapp.generated.resources.you_can_help_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
+fun InfoScreen(
+    onBack: () -> Unit,
+    onNavigateToHelp: () -> Unit,
+    onNavigateToLicense: (LicenseType) -> Unit
+) {
     val uriHandler = LocalUriHandler.current
 
     BackButtonHandler {
@@ -67,7 +83,13 @@ fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
             )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
             Text(stringResource(Res.string.info_description), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(16.dp))
             Button(
@@ -86,6 +108,56 @@ fun InfoScreen(onBack: () -> Unit, onNavigateToHelp: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(stringResource(Res.string.info_copyright_notice), style = MaterialTheme.typography.bodySmall)
             VersionInfoView()
+
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                stringResource(Res.string.info_third_party_licenses_title),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                stringResource(Res.string.info_third_party_licenses_description),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                stringResource(Res.string.info_license_apache2_libraries),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                stringResource(Res.string.info_license_mit_libraries),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                stringResource(Res.string.info_license_zlib_libraries),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                stringResource(Res.string.info_license_view_details),
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { onNavigateToLicense(LicenseType.APACHE_2_0) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(Res.string.info_license_apache2_button))
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { onNavigateToLicense(LicenseType.MIT) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(Res.string.info_license_mit_button))
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { onNavigateToLicense(LicenseType.ZLIB) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(Res.string.info_license_zlib_button))
+            }
         }
     }
 }

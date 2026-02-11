@@ -36,6 +36,7 @@ sealed class Screen {
     data object Settings : Screen()
     data object PatternList : Screen()
     data class PatternForm(val patternId: UInt) : Screen()
+    data class LicenseDetail(val licenseType: LicenseType) : Screen()
 }
 
 @Composable
@@ -118,6 +119,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
             is Screen.Settings -> "Settings"
             is Screen.PatternList -> "PatternList"
             is Screen.PatternForm -> "PatternForm(patternId=${s.patternId})"
+            is Screen.LicenseDetail -> "LicenseDetail(licenseType=${s.licenseType})"
         }
         Logger.log(LogLevel.INFO, "Navigating to screen: $screenName")
         Logger.logImportantFiles(LogLevel.TRACE)
@@ -603,7 +605,20 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                         }
 
                         Screen.Info -> {
-                            InfoScreen(onBack = { navigateBack() }, onNavigateToHelp = { navigateTo(Screen.HowToHelp) })
+                            InfoScreen(
+                                onBack = { navigateBack() },
+                                onNavigateToHelp = { navigateTo(Screen.HowToHelp) },
+                                onNavigateToLicense = { licenseType ->
+                                    navigateTo(Screen.LicenseDetail(licenseType))
+                                }
+                            )
+                        }
+
+                        is Screen.LicenseDetail -> {
+                            LicenseDetailScreen(
+                                licenseType = (screen as Screen.LicenseDetail).licenseType,
+                                onBack = { navigateBack() }
+                            )
                         }
 
                         Screen.HowToHelp -> {
