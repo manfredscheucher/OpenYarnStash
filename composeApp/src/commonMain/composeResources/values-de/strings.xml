@@ -151,7 +151,7 @@
     <string name="statistics_yarn_used_title_yards">Verbrauchte Wolle: %1$d g (%2$d yd)</string>
     <string name="statistics_projects_in_progress_title">Projekte in Arbeit: %1$d</string>
     <string name="statistics_projects_planned">Projekte in Planung: %1$d</string>
-    <string name="statistics_projects_finished_title">Projecte fertiggestellt: %1$d</string>
+    <string name="statistics_projects_finished_title">Projekte fertiggestellt: %1$d</string>
     <string name="statistics_overall">Gesamt</string>
     <string name="statistics_yarn_bought_vs_used_yearly">Garn: Gekauft vs. Verbraucht (Jahre)</string>
     <string name="statistics_yarn_bought_vs_used_monthly">Garn: Gekauft vs. Verbraucht (Monate)</string>
