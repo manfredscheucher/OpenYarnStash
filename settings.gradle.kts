@@ -34,3 +34,7 @@ plugins {
 }
 
 include(":composeApp")
+
+// Include KMP shared components library as module
+include(":shared-components")
+project(":shared-components").projectDir = file("libs/common/library")
