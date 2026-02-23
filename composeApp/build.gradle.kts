@@ -74,7 +74,6 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.koalaplot.core)
                 implementation(libs.kotlinx.io.core)
-                implementation(project(":shared-components"))
             }
         }
 
