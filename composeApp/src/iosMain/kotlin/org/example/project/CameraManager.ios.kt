@@ -4,9 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.refTo
-import platform.CoreGraphics.CGRectZero
+import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSData
+import platform.Foundation.NSProcessInfo
 import platform.UIKit.UIApplication
+import platform.UIKit.UIGraphicsBeginImageContextWithOptions
+import platform.UIKit.UIGraphicsEndImageContext
+import platform.UIKit.UIGraphicsGetCurrentContext
+import platform.UIKit.UIGraphicsGetImageFromCurrentImageContext
+import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImagePickerController
 import platform.UIKit.UIImagePickerControllerDelegateProtocol
@@ -22,6 +28,22 @@ actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): CameraLaunche
 
 class IosCameraLauncher(private val onResult: (ByteArray?) -> Unit) : CameraLauncher {
     override fun launch() {
+        // Check if running in simulator
+        val isSimulator = isRunningInSimulator()
+
+        if (isSimulator) {
+            // Generate a test image for simulator
+            val testImage = createTestImage()
+            val imageData = UIImageJPEGRepresentation(testImage, 0.9)
+            if (imageData != null) {
+                val bytes = imageData.toByteArray()
+                onResult(bytes)
+            } else {
+                onResult(null)
+            }
+            return
+        }
+
         val picker = UIImagePickerController()
         picker.sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera
 
@@ -73,4 +95,42 @@ private fun NSData.toByteArray(): ByteArray {
         memcpy(bytes.refTo(0), this.bytes, this.length)
     }
     return bytes
+}
+
+private fun isRunningInSimulator(): Boolean {
+    val environment = NSProcessInfo.processInfo.environment
+    return environment["SIMULATOR_DEVICE_NAME"] != null
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun createTestImage(): UIImage {
+    val width = 400.0
+    val height = 400.0
+
+    UIGraphicsBeginImageContextWithOptions(
+        size = platform.CoreGraphics.CGSizeMake(width, height),
+        opaque = false,
+        scale = 1.0
+    )
+
+    val context = UIGraphicsGetCurrentContext()
+
+    // Draw a simple gradient/pattern as test image
+    if (context != null) {
+        // Fill background with a color
+        platform.CoreGraphics.CGContextSetRGBFillColor(context, 0.2, 0.4, 0.8, 1.0)
+        platform.CoreGraphics.CGContextFillRect(context, CGRectMake(0.0, 0.0, width, height))
+
+        // Draw some shapes to make it recognizable
+        platform.CoreGraphics.CGContextSetRGBFillColor(context, 1.0, 0.5, 0.0, 1.0)
+        platform.CoreGraphics.CGContextFillEllipseInRect(context, CGRectMake(100.0, 100.0, 200.0, 200.0))
+
+        platform.CoreGraphics.CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0)
+        platform.CoreGraphics.CGContextFillRect(context, CGRectMake(150.0, 150.0, 100.0, 100.0))
+    }
+
+    val image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+
+    return image ?: UIImage()
 }
