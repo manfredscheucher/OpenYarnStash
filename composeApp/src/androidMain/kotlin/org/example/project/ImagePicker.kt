@@ -9,10 +9,10 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-actual class ImagePickerLauncher(
+class AndroidImagePickerLauncher(
     private val launcher: androidx.activity.result.ActivityResultLauncher<String>
-) {
-    actual fun launch() {
+) : ImagePickerLauncher {
+    override fun launch() {
         launcher.launch("image/*")
     }
 }
@@ -32,5 +32,5 @@ actual fun rememberImagePickerLauncher(onImagesSelected: (List<ByteArray>) -> Un
             onImagesSelected(imageBytes)
         }
     }
-    return remember { ImagePickerLauncher(launcher) }
+    return remember { AndroidImagePickerLauncher(launcher) }
 }
