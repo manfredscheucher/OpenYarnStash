@@ -71,6 +71,8 @@
     <string name="yarn_form_view_project">Projekt ansehen</string>
     <string name="yarn_form_delete_title">Wolle löschen?</string>
     <string name="yarn_form_delete_message">Sind Sie sicher, dass Sie diese Wolle löschen möchten? Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_yarn_restricted_title">Löschen nicht möglich</string>
+    <string name="delete_yarn_restricted_message">Löschen ist nur möglich, wenn die Wolle keinem Projekt zugeordnet ist. Entfernen Sie die Wolle aus allen Projekten, um mit dem Löschen fortzufahren.</string>
 
     <!-- Project form -->
     <string name="project_form_new">Neues Projekt</string>

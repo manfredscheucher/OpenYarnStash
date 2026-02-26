@@ -72,6 +72,8 @@
     <string name="yarn_form_view_project">View Project</string>
     <string name="yarn_form_delete_title">Delete Yarn?</string>
     <string name="yarn_form_delete_message">Are you sure you want to delete this yarn? This cannot be undone.</string>
+    <string name="delete_yarn_restricted_title">Deletion Not Possible</string>
+    <string name="delete_yarn_restricted_message">Deletion is only possible if the yarn is not assigned to any projects. Remove the yarn from all projects to proceed with deletion.</string>
 
     <!-- Project form -->
     <string name="project_form_new">New project</string>

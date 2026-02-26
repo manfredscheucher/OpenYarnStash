@@ -87,6 +87,7 @@ fun YarnFormScreen(
     var selectedImageId by remember(initial.id) { mutableStateOf<UInt?>(initial.imageIds.firstOrNull()) }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
     var onConfirmUnsaved by remember { mutableStateOf<() -> Unit>({}) }
     val scope = rememberCoroutineScope()
 
@@ -239,6 +240,12 @@ fun YarnFormScreen(
                     Text(stringResource(Res.string.common_cancel))
                 }
             }
+        )
+    }
+
+    if (showDeleteRestrictionDialog) {
+        DeleteRestrictionDialog(
+            onDismiss = { showDeleteRestrictionDialog = false }
         )
     }
 
@@ -578,13 +585,29 @@ fun YarnFormScreen(
                     TextButton(onClick = {
                         confirmDiscardChanges { onAddColor(initial) }
                     }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                    if (assignmentsForYarn.isEmpty()) {
-                        TextButton(onClick = { showDeleteDialog = true }) {
-                            Text(stringResource(Res.string.common_delete))
+                    TextButton(onClick = {
+                        if (assignmentsForYarn.isNotEmpty()) {
+                            showDeleteRestrictionDialog = true
+                        } else {
+                            showDeleteDialog = true
                         }
+                    }) {
+                        Text(stringResource(Res.string.common_delete))
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun DeleteRestrictionDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(Res.string.delete_yarn_restricted_title)) },
+        text = { Text(stringResource(Res.string.delete_yarn_restricted_message)) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.common_ok)) }
+        }
+    )
 }
