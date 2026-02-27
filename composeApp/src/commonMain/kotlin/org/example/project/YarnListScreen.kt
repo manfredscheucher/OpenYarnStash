@@ -42,7 +42,8 @@ fun YarnListScreen(
         onBack()
     }
 
-    var showConsumed by remember { mutableStateOf(settings.hideUsedYarns) }
+    var showAvailable by remember { mutableStateOf(true) }
+    var showUsed by remember { mutableStateOf(settings.hideUsedYarns) }
     var filter by remember { mutableStateOf("") }
 
     val assignmentsByYarnId = remember(assignments) {
@@ -53,6 +54,9 @@ fun YarnListScreen(
     val yarnData = remember(yarns, assignmentsByYarnId) {
         yarns.map { it.copy(usedAmount = assignmentsByYarnId[it.id] ?: 0) }
     }
+
+    val usedYarnsAmount = yarnData.filter { it.availableAmount == 0 || it.usedAmount > 0 }.sumOf { it.usedAmount }
+    val availableYarnsAmount = yarnData.sumOf { it.availableAmount }
 
     Scaffold(
         topBar = {
@@ -103,13 +107,18 @@ fun YarnListScreen(
                 }
             } else {
                 val filteredYarnData = yarnData.filter {
-                    val consumedOk = if (showConsumed) true else it.availableAmount > 0
+                    val statusOk = when {
+                        showAvailable && showUsed -> true
+                        showAvailable -> it.availableAmount > 0
+                        showUsed -> it.availableAmount == 0 || it.usedAmount > 0
+                        else -> false
+                    }
                     val filterOk = if (filter.isNotBlank()) {
                         Json.encodeToString(it).contains(filter, ignoreCase = true)
                     } else {
                         true
                     }
-                    consumedOk && filterOk
+                    statusOk && filterOk
                 }.sortedByDescending { it.modified }
 
                 val totalAvailable = yarnData.sumOf { it.availableAmount }
@@ -123,38 +132,53 @@ fun YarnListScreen(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
+                // Toggle buttons
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     FilterChip(
-                        selected = showConsumed,
-                        onClick = {
-                            val newShowConsumed = !showConsumed
-                            showConsumed = newShowConsumed
-                            onSettingsChange(settings.copy(hideUsedYarns = newShowConsumed))
-                        },
-                        label = { Text(stringResource(Res.string.yarn_list_hide_used)) },
+                        selected = showAvailable,
+                        onClick = { showAvailable = !showAvailable },
+                        label = { Text(stringResource(Res.string.yarn_list_available, availableYarnsAmount)) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )
-                    OutlinedTextField(
-                        value = filter,
-                        onValueChange = { filter = it },
-                        label = { Text(stringResource(Res.string.yarn_list_filter)) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Filled.Search,
-                                contentDescription = stringResource(Res.string.yarn_list_filter)
-                            )
+                    FilterChip(
+                        selected = showUsed,
+                        onClick = {
+                            showUsed = !showUsed
+                            onSettingsChange(settings.copy(hideUsedYarns = showUsed))
                         },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                        label = { Text(stringResource(Res.string.yarn_list_used, usedYarnsAmount)) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Search bar
+                OutlinedTextField(
+                    value = filter,
+                    onValueChange = { filter = it },
+                    label = { Text(stringResource(Res.string.yarn_list_filter)) },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = stringResource(Res.string.yarn_list_filter)
+                        )
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                )
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()

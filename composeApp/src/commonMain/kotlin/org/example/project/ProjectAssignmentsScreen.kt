@@ -162,7 +162,7 @@ fun ProjectAssignmentsScreen(
                                 "${yarn.name} (${yarn.color ?: "?"}) - Gesamt im Stash: ${yarn.amount}g",
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake) + " für dieses Projekt maximal verfügbar")
+                            Text(stringResource(Res.string.usage_available, maxAmountThisProjectCanTake))
                             Spacer(Modifier.height(4.dp))
                             OutlinedTextField(
                                 value = assignedAmount?.toString() ?: "",

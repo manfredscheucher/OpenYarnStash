@@ -16,6 +16,8 @@
     <string name="yarn_list_summary_yards">Current amount: %1$d g (%2$d yd)</string>
     <string name="yarn_item_label_modified">Last modified: %1$s</string>
     <string name="yarn_list_hide_used">Used yarns</string>
+    <string name="yarn_list_available">Available (%1$d g)</string>
+    <string name="yarn_list_used">Used (%1$d g)</string>
     <string name="yarn_list_filter">Search</string>
 
     <!-- Project list -->
