@@ -39,8 +39,21 @@ actual class FileDownloader {
         }
 
         try {
-            val file = File(androidContext.filesDir, fileName)
-            file.writeBytes(data)
+            // Check if we have a pre-created ZIP file (to avoid OOM with large files)
+            val existingZipFile = AndroidFileHandler.getLastExportZipFile()
+
+            val file = if (existingZipFile != null && existingZipFile.exists() && data.isEmpty()) {
+                // Use the pre-created ZIP file with proper name already set
+                GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Using pre-created ZIP file (${existingZipFile.length()} bytes): ${existingZipFile.name}") }
+                existingZipFile
+            } else {
+                // Fallback: write data to file (for smaller files or non-ZIP exports)
+                val newFile = File(androidContext.filesDir, fileName)
+                newFile.writeBytes(data)
+                GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Created new file from ByteArray (${data.size} bytes)") }
+                newFile
+            }
+
             val uri = FileProvider.getUriForFile(androidContext, "${androidContext.packageName}.provider", file)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "application/zip"
@@ -48,7 +61,16 @@ actual class FileDownloader {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             androidContext.startActivity(Intent.createChooser(intent, "Export ZIP"))
-            GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Successfully created intent for ZIP file.") }
+            GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Successfully created share intent") }
+
+            // Clean up the export ZIP after sharing (with delay to allow sharing to complete)
+            if (file == existingZipFile) {
+                GlobalScope.launch {
+                    kotlinx.coroutines.delay(10000) // 10 seconds delay
+                    AndroidFileHandler.cleanupExportZip()
+                    GlobalScope.launch { Logger.log(LogLevel.DEBUG, "FileDownloader: Cleaned up export ZIP") }
+                }
+            }
         } catch (e: Exception) {
             GlobalScope.launch { Logger.log(LogLevel.ERROR, "FileDownloader: Error while downloading ZIP file: ${e.message}", e) }
         }

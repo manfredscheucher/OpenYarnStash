@@ -16,6 +16,23 @@ import java.util.zip.ZipOutputStream
 
 class AndroidFileHandler(private val context: Context) : FileHandler {
 
+    companion object {
+        // Static reference to last export ZIP file (shared across all instances)
+        @Volatile
+        private var lastExportZipFile: File? = null
+
+        fun getLastExportZipFile(): File? = lastExportZipFile
+
+        fun setLastExportZipFile(file: File?) {
+            lastExportZipFile = file
+        }
+
+        fun cleanupExportZip() {
+            lastExportZipFile?.delete()
+            lastExportZipFile = null
+        }
+    }
+
     private val filesDir: File
 
     init {
@@ -96,28 +113,44 @@ class AndroidFileHandler(private val context: Context) : FileHandler {
     }
 
     override suspend fun zipFiles(): ByteArray {
-        val tempFile = File.createTempFile("export", ".zip", context.cacheDir)
-        try {
-            FileOutputStream(tempFile).use { fos ->
-                ZipOutputStream(fos).use { zos ->
-                    addFolderToZip(filesDir, zos)
-                }
+        // Clean up old export file if exists
+        cleanupExportZip()
+
+        // Create ZIP with proper timestamped filename directly
+        val exportFileName = createTimestampedFileName("openyarnstash", "zip")
+        val zipFile = File(context.cacheDir, exportFileName)
+
+        FileOutputStream(zipFile).use { fos ->
+            ZipOutputStream(fos).use { zos ->
+                addFolderToZip(filesDir, zos)
             }
-            return tempFile.readBytes()
-        } finally {
-            tempFile.delete()
         }
+
+        // Store file reference in companion object (static, shared across instances)
+        setLastExportZipFile(zipFile)
+
+        // Return empty ByteArray as signal that file is ready (avoids OOM for large files)
+        return ByteArray(0)
     }
 
     private fun addFolderToZip(folder: File, zos: ZipOutputStream) {
         println("[DEBUG] zip: add folder $folder")
         folder.listFiles()?.forEach { file ->
+            val relativePath = filesDir.toURI().relativize(file.toURI()).path
+
             if (file.isDirectory) {
+                // Add directory entry (must end with /)
+                val dirEntry = ZipEntry(relativePath + "/")
+                zos.putNextEntry(dirEntry)
+                zos.closeEntry()
+                println("[DEBUG] zip: added directory $relativePath/")
+
+                // Recursively add contents
                 addFolderToZip(file, zos)
             } else {
-                println("[DEBUG] zip: add file $file")
+                println("[DEBUG] zip: add file $relativePath")
                 FileInputStream(file).use { fis ->
-                    val entry = ZipEntry(filesDir.toURI().relativize(file.toURI()).path)
+                    val entry = ZipEntry(relativePath)
                     zos.putNextEntry(entry)
                     fis.copyTo(zos)
                     zos.closeEntry()
