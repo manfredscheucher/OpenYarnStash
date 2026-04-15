@@ -233,6 +233,16 @@ Removing or replacing the original author's name, misrepresenting authorship, or
     <string name="log_level_label">Logging Level</string>
     <string name="log_level_description">The log file is stored locally on the device and can be viewed via ZIP export.</string>
 
+    <!-- Startup Warning Dialogs -->
+    <string name="warning_dirty_build_title">Warning: Unofficial Build</string>
+    <string name="warning_dirty_build_message">This app was compiled with uncommitted changes. Data may be unstable.</string>
+    <string name="warning_future_version_title">Warning: Newer Version</string>
+    <string name="warning_future_version_message">The data files were created with a newer version of this app. Some data may not be displayed correctly.</string>
+    <string name="warning_app_expired_title">App Version Expired</string>
+    <string name="warning_app_expired_message">This version of the app was compiled more than one year ago. Please update the app.</string>
+    <string name="warning_rooted_device_title">Rooted Device Detected</string>
+    <string name="warning_rooted_device_message">This app cannot run on rooted devices.</string>
+
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Not Implemented</string>
     <string name="not_implemented_message">This feature is not yet implemented.</string>

@@ -186,6 +186,7 @@ abstract class GenerateVersionInfo @Inject constructor(
         var isDirty = "unknown"
         val wd = gitDir.asFile.orNull?.parentFile ?: project.rootDir
 
+        var commitDate = "unknown"
         if (gitDir.asFile.orNull?.exists() == true) {
             try {
                 // Get git commit hash
@@ -197,6 +198,16 @@ abstract class GenerateVersionInfo @Inject constructor(
                     isIgnoreExitValue = false
                 }
                 sha = shaOutput.toString().trim()
+
+                // Get commit date (ISO 8601 UTC)
+                val commitDateOutput = ByteArrayOutputStream()
+                execOps.exec {
+                    workingDir = wd
+                    commandLine("git", "log", "-1", "--format=%cI", "--date=iso-strict")
+                    standardOutput = commitDateOutput
+                    isIgnoreExitValue = false
+                }
+                commitDate = commitDateOutput.toString().trim()
 
                 // Check if repo is dirty (only tracked files)
                 val statusOutput = ByteArrayOutputStream()
@@ -212,10 +223,10 @@ abstract class GenerateVersionInfo @Inject constructor(
             }
         }
 
-        // Zeitstempel ISO 8601 UTC
+        // Compile timestamp ISO 8601 UTC
         val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         df.timeZone = TimeZone.getTimeZone("UTC")
-        val timestamp = df.format(Date())
+        val compileDate = df.format(Date())
 
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
@@ -231,15 +242,17 @@ abstract class GenerateVersionInfo @Inject constructor(
              *   gradle.properties -> version=X.Y.Z
              *
              * Other values are generated from Git:
-             *   GIT_SHA: Current Git commit hash
+             *   COMMIT_SHA: Current Git commit hash
+             *   COMMIT_DATE: Date of the last Git commit (ISO 8601)
              *   IS_DIRTY: Whether working directory has uncommitted changes
-             *   BUILD_DATE: When this build was created (ISO 8601 UTC)
+             *   COMPILE_DATE: When this build was compiled (ISO 8601 UTC)
              */
             object GeneratedVersionInfo {
                 const val VERSION: String = "$version"
-                const val GIT_SHA: String = "$sha"
+                const val COMMIT_SHA: String = "$sha"
+                const val COMMIT_DATE: String = "$commitDate"
                 const val IS_DIRTY: String = "$isDirty"
-                const val BUILD_DATE: String = "$timestamp"
+                const val COMPILE_DATE: String = "$compileDate"
             }
             """.trimIndent()
         )

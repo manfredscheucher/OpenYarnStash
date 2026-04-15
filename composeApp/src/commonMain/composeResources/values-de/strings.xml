@@ -228,6 +228,16 @@ Das Entfernen oder Ersetzen des Namens des ursprünglichen Autors, eine falsche 
     <string name="log_level_label">Log-Level</string>
     <string name="log_level_description">Die Log-Datei wird lokal auf dem Gerät gespeichert und kann über den ZIP-Export eingesehen werden.</string>
 
+    <!-- Startup Warning Dialogs -->
+    <string name="warning_dirty_build_title">Warnung: Inoffizieller Build</string>
+    <string name="warning_dirty_build_message">Diese App wurde mit nicht committeten Änderungen kompiliert. Daten können instabil sein.</string>
+    <string name="warning_future_version_title">Warnung: Neuere Version</string>
+    <string name="warning_future_version_message">Die Datendateien wurden mit einer neueren Version dieser App erstellt. Manche Daten werden möglicherweise nicht korrekt angezeigt.</string>
+    <string name="warning_app_expired_title">App-Version abgelaufen</string>
+    <string name="warning_app_expired_message">Diese App-Version wurde vor mehr als einem Jahr kompiliert. Bitte aktualisieren Sie die App.</string>
+    <string name="warning_rooted_device_title">Gerootetes Gerät erkannt</string>
+    <string name="warning_rooted_device_message">Diese App kann auf gerooteten Geräten nicht ausgeführt werden.</string>
+
     <!-- Not Implemented Dialog -->
     <string name="not_implemented_title">Nicht implementiert</string>
     <string name="not_implemented_message">Diese Funktion ist noch nicht implementiert.</string>

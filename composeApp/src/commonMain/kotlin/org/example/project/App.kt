@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 //import java.util.Locale // TODO
@@ -39,6 +41,7 @@ sealed class Screen {
     data class LicenseDetail(val licenseType: LicenseType) : Screen()
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownloader: FileDownloader, fileHandler: FileHandler, settingsManager: JsonSettingsManager) {
     var navStack by remember { mutableStateOf(listOf<Screen>(Screen.Home)) }
@@ -54,6 +57,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
     var isImporting by remember { mutableStateOf(false) }
     var showExportSuccessDialog by remember { mutableStateOf(false) }
     var showImportSuccessDialog by remember { mutableStateOf(false) }
+    var showDirtyBuildWarning by remember { mutableStateOf(false) }
+    var showFutureVersionWarning by remember { mutableStateOf(false) }
+    var showAppExpiredWarning by remember { mutableStateOf(false) }
+    var showRootedDeviceWarning by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -92,6 +99,42 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
         settings = loadedSettings
         Logger.updateSettings(loadedSettings)
         reloadAllData()
+
+        // Save updated versionInfo (lastUsedDate) immediately
+        withContext(Dispatchers.Default) { settingsManager.saveSettings(loadedSettings) }
+        settings = settingsManager.settings
+
+        // Startup warnings (shown only once at Home screen on launch)
+        // Check root first
+        if (isDeviceRooted()) {
+            showRootedDeviceWarning = true
+            return@LaunchedEffect
+        }
+
+        // Check expiry
+        try {
+            val buildInstant = Instant.parse(GeneratedVersionInfo.COMPILE_DATE)
+            val nowInstantVal = nowInstant()
+            val oneYearInSeconds = 120;//365L * 24 * 60 * 60
+            if ((nowInstantVal - buildInstant).inWholeSeconds > oneYearInSeconds) {
+                showAppExpiredWarning = true
+                return@LaunchedEffect
+            }
+        } catch (_: Exception) { }
+
+        if (GeneratedVersionInfo.IS_DIRTY == "dirty") {
+            showDirtyBuildWarning = true
+        }
+        val savedVersionInfo = loadedSettings.versionInfo
+        if (savedVersionInfo.commitDate.isNotEmpty()) {
+            try {
+                val savedBuildInstant = Instant.parse(savedVersionInfo.commitDate)
+                val currentBuildInstant = Instant.parse(GeneratedVersionInfo.COMMIT_DATE)
+                if (savedBuildInstant > currentBuildInstant) {
+                    showFutureVersionWarning = true
+                }
+            } catch (_: Exception) { }
+        }
     }
 
     LaunchedEffect(settings) {
@@ -145,6 +188,58 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
             text = { Text(errorDialogMessage!!) },
             confirmButton = {
                 TextButton(onClick = { errorDialogMessage = null }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
+    }
+
+    if (showDirtyBuildWarning) {
+        AlertDialog(
+            onDismissRequest = { showDirtyBuildWarning = false },
+            title = { Text(stringResource(Res.string.warning_dirty_build_title)) },
+            text = { Text(stringResource(Res.string.warning_dirty_build_message)) },
+            confirmButton = {
+                TextButton(onClick = { showDirtyBuildWarning = false }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
+    }
+
+    if (showFutureVersionWarning) {
+        AlertDialog(
+            onDismissRequest = { showFutureVersionWarning = false },
+            title = { Text(stringResource(Res.string.warning_future_version_title)) },
+            text = { Text(stringResource(Res.string.warning_future_version_message)) },
+            confirmButton = {
+                TextButton(onClick = { showFutureVersionWarning = false }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
+    }
+
+    if (showRootedDeviceWarning) {
+        AlertDialog(
+            onDismissRequest = { /* not dismissable */ },
+            title = { Text(stringResource(Res.string.warning_rooted_device_title)) },
+            text = { Text(stringResource(Res.string.warning_rooted_device_message)) },
+            confirmButton = {
+                TextButton(onClick = { exitApp() }) {
+                    Text(stringResource(Res.string.common_ok))
+                }
+            }
+        )
+    }
+
+    if (showAppExpiredWarning) {
+        AlertDialog(
+            onDismissRequest = { /* not dismissable */ },
+            title = { Text(stringResource(Res.string.warning_app_expired_title)) },
+            text = { Text(stringResource(Res.string.warning_app_expired_message)) },
+            confirmButton = {
+                TextButton(onClick = { exitApp() }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }

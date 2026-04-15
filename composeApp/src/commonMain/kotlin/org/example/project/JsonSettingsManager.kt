@@ -27,7 +27,14 @@ class JsonSettingsManager(private val fileHandler: FileHandler, private val file
     }
 
     suspend fun saveSettings(settings: Settings) {
-        this.settings = settings
+        this.settings = settings.copy(
+            versionInfo = VersionInfo(
+                appVersion = GeneratedVersionInfo.VERSION,
+                commitHash = GeneratedVersionInfo.COMMIT_SHA,
+                commitDate = GeneratedVersionInfo.COMMIT_DATE,
+                lastUsedDate = getCurrentTimestamp()
+            )
+        )
         val content = Json.encodeToString(this@JsonSettingsManager.settings)
         fileHandler.writeText(filePath, content)
     }
