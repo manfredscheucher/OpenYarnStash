@@ -177,6 +177,7 @@ abstract class GenerateVersionInfo @Inject constructor(
     abstract val gitDir: DirectoryProperty
     @get:Input abstract val versionName: Property<String>
     @get:Input abstract val packageName: Property<String>
+    @get:Input abstract val expirationDays: Property<Int>
     @get:OutputDirectory abstract val outputDir: DirectoryProperty
 
     @TaskAction
@@ -228,6 +229,7 @@ abstract class GenerateVersionInfo @Inject constructor(
         df.timeZone = TimeZone.getTimeZone("UTC")
         val compileDate = df.format(Date())
 
+        val expDays = expirationDays.get()
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
             """
@@ -245,14 +247,16 @@ abstract class GenerateVersionInfo @Inject constructor(
              *   COMMIT_SHA: Current Git commit hash
              *   COMMIT_DATE: Date of the last Git commit (ISO 8601)
              *   IS_DIRTY: Whether working directory has uncommitted changes
-             *   COMPILE_DATE: When this build was compiled (ISO 8601 UTC)
+             *   BUILD_DATE: When this build was compiled (ISO 8601 UTC)
+             *   EXPIRATION_DAYS: Days until app expires (0 = no expiration)
              */
             object GeneratedVersionInfo {
                 const val VERSION: String = "$version"
                 const val COMMIT_SHA: String = "$sha"
                 const val COMMIT_DATE: String = "$commitDate"
                 const val IS_DIRTY: String = "$isDirty"
-                const val COMPILE_DATE: String = "$compileDate"
+                const val BUILD_DATE: String = "$compileDate"
+                const val EXPIRATION_DAYS: Int = $expDays
             }
             """.trimIndent()
         )
@@ -269,6 +273,7 @@ generateVersionInfo.configure {
     versionName.set(project.provider { project.version.toString() })
     packageName.set("org.example.project")
     outputDir.set(versionGenOut)
+    expirationDays.set(project.provider { (project.findProperty("expirationDays") as? String)?.toIntOrNull() ?: 365 })
 }
 
 tasks.withType(KotlinCompilationTask::class.java).configureEach {

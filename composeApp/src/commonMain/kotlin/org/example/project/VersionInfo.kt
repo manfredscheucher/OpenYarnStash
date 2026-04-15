@@ -14,6 +14,6 @@ fun VersionInfoView() {
         val commitText = GeneratedVersionInfo.COMMIT_SHA.let { sha -> "${sha.take(7)} (${GeneratedVersionInfo.IS_DIRTY})" }
         Text("Commit: $commitText")
         Text("Commit Date: ${GeneratedVersionInfo.COMMIT_DATE}")
-        Text("Compiled: ${GeneratedVersionInfo.COMPILE_DATE}")
+        Text("Compiled: ${GeneratedVersionInfo.BUILD_DATE}")
     }
 }

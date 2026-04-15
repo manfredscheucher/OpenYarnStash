@@ -112,15 +112,18 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
         }
 
         // Check expiry
-        try {
-            val buildInstant = Instant.parse(GeneratedVersionInfo.COMPILE_DATE)
-            val nowInstantVal = nowInstant()
-            val oneYearInSeconds = 120;//365L * 24 * 60 * 60
-            if ((nowInstantVal - buildInstant).inWholeSeconds > oneYearInSeconds) {
-                showAppExpiredWarning = true
-                return@LaunchedEffect
-            }
-        } catch (_: Exception) { }
+        val expirationDays = GeneratedVersionInfo.EXPIRATION_DAYS
+        if (expirationDays > 0) {
+            try {
+                val buildInstant = Instant.parse(GeneratedVersionInfo.BUILD_DATE)
+                val nowInstantVal = nowInstant()
+                val expirationSeconds = expirationDays.toLong() * 24 * 60 * 60
+                if ((nowInstantVal - buildInstant).inWholeSeconds > expirationSeconds) {
+                    showAppExpiredWarning = true
+                    return@LaunchedEffect
+                }
+            } catch (_: Exception) { }
+        }
 
         if (GeneratedVersionInfo.IS_DIRTY == "dirty") {
             showDirtyBuildWarning = true
