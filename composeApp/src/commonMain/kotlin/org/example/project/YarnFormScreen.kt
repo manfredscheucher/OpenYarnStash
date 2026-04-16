@@ -308,6 +308,7 @@ fun YarnFormScreen(
         },
     ) { padding ->        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             val scrollState = rememberScrollState()
+            LaunchedEffect(initial.id) { scrollState.scrollTo(0) }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
