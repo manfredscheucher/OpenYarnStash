@@ -48,12 +48,16 @@ data class Yarn(
             }?.toInt()
         }
 
+    // IMPORTANT: When adding new attributes, also add them in YarnFormScreen.buildCurrentYarn() for copy color.
     fun copyForColor(): Yarn {
         return Yarn(
             id = 0u,
             name = this.name,
             brand = this.brand,
             blend = this.blend,
+            dyeLot = this.dyeLot,
+            storagePlace = this.storagePlace,
+            notes = this.notes,
             meteragePerSkein = this.meteragePerSkein,
             weightPerSkein = this.weightPerSkein,
             modified = getCurrentTimestamp()

@@ -230,6 +230,7 @@ abstract class GenerateVersionInfo @Inject constructor(
         val compileDate = df.format(Date())
 
         val expDays = expirationDays.get()
+        val commitYear = commitDate.take(4).toIntOrNull() ?: 0
         val dir = outputDir.get().asFile.apply { mkdirs() }
         dir.resolve("GeneratedVersionInfo.kt").writeText(
             """
@@ -246,6 +247,7 @@ abstract class GenerateVersionInfo @Inject constructor(
              * Other values are generated from Git:
              *   COMMIT_SHA: Current Git commit hash
              *   COMMIT_DATE: Date of the last Git commit (ISO 8601)
+             *   COMMIT_YEAR: Year of the last Git commit
              *   IS_DIRTY: Whether working directory has uncommitted changes
              *   BUILD_DATE: When this build was compiled (ISO 8601 UTC)
              *   EXPIRATION_DAYS: Days until app expires (0 = no expiration)
@@ -254,6 +256,7 @@ abstract class GenerateVersionInfo @Inject constructor(
                 const val VERSION: String = "$version"
                 const val COMMIT_SHA: String = "$sha"
                 const val COMMIT_DATE: String = "$commitDate"
+                const val COMMIT_YEAR: Int = $commitYear
                 const val IS_DIRTY: String = "$isDirty"
                 const val BUILD_DATE: String = "$compileDate"
                 const val EXPIRATION_DAYS: Int = $expDays

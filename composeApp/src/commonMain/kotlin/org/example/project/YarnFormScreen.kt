@@ -61,22 +61,22 @@ fun YarnFormScreen(
 ) {
     val totalUsedAmount = assignmentsForYarn.sumOf { it.amount }
 
-    var name by remember { mutableStateOf(initial.name) }
-    var color by remember { mutableStateOf(initial.color ?: "") }
-    var colorCode by remember { mutableStateOf(initial.colorCode ?: "") }
-    var brand by remember { mutableStateOf(initial.brand ?: "") }
-    var blend by remember { mutableStateOf(initial.blend ?: "") }
-    var dyeLot by remember { mutableStateOf(initial.dyeLot ?: "") }
-    var storagePlace by remember { mutableStateOf(initial.storagePlace ?: "") }
+    var name by remember(initial.id) { mutableStateOf(initial.name) }
+    var color by remember(initial.id) { mutableStateOf(initial.color ?: "") }
+    var colorCode by remember(initial.id) { mutableStateOf(initial.colorCode ?: "") }
+    var brand by remember(initial.id) { mutableStateOf(initial.brand ?: "") }
+    var blend by remember(initial.id) { mutableStateOf(initial.blend ?: "") }
+    var dyeLot by remember(initial.id) { mutableStateOf(initial.dyeLot ?: "") }
+    var storagePlace by remember(initial.id) { mutableStateOf(initial.storagePlace ?: "") }
 
-    var weightPerSkeinText by remember { mutableStateOf(initial.weightPerSkein?.toString() ?: "") }
-    var meteragePerSkeinText by remember { mutableStateOf(initial.meteragePerSkein?.toString() ?: "") }
-    var amountText by remember(initial) { mutableStateOf(initial.amount.toString().takeIf { it != "0" } ?: "") }
-    var numberOfBallsText by remember { mutableStateOf("1") }
+    var weightPerSkeinText by remember(initial.id) { mutableStateOf(initial.weightPerSkein?.toString() ?: "") }
+    var meteragePerSkeinText by remember(initial.id) { mutableStateOf(initial.meteragePerSkein?.toString() ?: "") }
+    var amountText by remember(initial.id) { mutableStateOf(initial.amount.toString().takeIf { it != "0" } ?: "") }
+    var numberOfBallsText by remember(initial.id) { mutableStateOf("1") }
 
-    val modifiedState by remember { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
-    var added by remember { mutableStateOf(initial.added ?: "") }
-    var notes by remember { mutableStateOf(initial.notes ?: "") }
+    val modifiedState by remember(initial.id) { mutableStateOf(initial.modified ?: getCurrentTimestamp()) }
+    var added by remember(initial.id) { mutableStateOf(initial.added ?: "") }
+    var notes by remember(initial.id) { mutableStateOf(initial.notes ?: "") }
 
     val images = remember { mutableStateMapOf<UInt, ByteArray>() }
     LaunchedEffect(initialImages) {
@@ -159,6 +159,29 @@ fun YarnFormScreen(
         }
     }
     val hasChanges by derivedStateOf { changes.isNotEmpty() }
+
+    fun buildCurrentYarn(): Yarn {
+        val enteredAmount = amountText.toIntOrNull() ?: 0
+        val finalAmountToSave = max(enteredAmount, totalUsedAmount)
+        val finalImageIds = images.keys.toList()
+        return initial.copy(
+            name = name,
+            brand = brand.ifBlank { null },
+            color = color.ifBlank { null },
+            colorCode = colorCode.ifBlank { null },
+            blend = blend.ifBlank { null },
+            dyeLot = dyeLot.ifBlank { null },
+            storagePlace = storagePlace.ifBlank { null },
+            amount = finalAmountToSave,
+            weightPerSkein = weightPerSkeinText.toIntOrNull(),
+            meteragePerSkein = meteragePerSkeinText.toIntOrNull(),
+            modified = getCurrentTimestamp(),
+            added = normalizeDateString(added),
+            notes = notes.ifBlank { null },
+            imageIds = finalImageIds,
+            imagesChanged = initialImages.keys != images.keys
+        )
+    }
 
     val saveAction: ((() -> Unit)?) -> Unit = { callback ->
         val enteredAmount = amountText.toIntOrNull() ?: 0
@@ -583,7 +606,7 @@ fun YarnFormScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TextButton(onClick = {
-                        confirmDiscardChanges { onAddColor(initial) }
+                        confirmDiscardChanges { onAddColor(buildCurrentYarn()) }
                     }) { Text(stringResource(Res.string.yarn_form_add_color)) }
                     TextButton(onClick = {
                         if (assignmentsForYarn.isNotEmpty()) {

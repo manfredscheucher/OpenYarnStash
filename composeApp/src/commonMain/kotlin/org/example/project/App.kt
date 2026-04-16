@@ -403,12 +403,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     onAddColor = { yarnToCopy ->
                                         scope.launch {
                                             val newYarnWithNewId = jsonDataManager.createNewYarn(yarnToCopy.name)
-                                            val newYarn = newYarnWithNewId.copy(
-                                                brand = yarnToCopy.brand,
-                                                blend = yarnToCopy.blend,
-                                                meteragePerSkein = yarnToCopy.meteragePerSkein,
-                                                weightPerSkein = yarnToCopy.weightPerSkein
-                                            )
+                                            val newYarn = yarnToCopy.copyForColor().copy(id = newYarnWithNewId.id)
                                             withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
                                             reloadAllData()
                                             navigateTo(Screen.YarnForm(newYarn.id))

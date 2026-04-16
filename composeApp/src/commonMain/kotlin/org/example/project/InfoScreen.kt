@@ -106,7 +106,12 @@ fun InfoScreen(
                 Text(stringResource(Res.string.you_can_help_button))
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Text(stringResource(Res.string.info_copyright_notice), style = MaterialTheme.typography.bodySmall)
+            val startYear = 2025
+            val endYear = GeneratedVersionInfo.COMMIT_YEAR
+            val yearRange = if (endYear <= startYear) "$startYear" else "$startYear–$endYear"
+            val copyrightNotice = stringResource(Res.string.info_copyright_notice)
+                .replace("2025", yearRange)
+            Text(copyrightNotice, style = MaterialTheme.typography.bodySmall)
             VersionInfoView()
 
             Spacer(modifier = Modifier.height(24.dp))
