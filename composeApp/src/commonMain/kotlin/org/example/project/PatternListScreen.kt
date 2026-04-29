@@ -34,6 +34,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.common_back
@@ -88,7 +89,8 @@ fun PatternListScreen(
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = onAddClick,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.testTag("btn_pattern_add")
             ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
@@ -140,7 +142,8 @@ fun PatternListScreen(
                 ) {                    items(filteredPatterns) { pattern ->
                         Card(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .testTag("item_pattern_${pattern.id}"),
                             onClick = { onOpen(pattern.id) },
                             colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(pattern.id))
                         ) {

@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
@@ -251,10 +252,13 @@ fun YarnFormScreen(
             title = { Text(stringResource(Res.string.yarn_form_delete_title)) },
             text = { Text(stringResource(Res.string.yarn_form_delete_message)) },
             confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    onDelete(initial.id)
-                }) {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDelete(initial.id)
+                    },
+                    modifier = Modifier.testTag("btn_yarn_delete_confirm")
+                ) {
                     Text(stringResource(Res.string.common_delete))
                 }
             },
@@ -299,7 +303,8 @@ fun YarnFormScreen(
                 actions = {
                     TextButton(
                         onClick = { saveAndGoBack() },
-                        enabled = name.isNotBlank()
+                        enabled = name.isNotBlank(),
+                        modifier = Modifier.testTag("btn_yarn_save")
                     ) {
                         Text(stringResource(Res.string.common_save))
                     }
@@ -388,11 +393,11 @@ fun YarnFormScreen(
                 }
 
                 Spacer(Modifier.height(16.dp))
-                SelectAllOutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = brand, onValueChange = { brand = it }, label = { Text(stringResource(Res.string.yarn_label_brand)) }, modifier = Modifier.fillMaxWidth().testTag("field_yarn_brand"))
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.yarn_label_name)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.yarn_label_name)) }, modifier = Modifier.fillMaxWidth().testTag("field_yarn_name"))
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = color, onValueChange = { color = it }, label = { Text(stringResource(Res.string.yarn_label_color)) }, modifier = Modifier.fillMaxWidth().testTag("field_yarn_color"))
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     SelectAllOutlinedTextField(
@@ -525,9 +530,9 @@ fun YarnFormScreen(
                     onDateChange = { added = it ?: "" }
                 )
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = storagePlace, onValueChange = { storagePlace = it }, label = { Text(stringResource(Res.string.yarn_label_storage_place)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = storagePlace, onValueChange = { storagePlace = it }, label = { Text(stringResource(Res.string.yarn_label_storage_place)) }, modifier = Modifier.fillMaxWidth().testTag("field_yarn_storage_place"))
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text(stringResource(Res.string.yarn_label_notes)) }, singleLine = false, minLines = 3, modifier = Modifier.fillMaxWidth().testTag("field_yarn_notes"))
                 Spacer(Modifier.height(8.dp))
                 Text(stringResource(Res.string.yarn_item_label_modified, formatTimestamp(modifiedState)))
 
@@ -606,16 +611,20 @@ fun YarnFormScreen(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    TextButton(onClick = {
-                        confirmDiscardChanges { onAddColor(buildCurrentYarn()) }
-                    }) { Text(stringResource(Res.string.yarn_form_add_color)) }
-                    TextButton(onClick = {
-                        if (assignmentsForYarn.isNotEmpty()) {
-                            showDeleteRestrictionDialog = true
-                        } else {
-                            showDeleteDialog = true
-                        }
-                    }) {
+                    TextButton(
+                        onClick = { confirmDiscardChanges { onAddColor(buildCurrentYarn()) } },
+                        modifier = Modifier.testTag("btn_yarn_add_color")
+                    ) { Text(stringResource(Res.string.yarn_form_add_color)) }
+                    TextButton(
+                        onClick = {
+                            if (assignmentsForYarn.isNotEmpty()) {
+                                showDeleteRestrictionDialog = true
+                            } else {
+                                showDeleteDialog = true
+                            }
+                        },
+                        modifier = Modifier.testTag("btn_yarn_delete")
+                    ) {
                         Text(stringResource(Res.string.common_delete))
                     }
                 }

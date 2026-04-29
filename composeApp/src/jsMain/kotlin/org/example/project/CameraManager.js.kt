@@ -1,4 +1,3 @@
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package org.example.project
 
 import androidx.compose.runtime.Composable
@@ -14,10 +13,10 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLVideoElement
 import org.w3c.files.FileReader
 
-actual class CameraLauncher(
+class JsCameraLauncher(
     private val onResult: (ByteArray?) -> Unit
-) {
-    actual fun launch() {
+) : CameraLauncher {
+    override fun launch() {
         // In browsers, we use a file input with camera capture
         // This is more compatible than getUserMedia which requires HTTPS
         val input = document.createElement("input") as HTMLInputElement
@@ -61,5 +60,5 @@ actual class CameraLauncher(
 
 @Composable
 actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): CameraLauncher? {
-    return remember { CameraLauncher(onResult) }
+    return remember { JsCameraLauncher(onResult) }
 }

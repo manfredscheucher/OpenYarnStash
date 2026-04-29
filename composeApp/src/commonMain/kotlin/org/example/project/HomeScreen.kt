@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.Res
 import openyarnstash.composeapp.generated.resources.help
@@ -72,33 +73,33 @@ fun HomeScreen(
     ) { padding ->
         Column(Modifier.padding(padding).padding(16.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                HomeButton(onClick = onOpenYarns, icon = Res.drawable.yarns, text = stringResource(Res.string.home_button_yarns))
-                HomeButton(onClick = onOpenProjects, icon = Res.drawable.projects, text = stringResource(Res.string.home_button_projects))
+                HomeButton(onClick = onOpenYarns, icon = Res.drawable.yarns, text = stringResource(Res.string.home_button_yarns), tag = "btn_home_yarns")
+                HomeButton(onClick = onOpenProjects, icon = Res.drawable.projects, text = stringResource(Res.string.home_button_projects), tag = "btn_home_projects")
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                HomeButton(onClick = onOpenPatterns, icon = Res.drawable.patterns, text = stringResource(Res.string.home_button_patterns))
-                HomeButton(onClick = onOpenStatistics, icon = Res.drawable.statistics, text = stringResource(Res.string.home_button_statistics))
+                HomeButton(onClick = onOpenPatterns, icon = Res.drawable.patterns, text = stringResource(Res.string.home_button_patterns), tag = "btn_home_patterns")
+                HomeButton(onClick = onOpenStatistics, icon = Res.drawable.statistics, text = stringResource(Res.string.home_button_statistics), tag = "btn_home_statistics")
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title))
-                HomeButton(onClick = onOpenInfo, icon = Res.drawable.info, text = stringResource(Res.string.info_screen_title))
+                HomeButton(onClick = onOpenSettings, icon = Res.drawable.settings, text = stringResource(Res.string.settings_title), tag = "btn_home_settings")
+                HomeButton(onClick = onOpenInfo, icon = Res.drawable.info, text = stringResource(Res.string.info_screen_title), tag = "btn_home_info")
             }
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                HomeButton(onClick = onOpenHowToHelp, icon = Res.drawable.help, text = stringResource(Res.string.info_how_to_help))
+                HomeButton(onClick = onOpenHowToHelp, icon = Res.drawable.help, text = stringResource(Res.string.info_how_to_help), tag = "btn_home_howtohelp")
             }
         }
     }
 }
 
 @Composable
-private fun HomeButton(onClick: () -> Unit, icon: org.jetbrains.compose.resources.DrawableResource, text: String) {
+private fun HomeButton(onClick: () -> Unit, icon: org.jetbrains.compose.resources.DrawableResource, text: String, tag: String = "") {
     Button(
         onClick = onClick,
         shape = RectangleShape,
-        modifier = Modifier.size(140.dp),
+        modifier = Modifier.size(140.dp).then(if (tag.isNotEmpty()) Modifier.testTag(tag) else Modifier),
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

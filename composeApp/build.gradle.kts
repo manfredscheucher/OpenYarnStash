@@ -82,6 +82,9 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(libs.kotest.assertions.core)
                 implementation(libs.kotest.framework.engine)
+                implementation(libs.kotlinx.coroutines.test)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
             }
         }
 
@@ -111,6 +114,15 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutinesSwing)
                 implementation(libs.pdfbox)
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutinesSwing)
+                implementation(kotlin("test-junit"))
+                implementation(compose.desktop.uiTestJUnit4)
             }
         }
 

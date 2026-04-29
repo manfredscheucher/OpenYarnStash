@@ -1,4 +1,3 @@
-@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 package org.example.project
 
 import androidx.compose.runtime.Composable
@@ -11,10 +10,10 @@ import java.io.ByteArrayOutputStream
 import java.io.FilenameFilter
 import javax.imageio.ImageIO
 
-actual class ImagePickerLauncher(
+class JvmImagePickerLauncher(
     private val onImagesSelected: (List<ByteArray>) -> Unit
-) {
-    actual fun launch() {
+) : ImagePickerLauncher {
+    override fun launch() {
         val fileDialog = FileDialog(null as Frame?, "Select Image", FileDialog.LOAD)
         fileDialog.isMultipleMode = true
         fileDialog.filenameFilter = FilenameFilter { _, name ->
@@ -52,5 +51,5 @@ actual class ImagePickerLauncher(
 
 @Composable
 actual fun rememberImagePickerLauncher(onImagesSelected: (List<ByteArray>) -> Unit): ImagePickerLauncher {
-    return remember { ImagePickerLauncher(onImagesSelected) }
+    return remember { JvmImagePickerLauncher(onImagesSelected) }
 }

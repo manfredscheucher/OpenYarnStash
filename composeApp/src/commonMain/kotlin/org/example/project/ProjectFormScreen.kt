@@ -29,6 +29,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import openyarnstash.composeapp.generated.resources.*
@@ -254,10 +255,13 @@ fun ProjectFormScreen(
             title = { Text(stringResource(Res.string.project_form_delete_title)) },
             text = { Text(stringResource(Res.string.project_form_delete_message)) },
             confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    onDelete(initial.id)
-                }) {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDelete(initial.id)
+                    },
+                    modifier = Modifier.testTag("btn_project_delete_confirm")
+                ) {
                     Text(stringResource(Res.string.common_delete))
                 }
             },
@@ -306,7 +310,8 @@ fun ProjectFormScreen(
                 actions = {
                     TextButton(
                         onClick = { saveAndGoBack() },
-                        enabled = name.isNotBlank()
+                        enabled = name.isNotBlank(),
+                        modifier = Modifier.testTag("btn_project_save")
                     ) {
                         Text(stringResource(Res.string.common_save))
                     }
@@ -394,7 +399,7 @@ fun ProjectFormScreen(
             }
 
             Spacer(Modifier.height(16.dp))
-            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth())
+            SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.project_label_name)) }, modifier = Modifier.fillMaxWidth().testTag("field_project_name"))
             Spacer(Modifier.height(8.dp))
             Box {
                 val selectedPattern = patterns.firstOrNull { it.id == patternId }
@@ -631,13 +636,16 @@ fun ProjectFormScreen(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    TextButton(onClick = {
-                        if (assignmentsForProject.isNotEmpty()) {
-                            showDeleteRestrictionDialog = true
-                        } else {
-                            showDeleteDialog = true
-                        }
-                    }) {
+                    TextButton(
+                        onClick = {
+                            if (assignmentsForProject.isNotEmpty()) {
+                                showDeleteRestrictionDialog = true
+                            } else {
+                                showDeleteDialog = true
+                            }
+                        },
+                        modifier = Modifier.testTag("btn_project_delete")
+                    ) {
                         Text(stringResource(Res.string.common_delete))
                     }
                 }

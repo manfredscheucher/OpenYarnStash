@@ -20,6 +20,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.*
@@ -86,7 +87,8 @@ fun YarnListScreen(
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = onAddClick,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.testTag("btn_yarn_add")
             ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
@@ -177,7 +179,7 @@ fun YarnListScreen(
                         )
                     },
                     shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("field_yarn_search")
                 )
                 LazyColumn(
                     modifier = Modifier
@@ -188,7 +190,8 @@ fun YarnListScreen(
                 ) {                    items(filteredYarnData) { yarn ->
                         Card(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .testTag("item_yarn_${yarn.id}"),
                             onClick = { onOpen(yarn.id) },
                             colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(yarn.id))
                         ) {

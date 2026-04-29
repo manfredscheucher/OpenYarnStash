@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import openyarnstash.composeapp.generated.resources.*
@@ -238,9 +239,9 @@ fun PatternFormScreen(
                 }
                 Spacer(Modifier.height(16.dp))
 
-                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(stringResource(Res.string.pattern_label_name)) }, modifier = Modifier.fillMaxWidth().testTag("field_pattern_name"))
                 Spacer(Modifier.height(8.dp))
-                SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth())
+                SelectAllOutlinedTextField(value = creator, onValueChange = { creator = it }, label = { Text(stringResource(Res.string.pattern_label_creator)) }, modifier = Modifier.fillMaxWidth().testTag("field_pattern_creator"))
                 Spacer(Modifier.height(8.dp))
                 var expanded by remember { mutableStateOf(false) }
                 val categories = patterns.mapNotNull { it.category }.filter { it.isNotBlank() }.distinct().sortedBy { it.lowercase() }
@@ -330,9 +331,15 @@ fun PatternFormScreen(
                 ) {
                     TextButton(onClick = backAction) { Text(stringResource(Res.string.common_cancel)) }
                     Row {
-                        TextButton(onClick = { onDelete(initial.id) }) { Text(stringResource(Res.string.common_delete)) }
+                        TextButton(
+                            onClick = { onDelete(initial.id) },
+                            modifier = Modifier.testTag("btn_pattern_delete")
+                        ) { Text(stringResource(Res.string.common_delete)) }
                         Spacer(Modifier.width(8.dp))
-                        Button(onClick = saveAndGoBack) { Text(stringResource(Res.string.common_save)) }
+                        Button(
+                            onClick = saveAndGoBack,
+                            modifier = Modifier.testTag("btn_pattern_save")
+                        ) { Text(stringResource(Res.string.common_save)) }
                     }
                 }
             }

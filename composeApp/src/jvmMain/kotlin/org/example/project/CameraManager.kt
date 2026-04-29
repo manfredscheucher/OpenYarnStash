@@ -5,11 +5,11 @@ import androidx.compose.runtime.remember
 
 @Composable
 actual fun rememberCameraLauncher(onResult: (ByteArray?) -> Unit): CameraLauncher? {
-    return remember { CameraLauncher(onResult) }
+    return remember { JvmCameraLauncher(onResult) }
 }
 
-actual class CameraLauncher(private val onResult: (ByteArray?) -> Unit) {
-    actual fun launch() {
+class JvmCameraLauncher(private val onResult: (ByteArray?) -> Unit) : CameraLauncher {
+    override fun launch() {
         // Not supported on JVM
         onResult(null)
     }

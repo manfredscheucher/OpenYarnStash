@@ -13,139 +13,44 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 import openyarnstash.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-//import java.util.Locale // TODO
-import kotlin.NoSuchElementException // Ensure this import is present
+import kotlin.NoSuchElementException
 
-sealed class Screen {
-    data object Home : Screen()
-    data object YarnList : Screen()
-    data class YarnForm(val yarnId: UInt) : Screen()
-    data object ProjectList : Screen()
-    data class ProjectForm(val projectId: UInt) : Screen()
-    data class ProjectAssignments(val projectId: UInt, val projectName: String) : Screen()
-    data object Info : Screen()
-    data object HowToHelp : Screen()
-    data object Statistics : Screen()
-    data object Settings : Screen()
-    data object PatternList : Screen()
-    data class PatternForm(val patternId: UInt) : Screen()
-    data class LicenseDetail(val licenseType: LicenseType) : Screen()
-}
-
-@OptIn(ExperimentalTime::class)
 @Composable
 fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownloader: FileDownloader, fileHandler: FileHandler, settingsManager: JsonSettingsManager) {
-    var navStack by remember { mutableStateOf(listOf<Screen>(Screen.Home)) }
-    val screen = navStack.last()
-    var settings by remember { mutableStateOf<Settings?>(null) }
-    var yarns by remember { mutableStateOf(emptyList<Yarn>()) }
-    var projects by remember { mutableStateOf(emptyList<Project>()) }
-    var assignments by remember { mutableStateOf(emptyList<Assignment>()) }
-    var patterns by remember { mutableStateOf(emptyList<Pattern>()) }
-    var showNotImplementedDialog by remember { mutableStateOf(false) }
-    var errorDialogMessage by remember { mutableStateOf<String?>(null) }
-    var isExporting by remember { mutableStateOf(false) }
-    var isImporting by remember { mutableStateOf(false) }
-    var showExportSuccessDialog by remember { mutableStateOf(false) }
-    var showImportSuccessDialog by remember { mutableStateOf(false) }
-    var showDirtyBuildWarning by remember { mutableStateOf(false) }
-    var showFutureVersionWarning by remember { mutableStateOf(false) }
-    var showAppExpiredWarning by remember { mutableStateOf(false) }
-    var showRootedDeviceWarning by remember { mutableStateOf(false) }
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val pdfManager = createPdfManager(fileHandler)
+    val pdfManager = remember { createPdfManager(fileHandler) }
 
-    fun navigateTo(newScreen: Screen) {
-        navStack = navStack + newScreen
-    }
+    val appState = remember { AppState(jsonDataManager, imageManager, settingsManager, fileHandler, fileDownloader, pdfManager, scope) }
 
-    fun navigateBack() {
-        if (navStack.size > 1) {
-            navStack = navStack.dropLast(1)
-        }
-    }
+    val navStack by appState.navStack.collectAsState()
+    val screen = navStack.last()
+    val settings by appState.settings.collectAsState()
+    val yarns by appState.yarns.collectAsState()
+    val projects by appState.projects.collectAsState()
+    val assignments by appState.assignments.collectAsState()
+    val patterns by appState.patterns.collectAsState()
+    val showNotImplementedDialog by appState.showNotImplementedDialog.collectAsState()
+    val errorDialogMessage by appState.errorDialogMessage.collectAsState()
+    val isExporting by appState.isExporting.collectAsState()
+    val isImporting by appState.isImporting.collectAsState()
+    val showExportSuccessDialog by appState.showExportSuccessDialog.collectAsState()
+    val showImportSuccessDialog by appState.showImportSuccessDialog.collectAsState()
+    val showDirtyBuildWarning by appState.showDirtyBuildWarning.collectAsState()
+    val showFutureVersionWarning by appState.showFutureVersionWarning.collectAsState()
+    val showAppExpiredWarning by appState.showAppExpiredWarning.collectAsState()
+    val showRootedDeviceWarning by appState.showRootedDeviceWarning.collectAsState()
 
-    suspend fun reloadAllData() {
-        try {
-            val data = withContext(Dispatchers.Default) { jsonDataManager.load() }
-            yarns = data.yarns
-            projects = data.projects
-            assignments = data.assignments
-            patterns = data.patterns
-        } catch (e: Exception) {
-            val errorMessage = "Failed to load data: ${e.message}. The data file might be corrupt."
-            errorDialogMessage = errorMessage
-            Logger.log(LogLevel.ERROR, "Failed to load data in fun reloadAllData: ${e.message}", e)
-            throw e  // Re-throw so caller can handle the failure
-        }
-        Logger.log(LogLevel.INFO,"Data reloaded" )
-        Logger.logImportantFiles(LogLevel.TRACE)
-    }
+    LaunchedEffect(Unit) { appState.initialize() }
 
     LaunchedEffect(Unit) {
-        val loadedSettings = withContext(Dispatchers.Default) { settingsManager.loadSettings() }
-        setAppLanguage(loadedSettings.language)
-        settings = loadedSettings
-        Logger.updateSettings(loadedSettings)
-        reloadAllData()
-
-        // Save updated versionInfo (lastUsedDate) immediately
-        withContext(Dispatchers.Default) { settingsManager.saveSettings(loadedSettings) }
-        settings = settingsManager.settings
-
-        // Startup warnings (shown only once at Home screen on launch)
-        // Check root first
-        if (isDeviceRooted()) {
-            showRootedDeviceWarning = true
-            return@LaunchedEffect
-        }
-
-        // Check expiry
-        val expirationDays = GeneratedVersionInfo.EXPIRATION_DAYS
-        if (expirationDays > 0) {
-            try {
-                val buildInstant = Instant.parse(GeneratedVersionInfo.BUILD_DATE)
-                val nowInstantVal = nowInstant()
-                val expirationSeconds = expirationDays.toLong() * 24 * 60 * 60
-                if ((nowInstantVal - buildInstant).inWholeSeconds > expirationSeconds) {
-                    showAppExpiredWarning = true
-                    return@LaunchedEffect
-                }
-            } catch (_: Exception) { }
-        }
-
-        if (GeneratedVersionInfo.IS_DIRTY == "dirty") {
-            showDirtyBuildWarning = true
-        }
-        val savedVersionInfo = loadedSettings.versionInfo
-        if (savedVersionInfo.commitDate.isNotEmpty()) {
-            try {
-                val savedBuildInstant = Instant.parse(savedVersionInfo.commitDate)
-                val currentBuildInstant = Instant.parse(GeneratedVersionInfo.COMMIT_DATE)
-                if (savedBuildInstant > currentBuildInstant) {
-                    showFutureVersionWarning = true
-                }
-            } catch (_: Exception) { }
-        }
-    }
-
-    LaunchedEffect(settings) {
-        settings?.let {
-            Logger.updateSettings(it)
-            Logger.log(LogLevel.INFO,"Settings reloaded" )
-            Logger.logImportantFiles(LogLevel.DEBUG)
-        }
+        appState.snackbarEvents.collect { snackbarHostState.showSnackbar(it) }
     }
 
     // Don't render UI until settings are loaded
@@ -173,11 +78,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
 
     if (showNotImplementedDialog) {
         AlertDialog(
-            onDismissRequest = { showNotImplementedDialog = false },
+            onDismissRequest = { appState.dismissNotImplementedDialog() },
             title = { Text(stringResource(Res.string.not_implemented_title)) },
             text = { Text(stringResource(Res.string.not_implemented_message)) },
             confirmButton = {
-                TextButton(onClick = { showNotImplementedDialog = false }) {
+                TextButton(onClick = { appState.dismissNotImplementedDialog() }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }
@@ -186,11 +91,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
 
     if (errorDialogMessage != null) {
         AlertDialog(
-            onDismissRequest = { errorDialogMessage = null },
+            onDismissRequest = { appState.dismissErrorDialog() },
             title = { Text("Error") },
             text = { Text(errorDialogMessage!!) },
             confirmButton = {
-                TextButton(onClick = { errorDialogMessage = null }) {
+                TextButton(onClick = { appState.dismissErrorDialog() }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }
@@ -199,11 +104,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
 
     if (showDirtyBuildWarning) {
         AlertDialog(
-            onDismissRequest = { showDirtyBuildWarning = false },
+            onDismissRequest = { appState.dismissDirtyBuildWarning() },
             title = { Text(stringResource(Res.string.warning_dirty_build_title)) },
             text = { Text(stringResource(Res.string.warning_dirty_build_message)) },
             confirmButton = {
-                TextButton(onClick = { showDirtyBuildWarning = false }) {
+                TextButton(onClick = { appState.dismissDirtyBuildWarning() }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }
@@ -212,11 +117,11 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
 
     if (showFutureVersionWarning) {
         AlertDialog(
-            onDismissRequest = { showFutureVersionWarning = false },
+            onDismissRequest = { appState.dismissFutureVersionWarning() },
             title = { Text(stringResource(Res.string.warning_future_version_title)) },
             text = { Text(stringResource(Res.string.warning_future_version_message)) },
             confirmButton = {
-                TextButton(onClick = { showFutureVersionWarning = false }) {
+                TextButton(onClick = { appState.dismissFutureVersionWarning() }) {
                     Text(stringResource(Res.string.common_ok))
                 }
             }
@@ -264,13 +169,13 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                 ) {
                     when (val s = screen) {
                         Screen.Home -> HomeScreen(
-                            onOpenYarns = { navigateTo(Screen.YarnList) },
-                            onOpenProjects = { navigateTo(Screen.ProjectList) },
-                            onOpenPatterns = { navigateTo(Screen.PatternList) },
-                            onOpenInfo = { navigateTo(Screen.Info) },
-                            onOpenStatistics = { navigateTo(Screen.Statistics) },
-                            onOpenSettings = { navigateTo(Screen.Settings) },
-                            onOpenHowToHelp = { navigateTo(Screen.HowToHelp) }
+                            onOpenYarns = { appState.navigateTo(Screen.YarnList) },
+                            onOpenProjects = { appState.navigateTo(Screen.ProjectList) },
+                            onOpenPatterns = { appState.navigateTo(Screen.PatternList) },
+                            onOpenInfo = { appState.navigateTo(Screen.Info) },
+                            onOpenStatistics = { appState.navigateTo(Screen.Statistics) },
+                            onOpenSettings = { appState.navigateTo(Screen.Settings) },
+                            onOpenHowToHelp = { appState.navigateTo(Screen.HowToHelp) }
                         )
 
                         Screen.YarnList -> {
@@ -280,24 +185,10 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 imageManager = imageManager,
                                 assignments = assignments,
                                 settings = currentSettings,
-                                onAddClick = {
-                                    scope.launch {
-                                        val newYarn = jsonDataManager.createNewYarn(defaultYarnName)
-                                        withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
-                                        reloadAllData()
-                                        navigateTo(Screen.YarnForm(newYarn.id))
-                                    }
-                                },
-                                onOpen = { id -> navigateTo(Screen.YarnForm(id)) },
-                                onBack = { navigateBack() },
-                                onSettingsChange = { newSettings ->
-                                    scope.launch {
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                }
+                                onAddClick = { appState.addYarn(defaultYarnName) },
+                                onOpen = { id -> appState.navigateTo(Screen.YarnForm(id)) },
+                                onBack = { appState.navigateBack() },
+                                onSettingsChange = { newSettings -> appState.changeSettings(newSettings) }
                             )
                         }
 
@@ -320,7 +211,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     try {
                                         withContext(Dispatchers.Default) {
                                             imageManager.getYarnImage(existingYarn.id, imageId)
-                                                ?. let{
+                                                ?.let {
                                                     imageMap[imageId] = it
                                                 } ?: scope.launch {
                                                 Logger.log(LogLevel.WARN, "Image not found for yarn ${existingYarn.id}, imageId $imageId")
@@ -336,7 +227,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             }
 
                             if (existingYarn == null) {
-                                LaunchedEffect(s.yarnId) { navigateBack() }
+                                LaunchedEffect(s.yarnId) { appState.navigateBack() }
                             } else {
                                 val relatedUsages = assignments.filter { it.yarnId == existingYarn.id }
                                 YarnFormScreen(
@@ -354,96 +245,27 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     },
                                     imageManager = imageManager,
                                     settings = currentSettings,
-                                    onBack = { navigateBack() },
-                                    onDelete = { yarnIdToDelete ->
-                                        scope.launch {
-                                            try {
-                                                withContext(Dispatchers.Default) {
-                                                    val yarnToDelete = jsonDataManager.getYarnById(yarnIdToDelete)
-                                                    yarnToDelete!!.imageIds.forEach { imageId ->
-                                                        imageManager.deleteYarnImage(yarnIdToDelete, imageId)
-                                                    }
-                                                    jsonDataManager.deleteYarn(yarnIdToDelete)
-                                                }
-                                                reloadAllData()
-                                                navStack = navStack.filterNot { it is Screen.YarnForm && it.yarnId == yarnIdToDelete }
-                                            } catch (e: Exception) {
-                                                Logger.log(LogLevel.ERROR, "Failed to delete yarn with id $yarnIdToDelete: ${e.message}", e)
-                                                errorDialogMessage = "Failed to delete yarn: ${e.message}"
-                                            }
-                                        }
-                                    },
+                                    onBack = { appState.navigateBack() },
+                                    onDelete = { yarnIdToDelete -> appState.deleteYarn(yarnIdToDelete) },
                                     onSave = { editedYarn, newImages, callback ->
-                                        scope.launch {
-                                            val existingImageIds = existingYarn.imageIds
-                                            val newImagesToUpload = newImages.filter { it.key !in existingYarn.imageIds }
-                                            val idsToDelete = existingImageIds.filter { it !in newImages.keys }
-                                            Logger.log(LogLevel.DEBUG, "Upload images: $newImagesToUpload")
-                                            Logger.log(LogLevel.DEBUG, "Removing old images with ids: $idsToDelete")
-
-                                            withContext(Dispatchers.Default) {
-                                                idsToDelete.forEach { imageId ->
-                                                    imageManager.deleteYarnImage(editedYarn.id, imageId)
-                                                }
-
-                                                newImagesToUpload.entries.forEach { (imageId, imageData) ->
-                                                    imageManager.saveYarnImage(
-                                                        editedYarn.id,
-                                                        imageId,
-                                                        imageData
-                                                    )
-                                                }
-
-                                                jsonDataManager.addOrUpdateYarn(editedYarn)
-                                            }
-                                            reloadAllData()
-                                            callback?.invoke()
-                                        }
+                                        appState.saveYarn(editedYarn, newImages, callback)
                                     },
-                                    onAddColor = { yarnToCopy ->
-                                        scope.launch {
-                                            val newYarnWithNewId = jsonDataManager.createNewYarn(yarnToCopy.name)
-                                            val newYarn = yarnToCopy.copyForColor().copy(id = newYarnWithNewId.id)
-                                            withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateYarn(newYarn) }
-                                            reloadAllData()
-                                            navigateTo(Screen.YarnForm(newYarn.id))
-                                        }
-                                    },
-                                    onNavigateToProject = { projectId -> navigateTo(Screen.ProjectForm(projectId)) }
+                                    onAddColor = { yarnToCopy -> appState.addColorVariant(yarnToCopy) },
+                                    onNavigateToProject = { projectId -> appState.navigateTo(Screen.ProjectForm(projectId)) }
                                 )
                             }
                         }
 
                         Screen.ProjectList -> {
-                            val defaultProjectName =
-                                stringResource(Res.string.project_new_default_name)
+                            val defaultProjectName = stringResource(Res.string.project_new_default_name)
                             ProjectListScreen(
                                 projects = projects.sortedByDescending { it.modified },
                                 imageManager = imageManager,
                                 settings = currentSettings,
-                                onAddClick = {
-                                    scope.launch {
-                                        val newProject =
-                                            jsonDataManager.createNewProject(defaultProjectName)
-                                        withContext(Dispatchers.Default) {
-                                            jsonDataManager.addOrUpdateProject(
-                                                newProject
-                                            )
-                                        }
-                                        reloadAllData()
-                                        navigateTo(Screen.ProjectForm(newProject.id))
-                                    }
-                                },
-                                onOpen = { id -> navigateTo(Screen.ProjectForm(id)) },
-                                onBack = { navigateBack() },
-                                onSettingsChange = { newSettings ->
-                                    scope.launch {
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                },
+                                onAddClick = { appState.addProject(defaultProjectName) },
+                                onOpen = { id -> appState.navigateTo(Screen.ProjectForm(id)) },
+                                onBack = { appState.navigateBack() },
+                                onSettingsChange = { newSettings -> appState.changeSettings(newSettings) },
                                 yarns = yarns,
                                 assignments = assignments
                             )
@@ -468,7 +290,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     try {
                                         withContext(Dispatchers.Default) {
                                             imageManager.getProjectImage(existingProject.id, imageId)
-                                                ?. let{
+                                                ?.let {
                                                     imageMap[imageId] = it
                                                 } ?: scope.launch {
                                                 Logger.log(LogLevel.WARN, "Image not found for project ${existingProject.id}, imageId $imageId")
@@ -484,7 +306,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             }
 
                             if (existingProject == null) {
-                                LaunchedEffect(s.projectId) { navigateBack() }
+                                LaunchedEffect(s.projectId) { appState.navigateBack() }
                             } else {
                                 val assignmentsForCurrentProject =
                                     assignments.filter { it.projectId == existingProject.id }
@@ -503,63 +325,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     },
                                     patterns = patterns,
                                     imageManager = imageManager,
-                                    onBack = { navigateBack() },
-                                    onDelete = { projectIdToDelete ->
-                                        scope.launch {
-                                            try {
-                                                withContext(Dispatchers.Default) {
-                                                    val projectToDelete = jsonDataManager.getProjectById(projectIdToDelete)
-                                                    projectToDelete!!.imageIds.forEach { imageId ->
-                                                        imageManager.deleteProjectImage(projectIdToDelete, imageId)
-                                                    }
-                                                    jsonDataManager.deleteProject(projectIdToDelete)
-                                                }
-                                                reloadAllData()
-                                                navStack = navStack.filterNot { (it is Screen.ProjectForm && it.projectId == projectIdToDelete) || (it is Screen.ProjectAssignments && it.projectId == projectIdToDelete) }
-                                            } catch (e: Exception) {
-                                                Logger.log(LogLevel.ERROR, "Failed to delete project with id $projectIdToDelete: ${e.message}", e)
-                                                errorDialogMessage = "Failed to delete project: ${e.message}"
-                                            }
-                                        }
-                                    },
+                                    onBack = { appState.navigateBack() },
+                                    onDelete = { projectIdToDelete -> appState.deleteProject(projectIdToDelete) },
                                     onSave = { editedProject, newImages, callback ->
-                                        scope.launch {
-                                            val existingImageIds = existingProject.imageIds
-                                            val newImagesToUpload = newImages.filter { it.key !in existingImageIds }
-                                            val idsToDelete = existingImageIds.filter { it !in newImages.keys }
-                                            Logger.log(LogLevel.DEBUG, "Upload images: $newImagesToUpload")
-                                            Logger.log(LogLevel.DEBUG, "Removing old images with ids: $idsToDelete")
-
-                                            withContext(Dispatchers.Default) {
-                                                idsToDelete.forEach { imageId ->
-                                                    imageManager.deleteProjectImage(editedProject.id, imageId)
-                                                }
-                                                newImagesToUpload.entries.sortedBy { it.key }.forEach { (imageId, imageData) ->
-                                                    imageManager.saveProjectImage(
-                                                        editedProject.id,
-                                                        imageId,
-                                                        imageData
-                                                    )
-                                                }
-
-                                                jsonDataManager.addOrUpdateProject(editedProject)
-                                            }
-                                            reloadAllData()
-                                            callback?.invoke()
-                                        }
+                                        appState.saveProject(editedProject, newImages, callback)
                                     },
                                     onNavigateToAssignments = {
-                                        navigateTo(Screen.ProjectAssignments(
+                                        appState.navigateTo(Screen.ProjectAssignments(
                                             existingProject.id,
                                             existingProject.name
                                         ))
                                     },
-                                    onNavigateToPattern = { patternId ->
-                                        navigateTo(Screen.PatternForm(patternId))
-                                    },
-                                    onNavigateToYarn = { yarnId ->
-                                        navigateTo(Screen.YarnForm(yarnId))
-                                    }
+                                    onNavigateToPattern = { patternId -> appState.navigateTo(Screen.PatternForm(patternId)) },
+                                    onNavigateToYarn = { yarnId -> appState.navigateTo(Screen.YarnForm(yarnId)) }
                                 )
                             }
                         }
@@ -575,10 +353,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 initialAssignments = initialAssignmentsForProject,
                                 getAvailableAmountForYarn = { yarnId ->
                                     try {
-                                        jsonDataManager.availableForYarn(
-                                            yarnId,
-                                            forProjectId = s.projectId
-                                        )
+                                        jsonDataManager.availableForYarn(yarnId, forProjectId = s.projectId)
                                     } catch (e: NoSuchElementException) {
                                         scope.launch {
                                             Logger.log(LogLevel.ERROR, "Failed to get available amount for yarn $yarnId in ProjectAssignmentsScreen: ${e.message}", e)
@@ -586,18 +361,8 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                         0
                                     }
                                 },
-                                onSave = { updatedAssignments ->
-                                    scope.launch {
-                                        withContext(Dispatchers.Default) {
-                                            jsonDataManager.setProjectAssignments(
-                                                s.projectId,
-                                                updatedAssignments
-                                            )
-                                        }
-                                        reloadAllData()
-                                    }
-                                },
-                                onBack = { navigateBack() }
+                                onSave = { updatedAssignments -> appState.setProjectAssignments(s.projectId, updatedAssignments) },
+                                onBack = { appState.navigateBack() }
                             )
                         }
 
@@ -605,16 +370,9 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             PatternListScreen(
                                 patterns = patterns,
                                 pdfManager = pdfManager,
-                                onAddClick = {
-                                    scope.launch {
-                                        val newPattern = jsonDataManager.createNewPattern()
-                                        withContext(Dispatchers.Default) { jsonDataManager.addOrUpdatePattern(newPattern) }
-                                        reloadAllData()
-                                        navigateTo(Screen.PatternForm(newPattern.id))
-                                    }
-                                },
-                                onOpen = { id -> navigateTo(Screen.PatternForm(id)) },
-                                onBack = { navigateBack() }
+                                onAddClick = { appState.addPattern() },
+                                onOpen = { id -> appState.navigateTo(Screen.PatternForm(id)) },
+                                onBack = { appState.navigateBack() }
                             )
                         }
 
@@ -652,7 +410,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             }
 
                             if (existingPattern == null) {
-                                LaunchedEffect(s.patternId) { navigateBack() }
+                                LaunchedEffect(s.patternId) { appState.navigateBack() }
                             } else {
                                 PatternFormScreen(
                                     initial = existingPattern,
@@ -661,48 +419,21 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                     patterns = patterns,
                                     pdfManager = pdfManager,
                                     imageManager = imageManager,
-                                    onBack = { navigateBack() },
-                                    onDelete = { patternIdToDelete ->
-                                        scope.launch {
-                                            projects.filter { it.patternId == patternIdToDelete }.forEach { projectToUpdate ->
-                                                val updatedProject = projectToUpdate.copy(patternId = null)
-                                                withContext(Dispatchers.Default) { jsonDataManager.addOrUpdateProject(updatedProject) }
-                                            }
-                                            withContext(Dispatchers.Default) {
-                                                pdfManager.deletePatternPdf(patternIdToDelete)
-                                                jsonDataManager.deletePattern(patternIdToDelete)
-                                            }
-                                            reloadAllData()
-                                            navStack = navStack.filterNot { it is Screen.PatternForm && it.patternId == patternIdToDelete }
-                                        }
-                                    },
-                                    onSave = { editedPattern, pdf ->
-                                        scope.launch {
-                                            withContext(Dispatchers.Default) {
-                                                if (initialPdf == null && pdf != null || initialPdf != null && pdf == null || (initialPdf != null && pdf != null && !initialPdf.contentEquals(pdf))) {
-                                                    if (pdf != null) {
-                                                        pdfManager.savePatternPdf(editedPattern.id, pdf)
-                                                    } else {
-                                                        pdfManager.deletePatternPdf(editedPattern.id)
-                                                    }
-                                                }
-                                                jsonDataManager.addOrUpdatePattern(editedPattern)
-                                            }
-                                            reloadAllData()
-                                        }
-                                    },
+                                    onBack = { appState.navigateBack() },
+                                    onDelete = { patternIdToDelete -> appState.deletePattern(patternIdToDelete) },
+                                    onSave = { editedPattern, pdf -> appState.savePattern(editedPattern, pdf, initialPdf) },
                                     onViewPdfExternally = { pdfManager.openPatternPdfExternally(s.patternId) },
-                                    onNavigateToProject = { projectId -> navigateTo(Screen.ProjectForm(projectId)) }
+                                    onNavigateToProject = { projectId -> appState.navigateTo(Screen.ProjectForm(projectId)) }
                                 )
                             }
                         }
 
                         Screen.Info -> {
                             InfoScreen(
-                                onBack = { navigateBack() },
-                                onNavigateToHelp = { navigateTo(Screen.HowToHelp) },
+                                onBack = { appState.navigateBack() },
+                                onNavigateToHelp = { appState.navigateTo(Screen.HowToHelp) },
                                 onNavigateToLicense = { licenseType ->
-                                    navigateTo(Screen.LicenseDetail(licenseType))
+                                    appState.navigateTo(Screen.LicenseDetail(licenseType))
                                 }
                             )
                         }
@@ -710,12 +441,12 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                         is Screen.LicenseDetail -> {
                             LicenseDetailScreen(
                                 licenseType = (screen as Screen.LicenseDetail).licenseType,
-                                onBack = { navigateBack() }
+                                onBack = { appState.navigateBack() }
                             )
                         }
 
                         Screen.HowToHelp -> {
-                            HowToHelpScreen(onBack = { navigateBack() })
+                            HowToHelpScreen(onBack = { appState.navigateBack() })
                         }
 
                         Screen.Statistics -> {
@@ -723,7 +454,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 yarns = yarns,
                                 projects = projects,
                                 assignments = assignments,
-                                onBack = { navigateBack() },
+                                onBack = { appState.navigateBack() },
                                 settings = currentSettings
                             )
                         }
@@ -734,200 +465,19 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                                 currentLengthUnit = currentSettings.lengthUnit,
                                 currentLogLevel = currentSettings.logLevel,
                                 fileHandler = fileHandler,
-                                onBack = { navigateBack() },
-                                onExportZip = {
-                                    scope.launch {
-                                        try {
-                                            isExporting = true
-                                            Logger.log(LogLevel.INFO, "Starting ZIP export")
-
-                                            val exportFileName = fileHandler.createTimestampedFileName("openyarnstash", "zip")
-                                            Logger.log(LogLevel.INFO, "Export filename: $exportFileName")
-
-                                            Logger.log(LogLevel.INFO, "Creating ZIP file")
-                                            val zipBytes = withContext(Dispatchers.Default) {
-                                                fileHandler.zipFiles()
-                                            }
-                                            Logger.log(LogLevel.INFO, "ZIP file created (${zipBytes.size} bytes)")
-
-                                            Logger.log(LogLevel.INFO, "Downloading ZIP file")
-                                            withContext(Dispatchers.Default) {
-                                                fileDownloader.download(exportFileName, zipBytes, getContext())
-                                            }
-
-                                            isExporting = false
-                                            showExportSuccessDialog = true
-                                            Logger.log(LogLevel.INFO, "ZIP export successful")
-                                        } catch (e: Exception) {
-                                            isExporting = false
-                                            errorDialogMessage = "Failed to export: ${e.message}"
-                                            Logger.log(LogLevel.ERROR, "ZIP export failed: ${e.message}", e)
-                                        }
-                                    }
-                                },
+                                onBack = { appState.navigateBack() },
+                                onExportZip = { appState.exportZip() },
                                 isExporting = isExporting,
                                 isImporting = isImporting,
                                 showExportSuccessDialog = showExportSuccessDialog,
                                 showImportSuccessDialog = showImportSuccessDialog,
-                                onDismissExportSuccess = { showExportSuccessDialog = false },
-                                onDismissImportSuccess = { showImportSuccessDialog = false },
-                                onImport = { fileContent ->
-                                    scope.launch {
-                                        try {
-                                            withContext(Dispatchers.Default) {
-                                                jsonDataManager.importData(fileContent)
-                                            }
-                                            reloadAllData()
-                                            snackbarHostState.showSnackbar("Import successful")
-                                        } catch (e: Exception) {
-                                            val errorMessage = "Failed to import data: ${e.message}. The data file might be corrupt."
-                                            errorDialogMessage = errorMessage
-                                            scope.launch {
-                                                Logger.log(LogLevel.ERROR, "Failed to import data in onImport: ${e.message}", e)
-                                            }
-                                        }
-                                    }
-                                },
-                                onImportZip = { zipInputStream ->
-                                    scope.launch {
-                                        var importSuccessful = false
-                                        var backupFolderName: String? = null
-                                        var isTemporaryBackup = false
-
-                                        try {
-                                            isImporting = true
-                                            Logger.log(LogLevel.INFO, "Starting ZIP import")
-
-                                            // Temporary backup
-                                            backupFolderName = "backup"
-                                            isTemporaryBackup = true
-                                            Logger.log(LogLevel.INFO, "Creating temporary backup: $backupFolderName")
-                                            // Delete old temporary backup if exists
-                                            try {
-                                                fileHandler.deleteBackupDirectory(backupFolderName)
-                                                Logger.log(LogLevel.DEBUG, "Old temporary backup deleted")
-                                            } catch (e: Exception) {
-                                                Logger.log(LogLevel.DEBUG, "No old temporary backup to delete")
-                                            }
-                                            fileHandler.renameFilesDirectory(backupFolderName)
-
-                                            Logger.log(LogLevel.INFO, "Unzipping files")
-                                            withContext(Dispatchers.Default) {
-                                                fileHandler.unzipAndReplaceFiles(zipInputStream)
-                                            }
-
-                                            importSuccessful = true
-                                            Logger.log(LogLevel.INFO, "ZIP import successful")
-                                        } catch (e: Exception) {
-                                            Logger.log(LogLevel.ERROR, "ZIP import failed: ${e.message}", e)
-
-                                            var rollbackSuccessful = false
-                                            // Rollback: delete corrupted files and restore backup
-                                            try {
-                                                Logger.log(LogLevel.INFO, "Starting rollback: deleting corrupted files")
-                                                fileHandler.deleteFilesDirectory()
-
-                                                if (backupFolderName != null) {
-                                                    Logger.log(LogLevel.INFO, "Restoring backup from: $backupFolderName")
-                                                    fileHandler.restoreBackupDirectory(backupFolderName)
-                                                    Logger.log(LogLevel.INFO, "Rollback completed successfully")
-                                                    rollbackSuccessful = true
-                                                } else {
-                                                    Logger.log(LogLevel.INFO, "No backup to restore (backup was disabled)")
-                                                }
-                                            } catch (rollbackException: Exception) {
-                                                Logger.log(LogLevel.ERROR, "CRITICAL: Rollback failed: ${rollbackException.message}", rollbackException)
-                                            }
-
-                                            val errorMessage = if (rollbackSuccessful) {
-                                                "Failed to import ZIP: ${e.message}\n\nYour previous data has been restored."
-                                            } else {
-                                                "Failed to import ZIP: ${e.message}\n\nWarning: Could not restore previous data."
-                                            }
-                                            errorDialogMessage = errorMessage
-                                        } finally {
-                                            Logger.log(LogLevel.INFO, "Reloading data from disk")
-                                            try {
-                                                reloadAllData()
-                                            } catch (e: Exception) {
-                                                Logger.log(LogLevel.ERROR, "Failed to reload data after import: ${e.message}", e)
-                                                // If reload fails, the import was not successful even if unzipping worked
-                                                importSuccessful = false
-
-                                                // Perform rollback: delete corrupted files and restore backup
-                                                var rollbackSuccessful = false
-                                                try {
-                                                    Logger.log(LogLevel.INFO, "Starting rollback after reload failure: deleting corrupted files")
-                                                    fileHandler.deleteFilesDirectory()
-
-                                                    if (backupFolderName != null) {
-                                                        Logger.log(LogLevel.INFO, "Restoring backup from: $backupFolderName")
-                                                        fileHandler.restoreBackupDirectory(backupFolderName)
-                                                        Logger.log(LogLevel.INFO, "Rollback completed successfully")
-                                                        rollbackSuccessful = true
-                                                    } else {
-                                                        Logger.log(LogLevel.INFO, "No backup to restore (first start or backup disabled)")
-                                                    }
-                                                } catch (rollbackException: Exception) {
-                                                    Logger.log(LogLevel.ERROR, "CRITICAL: Rollback failed: ${rollbackException.message}", rollbackException)
-                                                }
-
-                                                if (errorDialogMessage == null) {
-                                                    errorDialogMessage = if (rollbackSuccessful) {
-                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nYour previous data has been restored."
-                                                    } else if (backupFolderName != null) {
-                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nWarning: Could not restore previous data."
-                                                    } else {
-                                                        "Failed to import ZIP: Data is corrupt or invalid.\n\nNote: No previous data existed to restore."
-                                                    }
-                                                }
-                                            }
-
-                                            // Delete temporary backup after successful import
-                                            if (importSuccessful && isTemporaryBackup && backupFolderName != null) {
-                                                try {
-                                                    Logger.log(LogLevel.INFO, "Deleting temporary backup: $backupFolderName")
-                                                    fileHandler.deleteBackupDirectory(backupFolderName)
-                                                } catch (e: Exception) {
-                                                    Logger.log(LogLevel.WARN, "Failed to delete temporary backup: ${e.message}", e)
-                                                }
-                                            }
-
-                                            isImporting = false
-                                            if (importSuccessful) {
-                                                showImportSuccessDialog = true
-                                            }
-                                        }
-                                    }
-                                },
-                                onLocaleChange = { newLocale ->
-                                    scope.launch {
-                                        val newSettings = currentSettings.copy(language = newLocale)
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        setAppLanguage(newLocale)
-                                        settings = newSettings
-                                    }
-                                },
-                                onLengthUnitChange = { newLengthUnit ->
-                                    scope.launch {
-                                        val newSettings = currentSettings.copy(lengthUnit = newLengthUnit)
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                },
-                                onLogLevelChange = { newLogLevel ->
-                                    scope.launch {
-                                        val newSettings = currentSettings.copy(logLevel = newLogLevel)
-                                        withContext(Dispatchers.Default) {
-                                            settingsManager.saveSettings(newSettings)
-                                        }
-                                        settings = newSettings
-                                    }
-                                }
+                                onDismissExportSuccess = { appState.dismissExportSuccessDialog() },
+                                onDismissImportSuccess = { appState.dismissImportSuccessDialog() },
+                                onImport = { fileContent -> appState.importJson(fileContent) },
+                                onImportZip = { zipInputStream -> appState.importZip(zipInputStream) },
+                                onLocaleChange = { newLocale -> appState.changeLocale(newLocale) },
+                                onLengthUnitChange = { newLengthUnit -> appState.changeLengthUnit(newLengthUnit) },
+                                onLogLevelChange = { newLogLevel -> appState.changeLogLevel(newLogLevel) }
                             )
                         }
                     }

@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.json.Json
 import openyarnstash.composeapp.generated.resources.Res
@@ -115,7 +116,8 @@ fun ProjectListScreen(
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = onAddClick,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.testTag("btn_project_add")
             ) {
                 Text(
                     text = stringResource(Res.string.common_plus_symbol),
@@ -173,7 +175,7 @@ fun ProjectListScreen(
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("field_project_search")
             )
             if (sortedProjects.isEmpty()) {
                 Box(Modifier.fillMaxSize().padding(16.dp)) {
@@ -190,7 +192,7 @@ fun ProjectListScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {                        items(sortedProjects) { p ->
                             Card(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.fillMaxWidth().testTag("item_project_${p.id}"),
                                 onClick = { onOpen(p.id) },
                                 colors = CardDefaults.cardColors(containerColor = ColorPalette.idToColor(p.id))
                             ) {
