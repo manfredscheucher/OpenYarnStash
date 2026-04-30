@@ -12,6 +12,7 @@ class AppStateTest {
 
     private fun makeAppState(scope: CoroutineScope): AppState {
         val fileHandler = createPlatformFileHandler()
+        Logger.init(fileHandler, Settings())
         val jsonDataManager = JsonDataManager(fileHandler)
         val imageManager = ImageManager(fileHandler)
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
