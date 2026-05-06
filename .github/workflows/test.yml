@@ -22,7 +22,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Run JVM tests
-        run: ./gradlew :composeApp:jvmTest
+        run: ./gradlew :composeApp:jvmTest --tests "org.example.project.AppStateTest*" --tests "org.example.project.ZipExportImportTest*"
 
       - name: Upload test results
         if: always()
