@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -14,11 +15,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -26,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import openyarnstash.composeapp.generated.resources.*
 import org.example.project.components.DateInput
 import org.example.project.components.SelectAllOutlinedTextField
@@ -86,6 +92,8 @@ fun YarnFormScreen(
     }
     var nextTempId by remember(initial.id) { mutableStateOf<UInt>((initial.imageIds.maxOrNull() ?: 0u) + 1u) }
     var selectedImageId by remember(initial.id) { mutableStateOf<UInt?>(initial.imageIds.firstOrNull()) }
+    var imageOrder by remember(initial.id) { mutableStateOf(initial.imageIds) }
+    var zoomedImageId by remember { mutableStateOf<UInt?>(null) }
 
     var showUnsavedDialog by remember { mutableStateOf(false) }
     var showDeleteRestrictionDialog by remember { mutableStateOf(false) }
@@ -164,7 +172,7 @@ fun YarnFormScreen(
     fun buildCurrentYarn(): Yarn {
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
-        val finalImageIds = images.keys.toList()
+        val finalImageIds = imageOrder.filter { it in images }
         return initial.copy(
             name = name,
             brand = brand.ifBlank { null },
@@ -188,7 +196,7 @@ fun YarnFormScreen(
         val enteredAmount = amountText.toIntOrNull() ?: 0
         val finalAmountToSave = max(enteredAmount, totalUsedAmount)
 
-        val finalImageIds = images.keys.toList()
+        val finalImageIds = imageOrder.filter { it in images }
         val yarn = initial.copy(
             name = name,
             brand = brand.ifBlank { null },
@@ -291,6 +299,7 @@ fun YarnFormScreen(
         }
     }
 
+    Box(modifier = Modifier.fillMaxSize()) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -322,12 +331,15 @@ fun YarnFormScreen(
                     .navigationBarsPadding()
                     .padding(16.dp)
             ) {
-                val displayedImages = remember(images.size) {
-                    images.entries.sortedBy { it.key }
+                val displayedImages = remember(imageOrder, images.keys) {
+                    val validOrder = imageOrder.filter { it in images }
+                    val extra = images.keys.filter { it !in imageOrder }
+                    (validOrder + extra).mapNotNull { id -> images[id]?.let { id to it } }
                 }
 
                 LaunchedEffect(displayedImages) {
-                    val keys = displayedImages.map { it.key }
+                    val keys = displayedImages.map { it.first }
+                    imageOrder = keys
                     if (selectedImageId == null && keys.isNotEmpty()) {
                         selectedImageId = keys.first()
                     } else if (selectedImageId != null && selectedImageId !in keys) {
@@ -340,7 +352,13 @@ fun YarnFormScreen(
                 if (previewImage != null) {
                     val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
                     if (bitmap != null) {
-                        Image(bitmap, contentDescription = "Yarn Preview Image", modifier = Modifier.fillMaxWidth().height(200.dp))
+                        Image(
+                            bitmap,
+                            contentDescription = "Yarn Preview Image",
+                            modifier = Modifier.fillMaxWidth().height(200.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { zoomedImageId = selectedImageId }
+                        )
                     }
                 } else {
                     Image(
@@ -352,28 +370,54 @@ fun YarnFormScreen(
                 Spacer(Modifier.height(8.dp))
 
                 if (displayedImages.isNotEmpty()) {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(displayedImages, key = { it.key.toLong() }) { (id, bytes) ->
-                            Box {
-                                val bitmap = remember(bytes) { bytes.toImageBitmap() }
-                                Image(
-                                    bitmap,
-                                    contentDescription = "Image $id",
-                                    modifier = Modifier.size(80.dp)
-                                        .clickable { selectedImageId = id }
-                                )
-                                IconButton(
-                                    onClick = {
-                                        images.remove(id)
-                                        scope.launch {
-                                            Logger.log(LogLevel.DEBUG, "Image removed with id: $id")
-                                        }
-                                    },
-                                    modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
-                                ) {
-                                    Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(displayedImages, key = { it.first.toLong() }) { (id, bytes) ->
+                            val idx = displayedImages.indexOfFirst { it.first == id }
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Box {
+                                    val bitmap = remember(bytes) { bytes.toImageBitmap() }
+                                    Image(
+                                        bitmap,
+                                        contentDescription = "Image $id",
+                                        modifier = Modifier.size(80.dp)
+                                            .clickable { selectedImageId = id }
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            images.remove(id)
+                                            imageOrder = imageOrder.filter { it != id }
+                                            scope.launch {
+                                                Logger.log(LogLevel.DEBUG, "Image removed with id: $id")
+                                            }
+                                        },
+                                        modifier = Modifier.align(Alignment.TopEnd).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), CircleShape).size(24.dp)
+                                    ) {
+                                        Icon(Icons.Default.Close, contentDescription = "Remove Image", modifier = Modifier.size(16.dp))
+                                    }
+                                }
+                                Row {
+                                    IconButton(
+                                        onClick = {
+                                            val list = imageOrder.toMutableList()
+                                            list.add(idx - 1, list.removeAt(idx))
+                                            imageOrder = list
+                                        },
+                                        enabled = idx > 0,
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Move Left", modifier = Modifier.size(16.dp))
+                                    }
+                                    IconButton(
+                                        onClick = {
+                                            val list = imageOrder.toMutableList()
+                                            list.add(idx + 1, list.removeAt(idx))
+                                            imageOrder = list
+                                        },
+                                        enabled = idx < displayedImages.size - 1,
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Move Right", modifier = Modifier.size(16.dp))
+                                    }
                                 }
                             }
                         }
@@ -631,6 +675,49 @@ fun YarnFormScreen(
             }
         }
     }
+
+    // Full-screen image zoom overlay
+    val zoomedBytes = zoomedImageId?.let { images[it] }
+    if (zoomedBytes != null) {
+        val zoomedBitmap = remember(zoomedBytes) { zoomedBytes.toImageBitmap() }
+        var scale by remember(zoomedImageId) { mutableStateOf(1f) }
+        var offsetX by remember(zoomedImageId) { mutableStateOf(0f) }
+        var offsetY by remember(zoomedImageId) { mutableStateOf(0f) }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .zIndex(10f)
+        ) {
+            Image(
+                zoomedBitmap,
+                contentDescription = "Zoomed image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(zoomedBytes) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            scale = (scale * zoom).coerceIn(1f, 8f)
+                            offsetX += pan.x
+                            offsetY += pan.y
+                        }
+                    }
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offsetX,
+                        translationY = offsetY
+                    )
+            )
+            IconButton(
+                onClick = { zoomedImageId = null },
+                modifier = Modifier.align(Alignment.TopStart).padding(8.dp)
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.7f), CircleShape)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
+            }
+        }
+    }
+    } // outer Box
 }
 
 @Composable
