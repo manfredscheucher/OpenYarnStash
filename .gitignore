@@ -20,4 +20,5 @@ captures
 node_modules/
 /data2026/
 /todo.txt
-/backupskotlin-js-store/
+/backups
+kotlin-js-store/
