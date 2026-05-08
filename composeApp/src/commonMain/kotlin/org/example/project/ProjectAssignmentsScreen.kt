@@ -37,13 +37,7 @@ fun ProjectAssignmentsScreen(
     }
 
     val filteredYarns = remember(allYarns, filter) {
-        if (filter.isBlank()) {
-            allYarns
-        } else {
-            allYarns.filter { yarn ->
-                Json.encodeToString(yarn).contains(filter, ignoreCase = true)
-            }
-        }
+        allYarns.filter { yarn -> Json.encodeToString(yarn).matchesMultiWordFilter(filter) }
     }
 
     val sortedYarns = remember(filteredYarns, initialAssignments) {

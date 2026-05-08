@@ -1,6 +1,7 @@
 package org.example.project
 
 import androidx.compose.foundation.Image
+import kotlinx.serialization.json.Json
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -124,13 +125,7 @@ fun PatternListScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 )
                 val filteredPatterns = patterns.filter {
-                    if (filter.isNotBlank()) {
-                        it.name.contains(filter, ignoreCase = true) ||
-                        it.creator?.contains(filter, ignoreCase = true) == true ||
-                        it.category?.contains(filter, ignoreCase = true) == true
-                    } else {
-                        true
-                    }
+                    Json.encodeToString(it).matchesMultiWordFilter(filter)
                 }.sortedBy { it.name }
 
                 LazyColumn(

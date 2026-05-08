@@ -115,11 +115,7 @@ fun YarnListScreen(
                         showUsed -> it.availableAmount == 0 || it.usedAmount > 0
                         else -> false
                     }
-                    val filterOk = if (filter.isNotBlank()) {
-                        Json.encodeToString(it).contains(filter, ignoreCase = true)
-                    } else {
-                        true
-                    }
+                    val filterOk = Json.encodeToString(it).matchesMultiWordFilter(filter)
                     statusOk && filterOk
                 }.sortedByDescending { it.modified }
 

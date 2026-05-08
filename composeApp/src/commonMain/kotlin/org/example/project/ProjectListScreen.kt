@@ -82,11 +82,7 @@ fun ProjectListScreen(
 
     val filteredProjects = projects.filter {
         val statusOk = it.status in activeStatuses
-        val filterOk = if (filter.isNotBlank()) {
-            Json.encodeToString(it).contains(filter, ignoreCase = true)
-        } else {
-            true
-        }
+        val filterOk = Json.encodeToString(it).matchesMultiWordFilter(filter)
         statusOk && filterOk
     }
     val sortedProjects = filteredProjects.sortedByDescending { it.modified }

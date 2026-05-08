@@ -3,6 +3,11 @@ package org.example.project
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+fun String.matchesMultiWordFilter(filter: String): Boolean =
+    filter.isBlank() || filter.split(" ").filter { it.isNotBlank() }.all { word ->
+        this.contains(word, ignoreCase = true)
+    }
+
 internal fun formatDecimal(value: Double): String {
     if (value.isNaN() || value.isInfinite()) {
         return value.toString()
