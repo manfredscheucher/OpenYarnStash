@@ -349,7 +349,7 @@ fun YarnFormScreen(
 
                 if (displayedImages.isNotEmpty()) {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(displayedImages, key = { it.first.toLong() }) { (id, bytes) ->
+                        items(displayedImages) { (id, bytes) ->
                             val idx = displayedImages.indexOfFirst { it.first == id }
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Box {
