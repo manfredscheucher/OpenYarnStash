@@ -26,7 +26,11 @@ import kotlin.test.assertFalse
 
 class AppStateTest {
 
-    private fun makeAppState(scope: CoroutineScope): AppState {
+    private data class TestEnv(val appState: AppState, val imageManager: ImageManager)
+
+    private fun makeAppState(scope: CoroutineScope): AppState = makeTestEnv(scope).appState
+
+    private fun makeTestEnv(scope: CoroutineScope): TestEnv {
         val fileHandler = createPlatformFileHandler()
         Logger.init(fileHandler, Settings())
         val jsonDataManager = JsonDataManager(fileHandler)
@@ -34,7 +38,8 @@ class AppStateTest {
         val settingsManager = JsonSettingsManager(fileHandler, "settings.json")
         val fileDownloader = FileDownloader()
         val pdfManager = createPdfManager(fileHandler)
-        return AppState(jsonDataManager, imageManager, settingsManager, fileHandler, fileDownloader, pdfManager, scope)
+        val appState = AppState(jsonDataManager, imageManager, settingsManager, fileHandler, fileDownloader, pdfManager, scope)
+        return TestEnv(appState, imageManager)
     }
 
     // Wait for all child coroutines launched via scope.launch in AppState
@@ -299,6 +304,286 @@ class AppStateTest {
     }
 
     // =========================================================================
+    // Yarn — image roundtrip (save + load via imageManager)
+    // =========================================================================
+
+    @Test
+    fun saveYarnImageRoundtrip_imageDataCanBeReadBack() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("Photo Yarn")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            val imgBytes = fakePngBytes(42)
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u)), mapOf(1u to imgBytes))
+            awaitAllJobs()
+            // Verify the image data can be read back via imageManager
+            val loaded = imageManager.getYarnImage(yarn.id, 1u)
+            assertNotNull(loaded, "Image should be readable after save")
+            assertTrue(loaded.contentEquals(imgBytes), "Image content should match what was saved")
+        }
+    }
+
+    @Test
+    fun saveYarnMultipleImagesRoundtrip_allImagesReadable() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("Multi Image Yarn")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            val img1 = fakePngBytes(1)
+            val img2 = fakePngBytes(2)
+            val img3 = fakePngBytes(3)
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            // All three should be loadable
+            val saved = appState.yarns.value.first()
+            assertEquals(3, saved.imageIds.size)
+            for (id in saved.imageIds) {
+                assertNotNull(imageManager.getYarnImage(yarn.id, id), "Image $id should be readable")
+            }
+            assertTrue(imageManager.getYarnImage(yarn.id, 1u)!!.contentEquals(img1))
+            assertTrue(imageManager.getYarnImage(yarn.id, 2u)!!.contentEquals(img2))
+            assertTrue(imageManager.getYarnImage(yarn.id, 3u)!!.contentEquals(img3))
+        }
+    }
+
+    @Test
+    fun saveYarnReorderImages_orderPersistsAndAllReadable() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("Reorder Yarn")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            val img1 = fakePngBytes(10)
+            val img2 = fakePngBytes(20)
+            val img3 = fakePngBytes(30)
+            // Save in order 1, 2, 3
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            // Reorder to 3, 1, 2
+            appState.saveYarn(appState.yarns.value.first().copy(imageIds = listOf(3u, 1u, 2u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            assertEquals(listOf(3u, 1u, 2u), appState.yarns.value.first().imageIds)
+            // All images still readable
+            assertTrue(imageManager.getYarnImage(yarn.id, 1u)!!.contentEquals(img1))
+            assertTrue(imageManager.getYarnImage(yarn.id, 2u)!!.contentEquals(img2))
+            assertTrue(imageManager.getYarnImage(yarn.id, 3u)!!.contentEquals(img3))
+        }
+    }
+
+    @Test
+    fun saveYarnDeleteImage_imageDataRemovedFromDisk() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("Delete Image Yarn")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u)), mapOf(1u to fakePngBytes(1)))
+            awaitAllJobs()
+            assertNotNull(imageManager.getYarnImage(yarn.id, 1u))
+            // Now remove the image
+            appState.saveYarn(appState.yarns.value.first().copy(imageIds = emptyList()), emptyMap())
+            awaitAllJobs()
+            assertNull(imageManager.getYarnImage(yarn.id, 1u), "Deleted image should not be readable")
+        }
+    }
+
+    // =========================================================================
+    // Image display logic (displayedImages computation)
+    // =========================================================================
+
+    // Helper that mirrors the displayedImages computation in YarnFormScreen/ProjectFormScreen
+    private fun computeDisplayedImages(
+        imageOrder: List<UInt>,
+        images: Map<UInt, ByteArray>
+    ): List<Pair<UInt, ByteArray>> {
+        val validOrder = imageOrder.filter { it in images }.distinct()
+        val extra = images.keys.filter { it !in imageOrder }
+        return (validOrder + extra).mapNotNull { id -> images[id]?.let { id to it } }
+    }
+
+    @Test
+    fun displayedImages_showsAllImagesFromInitialImages() {
+        // Simulates: imageOrder = initial.imageIds = [1,2,3], images populated from initialImages
+        val img1 = byteArrayOf(1)
+        val img2 = byteArrayOf(2)
+        val img3 = byteArrayOf(3)
+        val imageOrder = listOf(1u, 2u, 3u)
+        val images = mapOf(1u to img1, 2u to img2, 3u to img3)
+        val displayed = computeDisplayedImages(imageOrder, images)
+        assertEquals(3, displayed.size, "All 3 images should be displayed")
+        assertEquals(listOf(1u, 2u, 3u), displayed.map { it.first })
+    }
+
+    @Test
+    fun displayedImages_showsImagesEvenWhenImageOrderIsEmpty() {
+        // Simulates: imageOrder was wiped to [] but images has data
+        val img1 = byteArrayOf(1)
+        val img2 = byteArrayOf(2)
+        val imageOrder = emptyList<UInt>()
+        val images = mapOf(1u to img1, 2u to img2)
+        val displayed = computeDisplayedImages(imageOrder, images)
+        assertEquals(2, displayed.size, "Images should appear via 'extra' even when imageOrder is empty")
+    }
+
+    @Test
+    fun displayedImages_preservesOrderAndIncludesNewImages() {
+        // imageOrder = [2,1] (reordered), new image 3 added but not in imageOrder
+        val img1 = byteArrayOf(1)
+        val img2 = byteArrayOf(2)
+        val img3 = byteArrayOf(3)
+        val imageOrder = listOf(2u, 1u)
+        val images = mapOf(1u to img1, 2u to img2, 3u to img3)
+        val displayed = computeDisplayedImages(imageOrder, images)
+        assertEquals(3, displayed.size)
+        assertEquals(listOf(2u, 1u, 3u), displayed.map { it.first }, "Order should be [2,1] then extra [3]")
+    }
+
+    @Test
+    fun displayedImages_filtersDeletedImages() {
+        // imageOrder = [1,2,3] but image 2 was deleted from images map
+        val img1 = byteArrayOf(1)
+        val img3 = byteArrayOf(3)
+        val imageOrder = listOf(1u, 2u, 3u)
+        val images = mapOf(1u to img1, 3u to img3)
+        val displayed = computeDisplayedImages(imageOrder, images)
+        assertEquals(2, displayed.size)
+        assertEquals(listOf(1u, 3u), displayed.map { it.first })
+    }
+
+    @Test
+    fun displayedImages_emptyWhenNoImages() {
+        val displayed = computeDisplayedImages(listOf(1u, 2u), emptyMap())
+        assertEquals(0, displayed.size)
+    }
+
+    @Test
+    fun displayedImages_noDuplicatesEvenWhenImageOrderHasDuplicates() {
+        // This was the crash: Key "1" was already used in LazyRow
+        val img1 = byteArrayOf(1)
+        val img2 = byteArrayOf(2)
+        val imageOrder = listOf(1u, 2u, 1u) // duplicate!
+        val images = mapOf(1u to img1, 2u to img2)
+        val displayed = computeDisplayedImages(imageOrder, images)
+        assertEquals(2, displayed.size, "Duplicates in imageOrder must not produce duplicate items")
+        val ids = displayed.map { it.first }
+        assertEquals(ids.distinct(), ids, "All displayed image IDs must be unique")
+    }
+
+    @Test
+    fun yarnImages_endToEnd_savedImagesVisibleAfterReload() {
+        // Simulates the full App.kt flow: save yarn with images, reload, build initialImages, check displayedImages
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("E2E Yarn")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            val img1 = fakePngBytes(10)
+            val img2 = fakePngBytes(20)
+            val img3 = fakePngBytes(30)
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+
+            // Simulate what App.kt does when opening YarnForm:
+            // 1. Get yarn from data manager
+            val savedYarn = appState.yarns.value.first()
+            assertEquals(listOf(1u, 2u, 3u), savedYarn.imageIds)
+
+            // 2. Build initialImages map the same way App.kt LaunchedEffect does
+            val initialImages = mutableMapOf<UInt, ByteArray>()
+            savedYarn.imageIds.forEach { imageId ->
+                imageManager.getYarnImage(savedYarn.id, imageId)?.let { initialImages[imageId] = it }
+            }
+            assertEquals(3, initialImages.size, "All 3 images should be loadable from disk")
+
+            // 3. Compute displayedImages with imageOrder = initial.imageIds (as form screen does)
+            val imageOrder = savedYarn.imageIds
+            val displayed = computeDisplayedImages(imageOrder, initialImages)
+            assertEquals(3, displayed.size, "All 3 images must appear in displayedImages")
+            assertEquals(listOf(1u, 2u, 3u), displayed.map { it.first })
+            assertTrue(displayed[0].second.contentEquals(img1))
+            assertTrue(displayed[1].second.contentEquals(img2))
+            assertTrue(displayed[2].second.contentEquals(img3))
+        }
+    }
+
+    @Test
+    fun projectImages_endToEnd_savedImagesVisibleAfterReload() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addProject("E2E Project")
+            awaitAllJobs()
+            val project = appState.projects.value.first()
+            val img1 = fakePngBytes(11)
+            val img2 = fakePngBytes(22)
+            appState.saveProject(project.copy(imageIds = listOf(1u, 2u)), mapOf(1u to img1, 2u to img2))
+            awaitAllJobs()
+
+            val savedProject = appState.projects.value.first()
+            assertEquals(listOf(1u, 2u), savedProject.imageIds)
+
+            // Build initialImages like App.kt does
+            val initialImages = mutableMapOf<UInt, ByteArray>()
+            savedProject.imageIds.forEach { imageId ->
+                imageManager.getProjectImage(savedProject.id, imageId)?.let { initialImages[imageId] = it }
+            }
+            assertEquals(2, initialImages.size, "Both images should be loadable from disk")
+
+            val displayed = computeDisplayedImages(savedProject.imageIds, initialImages)
+            assertEquals(2, displayed.size, "Both images must appear in displayedImages")
+            assertEquals(listOf(1u, 2u), displayed.map { it.first })
+            assertTrue(displayed[0].second.contentEquals(img1))
+            assertTrue(displayed[1].second.contentEquals(img2))
+        }
+    }
+
+    @Test
+    fun yarnImages_endToEnd_reorderedImagesVisibleAfterReload() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addYarn("Reorder E2E")
+            awaitAllJobs()
+            val yarn = appState.yarns.value.first()
+            val img1 = fakePngBytes(1)
+            val img2 = fakePngBytes(2)
+            val img3 = fakePngBytes(3)
+            // Save with order [1,2,3]
+            appState.saveYarn(yarn.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            // Reorder to [3,1,2]
+            appState.saveYarn(appState.yarns.value.first().copy(imageIds = listOf(3u, 1u, 2u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+
+            val savedYarn = appState.yarns.value.first()
+            assertEquals(listOf(3u, 1u, 2u), savedYarn.imageIds)
+
+            val initialImages = mutableMapOf<UInt, ByteArray>()
+            savedYarn.imageIds.forEach { imageId ->
+                imageManager.getYarnImage(savedYarn.id, imageId)?.let { initialImages[imageId] = it }
+            }
+
+            val displayed = computeDisplayedImages(savedYarn.imageIds, initialImages)
+            assertEquals(3, displayed.size)
+            assertEquals(listOf(3u, 1u, 2u), displayed.map { it.first }, "Reordered images must display in saved order")
+        }
+    }
+
+    // =========================================================================
     // Yarn — color variant
     // =========================================================================
 
@@ -496,6 +781,96 @@ class AppStateTest {
             appState.saveProject(project.copy(imageIds = ids), images)
             awaitAllJobs()
             assertEquals(ids, appState.projects.value.first().imageIds)
+        }
+    }
+
+    // =========================================================================
+    // Project — image roundtrip (save + load via imageManager)
+    // =========================================================================
+
+    @Test
+    fun saveProjectImageRoundtrip_imageDataCanBeReadBack() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addProject("Photo Project")
+            awaitAllJobs()
+            val project = appState.projects.value.first()
+            val imgBytes = fakePngBytes(42)
+            appState.saveProject(project.copy(imageIds = listOf(1u)), mapOf(1u to imgBytes))
+            awaitAllJobs()
+            val loaded = imageManager.getProjectImage(project.id, 1u)
+            assertNotNull(loaded, "Image should be readable after save")
+            assertTrue(loaded.contentEquals(imgBytes), "Image content should match what was saved")
+        }
+    }
+
+    @Test
+    fun saveProjectMultipleImagesRoundtrip_allImagesReadable() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addProject("Multi Image Project")
+            awaitAllJobs()
+            val project = appState.projects.value.first()
+            val img1 = fakePngBytes(1)
+            val img2 = fakePngBytes(2)
+            val img3 = fakePngBytes(3)
+            appState.saveProject(project.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            val saved = appState.projects.value.first()
+            assertEquals(3, saved.imageIds.size)
+            for (id in saved.imageIds) {
+                assertNotNull(imageManager.getProjectImage(project.id, id), "Image $id should be readable")
+            }
+            assertTrue(imageManager.getProjectImage(project.id, 1u)!!.contentEquals(img1))
+            assertTrue(imageManager.getProjectImage(project.id, 2u)!!.contentEquals(img2))
+            assertTrue(imageManager.getProjectImage(project.id, 3u)!!.contentEquals(img3))
+        }
+    }
+
+    @Test
+    fun saveProjectReorderImages_orderPersistsAndAllReadable() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addProject("Reorder Project")
+            awaitAllJobs()
+            val project = appState.projects.value.first()
+            val img1 = fakePngBytes(10)
+            val img2 = fakePngBytes(20)
+            val img3 = fakePngBytes(30)
+            appState.saveProject(project.copy(imageIds = listOf(1u, 2u, 3u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            // Reorder to 3, 1, 2
+            appState.saveProject(appState.projects.value.first().copy(imageIds = listOf(3u, 1u, 2u)), mapOf(1u to img1, 2u to img2, 3u to img3))
+            awaitAllJobs()
+            assertEquals(listOf(3u, 1u, 2u), appState.projects.value.first().imageIds)
+            assertTrue(imageManager.getProjectImage(project.id, 1u)!!.contentEquals(img1))
+            assertTrue(imageManager.getProjectImage(project.id, 2u)!!.contentEquals(img2))
+            assertTrue(imageManager.getProjectImage(project.id, 3u)!!.contentEquals(img3))
+        }
+    }
+
+    @Test
+    fun saveProjectDeleteImage_imageDataRemovedFromDisk() {
+        runBlocking {
+            val env = makeTestEnv(this)
+            val appState = env.appState
+            val imageManager = env.imageManager
+            appState.addProject("Delete Image Project")
+            awaitAllJobs()
+            val project = appState.projects.value.first()
+            appState.saveProject(project.copy(imageIds = listOf(1u)), mapOf(1u to fakePngBytes(1)))
+            awaitAllJobs()
+            assertNotNull(imageManager.getProjectImage(project.id, 1u))
+            // Now remove the image
+            appState.saveProject(appState.projects.value.first().copy(imageIds = emptyList()), emptyMap())
+            awaitAllJobs()
+            assertNull(imageManager.getProjectImage(project.id, 1u), "Deleted image should not be readable")
         }
     }
 

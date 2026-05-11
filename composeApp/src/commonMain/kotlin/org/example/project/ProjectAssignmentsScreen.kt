@@ -41,9 +41,15 @@ fun ProjectAssignmentsScreen(
     }
 
     val sortedYarns = remember(filteredYarns, initialAssignments) {
-        filteredYarns.sortedByDescending { yarn ->
-            (initialAssignments[yarn.id] ?: 0) > 0
-        }
+        filteredYarns
+            .filter { yarn ->
+                val assigned = (initialAssignments[yarn.id] ?: 0) > 0
+                val available = getAvailableAmountForYarn(yarn.id) > 0
+                assigned || available
+            }
+            .sortedByDescending { yarn ->
+                (initialAssignments[yarn.id] ?: 0) > 0
+            }
     }
 
     val backAction = {

@@ -24,7 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.alpha
@@ -91,7 +94,6 @@ fun YarnFormScreen(
         images.putAll(initialImages)
     }
     var nextTempId by remember(initial.id) { mutableStateOf<UInt>((initial.imageIds.maxOrNull() ?: 0u) + 1u) }
-    var selectedImageId by remember(initial.id) { mutableStateOf<UInt?>(initial.imageIds.firstOrNull()) }
     var imageOrder by remember(initial.id) { mutableStateOf(initial.imageIds) }
     var zoomedImageId by remember { mutableStateOf<UInt?>(null) }
 
@@ -104,6 +106,7 @@ fun YarnFormScreen(
         newImageBytes.forEach { bytes ->
             val newId = nextTempId++
             images[newId] = bytes
+            imageOrder = imageOrder + newId
             scope.launch {
                 Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
             }
@@ -114,6 +117,7 @@ fun YarnFormScreen(
         result?.let {
             val newId = nextTempId++
             images[newId] = it
+            imageOrder = imageOrder + newId
             scope.launch {
                 Logger.log(LogLevel.DEBUG, "Image added with id: $newId")
             }
@@ -237,7 +241,13 @@ fun YarnFormScreen(
         confirmDiscardChanges { onBack() }
     }
 
-    BackButtonHandler { backAction() }
+    BackButtonHandler {
+        if (zoomedImageId != null) {
+            zoomedImageId = null
+        } else {
+            backAction()
+        }
+    }
 
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -331,43 +341,11 @@ fun YarnFormScreen(
                     .navigationBarsPadding()
                     .padding(16.dp)
             ) {
-                val displayedImages = remember(imageOrder, images.keys) {
-                    val validOrder = imageOrder.filter { it in images }
+                val displayedImages = remember(imageOrder, images.toMap()) {
+                    val validOrder = imageOrder.filter { it in images }.distinct()
                     val extra = images.keys.filter { it !in imageOrder }
                     (validOrder + extra).mapNotNull { id -> images[id]?.let { id to it } }
                 }
-
-                LaunchedEffect(displayedImages) {
-                    val keys = displayedImages.map { it.first }
-                    imageOrder = keys
-                    if (selectedImageId == null && keys.isNotEmpty()) {
-                        selectedImageId = keys.first()
-                    } else if (selectedImageId != null && selectedImageId !in keys) {
-                        selectedImageId = keys.firstOrNull()
-                    }
-                }
-
-                val previewImage = selectedImageId?.let { images[it] }
-
-                if (previewImage != null) {
-                    val bitmap: ImageBitmap? = remember(previewImage) { previewImage.toImageBitmap() }
-                    if (bitmap != null) {
-                        Image(
-                            bitmap,
-                            contentDescription = "Yarn Preview Image",
-                            modifier = Modifier.fillMaxWidth().height(200.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable { zoomedImageId = selectedImageId }
-                        )
-                    }
-                } else {
-                    Image(
-                        painter = painterResource(Res.drawable.yarns),
-                        contentDescription = "Yarn icon",
-                        modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
-                    )
-                }
-                Spacer(Modifier.height(8.dp))
 
                 if (displayedImages.isNotEmpty()) {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -380,7 +358,8 @@ fun YarnFormScreen(
                                         bitmap,
                                         contentDescription = "Image $id",
                                         modifier = Modifier.size(80.dp)
-                                            .clickable { selectedImageId = id }
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .clickable { zoomedImageId = id }
                                     )
                                     IconButton(
                                         onClick = {
@@ -422,6 +401,13 @@ fun YarnFormScreen(
                             }
                         }
                     }
+                    Spacer(Modifier.height(8.dp))
+                } else {
+                    Image(
+                        painter = painterResource(Res.drawable.yarns),
+                        contentDescription = "Yarn icon",
+                        modifier = Modifier.fillMaxWidth().height(200.dp).alpha(0.5f)
+                    )
                     Spacer(Modifier.height(8.dp))
                 }
 
@@ -677,43 +663,55 @@ fun YarnFormScreen(
     }
 
     // Full-screen image zoom overlay
-    val zoomedBytes = zoomedImageId?.let { images[it] }
-    if (zoomedBytes != null) {
-        val zoomedBitmap = remember(zoomedBytes) { zoomedBytes.toImageBitmap() }
+    if (zoomedImageId != null) {
+        var hqBytes by remember(zoomedImageId) { mutableStateOf(images[zoomedImageId!!]) }
+        LaunchedEffect(zoomedImageId) {
+            val id = zoomedImageId ?: return@LaunchedEffect
+            val hq = withContext(Dispatchers.Default) { imageManager.getYarnImage(initial.id, id) }
+            if (hq != null) hqBytes = hq
+        }
+        val zoomedBitmap = hqBytes?.let { remember(it) { it.toImageBitmap() } }
         var scale by remember(zoomedImageId) { mutableStateOf(1f) }
         var offsetX by remember(zoomedImageId) { mutableStateOf(0f) }
         var offsetY by remember(zoomedImageId) { mutableStateOf(0f) }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .zIndex(10f)
-        ) {
-            Image(
-                zoomedBitmap,
-                contentDescription = "Zoomed image",
+        if (zoomedBitmap != null) {
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(zoomedBytes) {
-                        detectTransformGestures { _, pan, zoom, _ ->
-                            scale = (scale * zoom).coerceIn(1f, 8f)
-                            offsetX += pan.x
-                            offsetY += pan.y
-                        }
-                    }
-                    .graphicsLayer(
-                        scaleX = scale,
-                        scaleY = scale,
-                        translationX = offsetX,
-                        translationY = offsetY
-                    )
-            )
-            IconButton(
-                onClick = { zoomedImageId = null },
-                modifier = Modifier.align(Alignment.TopStart).padding(8.dp)
-                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.7f), CircleShape)
+                    .background(MaterialTheme.colorScheme.background)
+                    .zIndex(10f)
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
+                Image(
+                    zoomedBitmap,
+                    contentDescription = "Zoomed image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pointerInput(zoomedImageId) {
+                            val viewWidth = size.width.toFloat()
+                            val viewHeight = size.height.toFloat()
+                            detectTransformGestures { _, pan, zoom, _ ->
+                                scale = (scale * zoom).coerceIn(1f, 8f)
+                                val maxX = (viewWidth * (scale - 1f)) / 2f
+                                val maxY = (viewHeight * (scale - 1f)) / 2f
+                                offsetX = (offsetX + pan.x).coerceIn(-maxX, maxX)
+                                offsetY = (offsetY + pan.y).coerceIn(-maxY, maxY)
+                            }
+                        }
+                        .graphicsLayer(
+                            scaleX = scale,
+                            scaleY = scale,
+                            translationX = offsetX,
+                            translationY = offsetY
+                        )
+                )
+                IconButton(
+                    onClick = { zoomedImageId = null },
+                    modifier = Modifier.align(Alignment.TopStart).padding(8.dp)
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.7f), CircleShape)
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.common_back))
+                }
             }
         }
     }

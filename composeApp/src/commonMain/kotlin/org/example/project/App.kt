@@ -193,7 +193,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                         }
 
                         is Screen.YarnForm -> {
-                            val existingYarn = remember(s.yarnId, yarns) {
+                            val existingYarn = remember(s.yarnId) {
                                 try {
                                     jsonDataManager.getYarnById(s.yarnId)
                                 } catch (e: NoSuchElementException) {
@@ -205,7 +205,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             }
                             var yarnImagesMap by remember { mutableStateOf<Map<UInt, ByteArray>>(emptyMap()) }
 
-                            LaunchedEffect(s.yarnId, existingYarn) {
+                            LaunchedEffect(s.yarnId) {
                                 val imageMap = mutableMapOf<UInt, ByteArray>()
                                 existingYarn?.imageIds?.forEach { imageId ->
                                     try {
@@ -272,7 +272,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                         }
 
                         is Screen.ProjectForm -> {
-                            val existingProject = remember(s.projectId, projects) {
+                            val existingProject = remember(s.projectId) {
                                 try {
                                     jsonDataManager.getProjectById(s.projectId)
                                 } catch (e: NoSuchElementException) {
@@ -284,7 +284,7 @@ fun App(jsonDataManager: JsonDataManager, imageManager: ImageManager, fileDownlo
                             }
                             var projectImagesMap by remember { mutableStateOf<Map<UInt, ByteArray>>(emptyMap()) }
 
-                            LaunchedEffect(s.projectId, existingProject) {
+                            LaunchedEffect(s.projectId) {
                                 val imageMap = mutableMapOf<UInt, ByteArray>()
                                 existingProject?.imageIds?.forEach { imageId ->
                                     try {
